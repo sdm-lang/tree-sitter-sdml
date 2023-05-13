@@ -1,0 +1,6 @@
+#+TITLE: Simple Domain Modeling Language
+#+AUTHOR: Simon Johnston
+#+EMAIL: johnstonskj@gmail.com
+#+LANGUAGE: en
+#+STARTUP: overview hidestars inlineimages entitiespretty
+

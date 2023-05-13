@@ -1,0 +1,22 @@
+==========================
+Annotation, Single Boolean
+==========================
+
+module Campaign is
+
+  @dc:published = false
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (annotation
+      name: (identifier_reference
+              (qualified_identifier
+                module: (identifier)
+                member: (identifier)))
+                 value: (value
+                          (boolean)))))

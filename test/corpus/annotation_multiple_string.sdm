@@ -1,0 +1,28 @@
+============================
+Annotation, Multiple Strings
+============================
+
+module Campaign is
+
+  @dc:author = [ "me" "and" "you" ]
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (annotation
+      name: (identifier_reference
+              (qualified_identifier
+                module: (identifier)
+                member: (identifier)))
+                 value: (value
+                          (list_of_values 
+                            (string
+                              (quoted_string))
+                            (string
+                              (quoted_string))
+                            (string
+                              (quoted_string)))))))

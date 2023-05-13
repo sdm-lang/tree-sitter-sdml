@@ -9,6 +9,10 @@
 //
 // -------------------------------------------------------------------
 
+const IDENTIFIER = /[\p{Lu}\p{Ll}]+/;
+
+const STRING_CHAR = /([^\x00-\x08\x0B-\x1F\x7F"\\\\])|\\\\(["\\\\bfnrtv\/]|u\{[0-9a-fA-F]{2,6}\})/;
+
 function keyword(str) {
     return token(
         prec(2, str)
@@ -25,6 +29,11 @@ module.exports = grammar({
     name: 'sdml',
 
     word: $ => $.identifier,
+
+    supertypes: $ => [
+        $._single_import,
+        $._type_def
+    ],
 
     // -----------------------------------------------------------------------
     // Whitespace
@@ -44,15 +53,15 @@ module.exports = grammar({
 
         module: $ => seq(
             keyword('module'),
-            $.identifier,
-            $.module_body
+            field('name', $.identifier),
+            field('body', $.module_body)
         ),
 
         module_body: $ => seq(
             keyword('is'),
             repeat($.import),
             repeat($.annotation),
-            repeat($.type_def),
+            repeat($._type_def),
             keyword('end')
         ),
 
@@ -73,40 +82,30 @@ module.exports = grammar({
             $.module_import
         ),
 
-        member_import: $ => seq(
-            $.qualified_identifier,
-            optional(
-                $.import_rename
-            )
+        member_import: $ => choice(
+            field('name', $.qualified_identifier),
         ),
 
         module_import: $ => seq(
-            $.identifier,
+            field('name', $.identifier),
             optional(
-                $.import_from
+                seq(
+                    keyword('from'),
+                    field('source', $.iri_reference)
+                )
             )
-        ),
-
-        import_rename: $ => seq(
-            keyword('as'),
-            $.identifier
-        ),
-
-        import_from: $ => seq(
-            keyword('from'),
-            $.url
         ),
 
         // -----------------------------------------------------------------------
         // Identifiers
         // -----------------------------------------------------------------------
 
-        identifier: $ => /[\p{Lu}\p{Ll}]+/,
+        identifier: $ => token(IDENTIFIER),
 
         qualified_identifier: $ => seq(
-            $.identifier,
+            field('module', $.identifier),
             token.immediate(':'),
-            $.identifier
+            field('member', $.identifier)
         ),
 
         identifier_reference: $ => choice(
@@ -118,47 +117,56 @@ module.exports = grammar({
         // Annotations and Expressions
         // -----------------------------------------------------------------------
 
-        property_annotations: $ => seq(
+        annotation_only_body: $ => seq(
             keyword('is'),
             repeat1($.annotation),
             keyword('end')
         ),
 
         annotation: $ => seq(
-            token.immediate('@'),
-            $.identifier_reference,
-            optional($.type_expression),
-            $.assignment_expression
+            token('@'),
+            field('name', $.identifier_reference),
+            optional($._type_expression),
+            $._assignment_expression
         ),
 
-        type_expression: $ => seq(
+        _type_expression: $ => seq(
             operator('->'),
-            $.identifier_reference
+            field('target', $.identifier_reference)
         ),
 
-        type_expression_to: $ => seq(
+        _type_expression_to: $ => seq(
             operator('->'),
-            optional($.cardinality_expression),
-            $.identifier_reference
+            optional(
+                field('targetCardinality', $.cardinality_expression)
+            ),
+            field('target', $.identifier_reference)
         ),
 
-        type_expression_from_to: $ => seq(
-            optional($.cardinality_expression),
-            $.type_expression_to
+        _type_expression_from_to: $ => seq(
+            optional(
+                field('sourceCardinality', $.cardinality_expression)
+            ),
+            $._type_expression_to
         ),
 
-        assignment_expression: $ => seq(
+        _type_restriction: $ => seq(
+            operator('<-'),
+            field('base', $.identifier_reference)
+        ),
+
+        _assignment_expression: $ => seq(
             operator('='),
-            $.value
+            field('value', $.value)
         ),
 
         cardinality_expression: $ => seq(
             '{',
-            $.unsigned,
+            field('min', $.unsigned),
             optional(
                 seq(
                     token.immediate('..'),
-                    optional($.unsigned)
+                    field('max', optional($.unsigned))
                 )
             ),
             '}'
@@ -168,7 +176,7 @@ module.exports = grammar({
         // Type Definitions
         // -----------------------------------------------------------------------
 
-        type_def: $ => choice(
+        _type_def: $ => choice(
             $.entity_def,
             $.structure_def,
             $.enum_def,
@@ -178,8 +186,8 @@ module.exports = grammar({
 
         entity_def: $ => seq(
             keyword('entity'),
-            $.identifier,
-            optional($.entity_body)
+            field('name', $.identifier),
+            field('body', optional($.entity_body))
         ),
 
         entity_body: $ => seq(
@@ -197,8 +205,8 @@ module.exports = grammar({
 
         structure_def: $ => seq(
             keyword('structure'),
-            $.identifier,
-            optional($.structure_body)
+            field('name', $.identifier),
+            optional(field('body', $.structure_body))
         ),
 
         structure_body: $ => seq(
@@ -215,40 +223,36 @@ module.exports = grammar({
 
         enum_def: $ => seq(
             keyword('enum'),
-            $.identifier,
-            optional($._enum_body)
+            field('name', $.identifier),
+            optional(field('body', $.enum_body))
         ),
 
-        _enum_body: $ => seq(
+        enum_body: $ => seq(
             keyword('is'),
+            repeat($.annotation),
             repeat1($.enum_variant),
             keyword('end')
         ),
 
         enum_variant: $ => seq(
-            $.identifier,
+            field('name', $.identifier),
             operator('='),
             $.unsigned,
-            optional($.property_annotations)
+            optional(field('body', $.annotation_only_body))
         ),
 
         property_def: $ => seq(
             keyword('property'),
-            $.identifier,
-            $.type_expression,
-            optional($.property_annotations)
+            field('name', $.identifier),
+            $._type_expression,
+            optional(field('body', $.annotation_only_body))
         ),
 
         data_type_def: $ => seq(
             keyword('datatype'),
-            $.identifier,
-            $.type_restriction,
-            optional($.property_annotations)
-        ),
-
-        type_restriction: $ => seq(
-            operator('<-'),
-            $.identifier_reference
+            field('name', $.identifier),
+            $._type_restriction,
+            optional(field('body', $.annotation_only_body))
         ),
 
         // -----------------------------------------------------------------------
@@ -257,22 +261,22 @@ module.exports = grammar({
 
         identity_member: $ => seq(
             keyword('identity'),
-            $.identifier,
-            $.type_expression,
-            optional($.property_annotations)
+            field('name', $.identifier),
+            $._type_expression,
+            optional(field('body', $.annotation_only_body))
         ),
 
         member_by_value: $ => seq(
-            $.identifier,
-            $.type_expression_to,
-            optional($.property_annotations)
+            field('name', $.identifier),
+            $._type_expression_to,
+            optional(field('body', $.annotation_only_body))
         ),
 
         member_by_reference: $ => seq(
             keyword('ref'),
-            $.identifier,
-            $.type_expression_from_to,
-            optional($.property_annotations)
+            field('name', $.identifier),
+            $._type_expression_from_to,
+            optional(field('body', $.annotation_only_body))
         ),
 
         // -----------------------------------------------------------------------
@@ -288,77 +292,84 @@ module.exports = grammar({
         list_of_values: $ => seq(
             '[',
             choice(
-                repeat1($.language_string),
                 repeat1($.string),
                 repeat1($.double),
                 repeat1($.decimal),
                 repeat1($.integer),
+                repeat1($.iri_reference),
             ),
             ']'
         ),
 
         value_constructor: $ => seq(
-            $.identifier_reference,
+            field('name', $.identifier_reference),
             '(',
-            $._simple_value,
+            field('value', $._simple_value),
             ')'
         ),
 
         _simple_value: $ => choice(
-            $.language_string,
             $.string,
             $.double,
             $.decimal,
             $.integer,
             $.boolean,
-        ),
-
-        language_string: $ => seq(
-            $._quoted_string,
-            $.language_tag
+            $.iri_reference,
         ),
 
         string: $ => seq(
-            $._quoted_string,
+            $.quoted_string,
+            optional(
+                $.language_tag
+            )
         ),
 
-        _quoted_string: $ => seq(
-            '"',
-            repeat($._quoted_char),
-            '"'
+        quoted_string: $ => token(
+            seq(
+                token.immediate('"'),
+                repeat(STRING_CHAR),
+                token.immediate('"'),
+            )
         ),
 
-        _quoted_char: $ => /([^\x00-\x08\x0B-\x1F\x7F"\\\\])|\\\\(["\\\\bfnrtv\/]|u\{[0-9a-fA-F]{2,6}\})/,
-
-        language_tag: $ => /@[a-z]{2,3}(-[A-Z]{3})?(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?/,
-
-        // This is overly permissive
-        url: $ => /<[^\\x00-\\x1F\\x7F <>#]+>/,
-
-        double: $ => seq(
-            $.decimal,
-            $.exponent,
+        language_tag: $ => token(
+            seq(
+                token.immediate('@'),
+                /[a-z]{2,3}(-[A-Z]{3})?(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?/
+            )
         ),
 
-        exponent: $ => seq(
-            /[eE]/,
-            optional($.numeric_sign),
-            /[0-9]+/
+        // From <https://github.com/BonaBeavis/tree-sitter-turtle/blob/main/grammar.js>
+        iri_reference: $ => seq(
+            '<',
+            token.immediate(
+                repeat(
+                    choice(
+                        /([^<>"{}|^`\\\x00-\x20])/,
+                        /(\\u[0-9A-Fa-f]{4}|\\U[0-9A-Fa-f]{8})/
+                    )
+                )
+            ),
+            token.immediate(
+                '>'
+            )
         ),
 
-        decimal: $ => seq(
-            $.integer,
-            /\.[0-9]+/
+        double: $ => token(
+            /[+\\-]?(0|[1-9][0-9]*)(\.[0-9]+)[eE][+\\-]?(0|[1-9][0-9]*)/
         ),
 
-        integer: $ => seq(
-            optional($.numeric_sign),
-            $.unsigned
+        decimal: $ => token(
+            /[+\\-]?(0|[1-9][0-9]*)(\.[0-9]+)/
         ),
 
-        numeric_sign: $ => /[+\\-]/,
+        integer: $ => token(
+            /[+\\-]?(0|[1-9][0-9]*)/
+        ),
 
-        unsigned: $ => /0|[1-9][0-9]*/,
+        unsigned: $ => token(
+            /0|[1-9][0-9]*/
+        ),
 
         boolean: $ => choice(
             keyword('true'),

@@ -1,0 +1,24 @@
+=======================
+Import multiple members
+=======================
+
+module Campaign is
+
+  import [ xsd:base xml:lang ]
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (import
+      (member_import
+        name: (qualified_identifier
+          module: (identifier)
+          member: (identifier)))
+      (member_import
+        name: (qualified_identifier
+          module: (identifier)
+          member: (identifier))))))

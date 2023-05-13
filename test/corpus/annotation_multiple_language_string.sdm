@@ -1,0 +1,28 @@
+============================================
+Annotation, Multiple Language-Tagged Strings
+============================================
+
+module Campaign is
+
+  @dc:title = [ "a rather good test"@en-GB "a test"@en-US ]
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (annotation
+      name: (identifier_reference
+              (qualified_identifier
+                module: (identifier)
+                member: (identifier)))
+      value: (value
+                (list_of_values
+                  (string
+                    (quoted_string)
+                    (language_tag))
+                  (string
+                    (quoted_string)
+                    (language_tag)))))))

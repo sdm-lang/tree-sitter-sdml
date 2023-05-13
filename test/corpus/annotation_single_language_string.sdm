@@ -1,0 +1,24 @@
+=========================================
+Annotation, Single Language-Tagged String
+=========================================
+
+module Campaign is
+
+  @dc:title = "a test"@en-US
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (annotation
+      name: (identifier_reference
+              (qualified_identifier
+                module: (identifier)
+                member: (identifier)))
+                 value: (value
+                          (string
+                            (quoted_string)
+                            (language_tag))))))

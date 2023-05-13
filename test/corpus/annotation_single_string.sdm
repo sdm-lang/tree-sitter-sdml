@@ -1,0 +1,23 @@
+=========================
+Annotation, Single String
+=========================
+
+module Campaign is
+
+  @dc:author = "me"
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (annotation
+      name: (identifier_reference
+              (qualified_identifier
+                module: (identifier)
+                member: (identifier)))
+                 value: (value
+                          (string
+                            (quoted_string))))))

@@ -1,0 +1,45 @@
+module Campaign is
+
+  import [xsd skos xml:base dc]
+
+
+  @xml:base = <https::advertising.amazon.com/api-model>
+  
+  @skos:version = xsd:decimal(2)
+
+  datatype name <- xsd:string is
+    @xsd:minLength = 5
+    @xsd:maxLength = 25
+  end
+
+  property CampaignId -> xsd:string is
+    @skos:prefLabel = [
+      "Campaign Identifier"@en
+      "Identifiant de campagne"@fr
+    ]
+  end
+
+  property Name -> name
+
+  property Key -> xsd:string
+
+  property Value -> xsd:string
+
+  structure Tag is
+    key -> Key
+    value -> Value
+  end
+
+  entity Campaign is
+    identity campaignId -> CampaignId
+
+    name -> Name is
+      @skos:definition = ""
+    end
+
+    ref target {0..1} -> {1..} Target
+  end
+
+  entity Target
+  
+end

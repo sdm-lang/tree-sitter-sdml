@@ -2,7 +2,7 @@
 # Directories
 # ----------------------------------------------------------------------------
 
-ROOT := $(shell pwd)
+ROOT := $(PWD)
 
 SRC_DIR := $(ROOT)/src
 TST_DIR := $(ROOT)/test
@@ -52,8 +52,10 @@ DYLIB_EXT := dylib
 # Targets
 # ----------------------------------------------------------------------------
 
-BASE_NAME := $(shell basename $(PWD))
+BASE_NAME := $(shell basename $(ROOT))
 BASE_NAME_US := $(subst -,_,$(BASE_NAME))
+
+SHORT_NAME := $(shell echo $(BASE_NAME) | cut -d '-' -f 3)
 
 PARSER_LIB := lib$(BASE_NAME).$(DYLIB_EXT)
 PARSER := $(BUILD_DIR)/$(PARSER_LIB)
@@ -87,13 +89,12 @@ clean:
 	rm -rf $(RUST_BUILD_DIR)
 	rm $(BINDING_WASM)
 
-.PHONY: nothing
-nothing:
-	echo $(BASE_NAME) $(PARSER)
-
 # ----------------------------------------------------------------------------
 # Build: Grammar
 # ----------------------------------------------------------------------------
+
+# The default is  $(SHORT_NAME)
+FILE_EXT := sdm
 
 grammar: grammar_test
 
@@ -102,8 +103,8 @@ grammar_test: grammar_test_clean $(SRC_DIR)/grammar.json
 
 .PHONY: clean_tests
 grammar_test_clean:
-	rm -f $(TST_DIR)/corpus/*.txt\~ $(TST_DIR)/corpus/.*.\~undo-tree\~ && \
-    rm -f $(TST_DIR)/highlight/*.smithy~ $(TST_DIR)/highlight/.*.\~undo-tree\~
+	rm -f $(TST_DIR)/corpus/*.$(FILE_EXT)~ $(TST_DIR)/corpus/.*.\~undo-tree\~ && \
+    rm -f $(TST_DIR)/highlight/*.$(FILE_EXT)~ $(TST_DIR)/highlight/.*.\~undo-tree\~
 
 $(SRC_DIR)/grammar.json: $(ROOT)/grammar.js
 	$(TS_CLI) $(TS_GENERATE)
@@ -111,12 +112,14 @@ $(SRC_DIR)/grammar.json: $(ROOT)/grammar.js
 $(SRC_DIR)/node-types.json: $(ROOT)/grammar.js
 	$(TS_CLI) $(TS_GENERATE)
 
+$(SRC_DIR)/parser.c: $(ROOT)/grammar.js
+	$(TS_CLI) $(TS_GENERATE)
+
 # ----------------------------------------------------------------------------
 # Build: Library
 # ----------------------------------------------------------------------------
 
-IN_SRC_FILES := parser.c
-SRC_FILES = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
+SRC_FILES = $(SRC_DIR)/parser.c
 OBJ_FILES = $(addprefix $(BUILD_DIR)/, $(IN_SRC_FILES:.c=.o))
 INCLUDE_DIR := $(SRC_DIR)/tree_sitter
 
@@ -142,7 +145,7 @@ $(INSTALL_INCLUDE_DIR)/tree_sitter/parser.h: $(SRC_DIR)/tree_sitter/parser.h
 # Build: Bindings
 # ----------------------------------------------------------------------------
 
-$(BINDING_RUST): $(RUST_SRC_DIR)/build.rs $(RUST_SRC_DIR)/lib.rs $(SRC_DIR)/node-types.json
+$(BINDING_RUST): $(RUST_SRC_DIR)/build.rs
 	cargo build $(CARGO_FLAGS)
 
 $(BINDING_NODE): $(ROOT)/binding.gyp $(NODE_SRC_DIR)/index.js $(NODE_SRC_DIR)/binding.cc $(SRC_DIR)/node-types.json

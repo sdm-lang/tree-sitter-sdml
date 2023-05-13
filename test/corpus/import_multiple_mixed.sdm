@@ -1,0 +1,28 @@
+=====================
+Import multiple mixed
+=====================
+
+module Campaign is
+
+  import [ target xsd:base xml:lang skos ]
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (import
+      (module_import
+        name: (identifier))
+      (member_import
+        name: (qualified_identifier
+          module: (identifier)
+          member: (identifier)))
+      (member_import
+        name: (qualified_identifier
+          module: (identifier)
+          member: (identifier)))
+      (module_import
+        name: (identifier)))))

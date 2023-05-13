@@ -1,0 +1,20 @@
+====================
+Import single member
+====================
+
+module Campaign is
+
+  import xsd:base
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (import
+      (member_import
+        name: (qualified_identifier
+          module: (identifier)
+          member: (identifier))))))

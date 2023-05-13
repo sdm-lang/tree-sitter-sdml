@@ -1,0 +1,27 @@
+=========================
+Annotation, Multiple IRIs
+=========================
+
+module Campaign is
+
+  @dc:seeAlso = [
+      <https://www.dublincore.org/>
+      <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/>
+  ]
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (annotation
+      name: (identifier_reference
+              (qualified_identifier
+                module: (identifier)
+                member: (identifier)))
+                 value: (value
+                          (list_of_values
+                            (iri_reference)
+                            (iri_reference))))))

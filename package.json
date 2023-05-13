@@ -35,7 +35,7 @@
     {
       "scope": "source.sdml",
       "file-types": [
-        "sdml"
+        "sdml", "sdm"
       ],
       "folds": [
         "queries/folds.scm"
@@ -44,13 +44,10 @@
         "queries/highlights.scm"
       ],
       "indent": [
-        "queries/highlights.scm"
+        "queries/indent.scm"
       ],
       "injections": [
         "queries/injections.scm"
-      ],
-      "lint": [
-        "queries/lint.scm"
       ],
       "tags": [
         "queries/tags.scm"

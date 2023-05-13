@@ -1,0 +1,21 @@
+=======================
+Import multiple modules
+=======================
+
+module Campaign is
+
+  import [ xsd skos ]
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (import
+      (module_import
+        name: (identifier))
+      (module_import
+        name: (identifier)))))
+

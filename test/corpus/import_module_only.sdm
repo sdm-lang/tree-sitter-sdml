@@ -1,0 +1,18 @@
+=========================
+Import single module only
+=========================
+
+module Campaign is
+
+  import xsd
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (import
+      (module_import
+        name: (identifier)))))

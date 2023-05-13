@@ -1,0 +1,25 @@
+=============================
+Annotation, Multiple Decimals
+=============================
+
+module Campaign is
+
+  @dc:some = [ 101.0 102.201 0.1 ]
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (annotation
+      name: (identifier_reference
+              (qualified_identifier
+                module: (identifier)
+                member: (identifier)))
+                 value: (value
+                          (list_of_values
+                            (decimal)
+                            (decimal)
+                            (decimal))))))

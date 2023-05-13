@@ -1,0 +1,22 @@
+==========================
+Annotation, Single Decimal
+==========================
+
+module Campaign is
+
+  @dc:some = 102.201
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (annotation
+      name: (identifier_reference
+              (qualified_identifier
+                module: (identifier)
+                member: (identifier)))
+                 value: (value
+                          (decimal)))))

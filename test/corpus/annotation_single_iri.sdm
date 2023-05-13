@@ -1,0 +1,22 @@
+======================
+Annotation, Single IRI
+======================
+
+module Campaign is
+
+  @dc:seeAlso = <https://www.dublincore.org/>
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (annotation
+      name: (identifier_reference
+              (qualified_identifier
+                module: (identifier)
+                member: (identifier)))
+                 value: (value
+                          (iri_reference)))))

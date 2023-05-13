@@ -1,0 +1,25 @@
+=============================
+Annotation, Multiple Integers
+=============================
+
+module Campaign is
+
+  @dc:version = [ 1 2 3 ]
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (annotation
+      name: (identifier_reference
+              (qualified_identifier
+                module: (identifier)
+                member: (identifier)))
+                 value: (value
+                          (list_of_values
+                            (integer)
+                            (integer)
+                            (integer))))))

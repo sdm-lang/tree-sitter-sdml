@@ -1,0 +1,164 @@
+module Campaign is
+; <- keyword
+;      ^ module.definition
+;               ^ keyword
+
+  import [xsd skos xml:base dc]
+  ; <- keyword
+  ;      ^ punctuation.bracket
+  ;       ^ module
+  ;           ^ module
+  ;                ^ type
+  ;                         ^ module
+  ;                           ^ punctuation.bracket
+
+  @xml:base = <https::advertising.amazon.com/api-model>
+  ; <- property
+  ;^ property
+  ;         ^ operator
+  ;           ^ string
+  
+  @skos:version = xsd:decimal(2)
+  ; <- property
+  ;^ property
+  ;             ^ operator
+  ;               ^ function
+  ;                          ^ punctuation.bracket
+  ;                           ^ number
+  ;                            ^ punctuation.bracket
+
+  datatype name <- xsd:string is
+  ; <- keyword
+  ;        ^ type.definition
+  ;             ^ operator
+  ;                ^ type
+  ;                           ^ keyword
+  
+    @xsd:minLength = 5
+    ; <- property
+    ;^ property
+    ;              ^ operator
+    ;                ^ number
+    
+    @xsd:maxLength = 25
+    ; <- property
+    ;^ property
+    ;              ^ operator
+    ;                ^ number
+    
+  end
+  ; <- keyword
+  
+  property CampaignId -> xsd:string is
+  ; <- keyword
+  ;        ^ type.definition
+  ;                   ^ operator
+  ;                      ^ type
+  ;                                 ^ keyword
+
+    @skos:prefLabel = [
+    ; <- property
+    ;^ property
+    ;               ^ operator
+    ;                 ^ punctuation.bracket
+
+      "Campaign Identifier"@en
+      ; <- string
+      ;                    ^ property
+      
+      "Identifiant de campagne"@fr
+      ; <- string
+      ;                        ^ property
+
+    ]
+    ; <- punctuation.bracket
+
+  end
+  ; <- keyword
+
+  property Name -> name
+  ; <- keyword
+  ;        ^ type.definition
+  ;             ^ operator
+  ;                ^ type  
+
+  property Key -> xsd:string
+  ; <- keyword
+  ;        ^ type.definition
+  ;            ^ operator
+  ;               ^ type  
+
+  property Value -> xsd:string
+  ; <- keyword
+  ;        ^ type.definition
+  ;              ^ operator
+  ;                 ^ type  
+
+  structure Tag is
+  ; <- keyword
+  ;         ^ type.definition
+  ;             ^ keyword
+  
+    key -> Key
+    ; <- variable.field
+    ;   ^ operator
+    ;      ^ type
+    
+    value -> Value
+    ; <- variable.field
+    ;     ^ operator
+    ;        ^ type
+    
+  end
+  ; <- keyword
+
+  entity Campaign is
+  ; <- keyword
+  ;      ^ type.definition
+  ;               ^ keyword
+  
+    identity campaignId -> CampaignId
+    ; <- keyword
+    ;        ^ variable.field
+    ;                   ^ operator
+    ;                      ^ type
+
+    name -> Name is
+    ; <- variable.field
+    ;    ^ operator
+    ;       ^ type
+    ;            ^ keyword
+
+      @skos:definition = ""
+      ; <- property
+      ;^ property
+      ;                ^ operator
+      ;                  ^ string
+
+    end
+    ; <- keyword
+
+    ref target {0..1} -> {1..} Target
+    ; <- keyword
+    ;   ^ variable.field
+    ;          ^ punctuation.bracket
+    ;           ^ number
+    ;            ^ operator
+    ;              ^ number
+    ;               ^ punctuation.bracket
+    ;                 ^ operator
+    ;                    ^ punctuation.bracket
+    ;                     ^ number
+    ;                      ^ operator
+    ;                        ^ punctuation.bracket
+    ;                          ^ type
+
+  end
+  ; <- keyword
+
+  entity Target
+  ; <- keyword
+  ;      ^ type.definition
+  
+end
+; <- keyword

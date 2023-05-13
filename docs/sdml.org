@@ -29,6 +29,10 @@ digraph G {
 #+RESULTS: fig:model-transforms
 [[file:sdml-transforms.png]]
 
+- Abstract Model :: ...
+- RDF/OWL Semantics :: ...
+- Surface Syntax :: ...
+
 #+NAME: fig:model-transforms
 #+CAPTION: Model Transformations
 #+BEGIN_SRC dot :file sdml-transforms.png :exports results
@@ -45,7 +49,7 @@ digraph G {
 
   tsq [shape=ellipse; label="Tree-Sitter\nQueries"];
 
-  transform -> tsq [label="representation"];
+  transform -> tsq [label="using"];
 
   other [shape=ellipse; label="Artifact\nModel"];
 
@@ -60,4 +64,142 @@ digraph G {
 
 * Surface Syntax
 
+** Whitespace and Comments
+
+#+BEGIN_SRC sdml
+; comments start with ';' and go to end of line
+#+END_SRC
+
+** Values
+
+#+BEGIN_SRC sdml
+"a string"
+"a language-tagged string"en-US
+<https://...>  ;; an IRI reference
+true false     ;; booleans
+123            ;; integer
+123.0          ;; decimal
+123.0e-10      ;; double
+#+END_SRC
+
+#+BEGIN_SRC sdml
+[ "yes" "no" "maybe" ]
+#+END_SRC
+
+#+BEGIN_SRC sdml
+xsd:unsigned(1)
+#+END_SRC
+
+** Annotations
+
+#+BEGIN_SRC sdml
+@xml:base <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org>
+#+END_SRC
+
+#+BEGIN_SRC sdml
+@skos:prefLabel []
+#+END_SRC
+
+** Module Declaration and Imports
+
+#+BEGIN_SRC sdml
+module Example is end
+#+END_SRC
+
+#+BEGIN_SRC sdml
+module Example is
+  import xsd
+end
+#+END_SRC
+
+#+BEGIN_SRC sdml
+module Example is
+  import xsd:integer
+end
+#+END_SRC
+
+#+BEGIN_SRC sdml
+module Example is
+  import xsd
+  import [ dc:title dc:author ]
+end
+#+END_SRC
+
+** Structured Types
+
+#+BEGIN_SRC sdml
+structure Length
+#+END_SRC
+
+#+BEGIN_SRC sdml
+structure Length is
+  value -> Decimal
+  unit -> DistanceUnit
+end
+#+END_SRC
+
+#+BEGIN_SRC sdml
+structure Length is
+  @skos:prefLabel "Length"@en
+
+  value -> Decimal
+  unit -> DistanceUnit
+end
+#+END_SRC
+
+#+BEGIN_SRC sdml
+structure Person is
+  identifier id -> PersonId
+end
+#+END_SRC
+
+#+BEGIN_SRC sdml
+entity Person
+#+END_SRC
+
+#+BEGIN_SRC sdml
+entity Person is
+  ref contact {0..} -> {0..} Person is
+    @dc:description "Emergency contact person"
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC sdml
+enum DistanceUnit
+#+END_SRC
+
+#+BEGIN_SRC sdml
+enum DistanceUnit is
+  Meter = 1
+  Foot = 2
+end
+#+END_SRC
+
+** Property and Data Types
+
+#+BEGIN_SRC sdml
+property Name -> xsd:string
+#+END_SRC
+
+#+BEGIN_SRC sdml
+property SSN -> xsd:string is
+  @rdfs:isDefinedBy = <https://www.ssa.gov/number-card>
+end
+#+END_SRC
+
+#+BEGIN_SRC sdml
+datatype name <- xsd:string
+#+END_SRC
+
+#+BEGIN_SRC sdml
+datatype name <- xsd:string is
+  @xsd:minLength = 5
+  @xsd:maxLength = 25
+end
+#+END_SRC
+
 * Transforms
+
+* Appendix: References
+

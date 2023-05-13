@@ -126,7 +126,6 @@ module.exports = grammar({
         annotation: $ => seq(
             token('@'),
             field('name', $.identifier_reference),
-            optional($._type_expression),
             $._assignment_expression
         ),
 

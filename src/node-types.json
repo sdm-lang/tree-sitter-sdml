@@ -53,16 +53,6 @@
           }
         ]
       },
-      "target": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier_reference",
-            "named": true
-          }
-        ]
-      },
       "value": {
         "multiple": false,
         "required": true,

@@ -4,3 +4,60 @@
 #+LANGUAGE: en
 #+STARTUP: overview hidestars inlineimages entitiespretty
 
+* Introduction
+
+#+NAME: fig:model-overview
+#+CAPTION: Model Overview
+#+BEGIN_SRC dot :file sdml-overview.png :exports results
+digraph G {
+  rankdir="LR";
+  node [fontsize=10];
+  edge [fontsize=9; fontcolor=darkgrey];
+  
+  abstract [shape=ellipse; label="Abstract\nModel"];
+
+  rdf [shape=ellipse; label="RDF/OWL"];
+
+  abstract -> rdf [label="semantics"];
+  
+  sdml [shape=ellipse; label="Surface\nSyntax"];
+
+  abstract -> sdml [label="syntax"];
+}
+#+END_SRC
+
+#+RESULTS: fig:model-transforms
+[[file:sdml-transforms.png]]
+
+#+NAME: fig:model-transforms
+#+CAPTION: Model Transformations
+#+BEGIN_SRC dot :file sdml-transforms.png :exports results
+digraph G {
+  rankdir="LR";
+  node [fontsize=10];
+  edge [fontsize=9; fontcolor=darkgrey];
+
+  abstract [shape=ellipse; label="Abstract\nModel"];
+
+  transform [shape=ellipse; label="Transformation"];
+
+  transform -> abstract [label="source"];
+
+  tsq [shape=ellipse; label="Tree-Sitter\nQueries"];
+
+  transform -> tsq [label="representation"];
+
+  other [shape=ellipse; label="Artifact\nModel"];
+
+  transform -> other [label="target"];
+}
+#+END_SRC
+
+#+RESULTS: fig:model-overview
+[[file:sdml-overview.png]]
+
+* RDF Abstract Model
+
+* Surface Syntax
+
+* Transforms

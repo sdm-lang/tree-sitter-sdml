@@ -3,14 +3,16 @@
 #+EMAIL: johnstonskj@gmail.com
 #+LANGUAGE: en
 #+STARTUP: overview hidestars inlineimages entitiespretty
-#+INFOJS_OPT: view:t toc:t ltoc:t mouse:underline buttons:0 path:http://thomasf.github.io/solarized-css/org-info.min.js
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://thomasf.github.io/solarized-css/solarized-light.min.css" />
+# #+INFOJS_OPT: view:t toc:t ltoc:t mouse:underline buttons:0 path:http://thomasf.github.io/solarized-css/org-info.min.js
+# #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://thomasf.github.io/solarized-css/solarized-light.min.css" />
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 #+HTML_HEAD: <style>img { max-width: 800px; height: auto; }</style>
+#+HTML_HEAD: <style>div.figure { text-align: center; }</style>
+#+OPTIONS: toc:3
 
-# See http://thomasf.github.io/solarized-css/
-
+* Introduction
 The Simple Domain Modeling Language is a small data-oriented language for constructing, documenting, and reasoning about
-a conceptual domain model. The language uses some ideas from UML which is often used in the construction of such models
+a conceptual domain model. The language uses some ideas from [[http://www.uml.org/][UML]] which is often used in the construction of such models
 today. However, the goal is to keep the language as small as possible, taking away some options where they don't make
 sense or where their use may distract from the major purpose of the model. The model also takes some of the language
 from Domain-Driven Design[fn:1], namely the separation of entities (/an object defined not by its attributes, but its
@@ -18,10 +20,12 @@ identity/) from value objects (/an immutable object that contains attributes but
 termed structures in SDML. This model does not include the following as first-class concepts: /aggregates/, /repositories/,
 /factories/, or /services/.
 
-* Introduction
+At it's core SDML comprises an /abstract model/ whose structure and semantics are described by an [[https://www.w3.org/OWL/][OWL]] ([[https://www.w3.org/RDF/][RDF]]) ontology, and a
+/surface syntax/ for editing and sharing concrete models. This document covers both the OWL and SDML representations and
+the correspondence between them, however the primary focus of the documentation is the surface syntax as most users will
+be interacting with it alone. Figure [[fig:model-overview]] shows the relationship between these high-level components. 
 
 #+NAME: fig:model-overview
-#+CAPTION: Model Overview
 #+BEGIN_SRC dot :file sdml-overview.png :exports results
 digraph G {
   bgcolor="transparent";
@@ -32,24 +36,29 @@ digraph G {
   abstract [shape=ellipse; label="Abstract\nModel"];
 
   rdf [shape=ellipse; label="RDF/OWL"];
-
-  abstract -> rdf [label="semantics"];
-  
-  sdml [shape=ellipse; label="Surface\nSyntax"];
-
+  sdml [shape=ellipse; label="Surface\nSyntax"];  
+  abstract -> rdf [label="semantics"];  
   abstract -> sdml [label="syntax"];
+
+  concrete [shape=ellipse; style=dotted; label="Concrete\nModel"];
+  rdf -> concrete [arrowtail=open; dir=back; style=dotted; label="conforms-to"];
+  sdml -> concrete [arrowtail=open; dir=back; style=dotted; label="expressed-in"];
 }
 #+END_SRC
 
-#+RESULTS: fig:model-transforms
-[[file:sdml-transforms.png]]
+#+CAPTION: Model Overview
+#+RESULTS: fig:model-overview
+[[file:sdml-overview.png]]
 
-- Abstract Model :: ...
-- RDF/OWL Semantics :: ...
-- Surface Syntax :: ...
+One element that is not included in figure [[fig:model-overview]] as it is primarily an implementation decision, is that the
+reference implementation for SDML is provided as a [[https://tree-sitter.github.io/tree-sitter/][Tree-Sitter]] package. While generated tree-sitter parsers are not
+intended to be fast, or to be part of a compilation processes they do provide a multitude of language bindings, and a
+concrete syntax tree allowing easy development of the relatively simple tools required for SDML usage. 
+
+Figure [[fig:model-transforms]] demonstrates another key element of a /Model-Driven Development/ style, the transformation
+between models and between models and other development artifacts.
 
 #+NAME: fig:model-transforms
-#+CAPTION: Model Transformations
 #+BEGIN_SRC dot :file sdml-transforms.png :exports results
 digraph G {
   bgcolor="transparent";
@@ -60,28 +69,26 @@ digraph G {
   abstract [shape=ellipse; label="Abstract\nModel"];
 
   transform [shape=ellipse; label="Transformation"];
-
   transform -> abstract [label="source"];
 
   tsq [shape=ellipse; label="Tree-Sitter\nQueries"];
-
   transform -> tsq [label="using"];
 
   other [shape=ellipse; label="Artifact\nModel"];
-
   transform -> other [label="target"];
 }
 #+END_SRC
 
-#+RESULTS: fig:model-overview
+#+CAPTION: Model Transformations
+#+RESULTS: fig:model-transforms
 [[file:sdml-overview.png]]
+
 
 * RDF Abstract Model
 
+Figure [[fig:owl-ontology]] is an overview of the OWL Ontology, 
+
 #+NAME: fig:owl-ontology
-#+CAPTION: OWL Ontology
-#+ATTR_HTML: :width 800px
-#+ATTR_LATEX: :width 640px
 #+BEGIN_SRC dot :file owl-ontology.png :exports results
 digraph G {
   bgcolor="transparent";
@@ -103,10 +110,10 @@ digraph G {
 
   identifier [shape=rectangle;style=filled;color=lightgrey;label="rdf:langString"];
 
-  Module -> Classifier [label="hasClassifiers"];
-  Module -> identifier [label="rdfs:label"];
+  Module -> Classifier [label="hasClassifiers";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
+  Module -> identifier [label="rdfs:label";dir=both;arrowtail=diamond;arrowhead=open;headlabel="+"];
 
-  Classifier -> identifier [label="rdfs:label"];
+  Classifier -> identifier [label="rdfs:label";dir=both;arrowtail=diamond;arrowhead=open;headlabel="+"];
 
   Structure -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
   Entity -> Structure [label="rdfs:subClassOf";arrowhead=empty];
@@ -114,35 +121,166 @@ digraph G {
   Event -> Structure [label="rdfs:subClassOf";arrowhead=empty];
   Datatype -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
 
-  Structure -> Group [label="hasGroup"];
-  Structure -> Member [label="hasMember"];
+  Event -> Entity [label="eventSource";dir=both;arrowtail=odiamond;arrowhead=open];
 
-  Group -> Member [label="hasMember"];
+  Datatype -> Datatype [label="baseDatatype";dir=both;arrowtail=odiamond;arrowhead=open];
 
-  Enumeration -> Variant [label="hasVariant"];
+  Structure -> Group [label="hasGroup";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
+  Structure -> Member [label="hasMember";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
 
-  Member -> identifier [label="rdfs:label"];
-  Member -> Cardinality [label="sourceCardinality"];
-  Member -> Classifier [label="targetClassifier";arrowhead=open];
-  Member -> Cardinality [label="targetCardinality"];
+  Group -> identifier [label="rdfs:label";dir=both;arrowtail=diamond;arrowhead=open;headlabel="+"];
+  Group -> Member [label="hasMember";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
 
-  integer [shape=rectangle;style=filled;color=lightgrey;label="xsd:nonNegativeInteger";arrowhead=open];
+  Enumeration -> Variant [label="hasVariant";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
+
+  Member -> identifier [label="rdfs:label";dir=both;arrowtail=diamond;arrowhead=open;headlabel="+"];
+  Member -> Cardinality [label="sourceCardinality";dir=both;arrowtail=diamond;arrowhead=open;headlabel="?"];
+  Member -> Classifier [label="targetClassifier";dir=both;arrowtail=odiamond;arrowhead=open];
+  Member -> Cardinality [label="targetCardinality";dir=both;arrowtail=diamond;arrowhead=open;headlabel="?"];
+
+  integer [shape=rectangle;style=filled;color=lightgrey;label="xsd:nonNegativeInteger"];
   
-  Cardinality -> integer [label="maxOccurs"];
-  Cardinality -> integer [label="minOccurs"];
-  Variant -> integer [label="hasValue"];
+  Cardinality -> integer [label="owl:maxCardinality";dir=both;arrowtail=diamond;arrowhead=open];
+  Cardinality -> integer [label="owl:minCardinality";dir=both;arrowtail=diamond;arrowhead=open];
+
+  Variant -> identifier [label="rdfs:label";dir=both;arrowtail=diamond;arrowhead=open;headlabel="+"];
+  Variant -> integer [label="hasValue";dir=both;arrowtail=diamond;arrowhead=open];
 }
 #+END_SRC
 
+#+CAPTION: OWL Ontology
 #+RESULTS: fig:owl-ontology
 [[file:owl-ontology.png]]
 
-Empty arrow heads = subClassOf, Filled arrow heads = aggregate, open arrow heads = association
+Figure [[fig:owl-ontology]] uses some notation elements from UML, although not a UML diagram itself.
+
+1. Open triangular arrow heads correspond to the RDF Schema =subClassOf= relationship.
+2. Filled diamonds correspond to composite associations, or strong ownership.
+3. Open diamonds correspond to aggregate associations, or weak ownership.
+
+** Major OWL Elements
+
+#+NAME: lst:owl-module
+#+CAPTION: OWL: Top-Level Module
+#+BEGIN_SRC ttl
+:Module rdf:type owl:Class .
+#+END_SRC
+
+
+#+NAME: lst:owl-classifiers
+#+CAPTION: OWL: Classifiers, or Types
+#+BEGIN_SRC ttl
+:Classifier rdf:type owl:Class .
+
+:Structure rdf:type owl:Class ;
+    rdfs:subClassOf :Classifier .
+    
+:Entity rdf:type owl:Class ;
+    rdfs:subClassOf :Structure .
+    
+:Event rdf:type owl:Class ;
+    rdfs:subClassOf :Structure .
+    
+:Enumeration rdf:type owl:Class ;
+    rdfs:subClassOf :Classifier .
+    
+:Datatype rdf:type rdfs:Datatype ;
+     rdfs:subClassOf :Classifier .
+#+END_SRC
+
+
+#+NAME: lst:owl-classifier-parts
+#+CAPTION: OWL: Classifier Related Classes
+#+BEGIN_SRC ttl
+:Group rdf:type owl:Class .
+
+:Member rdf:type owl:Class .
+
+:Cardinality rdf:type owl:Class .
+
+:Variant rdf:type owl:Class .
+#+END_SRC
+
+
+#+NAME: lst:owl-classifier-object-properties
+#+CAPTION: OWL: Classifier Object Properties
+#+BEGIN_SRC ttl
+:hasGroup rdf:type owl:ObjectProperty ;
+    rdfs:Structure ;
+    rdfs:range :Group .
+    
+:hasClassifiers rdf:type owl:ObjectProperty ;
+    rdfs:domain :Module ;
+    rdfs:Range  :Classifier .
+    
+:hasVariant rdf:type owl:ObjectProperty ;
+    rdfs:Domain :Enumeration ;
+    rdfs:Range  :Variant .
+    
+:sourceCardinality rdf:type owl:ObjectProperty ;
+    rdfs:Domain :Member ;
+    rdfs:Range  :Cardinality .
+    
+:targetCardinality rdf:type owl:ObjectProperty  ;
+    rdfs:Domain :Member ;
+    rdfs:Range  :Cardinality .
+    
+:targetClassifier rdf:type owl:ObjectProperty ;
+    rdfs:Domain :Member ;
+    rdfs:Range  :Classifier .
+    
+:baseDatatype rdf:type owl:ObjectProperty ;
+    rdfs:subPropertyOf owl:onDatatype ;
+    rdfs:Domain :Datatype ;
+    rdfs:Range  :Datatype .
+    
+:eventSource rdf:type owl:ObjectProperty ;
+    rdfs:Domain :Event ;
+    rdfs:Range  :Entity .
+#+END_SRC
+
+
+#+NAME: lst:owl-classifier-member-properties
+#+CAPTION: OWL: Classifier Member Properties
+#+BEGIN_SRC ttl
+:hasMember rdf:type owl:ObjectProperty .
+
+:hasIdentifyingMember rdf:type owl:DatatypeProperty ;
+    rdf:type owl:FunctionalProperty ;
+    rdfs:subPropertyOf :hasMember ;
+    rdfs:Domain owl:UnionOf ( :Structure :Group ) ;
+    rdfs:Range :Member .
+    
+:hasCompositeMember rdf:type owl:DatatypeProperty ;
+    rdfs:subPropertyOf :hasMember ;
+    rdfs:Domain owl:UnionOf ( :Structure :Group ) ;
+    rdfs:Range :Member .
+    
+:hasReferenceMember rdf:type owl:DatatypeProperty ;
+    rdfs:subPropertyOf :hasMember ;
+    rdfs:Domain owl:UnionOf ( :Structure :Group ) ;
+    rdfs:Range :Member .
+#+END_SRC
+
+
+#+NAME: lst:owl-variant-value
+#+CAPTION: OWL: Variant Value Property
+#+BEGIN_SRC ttl
+:hasValue rdf:type owl:DatatypeProperty ;
+    rdfs:Domain :Variant ;
+    rdfs:Range  :xsd:nonNegativeInteger .
+#+END_SRC
+
 
 * Surface Syntax
 
+The following describes the SDML surface syntax, a syntax intended to look and feel like a programming language but with
+extensibility provided by it's underlying RDF and OWL foundation.
+
 ** Whitespace and Comments
 
+#+NAME: lst:sdml-ex-comments
+#+CAPTION: SDML Comments
 #+BEGIN_SRC sdml
 ; comments start with ';' and go to end of line
 #+END_SRC
@@ -150,10 +288,12 @@ Empty arrow heads = subClassOf, Filled arrow heads = aggregate, open arrow heads
 ** Identifiers and Values
 
 An identifier is a string of characters corresponding to the [[https://unicode.org/reports/tr44/#GC_Values_Table][Unicode General Category]] *Lu* (an uppercase letter) or *Ll* (a
-lowercase letter). No additional separator characters such as '_', '-', '$', '@', '#', etc. are permitted.
+lowercase letter). No additional separator characters such as ='_'=, ='-'=, ='$'=, ='@'=, ='#'=, etc. are permitted.
 
 Naming Conventions:
 
+#+NAME: lst:sdml-ex-identifiers
+#+CAPTION: SDML Identifier Examples
 #+BEGIN_SRC sdml
 UpperCamel
 lowerCamel
@@ -172,12 +312,16 @@ SHOUTY
   are commonly simply the lower Camel Case version of the corresponding type name.
 - *Enum Variant Name* :: Upper Camel Case is the preferred, although SHOUTY CASE is acceptable.
 
+#+NAME: lst:sdml-ex-qualified-identifiers
+#+CAPTION: SDML Qualified Identifier Example
 #+BEGIN_SRC sdml
 module:Member
 #+END_SRC
 
 Simple Values:
 
+#+NAME: lst:sdml-ex-simple-values
+#+CAPTION: SDML Simple Value Examples
 #+BEGIN_SRC sdml
 "a string"
 "a language-tagged string"en-US
@@ -190,22 +334,114 @@ true false     ;; booleans
 
 Value Lists:
 
+#+NAME: lst:sdml-ex-value-lists
+#+CAPTION: SDML Value List Example
 #+BEGIN_SRC sdml
 [ "yes" "no" "maybe" ]
 #+END_SRC
 
 Value Constructors:
 
+#+NAME: lst:sdml-ex-type-constructor
+#+CAPTION: SDML Type Constructor Example
 #+BEGIN_SRC sdml
 xsd:unsigned(1)
 #+END_SRC
 
-*** Data Types
+See [[sec:data-types]]
 
+** Module Declaration and Imports
+
+An empty module, specifically a module with an empty /body/ which is the content between the keywords *=is=* and *=end=*. 
+
+#+NAME: lst:sdml-ex-empty-module
+#+CAPTION: SDML Empty Module
+#+BEGIN_SRC sdml
+module example is end
+#+END_SRC
+
+#+NAME: lst:sdml-ex-empty-module-owl
+#+CAPTION: SDML Empty Module, Corresponding OWL
+#+BEGIN_SRC ttl
+:example rdf:type :Module .
+#+END_SRC
+
+This module contains a single import statement bringing in the module named =xsd= making it's members available in the
+qualified form =xsd:*=.
+
+#+NAME: lst:sdml-ex-import-module
+#+CAPTION: SDML Importing Module
+#+BEGIN_SRC sdml
+module example is
+  import xsd
+end
+#+END_SRC
+
+#+NAME: lst:sdml-ex-import-module-owl
+#+CAPTION: SDML Importing Module, Corresponding OWL
+#+BEGIN_SRC ttl
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:example rdf:type :Module .
+#+END_SRC
+
+#+NAME: lst:sdml-ex-import-member
+#+CAPTION: SDML Importing Member
+#+BEGIN_SRC sdml
+module example is
+  import xsd:integer
+end
+#+END_SRC
+
+#+NAME: lst:sdml-ex-import-member-owl
+#+CAPTION: SDML Importing Member, Corresponding OWL
+#+BEGIN_SRC ttl
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:example rdf:type :Module .
+#+END_SRC
+
+#+NAME: lst:sdml-ex-import-list
+#+CAPTION: SDML Importing a List
+#+BEGIN_SRC sdml
+module example is
+  import [ dc:title dc:author ]
+end
+#+END_SRC
+
+#+NAME: lst:sdml-ex-import-from
+#+CAPTION: SDML Importing From URL
+#+BEGIN_SRC sdml
+module example is
+  import show from <http://example.org/vocab/show/>
+end
+#+END_SRC
+
+#+NAME: lst:sdml-ex-import-from-owl
+#+CAPTION: SDML Importing From URL, Corresponding OWL
+#+BEGIN_SRC ttl
+@prefix show: <http://example.org/vocab/show/> .
+
+:example rdf:type :Module .
+#+END_SRC
+
+** <<sec:data-types>> Data Types
+
+#+NAME: lst:sdml-ex-datatype
+#+CAPTION: SDML Datatype
 #+BEGIN_SRC sdml
 datatype name <- xsd:string
 #+END_SRC
 
+#+NAME: lst:sdml-ex-datatype-owl
+#+CAPTION: SDML Datatype, Corresponding OWL
+#+BEGIN_SRC ttl
+:name rdf:type rdfs:Datatype ;
+    owl:onDatatype xsd:string .
+#+END_SRC
+
+#+NAME: lst:sdml-ex-restricted-datatype
+#+CAPTION: SDML Datatype with Restrictions
 #+BEGIN_SRC sdml
 datatype name <- xsd:string is
   @xsd:minLength = 5
@@ -213,51 +449,38 @@ datatype name <- xsd:string is
 end
 #+END_SRC
 
+#+NAME: lst:sdml-ex-restricted-datatype-owl
+#+CAPTION: SDML Datatype with Restrictions, Corresponding OWL
+#+BEGIN_SRC ttl
+:name rdf:type rdfs:Datatype ;
+    owl:onDatatype xsd:string ;
+    owl:withRestrictions (
+        [ xsd:minLength "5"^^xsd:nonNegativeInteger ]
+        [ xsd:maxLength "25"^^xsd:nonNegativeInteger ]
+    ) .
+#+END_SRC
+
 From [[https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide][OWL 2 Web Ontology Language Quick Reference Guide (Second Edition)]]:
 
-| Facet                                                               | Value                                      | Applicable Datatypes       | Explanation                                                                                |
-|---------------------------------------------------------------------+--------------------------------------------+----------------------------+--------------------------------------------------------------------------------------------|
-| =xsd:minInclusive= =xsd:maxInclusive= =xsd:minExclusive= =xsd:maxExclusive= | literal in the corresponding datatype      | Numbers, Time Instants     | Restricts the value-space to greater than (equal to) or lesser than (equal to) a value     |
-| =xsd:minLength= =xsd:maxLength= =xsd:length=                              | Non-negative integer                       | Strings, Binary Data, IRIs | Restricts the value-space based on the lengths of the literals                             |
-| =xsd:pattern=                                                         | =xsd:string= literal as a regular expression | Strings, IRIs              | Restricts the value space to literals that match the regular expression                    |
-| =rdf:langRange=                                                       | =xsd:string= literal as a regular expression | =rdf:PlainLiteral=           | Restricts the value space to literals with language tags that match the regular expression |
-
-** Module Declaration and Imports
-
-An empty module, specifically a module with an empty /body/ which is the content between the keywords *=is=* and *=end=*. 
-
-#+BEGIN_SRC sdml
-module example is end
-#+END_SRC
-
-This module contains a single import statement bringing in the module named =xsd= making it's members available in the
-qualified form =xsd:*=.
-
-#+BEGIN_SRC sdml
-module example is
-  import xsd
-end
-#+END_SRC
-
-#+BEGIN_SRC sdml
-module example is
-  import xsd:integer
-end
-#+END_SRC
-
-#+BEGIN_SRC sdml
-module example is
-  import xsd
-  import [ dc:title dc:author ]
-end
-#+END_SRC
+#+NAME: tbl:owl-facets
+#+CAPTION: OWL Built-in Datatype Facets
+| Facet                                                                  | Value                                      | Applicable Datatypes       | Explanation                                                                                |
+|------------------------------------------------------------------------+--------------------------------------------+----------------------------+--------------------------------------------------------------------------------------------|
+| =xsd:minInclusive=, =xsd:maxInclusive=, =xsd:minExclusive=, =xsd:maxExclusive= | literal in the corresponding datatype      | Numbers, Time Instants     | Restricts the value-space to greater than (equal to) or lesser than (equal to) a value     |
+| =xsd:minLength=, =xsd:maxLength=, =xsd:length=                               | Non-negative integer                       | Strings, Binary Data, IRIs | Restricts the value-space based on the lengths of the literals                             |
+| =xsd:pattern=                                                            | =xsd:string= literal as a regular expression | Strings, IRIs              | Restricts the value space to literals that match the regular expression                    |
+| =rdf:langRange=                                                          | =xsd:string= literal as a regular expression | =rdf:PlainLiteral=           | Restricts the value space to literals with language tags that match the regular expression |
 
 ** Annotations
 
+#+NAME: lst:sdml-ex-annotation-property
+#+CAPTION: SDML Annotation Property
 #+BEGIN_SRC sdml
 @xml:base <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org>
 #+END_SRC
 
+#+NAME: lst:sdml-ex-annotation-property-list
+#+CAPTION: SDML Annotation Property List
 #+BEGIN_SRC sdml
 @skos:prefLabel [
   "example"@en
@@ -266,6 +489,8 @@ end
 ]
 #+END_SRC
 
+#+NAME: lst:sdml-ex-annotated-module
+#+CAPTION: SDML Annotated Module
 #+BEGIN_SRC sdml
 module example is
 
@@ -290,26 +515,35 @@ should be a triple:
 
 ** Structured Types
 
+#+NAME: lst:sdml-ex-empty-structure
+#+CAPTION: SDML Empty Structure
 #+BEGIN_SRC sdml
 structure Length
 #+END_SRC
 
+#+NAME: lst:sdml-ex-empty-structure-owl
+#+CAPTION: SDML Empty Structure, Corresponding OWL
 #+BEGIN_SRC ttl
-:Length a owl:Class ;
-    rdfs:subClassOf sdml:Structure .
+:Length rdf:type sdml:Structure .
 #+END_SRC
 
+#+NAME: lst:sdml-ex-annotated-structure
+#+CAPTION: SDML Annotated Structure
 #+BEGIN_SRC sdml
 structure Length is
   @skos:prefLabel "Length"@en
 end
 #+END_SRC
 
+#+NAME: lst:sdml-ex-annotated-structure-owl
+#+CAPTION: SDML Annotated Structure, Corresponding OWL
 #+BEGIN_SRC ttl
-:Length rdf:type owl:Class ;
+:Length rdf:type sdml:Structure ;
     skos:prefLabel "Length"@en .
 #+END_SRC
 
+#+NAME: lst:sdml-ex-structure-members
+#+CAPTION: SDML Structure Members
 #+BEGIN_SRC sdml
 structure Length is
   @skos:prefLabel "Length"@en
@@ -319,104 +553,97 @@ structure Length is
 end
 #+END_SRC
 
+#+NAME: lst:sdml-ex-structure-members-owl
+#+CAPTION: SDML Structure Members, Corresponding OWL
 #+BEGIN_SRC ttl
-[
-    rdf:type owl:DatatypeProperty ;
-    rdfs:label "value" ;
-    rdfs:domain :Length ;
-    rdfs:range :Decimal ;
-]
+:Length rdf:type sdml:Structure ;
+    skos:prefLabel "Length"@en .
+    :hasMember [
+        rdfs:label "value" ;
+        :targetClassifier :Decimal ;
+    ] ,
+    [
+        rdfs:label "unit" ;
+        :targetClassifier :DistanceUnit ;
+    ] .
 #+END_SRC
-
-#+BEGIN_SRC ttl
-[
-    rdf:type owl:ObjectProperty ;
-    rdfs:label "unit" ;
-    rdfs:domain :Length ;
-    rdfs:range :DistanceUnit ;
-]
-#+END_SRC
-
 
 *** Entities
 
+#+NAME: lst:sdml-ex-empty-entity
+#+CAPTION: SDML Empty Entity
 #+BEGIN_SRC sdml
 entity Person
 #+END_SRC
 
+#+NAME: lst:sdml-ex-empty-entity-owl
+#+CAPTION: SDML Empty Entity, Corresponding OWL
 #+BEGIN_SRC ttl
-:Person a owl:Class ;
-    rdfs:subClassOf sdml:Entity .
+:Person rdf:type sdml:Entity .
 #+END_SRC
 
+#+NAME: lst:sdml-ex-entity-identifying-member
+#+CAPTION: SDML Entity with Identifying Member
 #+BEGIN_SRC sdml
 entity Person is
   identifier id -> PersonId
 end
 #+END_SRC
 
+#+NAME: lst:sdml-ex-entity-identifying-member-owl
+#+CAPTION: SDML Entity with Identifying Member, Corresponding OWL
 #+BEGIN_SRC ttl
-[
-    rdf:type owl:ObjectProperty ;
-    rdf:type owl:FunctionalProperty ;
-    rdfs:label "id" ;
-    rdfs:domain :Person ;
-    rdfs:range :PersonId ;
-    owl:maxCardinality 1;
-    owl:minCardinality 1;
-]
+:Person rdf:type sdml:Entity ;
+    :hasIdentifyingMember [
+        rdfs:label "id" ;
+        :targetClassifier :Person ;
+    ] .
 #+END_SRC
 
+#+NAME: lst:sdml-ex-entity-ref-member
+#+CAPTION: SDML Entity with Reference Member
 #+BEGIN_SRC sdml
 entity Person is
-  ref contact {0..} -> {0..} Person is
+  ref contact {0..} -> {0..2} Person is
     @dc:description "Emergency contact person"
   end
 end
 #+END_SRC
 
+#+NAME: lst:sdml-ex-entity-ref-member-owl
+#+CAPTION: SDML Entity with Reference Member, Corresponding OWL
 #+BEGIN_SRC ttl
-[
-    rdf:type owl:ObjectProperty ;
-    rdfs:label "id" ;
-    rdfs:domain :Person ;
-    rdfs:range :PersonId ;
-    owl:minCardinality 0;
-]
-#+END_SRC
-
-
-*** Events
-
-#+BEGIN_SRC sdml
-event PersonNameChanged source Person
-#+END_SRC
-
-#+BEGIN_SRC ttl
-:PersonNameChanged a owl:Class ;
-    rdfs:subClassOf sdml:Event ;
-    sdml:eventSource :Person .
-#+END_SRC
-
-#+BEGIN_SRC sdml
-event PersonNameChanged source Person is
-  ;; identifier members will be copied from Person 
-  from_value -> Name
-  to_value -> Name
-end
+:Person rdf:type sdml:Entity ;
+    :hasReferenceMember [
+        rdfs:label "contact" ;
+        :targetClassifier :Person ;
+        :sourceCardinality [
+            owl:minCardinality 0 ;
+        ] ;
+        :targetCardinality [
+            owl:minCardinality 0 ;
+            owl:maxCardinality 2 ;
+        ]
+        dc::description "Emergency contact person"
+    ] .
 #+END_SRC
 
 *** Enums
 
+#+NAME: lst:sdml-ex-empty-enum
+#+CAPTION: SDML Empty Enum
 #+BEGIN_SRC sdml
 enum DistanceUnit
 #+END_SRC
 
+#+NAME: lst:sdml-ex-empty-enum-owl
+#+CAPTION: SDML Empty Enum, Corresponding OWL
 #+BEGIN_SRC ttl
-:DistanceUnit a owl:Class ;
-    rdfs:subClassOf sdml:Enumeration .
+:DistanceUnit rdf:type sdml:Enumeration .
 #+END_SRC
 
+#+NAME: lst:sdml-ex-enum
+#+CAPTION: SDML Enum With Variants
 #+BEGIN_SRC sdml
 enum DistanceUnit is
   Meter = 1
@@ -424,8 +651,73 @@ enum DistanceUnit is
 end
 #+END_SRC
 
+#+NAME: lst:sdml-ex-enum-owl
+#+CAPTION: SDML Enum With Variants, Corresponding OWL
+#+BEGIN_SRC ttl
+:DistanceUnit rdf:type sdml:Enumeration
+    :hasVariant [
+        rdfs:label "Meter" ;
+        :hasValue 1 
+    ] ,
+    [
+        rdfs:label "Foot" ;
+        :hasValue 2
+    ] .
+#+END_SRC
+
+*** Events
+
+#+NAME: lst:sdml-ex-empty-event
+#+CAPTION: SDML Empty Event
+#+BEGIN_SRC sdml
+event PersonNameChanged source Person
+#+END_SRC
+
+#+NAME: lst:sdml-ex-empty-event-owl
+#+CAPTION: SDML Empty Event, Corresponding OWL
+#+BEGIN_SRC ttl
+:PersonNameChanged rdf:type sdml:Event ;
+    sdml:eventSource :Person .
+#+END_SRC
+
+#+NAME: lst:sdml-ex-event
+#+CAPTION: SDML Event
+#+BEGIN_SRC sdml
+event PersonNameChanged source Person is
+  ;; identifier members will be copied from Person 
+  fromValue -> Name
+  toValue -> Name
+end
+#+END_SRC
+
+#+NAME: lst:sdml-ex-event-owl
+#+CAPTION: SDML Event, Corresponding OWL
+#+BEGIN_SRC ttl
+:PersonNameChanged rdf:type sdml:Event ;
+    sdml:eventSource :Person ;
+    :hasMember [
+        rdfs:Label "personId" ;
+        :targetClassifier :Person
+    ] ,
+    [
+        rdfs:Label "fromValue" ;
+        :targetClassifier :Name
+    ] ,
+    [
+        rdfs:Label "toValue" ;
+        :targetClassifier :Name
+    ] .
+#+END_SRC
+
+
 * Transforms
 
-* Appendix: References
+* Appendix: Tables of Other Content
+
+#+TOC: figures
+
+#+TOC: tables
+
+#+TOC: listings
 
 [fn:1] [[https://en.wikipedia.org/wiki/Domain-driven_design][Domain-Driven Design]], Wikipedia

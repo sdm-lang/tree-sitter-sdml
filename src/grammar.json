@@ -328,6 +328,30 @@
         }
       ]
     },
+    "_type_restriction": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 1,
+            "content": {
+              "type": "STRING",
+              "value": "<-"
+            }
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "base",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier_reference"
+          }
+        }
+      ]
+    },
     "_type_expression_to": {
       "type": "SEQ",
       "members": [
@@ -390,30 +414,6 @@
         {
           "type": "SYMBOL",
           "name": "_type_expression_to"
-        }
-      ]
-    },
-    "_type_restriction": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 1,
-            "content": {
-              "type": "STRING",
-              "value": "<-"
-            }
-          }
-        },
-        {
-          "type": "FIELD",
-          "name": "base",
-          "content": {
-            "type": "SYMBOL",
-            "name": "identifier_reference"
-          }
         }
       ]
     },
@@ -511,11 +511,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "enum_def"
+          "name": "event_def"
         },
         {
           "type": "SYMBOL",
-          "name": "property_def"
+          "name": "enum_def"
         },
         {
           "type": "SYMBOL",
@@ -693,10 +693,6 @@
             "members": [
               {
                 "type": "SYMBOL",
-                "name": "identity_member"
-              },
-              {
-                "type": "SYMBOL",
                 "name": "member_by_value"
               }
             ]
@@ -712,6 +708,65 @@
               "value": "end"
             }
           }
+        }
+      ]
+    },
+    "event_def": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "event"
+            }
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "source"
+            }
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "source",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier_reference"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "body",
+              "content": {
+                "type": "SYMBOL",
+                "name": "structure_body"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -819,52 +874,12 @@
           }
         },
         {
-          "type": "SYMBOL",
-          "name": "unsigned"
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "FIELD",
-              "name": "body",
-              "content": {
-                "type": "SYMBOL",
-                "name": "annotation_only_body"
-              }
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        }
-      ]
-    },
-    "property_def": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "property"
-            }
-          }
-        },
-        {
           "type": "FIELD",
-          "name": "name",
+          "name": "value",
           "content": {
             "type": "SYMBOL",
-            "name": "identifier"
+            "name": "unsigned"
           }
-        },
-        {
-          "type": "SYMBOL",
-          "name": "_type_expression"
         },
         {
           "type": "CHOICE",

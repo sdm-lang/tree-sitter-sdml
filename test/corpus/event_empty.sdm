@@ -1,0 +1,19 @@
+============
+Event, Empty
+============
+
+module campaign is
+
+  event NameChanged source Campaign
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+          (event_def
+            name: (identifier)
+            source: (identifier_reference
+               (identifier)))))

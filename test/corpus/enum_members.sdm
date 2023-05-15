@@ -1,0 +1,27 @@
+============
+Enum, Empty
+============
+
+module campaign is
+
+  enum NameKind is
+    Internal = 0
+    External = 1
+  end
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+          (enum_def
+            name: (identifier)
+            body: (enum_body
+                    (enum_variant
+                      name: (identifier)
+                      value: (unsigned))
+                    (enum_variant
+                      name: (identifier)
+                      value: (unsigned))))))

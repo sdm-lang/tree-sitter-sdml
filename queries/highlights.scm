@@ -18,9 +18,10 @@
  "entity"
  "structure"
  "entity"
+ "event"
+ "source"
  "structure"
  "enum"
- "property"
  "datatype"
  "end"
  ] @keyword
@@ -57,10 +58,9 @@ name: (identifier) @type.definition)
 (enum_def
  name: (identifier) @type.definition)
 
-(property_def
+(event_def
  name: (identifier) @type.definition
- "->" @operator
- target: (identifier_reference) @type)
+ source: (identifier_reference) @type)
 
 (data_type_def
  name: (identifier) @type.definition

@@ -31,11 +31,11 @@
 (enum_def
  name: (identifier) @name) @definition.class
 
-(property_def
+(event_def
  name: (identifier) @name) @definition.class
 
-(property_def
- target: (identifier_reference) @name) @reference.class
+(event_def
+ source: (identifier_reference) @name) @reference.class
 
 (data_type_def
  name: (identifier) @name) @definition.class

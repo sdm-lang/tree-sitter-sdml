@@ -134,6 +134,11 @@ module.exports = grammar({
             field('target', $.identifier_reference)
         ),
 
+        _type_restriction: $ => seq(
+            operator('<-'),
+            field('base', $.identifier_reference)
+        ),
+
         _type_expression_to: $ => seq(
             operator('->'),
             optional(
@@ -147,11 +152,6 @@ module.exports = grammar({
                 field('sourceCardinality', $.cardinality_expression)
             ),
             $._type_expression_to
-        ),
-
-        _type_restriction: $ => seq(
-            operator('<-'),
-            field('base', $.identifier_reference)
         ),
 
         _assignment_expression: $ => seq(
@@ -178,8 +178,8 @@ module.exports = grammar({
         _type_def: $ => choice(
             $.entity_def,
             $.structure_def,
+            $.event_def,
             $.enum_def,
-            $.property_def,
             $.data_type_def
         ),
 
@@ -213,11 +213,18 @@ module.exports = grammar({
             repeat($.annotation),
             repeat(
                 choice(
-                    $.identity_member,
-                    $.member_by_value
+                   $.member_by_value
                 )
             ),
             keyword('end')
+        ),
+
+        event_def: $ => seq(
+            keyword('event'),
+            field('name', $.identifier),
+            keyword('source'),
+            field('source', $.identifier_reference),
+            optional(field('body', $.structure_body))
         ),
 
         enum_def: $ => seq(
@@ -236,14 +243,7 @@ module.exports = grammar({
         enum_variant: $ => seq(
             field('name', $.identifier),
             operator('='),
-            $.unsigned,
-            optional(field('body', $.annotation_only_body))
-        ),
-
-        property_def: $ => seq(
-            keyword('property'),
-            field('name', $.identifier),
-            $._type_expression,
+            field('value', $.unsigned),
             optional(field('body', $.annotation_only_body))
         ),
 

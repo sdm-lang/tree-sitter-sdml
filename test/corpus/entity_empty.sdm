@@ -1,0 +1,17 @@
+=============
+Entity, Empty
+=============
+
+module Campaign is
+
+  entity Campaign
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+          (entity_def
+            name: (identifier))))

@@ -30,7 +30,7 @@
         "named": true
       },
       {
-        "type": "property_def",
+        "type": "event_def",
         "named": true
       },
       {
@@ -268,17 +268,53 @@
             "named": true
           }
         ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "unsigned",
+            "named": true
+          }
+        ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "unsigned",
-          "named": true
-        }
-      ]
+    }
+  },
+  {
+    "type": "event_def",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "structure_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "source": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -581,42 +617,6 @@
     }
   },
   {
-    "type": "property_def",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "annotation_only_body",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "target": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier_reference",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "qualified_identifier",
     "named": true,
     "fields": {
@@ -671,10 +671,6 @@
       "types": [
         {
           "type": "annotation",
-          "named": true
-        },
-        {
-          "type": "identity_member",
           "named": true
         },
         {
@@ -872,6 +868,10 @@
     "named": false
   },
   {
+    "type": "event",
+    "named": false
+  },
+  {
     "type": "false",
     "named": false
   },
@@ -912,15 +912,15 @@
     "named": false
   },
   {
-    "type": "property",
-    "named": false
-  },
-  {
     "type": "quoted_string",
     "named": true
   },
   {
     "type": "ref",
+    "named": false
+  },
+  {
+    "type": "source",
     "named": false
   },
   {

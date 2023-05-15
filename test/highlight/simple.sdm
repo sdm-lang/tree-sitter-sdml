@@ -27,7 +27,7 @@ module Campaign is
   ;                           ^ number
   ;                            ^ punctuation.bracket
 
-  datatype name <- xsd:string is
+  datatype Name <- xsd:string is
   ; <- keyword
   ;        ^ type.definition
   ;             ^ operator
@@ -49,7 +49,7 @@ module Campaign is
   end
   ; <- keyword
   
-  property CampaignId -> xsd:string is
+  datatype CampaignId <- xsd:string is
   ; <- keyword
   ;        ^ type.definition
   ;                   ^ operator
@@ -75,39 +75,25 @@ module Campaign is
 
   end
   ; <- keyword
-
-  property Name -> name
-  ; <- keyword
-  ;        ^ type.definition
-  ;             ^ operator
-  ;                ^ type  
-
-  property Key -> xsd:string
-  ; <- keyword
-  ;        ^ type.definition
-  ;            ^ operator
-  ;               ^ type  
-
-  property Value -> xsd:string
-  ; <- keyword
-  ;        ^ type.definition
-  ;              ^ operator
-  ;                 ^ type  
-
+ 
   structure Tag is
   ; <- keyword
   ;         ^ type.definition
   ;             ^ keyword
   
-    key -> Key
+    key -> xsd:NMTOKEN
     ; <- variable.field
     ;   ^ operator
     ;      ^ type
     
-    value -> Value
+    value -> {0..} rdfs:langString
     ; <- variable.field
     ;     ^ operator
-    ;        ^ type
+    ;        ^ punctuation.bracket
+    ;         ^ number
+    ;          ^ operator
+    ;            ^ punctuation.bracket
+    ;              ^ type
     
   end
   ; <- keyword

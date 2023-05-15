@@ -3,6 +3,20 @@
 #+EMAIL: johnstonskj@gmail.com
 #+LANGUAGE: en
 #+STARTUP: overview hidestars inlineimages entitiespretty
+#+INFOJS_OPT: view:t toc:t ltoc:t mouse:underline buttons:0 path:http://thomasf.github.io/solarized-css/org-info.min.js
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://thomasf.github.io/solarized-css/solarized-light.min.css" />
+#+HTML_HEAD: <style>img { max-width: 800px; height: auto; }</style>
+
+# See http://thomasf.github.io/solarized-css/
+
+The Simple Domain Modeling Language is a small data-oriented language for constructing, documenting, and reasoning about
+a conceptual domain model. The language uses some ideas from UML which is often used in the construction of such models
+today. However, the goal is to keep the language as small as possible, taking away some options where they don't make
+sense or where their use may distract from the major purpose of the model. The model also takes some of the language
+from Domain-Driven Design[fn:1], namely the separation of entities (/an object defined not by its attributes, but its
+identity/) from value objects (/an immutable object that contains attributes but has no conceptual identity/), simply
+termed structures in SDML. This model does not include the following as first-class concepts: /aggregates/, /repositories/,
+/factories/, or /services/.
 
 * Introduction
 
@@ -10,6 +24,7 @@
 #+CAPTION: Model Overview
 #+BEGIN_SRC dot :file sdml-overview.png :exports results
 digraph G {
+  bgcolor="transparent";
   rankdir="LR";
   node [fontsize=10];
   edge [fontsize=9; fontcolor=darkgrey];
@@ -37,6 +52,7 @@ digraph G {
 #+CAPTION: Model Transformations
 #+BEGIN_SRC dot :file sdml-transforms.png :exports results
 digraph G {
+  bgcolor="transparent";
   rankdir="LR";
   node [fontsize=10];
   edge [fontsize=9; fontcolor=darkgrey];
@@ -62,6 +78,67 @@ digraph G {
 
 * RDF Abstract Model
 
+#+NAME: fig:owl-ontology
+#+CAPTION: OWL Ontology
+#+ATTR_HTML: :width 800px
+#+ATTR_LATEX: :width 640px
+#+BEGIN_SRC dot :file owl-ontology.png :exports results
+digraph G {
+  bgcolor="transparent";
+  rankdir="LR";
+  node [fontsize=10];
+  edge [fontsize=9; fontcolor=darkgrey];
+
+  Module [shape=ellipse;penwidth=2.0;color=blue;labelcolor=blue];
+  Cardinality [shape=ellipse];
+  Classifier [shape=ellipse];
+  Entity [shape=ellipse];
+  Enumeration [shape=ellipse];
+  Event [shape=ellipse];
+  Group [shape=ellipse];
+  Member [shape=ellipse];
+  Structure [shape=ellipse];
+  Variant [shape=ellipse];
+  Datatype [shape=ellipse;label="rdfs:Datatype"];
+
+  identifier [shape=rectangle;style=filled;color=lightgrey;label="rdf:langString"];
+
+  Module -> Classifier [label="hasClassifiers"];
+  Module -> identifier [label="rdfs:label"];
+
+  Classifier -> identifier [label="rdfs:label"];
+
+  Structure -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
+  Entity -> Structure [label="rdfs:subClassOf";arrowhead=empty];
+  Enumeration -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
+  Event -> Structure [label="rdfs:subClassOf";arrowhead=empty];
+  Datatype -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
+
+  Structure -> Group [label="hasGroup"];
+  Structure -> Member [label="hasMember"];
+
+  Group -> Member [label="hasMember"];
+
+  Enumeration -> Variant [label="hasVariant"];
+
+  Member -> identifier [label="rdfs:label"];
+  Member -> Cardinality [label="sourceCardinality"];
+  Member -> Classifier [label="targetClassifier";arrowhead=open];
+  Member -> Cardinality [label="targetCardinality"];
+
+  integer [shape=rectangle;style=filled;color=lightgrey;label="xsd:nonNegativeInteger";arrowhead=open];
+  
+  Cardinality -> integer [label="maxOccurs"];
+  Cardinality -> integer [label="minOccurs"];
+  Variant -> integer [label="hasValue"];
+}
+#+END_SRC
+
+#+RESULTS: fig:owl-ontology
+[[file:owl-ontology.png]]
+
+Empty arrow heads = subClassOf, Filled arrow heads = aggregate, open arrow heads = association
+
 * Surface Syntax
 
 ** Whitespace and Comments
@@ -70,7 +147,36 @@ digraph G {
 ; comments start with ';' and go to end of line
 #+END_SRC
 
-** Values
+** Identifiers and Values
+
+An identifier is a string of characters corresponding to the [[https://unicode.org/reports/tr44/#GC_Values_Table][Unicode General Category]] *Lu* (an uppercase letter) or *Ll* (a
+lowercase letter). No additional separator characters such as '_', '-', '$', '@', '#', etc. are permitted.
+
+Naming Conventions:
+
+#+BEGIN_SRC sdml
+UpperCamel
+lowerCamel
+SHOUTY
+#+END_SRC
+
+- *Module Name* :: lower Camel Case; i.e. =xsd=, =skos=, =bank=, or =customer=. In general this should be a broad noun.
+- *Structure/Entity/Event/Enum Name* :: Upper Camel Case; i.e. =Customer=, =Account=, =Address=, or =Name=. In general
+  these are nouns related to, and often narrower than, the module name.
+- *Data Type Name* :: Upper Camel Case; i.e. =ShortString=, =AccountNumber=, or =SocialSecurityNumber=. In general these are
+  broad nouns, with either a property noun suffix as in =AccountNumber= or a qualifier noun prefix as in =ShortString=. Do
+  not create capitalized acronym (SSN) or abbreviation (ID) forms unless these are universally understood within the
+  domain.
+- *Type Member Name* :: lower Camel Case; i.e. =street=, =accountName=, or =currentValue=. As in data type definitions these are
+  broad nouns, with either a property noun suffix as in =accountNumber= or a qualifier noun prefix as in =shortName=. These
+  are commonly simply the lower Camel Case version of the corresponding type name.
+- *Enum Variant Name* :: Upper Camel Case is the preferred, although SHOUTY CASE is acceptable.
+
+#+BEGIN_SRC sdml
+module:Member
+#+END_SRC
+
+Simple Values:
 
 #+BEGIN_SRC sdml
 "a string"
@@ -82,111 +188,19 @@ true false     ;; booleans
 123.0e-10      ;; double
 #+END_SRC
 
+Value Lists:
+
 #+BEGIN_SRC sdml
 [ "yes" "no" "maybe" ]
 #+END_SRC
+
+Value Constructors:
 
 #+BEGIN_SRC sdml
 xsd:unsigned(1)
 #+END_SRC
 
-** Annotations
-
-#+BEGIN_SRC sdml
-@xml:base <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org>
-#+END_SRC
-
-#+BEGIN_SRC sdml
-@skos:prefLabel []
-#+END_SRC
-
-** Module Declaration and Imports
-
-#+BEGIN_SRC sdml
-module Example is end
-#+END_SRC
-
-#+BEGIN_SRC sdml
-module Example is
-  import xsd
-end
-#+END_SRC
-
-#+BEGIN_SRC sdml
-module Example is
-  import xsd:integer
-end
-#+END_SRC
-
-#+BEGIN_SRC sdml
-module Example is
-  import xsd
-  import [ dc:title dc:author ]
-end
-#+END_SRC
-
-** Structured Types
-
-#+BEGIN_SRC sdml
-structure Length
-#+END_SRC
-
-#+BEGIN_SRC sdml
-structure Length is
-  value -> Decimal
-  unit -> DistanceUnit
-end
-#+END_SRC
-
-#+BEGIN_SRC sdml
-structure Length is
-  @skos:prefLabel "Length"@en
-
-  value -> Decimal
-  unit -> DistanceUnit
-end
-#+END_SRC
-
-#+BEGIN_SRC sdml
-structure Person is
-  identifier id -> PersonId
-end
-#+END_SRC
-
-#+BEGIN_SRC sdml
-entity Person
-#+END_SRC
-
-#+BEGIN_SRC sdml
-entity Person is
-  ref contact {0..} -> {0..} Person is
-    @dc:description "Emergency contact person"
-  end
-end
-#+END_SRC
-
-#+BEGIN_SRC sdml
-enum DistanceUnit
-#+END_SRC
-
-#+BEGIN_SRC sdml
-enum DistanceUnit is
-  Meter = 1
-  Foot = 2
-end
-#+END_SRC
-
-** Property and Data Types
-
-#+BEGIN_SRC sdml
-property Name -> xsd:string
-#+END_SRC
-
-#+BEGIN_SRC sdml
-property SSN -> xsd:string is
-  @rdfs:isDefinedBy = <https://www.ssa.gov/number-card>
-end
-#+END_SRC
+*** Data Types
 
 #+BEGIN_SRC sdml
 datatype name <- xsd:string
@@ -199,7 +213,219 @@ datatype name <- xsd:string is
 end
 #+END_SRC
 
+From [[https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide][OWL 2 Web Ontology Language Quick Reference Guide (Second Edition)]]:
+
+| Facet                                                               | Value                                      | Applicable Datatypes       | Explanation                                                                                |
+|---------------------------------------------------------------------+--------------------------------------------+----------------------------+--------------------------------------------------------------------------------------------|
+| =xsd:minInclusive= =xsd:maxInclusive= =xsd:minExclusive= =xsd:maxExclusive= | literal in the corresponding datatype      | Numbers, Time Instants     | Restricts the value-space to greater than (equal to) or lesser than (equal to) a value     |
+| =xsd:minLength= =xsd:maxLength= =xsd:length=                              | Non-negative integer                       | Strings, Binary Data, IRIs | Restricts the value-space based on the lengths of the literals                             |
+| =xsd:pattern=                                                         | =xsd:string= literal as a regular expression | Strings, IRIs              | Restricts the value space to literals that match the regular expression                    |
+| =rdf:langRange=                                                       | =xsd:string= literal as a regular expression | =rdf:PlainLiteral=           | Restricts the value space to literals with language tags that match the regular expression |
+
+** Module Declaration and Imports
+
+An empty module, specifically a module with an empty /body/ which is the content between the keywords *=is=* and *=end=*. 
+
+#+BEGIN_SRC sdml
+module example is end
+#+END_SRC
+
+This module contains a single import statement bringing in the module named =xsd= making it's members available in the
+qualified form =xsd:*=.
+
+#+BEGIN_SRC sdml
+module example is
+  import xsd
+end
+#+END_SRC
+
+#+BEGIN_SRC sdml
+module example is
+  import xsd:integer
+end
+#+END_SRC
+
+#+BEGIN_SRC sdml
+module example is
+  import xsd
+  import [ dc:title dc:author ]
+end
+#+END_SRC
+
+** Annotations
+
+#+BEGIN_SRC sdml
+@xml:base <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org>
+#+END_SRC
+
+#+BEGIN_SRC sdml
+@skos:prefLabel [
+  "example"@en
+  "exemple"@fr
+  "例子"@zh-CH
+]
+#+END_SRC
+
+#+BEGIN_SRC sdml
+module example is
+
+  import xml skos
+
+  @xml:base <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org>
+
+  @skos:prefLabel "Example Module"@en
+
+end
+#+END_SRC
+
+From [[https://www.w3.org/TR/owl-ref/#AnnotationProperty-def][OWL Web Ontology Language Reference]], Appendix E: Rules of Thumb for OWL DL ontologies:
+
+#+BEGIN_QUOTE
+If a property =a= is used where an annotation property is expected then it should either be one of the built in
+annotation properties (=owl:versionInfo=, =rdfs:label=, =rdfs:comment=, =rdfs:seeAlso=, and =rdfs:isDefinedBy=) or there
+should be a triple:
+
+=a rdf:type owl:AnnotationProperty=
+#+END_QUOTE
+
+** Structured Types
+
+#+BEGIN_SRC sdml
+structure Length
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Length a owl:Class ;
+    rdfs:subClassOf sdml:Structure .
+#+END_SRC
+
+#+BEGIN_SRC sdml
+structure Length is
+  @skos:prefLabel "Length"@en
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Length rdf:type owl:Class ;
+    skos:prefLabel "Length"@en .
+#+END_SRC
+
+#+BEGIN_SRC sdml
+structure Length is
+  @skos:prefLabel "Length"@en
+
+  value -> Decimal
+  unit -> DistanceUnit
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+[
+    rdf:type owl:DatatypeProperty ;
+    rdfs:label "value" ;
+    rdfs:domain :Length ;
+    rdfs:range :Decimal ;
+]
+#+END_SRC
+
+#+BEGIN_SRC ttl
+[
+    rdf:type owl:ObjectProperty ;
+    rdfs:label "unit" ;
+    rdfs:domain :Length ;
+    rdfs:range :DistanceUnit ;
+]
+#+END_SRC
+
+
+*** Entities
+
+#+BEGIN_SRC sdml
+entity Person
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Person a owl:Class ;
+    rdfs:subClassOf sdml:Entity .
+#+END_SRC
+
+#+BEGIN_SRC sdml
+entity Person is
+  identifier id -> PersonId
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+[
+    rdf:type owl:ObjectProperty ;
+    rdf:type owl:FunctionalProperty ;
+    rdfs:label "id" ;
+    rdfs:domain :Person ;
+    rdfs:range :PersonId ;
+    owl:maxCardinality 1;
+    owl:minCardinality 1;
+]
+#+END_SRC
+
+#+BEGIN_SRC sdml
+entity Person is
+  ref contact {0..} -> {0..} Person is
+    @dc:description "Emergency contact person"
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+[
+    rdf:type owl:ObjectProperty ;
+    rdfs:label "id" ;
+    rdfs:domain :Person ;
+    rdfs:range :PersonId ;
+    owl:minCardinality 0;
+]
+#+END_SRC
+
+
+*** Events
+
+#+BEGIN_SRC sdml
+event PersonNameChanged source Person
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:PersonNameChanged a owl:Class ;
+    rdfs:subClassOf sdml:Event ;
+    sdml:eventSource :Person .
+#+END_SRC
+
+#+BEGIN_SRC sdml
+event PersonNameChanged source Person is
+  ;; identifier members will be copied from Person 
+  from_value -> Name
+  to_value -> Name
+end
+#+END_SRC
+
+*** Enums
+
+#+BEGIN_SRC sdml
+enum DistanceUnit
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:DistanceUnit a owl:Class ;
+    rdfs:subClassOf sdml:Enumeration .
+#+END_SRC
+
+#+BEGIN_SRC sdml
+enum DistanceUnit is
+  Meter = 1
+  Foot = 2
+end
+#+END_SRC
+
 * Transforms
 
 * Appendix: References
 
+[fn:1] [[https://en.wikipedia.org/wiki/Domain-driven_design][Domain-Driven Design]], Wikipedia

@@ -1,0 +1,17 @@
+================
+Structure, Empty
+================
+
+module Campaign is
+
+  structure Duration
+  
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+          (structure_def
+            name: (identifier))))

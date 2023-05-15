@@ -77,11 +77,11 @@ ALL_BINDINGS := $(BINDING_NODE) $(BINDING_RUST) $(BINDING_WASM)
 # Start Here
 # ----------------------------------------------------------------------------
 
-all: grammar parser_dylib bindings
+build: $(SRC_DIR)/parser.c $(PARSER) $(ALL_BINDINGS)
 
-parser_dylib: $(PARSER)
+test: test_grammar test_rust
 
-bindings: $(ALL_BINDINGS)
+install: install_parser
 
 .PHONY: clean
 clean:
@@ -89,22 +89,14 @@ clean:
 	rm -rf $(RUST_BUILD_DIR)
 	rm $(BINDING_WASM)
 
+publish: publish_rust
+
 # ----------------------------------------------------------------------------
 # Build: Grammar
 # ----------------------------------------------------------------------------
 
 # The default is  $(SHORT_NAME)
 FILE_EXT := sdm
-
-grammar: grammar_test
-
-grammar_test: grammar_test_clean $(SRC_DIR)/grammar.json
-	$(TS_CLI) $(TS_TEST) $(TS_TEST_FLAGS)
-
-.PHONY: clean_tests
-grammar_test_clean:
-	rm -f $(TST_DIR)/corpus/*.$(FILE_EXT)~ $(TST_DIR)/corpus/.*.\~undo-tree\~ && \
-    rm -f $(TST_DIR)/highlight/*.$(FILE_EXT)~ $(TST_DIR)/highlight/.*.\~undo-tree\~
 
 $(SRC_DIR)/grammar.json: $(ROOT)/grammar.js
 	$(TS_CLI) $(TS_GENERATE)
@@ -114,6 +106,14 @@ $(SRC_DIR)/node-types.json: $(ROOT)/grammar.js
 
 $(SRC_DIR)/parser.c: $(ROOT)/grammar.js
 	$(TS_CLI) $(TS_GENERATE)
+
+test_grammar: test_grammar_clean $(SRC_DIR)/grammar.json
+	$(TS_CLI) $(TS_TEST) $(TS_TEST_FLAGS)
+
+.PHONY: clean_tests
+test_grammar_clear:
+	rm -f $(TST_DIR)/corpus/*.$(FILE_EXT)~ $(TST_DIR)/corpus/.*.\~undo-tree\~ && \
+    rm -f $(TST_DIR)/highlight/*.$(FILE_EXT)~ $(TST_DIR)/highlight/.*.\~undo-tree\~
 
 # ----------------------------------------------------------------------------
 # Build: Library
@@ -133,6 +133,8 @@ $(PARSER): $(OBJ_FILES)
 $(BUILD_DIR)/%.o : $(SRC_DIR)/%.c
 	$(CC) -c $(CFLAGS) $< -o $@
 
+install_parser: $(INSTALL_LIB_DIR)/$(PARSER) $(INSTALL_INCLUDE_DIR)/tree_sitter/parser.h
+
 $(INSTALL_LIB_DIR)/$(PARSER): $(PARSER)
 	install -d '$(INSTALL_LIB_DIR)'
 	install -m755 '$(PARSER)' '$(INSTALL_LIB_DIR)'/'$(PARSER)'
@@ -145,14 +147,23 @@ $(INSTALL_INCLUDE_DIR)/tree_sitter/parser.h: $(SRC_DIR)/tree_sitter/parser.h
 # Build: Bindings
 # ----------------------------------------------------------------------------
 
-$(BINDING_RUST): $(RUST_SRC_DIR)/build.rs
+$(BINDING_RUST): $(PARSER) $(RUST_SRC_DIR)/build.rs
 	cargo build $(CARGO_FLAGS)
 
-$(BINDING_NODE): $(ROOT)/binding.gyp $(NODE_SRC_DIR)/index.js $(NODE_SRC_DIR)/binding.cc $(SRC_DIR)/node-types.json
+test_rust: $(BINDING_RUST)
+	cargo test
+
+publish_rust: $(BINDING_RUST)
+    cargo publish --allow-dirty
+
+$(BINDING_NODE): $(PARSER) $(ROOT)/binding.gyp $(NODE_SRC_DIR)/index.js $(NODE_SRC_DIR)/binding.cc
 	node-gyp configure && \
 	node-gyp build
 
-$(BINDING_WASM): $(SRC_DIR)/grammar.json
+publish_npm: $(BINDING_NODE)
+	npm publish
+
+$(BINDING_WASM): $(PARSER) $(SRC_DIR)/grammar.json
 	$(TS_CLI) build-wasm
 
 # ----------------------------------------------------------------------------

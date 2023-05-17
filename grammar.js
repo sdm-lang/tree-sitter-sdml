@@ -126,7 +126,8 @@ module.exports = grammar({
         annotation: $ => seq(
             token('@'),
             field('name', $.identifier_reference),
-            $._assignment_expression
+           operator('='),
+            field('value', $.value)
         ),
 
         _type_expression: $ => seq(
@@ -152,11 +153,6 @@ module.exports = grammar({
                 field('sourceCardinality', $.cardinality_expression)
             ),
             $._type_expression_to
-        ),
-
-        _assignment_expression: $ => seq(
-            operator('='),
-            field('value', $.value)
         ),
 
         cardinality_expression: $ => seq(
@@ -192,7 +188,7 @@ module.exports = grammar({
         entity_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
-            optional($.identity_member),
+            optional(field('identity', $.identity_member)),
             repeat(
                 choice(
                     $.member_by_value,
@@ -279,7 +275,7 @@ module.exports = grammar({
         ),
 
         // -----------------------------------------------------------------------
-        // Values
+        // (Annotation) Values
         // -----------------------------------------------------------------------
 
         value: $ => choice(
@@ -319,7 +315,7 @@ module.exports = grammar({
         string: $ => seq(
             $.quoted_string,
             optional(
-                $.language_tag
+                field('language', $.language_tag)
             )
         ),
 

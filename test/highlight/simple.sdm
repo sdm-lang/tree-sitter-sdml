@@ -22,12 +22,12 @@ module Campaign is
   ; <- property
   ;^ property
   ;             ^ operator
-  ;               ^ function
+  ;               ^ function.call
   ;                          ^ punctuation.bracket
   ;                           ^ number
   ;                            ^ punctuation.bracket
 
-  datatype Name <- xsd:string is
+  datatype name <- xsd:string is
   ; <- keyword
   ;        ^ type.definition
   ;             ^ operator

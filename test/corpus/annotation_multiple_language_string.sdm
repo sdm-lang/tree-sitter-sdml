@@ -22,7 +22,7 @@ end
                 (list_of_values
                   (string
                     (quoted_string)
-                    (language_tag))
+                    language: (language_tag))
                   (string
                     (quoted_string)
-                    (language_tag)))))))
+                    language: (language_tag)))))))

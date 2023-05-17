@@ -150,17 +150,24 @@
   {
     "type": "entity_body",
     "named": true,
-    "fields": {},
+    "fields": {
+      "identity": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identity_member",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
       "types": [
         {
           "type": "annotation",
-          "named": true
-        },
-        {
-          "type": "identity_member",
           "named": true
         },
         {
@@ -645,15 +652,22 @@
   {
     "type": "string",
     "named": true,
-    "fields": {},
+    "fields": {
+      "language": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "language_tag",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
-        {
-          "type": "language_tag",
-          "named": true
-        },
         {
           "type": "quoted_string",
           "named": true

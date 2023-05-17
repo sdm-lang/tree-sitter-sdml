@@ -17,7 +17,6 @@
  "ref"
  "entity"
  "structure"
- "entity"
  "event"
  "source"
  "structure"
@@ -109,7 +108,7 @@ name: (identifier) @type.definition)
 (boolean) @constant.builtin
 
 (value_constructor
- name: (identifier_reference)) @function
+ name: (identifier_reference)) @function.call
 
 ;; ---------------------------------------------------------------------------
 ;; Punctuation

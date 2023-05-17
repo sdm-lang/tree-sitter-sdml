@@ -21,4 +21,4 @@ end
                  value: (value
                           (string
                             (quoted_string)
-                            (language_tag))))))
+                            language: (language_tag))))))

@@ -2,44 +2,39 @@ module Campaign is
 
   import [xsd skos xml:base dc]
 
+  @xml:base = <https://advertising.amazon.com/api-model>
 
-  @xml:base = <https::advertising.amazon.com/api-model>
-  
   @skos:version = xsd:decimal(2)
 
-  datatype name <- xsd:string is
+  datatype Name <- xsd:string is
     @xsd:minLength = 5
     @xsd:maxLength = 25
   end
 
-  property CampaignId -> xsd:string is
+  datatype CampaignId <- xsd:string is
     @skos:prefLabel = [
       "Campaign Identifier"@en
-      "Identifiant de campagne"@fr
+      "Identified de campagne"@fr
     ]
   end
 
-  property Name -> name
-
-  property Key -> xsd:string
-
-  property Value -> xsd:string
-
   structure Tag is
-    key -> Key
-    value -> Value
+    key -> xsd:NMTOKEN
+    value -> {0..} rdfs:langString
   end
 
-  entity Campaign is
+  entity campaign is
     identity campaignId -> CampaignId
 
     name -> Name is
-      @skos:definition = ""
+      @skos:definition = ""@en
     end
+
+    tag -> {0..} Tag
 
     ref target {0..1} -> {1..} Target
   end
 
   entity Target
-  
+
 end

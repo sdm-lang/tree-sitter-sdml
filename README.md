@@ -1,8 +1,9 @@
 # tree-sitter-sdml
 
-A [tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for the [Simple Domain Modeling Language](docs/sdml.org) (SDML).
+A [tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for the Simple Domain Modeling Language (SDML).
+For more information on the language, see the [documentation](docs/sdml.org).
 
-Example:
+# Example
 
 ``` sdml
 module Campaign is
@@ -47,11 +48,11 @@ module Campaign is
 end
 ```
 
-Published Bindings:
+# Published Bindings
 
 * [npm.js](https://www.npmjs.com/package/tree-sitter-sdml)
 * [crates.io](https://crates.io/crates/tree-sitter-sdml)
 
-Editor Support:
+# Editor Support
 
 * Emacs [sdml-mode](https://github.com/johnstonskj/emacs-sdml-mode)

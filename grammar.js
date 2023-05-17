@@ -254,6 +254,7 @@ module.exports = grammar({
         // Members
         // -----------------------------------------------------------------------
 
+        // Default cardinality: !{1..1} -> !{1..1}
         identity_member: $ => seq(
             keyword('identity'),
             field('name', $.identifier),
@@ -261,12 +262,14 @@ module.exports = grammar({
             optional(field('body', $.annotation_only_body))
         ),
 
+        // Default cardinality: !{1..1} -> {1..}
         member_by_value: $ => seq(
             field('name', $.identifier),
             $._type_expression_to,
             optional(field('body', $.annotation_only_body))
         ),
 
+        // Default cardinality: {0..} -> {0..}
         member_by_reference: $ => seq(
             keyword('ref'),
             field('name', $.identifier),

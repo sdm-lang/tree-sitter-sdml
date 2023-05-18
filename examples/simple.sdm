@@ -1,4 +1,4 @@
-module Campaign is
+module campaign is
 
   import [xsd skos xml:base dc]
 
@@ -23,16 +23,18 @@ module Campaign is
     value -> {0..} rdfs:langStrings
   end
 
-  entity campaign is
+  entity Campaign is
     identity campaignId -> CampaignId
 
     name -> Name is
       @skos:definition = ""
     end
 
+    group
     tag -> {0..} Tag
+  end
 
-    ref target {0..1} -> {0..} Target
+  ref target {0..1} -> {0..} Target
   end
 
   entity Target

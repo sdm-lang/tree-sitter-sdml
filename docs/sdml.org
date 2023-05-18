@@ -11,6 +11,7 @@
 #+OPTIONS: toc:3
 
 * Introduction
+
 The Simple Domain Modeling Language is a small data-oriented language for constructing, documenting, and reasoning about
 a conceptual domain model. The language uses some ideas from [[http://www.uml.org/][UML]] which is often used in the construction of such models
 today. However, the goal is to keep the language as small as possible, taking away some options where they don't make
@@ -108,12 +109,7 @@ digraph G {
   Variant [shape=ellipse];
   Datatype [shape=ellipse;label="rdfs:Datatype"];
 
-  identifier [shape=rectangle;style=filled;color=lightgrey;label="rdf:langString"];
-
   Module -> Classifier [label="hasClassifiers";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
-  Module -> identifier [label="rdfs:label";dir=both;arrowtail=diamond;arrowhead=open;headlabel="+"];
-
-  Classifier -> identifier [label="rdfs:label";dir=both;arrowtail=diamond;arrowhead=open;headlabel="+"];
 
   Structure -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
   Entity -> Structure [label="rdfs:subClassOf";arrowhead=empty];
@@ -128,12 +124,10 @@ digraph G {
   Structure -> Group [label="hasGroup";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
   Structure -> Member [label="hasMember";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
 
-  Group -> identifier [label="rdfs:label";dir=both;arrowtail=diamond;arrowhead=open;headlabel="+"];
   Group -> Member [label="hasMember";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
 
   Enumeration -> Variant [label="hasVariant";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
 
-  Member -> identifier [label="rdfs:label";dir=both;arrowtail=diamond;arrowhead=open;headlabel="+"];
   Member -> Cardinality [label="sourceCardinality";dir=both;arrowtail=diamond;arrowhead=open;headlabel="?"];
   Member -> Classifier [label="targetClassifier";dir=both;arrowtail=odiamond;arrowhead=open];
   Member -> Cardinality [label="targetCardinality";dir=both;arrowtail=diamond;arrowhead=open;headlabel="?"];
@@ -143,7 +137,6 @@ digraph G {
   Cardinality -> integer [label="owl:maxCardinality";dir=both;arrowtail=diamond;arrowhead=open];
   Cardinality -> integer [label="owl:minCardinality";dir=both;arrowtail=diamond;arrowhead=open];
 
-  Variant -> identifier [label="rdfs:label";dir=both;arrowtail=diamond;arrowhead=open;headlabel="+"];
   Variant -> integer [label="hasValue";dir=both;arrowtail=diamond;arrowhead=open];
 }
 #+END_SRC
@@ -152,7 +145,8 @@ digraph G {
 #+RESULTS: fig:owl-ontology
 [[file:owl-ontology.png]]
 
-Figure [[fig:owl-ontology]] uses some notation elements from UML, although not a UML diagram itself.
+Figure [[fig:owl-ontology]] uses some notation elements from UML, although not a UML diagram itself. 
+For a higher resolution version, [[file:owl-ontology.png][click here]].
 
 1. Open triangular arrow heads correspond to the RDF Schema =subClassOf= relationship.
 2. Filled diamonds correspond to composite associations, or strong ownership.
@@ -566,6 +560,24 @@ end
         rdfs:label "unit" ;
         :targetClassifier :DistanceUnit ;
     ] .
+#+END_SRC
+
+#+NAME: lst:sdml-ex-structure-groups
+#+CAPTION: SDML Structure MembersGroups
+#+BEGIN_SRC sdml
+structure Account is
+  @skos:prefLabel "Customer Account"@en
+
+  group
+    @skos:prefLabel "Metadata"
+   created -> xsd:dateTime
+  end
+
+  group
+    @skos:prefLabel "Customer Information"
+    ref customer -> {1..1} Customer
+  end
+end
 #+END_SRC
 
 *** Entities

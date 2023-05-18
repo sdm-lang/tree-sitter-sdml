@@ -171,6 +171,10 @@
           "named": true
         },
         {
+          "type": "entity_group",
+          "named": true
+        },
+        {
           "type": "member_by_reference",
           "named": true
         },
@@ -205,6 +209,29 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "entity_group",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "annotation",
+          "named": true
+        },
+        {
+          "type": "member_by_reference",
+          "named": true
+        },
+        {
+          "type": "member_by_value",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -690,6 +717,10 @@
         {
           "type": "member_by_value",
           "named": true
+        },
+        {
+          "type": "structure_group",
+          "named": true
         }
       ]
     }
@@ -718,6 +749,25 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "structure_group",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "annotation",
+          "named": true
+        },
+        {
+          "type": "member_by_value",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -891,6 +941,10 @@
   },
   {
     "type": "from",
+    "named": false
+  },
+  {
+    "type": "group",
     "named": false
   },
   {

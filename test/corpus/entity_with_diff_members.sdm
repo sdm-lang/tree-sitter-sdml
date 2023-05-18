@@ -1,0 +1,41 @@
+==============================
+Entity, With Different Members
+==============================
+
+module Campaign is
+
+  entity Campaign is
+
+    identity a -> CampaignId
+
+    b -> xsd:string
+    
+    ref c -> Target
+
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (entity_def
+      name: (identifier)
+      body: (entity_body
+        identity: (identity_member
+          name: (identifier)
+          target: (identifier_reference
+            (identifier)))
+        (member_by_value
+          name: (identifier)
+          target: (identifier_reference
+            (qualified_identifier
+              module: (identifier)
+              member: (identifier))))
+        (member_by_reference
+          name: (identifier)
+          target: (identifier_reference
+            (identifier)))))))
+ 

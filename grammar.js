@@ -185,12 +185,25 @@ module.exports = grammar({
             field('body', optional($.entity_body))
         ),
 
+        entity_group: $ => seq(
+            keyword('group'),
+            repeat($.annotation),
+            repeat(
+                choice(
+                    $.member_by_value,
+                    $.member_by_reference
+                )
+            ),
+            keyword('end')
+        ),
+
         entity_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
             optional(field('identity', $.identity_member)),
             repeat(
                 choice(
+                    $.entity_group,
                     $.member_by_value,
                     $.member_by_reference
                 )
@@ -204,12 +217,24 @@ module.exports = grammar({
             optional(field('body', $.structure_body))
         ),
 
+        structure_group: $ => seq(
+            keyword('group'),
+            repeat($.annotation),
+            repeat(
+                choice(
+                    $.member_by_value
+                )
+            ),
+            keyword('end')
+        ),
+
         structure_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
             repeat(
                 choice(
-                   $.member_by_value
+                    $.structure_group,
+                    $.member_by_value
                 )
             ),
             keyword('end')

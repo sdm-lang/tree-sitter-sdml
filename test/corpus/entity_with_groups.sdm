@@ -1,0 +1,42 @@
+===================
+Entity, With Groups
+===================
+
+module Campaign is
+
+  entity Campaign is
+
+  group
+a -> xsd:string
+  end
+
+group
+b -> xsd:integer
+end
+
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (entity_def
+      name: (identifier)
+      body: (entity_body
+        (entity_group
+          (member_by_value
+            name: (identifier)
+            target: (identifier_reference
+              (qualified_identifier
+                module: (identifier)
+                member: (identifier)))))
+        (entity_group
+          (member_by_value
+            name: (identifier)
+            target: (identifier_reference
+              (qualified_identifier
+                module: (identifier)
+                member: (identifier)))))))))

@@ -10,19 +10,19 @@
 ;; ---------------------------------------------------------------------------
 
 [
- "module"
- "is"
- "import"
- "identity"
- "ref"
- "entity"
- "structure"
- "event"
- "source"
- "structure"
- "enum"
  "datatype"
  "end"
+ "entity"
+ "enum"
+ "event"
+ "group"
+ "identity"
+ "import"
+ "is"
+ "module"
+ "ref"
+ "source"
+ "structure"
  ] @keyword
 
 (module name: (identifier) @module.definition)
@@ -40,8 +40,6 @@
 (annotation
  "@" @property
  name: (identifier_reference) @property
- "->"? @operator
- target: (identifier_reference)? @type
  "="? @operator)
 
 ;; ---------------------------------------------------------------------------
@@ -99,8 +97,8 @@ name: (identifier) @type.definition)
 (iri_reference) @string
 
 [
- (double)
  (decimal)
+ (double)
  (integer)
  (unsigned)
  ] @number

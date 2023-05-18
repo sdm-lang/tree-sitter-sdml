@@ -31,10 +31,10 @@ module campaign is
     end
 
     group
-    tag -> {0..} Tag
-  end
+      tag -> {0..} Tag
+    end
 
-  ref target {0..1} -> {0..} Target
+    ref target {0..1} -> {0..} Target
   end
 
   entity Target

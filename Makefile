@@ -70,7 +70,7 @@ BINDING_NODE := $(NODE_BUILD_DIR)/$(NODE_BUILD_KIND)/$(BINDING_NODE_LIB)
 BINDING_RUST_LIB := lib$(BASE_NAME_US).rlib
 BINDING_RUST := $(RUST_BUILD_DIR)/$(BUILD_KIND)/$(BINDING_RUST_LIB)
 
-BINDING_WASM_LIB := $(BASENAME).wasm
+BINDING_WASM_LIB := $(BASE_NAME).wasm
 BINDING_WASM := $(ROOT)/$(BINDING_WASM_LIB)
 
 ALL_BINDINGS := $(BINDING_NODE) $(BINDING_RUST) $(BINDING_WASM)
@@ -130,7 +130,7 @@ build_parser: $(PARSER)
 
 .PHONY: clean_parser
 clean_parser:
-	rm $(OBJ_FILES) $PARSER)
+	rm -f $(OBJ_FILES) $(PARSER)
 
 $(PARSER): $(OBJ_FILES)
 	$(CC) $(LDFLAGS) -dynamiclib $(LDLIBS) $^ -o $@
@@ -147,6 +147,22 @@ $(INSTALL_LIB_DIR)/$(PARSER): $(PARSER)
 $(INSTALL_INCLUDE_DIR)/tree_sitter/parser.h: $(SRC_DIR)/tree_sitter/parser.h
 	install -d '$(INSTALL_INCLUDE_DIR)'/tree_sitter
 	install '$(SRC_DIR)'/'$(INCLUDE_DIR)'/parser.h '$(INSTALL_INCLUDE_DIR)'/'$(INCLUDE_DIR)'/parser.h
+
+# ----------------------------------------------------------------------------
+# Build ❯ Library ❯ Emacs
+# ----------------------------------------------------------------------------
+
+EMACS_TS_DIR ?= $(HOME)/.tree-sitter/bin
+EMACS_BINDING := $(EMACS_TS_DIR)/$(SHORT_NAME).$(DYLIB_EXT)
+
+emacs: $(EMACS_BINDING)
+
+$(EMACS_BINDING): generate_for_emacs build_parser
+	cp $(PARSER) $(EMACS_BINDING)
+ 
+.PHONY: generate_for_emacs
+generate_for_emacs:
+	$(TS_CLI) $(TS_GENERATE)
 
 # ----------------------------------------------------------------------------
 # Build ❯ Bindings
@@ -208,7 +224,7 @@ $(BINDING_WASM): $(PARSER) $(SRC_DIR)/grammar.json
 
 .PHONY: clean_wasm
 clean_wasm:
-	rm $(BINDING_WASM)
+	rm -f $(BINDING_WASM)
 
 # ----------------------------------------------------------------------------
 # Setup

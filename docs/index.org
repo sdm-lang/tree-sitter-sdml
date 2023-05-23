@@ -10,6 +10,11 @@
 #+HTML_HEAD: <style>div.figure { text-align: center; }</style>
 #+OPTIONS: toc:3
 
+#+BEGIN_SRC emacs-lisp :exports none
+(require 'ob-dot)
+#+END_SRC
+
+
 * Introduction
 
 The Simple Domain Modeling Language is a small data-oriented language for constructing, documenting, and reasoning about
@@ -56,7 +61,7 @@ reference implementation for SDML is provided as a [[https://tree-sitter.github.
 intended to be fast, or to be part of a compilation processes they do provide a multitude of language bindings, and a
 concrete syntax tree allowing easy development of the relatively simple tools required for SDML usage. 
 
-Figure [[fig:model-transforms]] demonstrates another key element of a /Model-Driven Development/ style, the transformation
+Figure [[fig:model-transforms]] demonstrates another key element of a /Model-Driven Development/[fn:2] style, the transformation
 between models and between models and other development artifacts.
 
 #+NAME: fig:model-transforms
@@ -84,8 +89,15 @@ digraph G {
 #+RESULTS: fig:model-transforms
 [[file:sdml-overview.png]]
 
+# ----- Footnotes
+
+[fn:1] [[https://en.wikipedia.org/wiki/Domain-driven_design][Domain-Driven Design]], Wikipedia
+[fn:2] [[https://en.wikipedia.org/wiki/Model-driven_engineering][Model-Driven Development]], Wikipedia
+
 
 * RDF Abstract Model
+
+Why RDF? ...
 
 Figure [[fig:owl-ontology]] is an overview of the OWL Ontology, 
 
@@ -109,7 +121,7 @@ digraph G {
   Variant [shape=ellipse];
   Datatype [shape=ellipse;label="rdfs:Datatype"];
 
-  Module -> Classifier [label="hasClassifiers";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
+  Module -> Classifier [label="hasDefinition";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
 
   Structure -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
   Entity -> Structure [label="rdfs:subClassOf";arrowhead=empty];
@@ -123,6 +135,7 @@ digraph G {
 
   Structure -> Group [label="hasGroup";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
   Structure -> Member [label="hasMember";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
+  Entity -> Member [label="hasIdentifier";dir=both;arrowtail=diamond;arrowhead=open;headlabel="1"];
 
   Group -> Member [label="hasMember";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
 
@@ -134,7 +147,7 @@ digraph G {
 
   integer [shape=rectangle;style=filled;color=lightgrey;label="xsd:nonNegativeInteger"];
   
-  Cardinality -> integer [label="owl:maxCardinality";dir=both;arrowtail=diamond;arrowhead=open];
+  Cardinality -> integer [label="owl:maxCardinality";dir=both;arrowtail=diamond;arrowhead=open;headlabel="?"];
   Cardinality -> integer [label="owl:minCardinality";dir=both;arrowtail=diamond;arrowhead=open];
 
   Variant -> integer [label="hasValue";dir=both;arrowtail=diamond;arrowhead=open];
@@ -152,49 +165,86 @@ For a higher resolution version, [[file:owl-ontology.png][click here]].
 2. Filled diamonds correspond to composite associations, or strong ownership.
 3. Open diamonds correspond to aggregate associations, or weak ownership.
 
-** Major OWL Elements
+** Classes
 
 #+NAME: lst:owl-module
 #+CAPTION: OWL: Top-Level Module
 #+BEGIN_SRC ttl
-:Module rdf:type owl:Class .
+:Module rdf:type owl:Class ;
+    skos:prefLabel "Module"@en .
 #+END_SRC
 
 
 #+NAME: lst:owl-classifiers
 #+CAPTION: OWL: Classifiers, or Types
 #+BEGIN_SRC ttl
-:Classifier rdf:type owl:Class .
+:Classifier rdf:type owl:Class
+    skos:prefLabel "Classifier"@en ;
+    skos:altLabel "Type"@en .
 
 :Structure rdf:type owl:Class ;
-    rdfs:subClassOf :Classifier .
+    rdfs:subClassOf :Classifier ;
+    skos:prefLabel "Structure"@en ;
+    skos:altLabel "Struct"@en ;
+    skos:altLabel "Record"@en .
     
 :Entity rdf:type owl:Class ;
-    rdfs:subClassOf :Structure .
+    rdfs:subClassOf :Structure ;
+    skos:prefLabel "Entity"@en ;
+    skos:altLabel "Independent Entity" .
     
 :Event rdf:type owl:Class ;
-    rdfs:subClassOf :Structure .
+    rdfs:subClassOf :Structure ;
+    skos:prefLabel "Event"@en ;
+    skos:altLabel "Entity Event"@en .
     
 :Enumeration rdf:type owl:Class ;
     rdfs:subClassOf :Classifier .
     
 :Datatype rdf:type rdfs:Datatype ;
-     rdfs:subClassOf :Classifier .
+    rdfs:subClassOf :Classifier ;
+    skos:prefLabel "Datatype"@en ;
+    skos:altLabel "Data Type"@en .
+    
+:Unknown rdf:type owl:Class ;
+    skos:prefLabel "Unknown" ;
+    skos:altLabel "Unknown Type"@en .
 #+END_SRC
 
 
 #+NAME: lst:owl-classifier-parts
 #+CAPTION: OWL: Classifier Related Classes
 #+BEGIN_SRC ttl
-:Group rdf:type owl:Class .
+:Group rdf:type owl:Class ;
+    skos:prefLabel "Member Group"@en .
 
-:Member rdf:type owl:Class .
+:Member rdf:type owl:Class ;
+    skos:prefLabel "Member"@en .
 
 :Cardinality rdf:type owl:Class .
 
 :Variant rdf:type owl:Class .
 #+END_SRC
 
+** Object Properties
+
+#+NAME: lst:owl-module-object-properties
+#+CAPTION: OWL: Module Object Properties
+#+BEGIN_SRC ttl
+:hasDefinition rdf:type owl:ObjectProperty ;
+    rdfs:domain :Module ;
+    rdfs:Range  :Classifier ;
+    owl:inverseOf :isDefinedBy ;
+    skos:prefLabel "module has definition"@en .
+
+:isDefinedBy  rdf:type owl:ObjectProperty ;
+    rdfs:isSubPropertyOf rfs:isDefineBy ;
+    rdfs:domain :Classifier ;
+    rdfs:Range  :Module ;
+    skos:prefLabel "defined by module" .
+#+END_SRC
+
+Properties concerning structured types.
 
 #+NAME: lst:owl-classifier-object-properties
 #+CAPTION: OWL: Classifier Object Properties
@@ -203,14 +253,15 @@ For a higher resolution version, [[file:owl-ontology.png][click here]].
     rdfs:Structure ;
     rdfs:range :Group .
     
-:hasClassifiers rdf:type owl:ObjectProperty ;
-    rdfs:domain :Module ;
-    rdfs:Range  :Classifier .
-    
 :hasVariant rdf:type owl:ObjectProperty ;
     rdfs:Domain :Enumeration ;
-    rdfs:Range  :Variant .
+    rdfs:Range  :Variant ;
+    owl:inverseOf :isVariantOf.
     
+:isVariantOf rdf:type owl:ObjectProperty ;
+    rdfs:Domain :Variant ;
+    rdfs:Range  :Enumeration ;
+   
 :sourceCardinality rdf:type owl:ObjectProperty ;
     rdfs:Domain :Member ;
     rdfs:Range  :Cardinality .
@@ -230,39 +281,69 @@ For a higher resolution version, [[file:owl-ontology.png][click here]].
     
 :eventSource rdf:type owl:ObjectProperty ;
     rdfs:Domain :Event ;
-    rdfs:Range  :Entity .
+    rdfs:Range  :Entity ;
+    owl:inverseOf :emitsEvent .
+    
+:emitsEvent rdf:type owl:ObjectProperty ;
+    rdfs:Domain :Entity ;
+    rdfs:Range  :Event .
 #+END_SRC
 
+Properties concerning structured type members
 
 #+NAME: lst:owl-classifier-member-properties
 #+CAPTION: OWL: Classifier Member Properties
 #+BEGIN_SRC ttl
-:hasMember rdf:type owl:ObjectProperty .
+:hasMember rdf:type owl:ObjectProperty ;
+    rdfs:Range :Member ;
+    owl:inverseOf :isMemberOf .
 
-:hasIdentifyingMember rdf:type owl:DatatypeProperty ;
+:isMemberOf rdf:type owl:ObjectProperty ;
+    rdfs:Domain :Member .
+
+:hasIdentifyingMember rdf:type owl:ObjectProperty ;
     rdf:type owl:FunctionalProperty ;
     rdfs:subPropertyOf :hasMember ;
-    rdfs:Domain owl:UnionOf ( :Structure :Group ) ;
-    rdfs:Range :Member .
+    rdfs:Domain :Entity .
     
-:hasCompositeMember rdf:type owl:DatatypeProperty ;
+:hasCompositeMember rdf:type owl:ObjectProperty ;
     rdfs:subPropertyOf :hasMember ;
-    rdfs:Domain owl:UnionOf ( :Structure :Group ) ;
-    rdfs:Range :Member .
+    rdfs:Domain owl:UnionOf ( :Structure :Group ) .
     
-:hasReferenceMember rdf:type owl:DatatypeProperty ;
+:hasReferenceMember rdf:type owl:ObjectProperty ;
     rdfs:subPropertyOf :hasMember ;
-    rdfs:Domain owl:UnionOf ( :Structure :Group ) ;
-    rdfs:Range :Member .
+    rdfs:Domain owl:UnionOf ( :Entity :Group ) .
+
+:targetClassifier rdf:type owl:ObjectProperty ;
+    rdfs:Domain :Member ;
+    rdfs:Range owl:UnionOf ( :Classifier :Unknown ) .
 #+END_SRC
 
+
+#+NAME: lst:owl-cardinality-object-properties
+#+CAPTION: OWL: Cardinality Object Properties
+#+BEGIN_SRC ttl
+:sourceCardinality rdf:type owl:ObjectProperty ;
+    rdfs:Domain :Member ;
+    rdfs:Range  :Cardinality .
+    
+:targetCardinality rdf:type owl:ObjectProperty  ;
+    rdfs:Domain :Member ;
+    rdfs:Range  :Cardinality .
+#+END_SRC
+
+- Groups not yet modeled.
+- Cardinality not yet modeled.
+
+** Datatype Properties
 
 #+NAME: lst:owl-variant-value
 #+CAPTION: OWL: Variant Value Property
 #+BEGIN_SRC ttl
 :hasValue rdf:type owl:DatatypeProperty ;
     rdfs:Domain :Variant ;
-    rdfs:Range  :xsd:nonNegativeInteger .
+    rdfs:Range  :xsd:nonNegativeInteger ;
+    skos:prefLabel "has value"@en.
 #+END_SRC
 
 
@@ -272,6 +353,14 @@ The following describes the SDML surface syntax, a syntax intended to look and f
 extensibility provided by it's underlying RDF and OWL foundation.
 
 ** Whitespace and Comments
+
+This grammar chooses to use the JavaScript regular expression character class =\s= which includes the following values,
+including all Unicode whitespace.
+
+=/[\f\n\r\t\v\u0020\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]/=
+
+Comments follow Lisp-like forms, starting with a semi-colon character and continuing to the end of line. Lisp
+conventions for single, double, and triple comment characters are useful but in no way enforced.
 
 #+NAME: lst:sdml-ex-comments
 #+CAPTION: SDML Comments
@@ -325,6 +414,8 @@ true false     ;; booleans
 123.0          ;; decimal
 123.0e-10      ;; double
 #+END_SRC
+
+IRI references are more permissive in the SDML grammar than the Turtle[fn:3] language. 
 
 Value Lists:
 
@@ -518,7 +609,8 @@ structure Length
 #+NAME: lst:sdml-ex-empty-structure-owl
 #+CAPTION: SDML Empty Structure, Corresponding OWL
 #+BEGIN_SRC ttl
-:Length rdf:type sdml:Structure .
+:Length rdf:type sdml:Structure ;
+    rdfs:isDefinedBy :module .
 #+END_SRC
 
 #+NAME: lst:sdml-ex-annotated-structure
@@ -721,8 +813,57 @@ end
     ] .
 #+END_SRC
 
+# ----- Footnotes
+
+[fn:3] [[https://www.w3.org/TR/turtle/#sec-iri-references][RDF 1.1 Turtle]], 6.3 IRI References
+
 
 * Transforms
+
+TBD
+
+
+* Implementation (Tree-Sitter)
+
+The core of the implementation 
+
+** Build
+
+#+BEGIN_EXAMPLE
+git clone https://github.com/johnstonskj/tree-sitter-sdml
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+make setup
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+make build
+#+END_EXAMPLE
+ 
+
+* Tools
+
+** Command-Line Tool
+
+** Editor Support
+
+*** VSCode
+
+Try here: https://github.com/georgewfraser/vscode-tree-sitter
+
+*** Emacs (< 29)
+
+Follow the directions in the /read-me/ file for the Emacs [[https://github.com/johnstonskj/emacs-sdml-mode][tree-sitter]] package.
+
+*** Emacs (>= 29)
+
+TBD
+
+*** Neovim
+
+TBD
+
 
 * Appendix: Tables of Other Content
 
@@ -731,5 +872,3 @@ end
 #+TOC: tables
 
 #+TOC: listings
-
-[fn:1] [[https://en.wikipedia.org/wiki/Domain-driven_design][Domain-Driven Design]], Wikipedia

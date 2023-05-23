@@ -65,7 +65,7 @@ module Campaign is
       "Campaign Identifier"@en
       ; <- string
       ;                    ^ property
-      
+
       "Identifiant de campagne"@fr
       ; <- string
       ;                        ^ property
@@ -75,17 +75,17 @@ module Campaign is
 
   end
   ; <- keyword
- 
+
   structure Tag is
   ; <- keyword
   ;         ^ type.definition
   ;             ^ keyword
-  
+
     key -> xsd:NMTOKEN
     ; <- variable.field
     ;   ^ operator
     ;      ^ type
-    
+
     value -> {0..} rdfs:langString
     ; <- variable.field
     ;     ^ operator
@@ -94,7 +94,7 @@ module Campaign is
     ;          ^ operator
     ;            ^ punctuation.bracket
     ;              ^ type
-    
+
   end
   ; <- keyword
 
@@ -102,7 +102,7 @@ module Campaign is
   ; <- keyword
   ;      ^ type.definition
   ;               ^ keyword
-  
+
     identity campaignId -> CampaignId
     ; <- keyword
     ;        ^ variable.field
@@ -123,6 +123,12 @@ module Campaign is
 
     end
     ; <- keyword
+
+    ref something -> unknown
+    ; <- keyword
+    ;   ^ variable.field
+    ;             ^ operator
+    ;                ^ keyword
 
     ref target {0..1} -> {1..} Target
     ; <- keyword
@@ -145,6 +151,6 @@ module Campaign is
   entity Target
   ; <- keyword
   ;      ^ type.definition
-  
+
 end
 ; <- keyword

@@ -72,20 +72,26 @@ name: (identifier) @type.definition)
 (identity_member
  name: (identifier) @variable.field
  "->" @operator
- target: (identifier_reference) @type)
+ target: (_) @type)
+
+(identity_member
+ name: (identifier) @variable.field
+ "->" @operator
+ target: (_) @type)
 
 (member_by_value
  name: (identifier) @variable.field
  "->" @operator
- target: (identifier_reference) @type)
+ target: (_) @type)
 
 (member_by_reference
  name: (identifier) @variable.field
  "->" @operator
- target: (identifier_reference) @type)
+ target: (_) @type)
 
 (cardinality_expression
- ".." @operator)
+ (cardinality_range
+   ".." @operator))
 
 ;; ---------------------------------------------------------------------------
 ;; Values

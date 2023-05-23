@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.0
+// Version:    0.1.5
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    MIT
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -59,25 +59,25 @@ module.exports = grammar({
 
         module_body: $ => seq(
             keyword('is'),
-            repeat($._import_statement),
+            repeat($.import),
             repeat($.annotation),
             repeat($._type_def),
             keyword('end')
         ),
 
-        _import_statement: $ => seq(
+        import: $ => seq(
             keyword('import'),
             choice(
-                $.import,
+                $._single_import,
                 seq(
                     '[',
-                    repeat1($.import),
+                    repeat1($._single_import),
                     ']'
                 )
             )
         ),
 
-        import: $ => choice(
+        _single_import: $ => choice(
             $.member_import,
             $.module_import
         ),
@@ -114,7 +114,7 @@ module.exports = grammar({
         ),
 
         // -----------------------------------------------------------------------
-        // Annotations
+        // Annotations and Values
         // -----------------------------------------------------------------------
 
         annotation: $ => seq(
@@ -384,15 +384,15 @@ module.exports = grammar({
             '{',
             field('min', $.unsigned),
             optional(
-                seq(
-                    $.cardinality_range,
-                    field('max', optional($.unsigned))
-                )
+                $.cardinality_range
             ),
             '}'
         ),
 
-        cardinality_range: $ => operator('..'),
+        cardinality_range: $ => seq(
+            operator('..'),
+            field('max', optional($.unsigned))
+        ),
 
         // -----------------------------------------------------------------------
         // Comments

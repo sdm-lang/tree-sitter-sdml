@@ -89,19 +89,35 @@
     "type": "cardinality_expression",
     "named": true,
     "fields": {
-      "max": {
+      "min": {
         "multiple": false,
-        "required": false,
+        "required": true,
         "types": [
           {
             "type": "unsigned",
             "named": true
           }
         ]
-      },
-      "min": {
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "cardinality_range",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "cardinality_range",
+    "named": true,
+    "fields": {
+      "max": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "unsigned",
@@ -153,7 +169,7 @@
     "fields": {
       "identity": {
         "multiple": false,
-        "required": false,
+        "required": true,
         "types": [
           {
             "type": "identity_member",
@@ -401,6 +417,10 @@
           {
             "type": "identifier_reference",
             "named": true
+          },
+          {
+            "type": "unknown_type",
+            "named": true
           }
         ]
       }
@@ -434,6 +454,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "boolean",
+          "named": true
+        },
         {
           "type": "decimal",
           "named": true
@@ -498,6 +522,10 @@
           {
             "type": "identifier_reference",
             "named": true
+          },
+          {
+            "type": "unknown_type",
+            "named": true
           }
         ]
       },
@@ -543,6 +571,10 @@
         "types": [
           {
             "type": "identifier_reference",
+            "named": true
+          },
+          {
+            "type": "unknown_type",
             "named": true
           }
         ]
@@ -998,6 +1030,10 @@
   {
     "type": "true",
     "named": false
+  },
+  {
+    "type": "unknown_type",
+    "named": true
   },
   {
     "type": "unsigned",

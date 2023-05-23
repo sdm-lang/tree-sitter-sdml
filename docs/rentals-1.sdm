@@ -1,0 +1,11 @@
+module rental is
+
+  entity Vehicle
+
+  entity Location
+
+  entity Customer
+
+  entity Booking
+
+end

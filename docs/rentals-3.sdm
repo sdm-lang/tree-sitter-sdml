@@ -1,0 +1,26 @@
+module rentals is
+
+  import cids:VehicleIdentificationNumber
+
+  entity Class
+
+  entity Vehicle is
+    identity vin -> VehicleIdentificationNumber
+
+    ref rentalClass -> {1} Class
+  end
+
+  entity Location
+
+  entity Customer
+
+  entity Booking is
+    identity bookingCode -> unknown
+
+    ref bookingClass -> {1} Class
+    ref vehicle -> {0..1} Vehicle
+    ref from -> Location
+    ref customer -> {1} Customer
+  end
+
+end

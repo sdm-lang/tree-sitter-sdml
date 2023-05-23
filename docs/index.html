@@ -1,0 +1,1295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-05-23 Tue 09:31 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Simple Domain Modeling Language</title>
+<meta name="author" content="Simon Johnston" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+<style>img { max-width: 800px; height: auto; }</style>
+<style>div.figure { text-align: center; }</style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Simple Domain Modeling Language</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orge70af26">1. Introduction</a></li>
+<li><a href="#orgf4d9d3b">2. RDF Abstract Model</a>
+<ul>
+<li><a href="#orge9f1084">2.1. Classes</a></li>
+<li><a href="#org1a2ac25">2.2. Object Properties</a></li>
+<li><a href="#orgb662636">2.3. Datatype Properties</a></li>
+</ul>
+</li>
+<li><a href="#org752d1de">3. Surface Syntax</a>
+<ul>
+<li><a href="#orgabddc87">3.1. Whitespace and Comments</a></li>
+<li><a href="#org37ee445">3.2. Identifiers and Values</a></li>
+<li><a href="#org1c70443">3.3. Module Declaration and Imports</a></li>
+<li><a href="#orgd8b76f3">3.4. Data Types</a></li>
+<li><a href="#orge816765">3.5. Annotations</a></li>
+<li><a href="#org492e2ad">3.6. Structured Types</a>
+<ul>
+<li><a href="#org08b0c16">3.6.1. Entities</a></li>
+<li><a href="#org6865b5b">3.6.2. Enums</a></li>
+<li><a href="#org5924c76">3.6.3. Events</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgfb0d8d1">4. Walk-Through Example</a></li>
+<li><a href="#org1a44906">5. Transforms</a></li>
+<li><a href="#orgdeb1b97">6. Implementation (Tree-Sitter)</a>
+<ul>
+<li><a href="#org4757715">6.1. Build</a></li>
+</ul>
+</li>
+<li><a href="#org6edd18c">7. Tools</a>
+<ul>
+<li><a href="#org10fd1a9">7.1. Command-Line Tool</a></li>
+<li><a href="#orgb934b79">7.2. Editor Support</a>
+<ul>
+<li><a href="#orgee9a75d">7.2.1. VSCode</a></li>
+<li><a href="#orgd8ba069">7.2.2. Emacs (&lt; 29)</a></li>
+<li><a href="#org49e4e91">7.2.3. Emacs (&gt;= 29)</a></li>
+<li><a href="#org5e0911f">7.2.4. Neovim</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgb989592">8. Appendix: Surface Syntax to RDF</a></li>
+<li><a href="#orgd653c46">9. Appendix: Tables of Other Content</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge70af26" class="outline-2">
+<h2 id="orge70af26"><span class="section-number-2">1.</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+The Simple Domain Modeling Language is a small data-oriented language for constructing, documenting, and reasoning about
+a conceptual domain model. The language uses some ideas from <a href="http://www.uml.org/">UML</a> which is often used in the construction of such models
+today. However, the goal is to keep the language as small as possible, taking away some options where they don't make
+sense or where their use may distract from the major purpose of the model. The model also takes some of the language
+from Domain-Driven Design<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>, namely the separation of entities (<i>an object defined not by its attributes, but its
+identity</i>) from value objects (<i>an immutable object that contains attributes but has no conceptual identity</i>), simply
+termed structures in SDML. This model does not include the following as first-class concepts: <i>aggregates</i>, <i>repositories</i>,
+<i>factories</i>, or <i>services</i>.
+</p>
+
+<p>
+At it's core SDML comprises an <i>abstract model</i> whose structure and semantics are described by an <a href="https://www.w3.org/OWL/">OWL</a> (<a href="https://www.w3.org/RDF/">RDF</a>) ontology, and a
+<i>surface syntax</i> for editing and sharing concrete models. This document covers both the OWL and SDML representations and
+the correspondence between them, however the primary focus of the documentation is the surface syntax as most users will
+be interacting with it alone. Figure <a href="#orgbf96199">1</a> shows the relationship between these high-level components. 
+</p>
+
+
+<div id="orgbf96199" class="figure">
+<p><img src="sdml-overview.png" alt="sdml-overview.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Model Overview</p>
+</div>
+
+<p>
+One element that is not included in figure <a href="#orgbf96199">1</a> as it is primarily an implementation decision, is that the
+reference implementation for SDML is provided as a <a href="https://tree-sitter.github.io/tree-sitter/">Tree-Sitter</a> package. While generated tree-sitter parsers are not
+intended to be fast, or to be part of a compilation processes they do provide a multitude of language bindings, and a
+concrete syntax tree allowing easy development of the relatively simple tools required for SDML usage. 
+</p>
+
+<p>
+Figure <a href="#orgc9e66e8">2</a> demonstrates another key element of a <i>Model-Driven Development</i><sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup> style, the transformation
+between models and between models and other development artifacts.
+</p>
+
+
+<div id="orgc9e66e8" class="figure">
+<p><img src="sdml-transforms.png" alt="sdml-transforms.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Model Transformations</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgf4d9d3b" class="outline-2">
+<h2 id="orgf4d9d3b"><span class="section-number-2">2.</span> RDF Abstract Model</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Why RDF? &#x2026;
+</p>
+
+<p>
+Figure <a href="#org7848f3d">3</a> is an overview of the OWL Ontology, 
+</p>
+
+
+<div id="org7848f3d" class="figure">
+<p><img src="owl-ontology.png" alt="owl-ontology.png" />
+</p>
+<p><span class="figure-number">Figure 3: </span>OWL Ontology</p>
+</div>
+
+<p>
+Figure <a href="#org7848f3d">3</a> uses some notation elements from UML, although not a UML diagram itself. 
+For a higher resolution version, <a href="owl-ontology.png">click here</a>.
+</p>
+
+<ol class="org-ol">
+<li>Open triangular arrow heads correspond to the RDF Schema <code>subClassOf</code> relationship.</li>
+<li>Filled diamonds correspond to composite associations, or strong ownership.</li>
+<li>Open diamonds correspond to aggregate associations, or weak ownership.</li>
+</ol>
+</div>
+
+<div id="outline-container-orge9f1084" class="outline-3">
+<h3 id="orge9f1084"><span class="section-number-3">2.1.</span> Classes</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 1: </span>OWL: Top-Level Module</label><pre class="src src-ttl" id="org5541a72"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">Module</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">Class</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">prefLabel</span> <span style="color: #2aa198;">"Module"</span><span style="color: #d33682;">@en</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 2: </span>OWL: Classifiers, or Types</label><pre class="src src-ttl" id="org30a93ce"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">Classifier</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">Class</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">prefLabel</span> <span style="color: #2aa198;">"Classifier"</span><span style="color: #d33682;">@en</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">altLabel</span> <span style="color: #2aa198;">"Type"</span><span style="color: #d33682;">@en</span> <span style="color: #268bd2;">.</span>
+
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">Structure</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">Class</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">subClassOf</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Classifier</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">prefLabel</span> <span style="color: #2aa198;">"Structure"</span><span style="color: #d33682;">@en</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">altLabel</span> <span style="color: #2aa198;">"Struct"</span><span style="color: #d33682;">@en</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">altLabel</span> <span style="color: #2aa198;">"Record"</span><span style="color: #d33682;">@en</span> <span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">Entity</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">Class</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">subClassOf</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Structure</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">prefLabel</span> <span style="color: #2aa198;">"Entity"</span><span style="color: #d33682;">@en</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">altLabel</span> <span style="color: #2aa198;">"Independent Entity"</span> <span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">Event</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">Class</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">subClassOf</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Structure</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">prefLabel</span> <span style="color: #2aa198;">"Event"</span><span style="color: #d33682;">@en</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">altLabel</span> <span style="color: #2aa198;">"Entity Event"</span><span style="color: #d33682;">@en</span> <span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">Enumeration</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">Class</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">subClassOf</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Classifier</span> <span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">Datatype</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Datatype</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">subClassOf</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Classifier</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">prefLabel</span> <span style="color: #2aa198;">"Datatype"</span><span style="color: #d33682;">@en</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">altLabel</span> <span style="color: #2aa198;">"Data Type"</span><span style="color: #d33682;">@en</span> <span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">Unknown</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">Class</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">prefLabel</span> <span style="color: #2aa198;">"Unknown"</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">altLabel</span> <span style="color: #2aa198;">"Unknown Type"</span><span style="color: #d33682;">@en</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 3: </span>OWL: Classifier Related Classes</label><pre class="src src-ttl" id="org0ef9b00"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">Group</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">Class</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">prefLabel</span> <span style="color: #2aa198;">"Member Group"</span><span style="color: #d33682;">@en</span> <span style="color: #268bd2;">.</span>
+
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">Member</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">Class</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">prefLabel</span> <span style="color: #2aa198;">"Member"</span><span style="color: #d33682;">@en</span> <span style="color: #268bd2;">.</span>
+
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">Cardinality</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">Class</span> <span style="color: #268bd2;">.</span>
+
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">Variant</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">Class</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1a2ac25" class="outline-3">
+<h3 id="org1a2ac25"><span class="section-number-3">2.2.</span> Object Properties</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 4: </span>OWL: Module Object Properties</label><pre class="src src-ttl" id="org5cbeb9d"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasDefinition</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Module</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span>  <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Classifier</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">inverseOf</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">isDefinedBy</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">prefLabel</span> <span style="color: #2aa198;">"module has definition"</span><span style="color: #d33682;">@en</span> <span style="color: #268bd2;">.</span>
+
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">isDefinedBy</span>  <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">isSubPropertyOf</span> <span style="color: #268bd2;">rfs:</span><span style="color: #268bd2;">isDefineBy</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Classifier</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span>  <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Module</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">prefLabel</span> <span style="color: #2aa198;">"defined by module"</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<p>
+Properties concerning structured types.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 5: </span>OWL: Classifier Object Properties</label><pre class="src src-ttl" id="orgac6c29e"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasGroup</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Structure</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">range</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Group</span> <span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasVariant</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Enumeration</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span>  <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Variant</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">inverseOf</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">isVariantOf</span><span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">isVariantOf</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Variant</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span>  <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Enumeration</span> <span style="color: #859900;">;</span>
+   
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">sourceCardinality</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Member</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span>  <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Cardinality</span> <span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">targetCardinality</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span>  <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Member</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span>  <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Cardinality</span> <span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">targetClassifier</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Member</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span>  <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Classifier</span> <span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">baseDatatype</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">subPropertyOf</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">onDatatype</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Datatype</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span>  <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Datatype</span> <span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">eventSource</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Event</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span>  <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Entity</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">inverseOf</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">emitsEvent</span> <span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">emitsEvent</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Entity</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span>  <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Event</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<p>
+Properties concerning structured type members
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 6: </span>OWL: Classifier Member Properties</label><pre class="src src-ttl" id="orga881141"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasMember</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Member</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">inverseOf</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">isMemberOf</span> <span style="color: #268bd2;">.</span>
+
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">isMemberOf</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Member</span> <span style="color: #268bd2;">.</span>
+
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasIdentifyingMember</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">FunctionalProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">subPropertyOf</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasMember</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Entity</span> <span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasCompositeMember</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">subPropertyOf</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasMember</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">UnionOf</span> <span style="color: #657b83;">(</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Structure</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Group</span> <span style="color: #657b83;">)</span> <span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasReferenceMember</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">subPropertyOf</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasMember</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">UnionOf</span> <span style="color: #657b83;">(</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Entity</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Group</span> <span style="color: #657b83;">)</span> <span style="color: #268bd2;">.</span>
+
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">targetClassifier</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Member</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">UnionOf</span> <span style="color: #657b83;">(</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Classifier</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Unknown</span> <span style="color: #657b83;">)</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 7: </span>OWL: Cardinality Object Properties</label><pre class="src src-ttl" id="org46a7725"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">sourceCardinality</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Member</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span>  <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Cardinality</span> <span style="color: #859900;">.</span>
+    
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">targetCardinality</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">ObjectProperty</span>  <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Member</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span>  <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Cardinality</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Groups not yet modeled.</li>
+<li>Cardinality not yet modeled.</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb662636" class="outline-3">
+<h3 id="orgb662636"><span class="section-number-3">2.3.</span> Datatype Properties</h3>
+<div class="outline-text-3" id="text-2-3">
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 8: </span>OWL: Variant Value Property</label><pre class="src src-ttl" id="org1f51f8f"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasValue</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">DatatypeProperty</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Domain</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Variant</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Range</span>  <span style="color: #268bd2;">:xsd:</span><span style="color: #268bd2;">nonNegativeInteger</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">prefLabel</span> <span style="color: #2aa198;">"has value"</span><span style="color: #d33682;">@en</span><span style="color: #859900;">.</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org752d1de" class="outline-2">
+<h2 id="org752d1de"><span class="section-number-2">3.</span> Surface Syntax</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+The following describes the SDML surface syntax, a syntax intended to look and feel like a programming language but with
+extensibility provided by it's underlying RDF and OWL foundation.
+</p>
+</div>
+
+<div id="outline-container-orgabddc87" class="outline-3">
+<h3 id="orgabddc87"><span class="section-number-3">3.1.</span> Whitespace and Comments</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+This grammar chooses to use the JavaScript regular expression character class <code>\s</code> which includes the following values,
+including all Unicode whitespace.
+</p>
+
+<p>
+<code>/[\f\n\r\t\v\u0020\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]/</code>
+</p>
+
+<p>
+Comments follow Lisp-like forms, starting with a semi-colon character and continuing to the end of line. Lisp
+conventions for single, double, and triple comment characters are useful but in no way enforced.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 9: </span>SDML Comments</label><pre class="src src-sdml" id="org6a2e77a"><span style="color: #93a1a1; font-style: italic;">; comments start with ';' and go to end of line</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org37ee445" class="outline-3">
+<h3 id="org37ee445"><span class="section-number-3">3.2.</span> Identifiers and Values</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+An identifier is a string of characters corresponding to the <a href="https://unicode.org/reports/tr44/#GC_Values_Table">Unicode General Category</a> <b>Lu</b> (an uppercase letter) or <b>Ll</b> (a
+lowercase letter). No additional separator characters such as <code>'_'</code>, <code>'-'</code>, <code>'$'</code>, <code>'@'</code>, <code>'#'</code>, etc. are permitted.
+</p>
+
+<p>
+Naming Conventions:
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 10: </span>SDML Identifier Examples</label><pre class="src src-sdml" id="org109aaa1">UpperCamel
+lowerCamel
+SHOUTY
+</pre>
+</div>
+
+<dl class="org-dl">
+<dt><b>Module Name</b></dt><dd>lower Camel Case; i.e. <code>xsd</code>, <code>skos</code>, <code>bank</code>, or <code>customer</code>. In general this should be a broad noun.</dd>
+<dt><b>Structure/Entity/Event/Enum Name</b></dt><dd>Upper Camel Case; i.e. <code>Customer</code>, <code>Account</code>, <code>Address</code>, or <code>Name</code>. In general
+these are nouns related to, and often narrower than, the module name.</dd>
+<dt><b>Data Type Name</b></dt><dd>Upper Camel Case; i.e. <code>ShortString</code>, <code>AccountNumber</code>, or <code>SocialSecurityNumber</code>. In general these are
+broad nouns, with either a property noun suffix as in <code>AccountNumber</code> or a qualifier noun prefix as in <code>ShortString</code>. Do
+not create capitalized acronym (SSN) or abbreviation (ID) forms unless these are universally understood within the
+domain.</dd>
+<dt><b>Type Member Name</b></dt><dd>lower Camel Case; i.e. <code>street</code>, <code>accountName</code>, or <code>currentValue</code>. As in data type definitions these are
+broad nouns, with either a property noun suffix as in <code>accountNumber</code> or a qualifier noun prefix as in <code>shortName</code>. These
+are commonly simply the lower Camel Case version of the corresponding type name.</dd>
+<dt><b>Enum Variant Name</b></dt><dd>Upper Camel Case is the preferred, although SHOUTY CASE is acceptable.</dd>
+</dl>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 11: </span>SDML Qualified Identifier Example</label><pre class="src src-sdml" id="org0af2001"><span style="color: #859900;">module</span>:Member
+</pre>
+</div>
+
+<p>
+Simple Values:
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 12: </span>SDML Simple Value Examples</label><pre class="src src-sdml" id="org64d670b">"a string"
+"a language-tagged string"en-US
+<a href="https://...">&lt;https://...&gt;</a>  <span style="color: #93a1a1; font-style: italic;">;; an IRI reference</span>
+true false     <span style="color: #93a1a1; font-style: italic;">;; booleans</span>
+<span style="color: #268bd2;">123</span>            <span style="color: #93a1a1; font-style: italic;">;; integer</span>
+<span style="color: #268bd2;">123</span>.<span style="color: #268bd2;">0</span>          <span style="color: #93a1a1; font-style: italic;">;; decimal</span>
+<span style="color: #268bd2;">123</span>.<span style="color: #268bd2;">0</span>e<span style="color: #268bd2;">-10</span>      <span style="color: #93a1a1; font-style: italic;">;; double</span>
+</pre>
+</div>
+
+<p>
+IRI references are more permissive in the SDML grammar than the Turtle<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3</a></sup> language. 
+</p>
+
+<p>
+Value Lists:
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 13: </span>SDML Value List Example</label><pre class="src src-sdml" id="org26b8a62"><span style="color: #657b83; background-color: #fdf6e3;">[</span> "yes" "no" "maybe" <span style="color: #657b83; background-color: #fdf6e3;">]</span>
+</pre>
+</div>
+
+<p>
+Value Constructors:
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 14: </span>SDML Type Constructor Example</label><pre class="src src-sdml" id="org5dee28b">xsd:unsigned<span style="color: #657b83; background-color: #fdf6e3;">(</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">)</span>
+</pre>
+</div>
+
+<p>
+See <a href="#org66045bf">3.4</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1c70443" class="outline-3">
+<h3 id="org1c70443"><span class="section-number-3">3.3.</span> Module Declaration and Imports</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+An empty module, specifically a module with an empty <i>body</i> which is the content between the keywords <b><code>is</code></b> and <b><code>end</code></b>. 
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 15: </span>SDML Empty Module</label><pre class="src src-sdml" id="org045ed90"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span> <span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 16: </span>SDML Empty Module, Corresponding OWL</label><pre class="src src-ttl" id="org00ed557"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">example</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Module</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<p>
+This module contains a single import statement bringing in the module named <code>xsd</code> making it's members available in the
+qualified form <code>xsd:*</code>.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 17: </span>SDML Importing Module</label><pre class="src src-sdml" id="orgee4bb3f"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">import</span> <span style="color: #268bd2;">xsd</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 18: </span>SDML Importing Module, Corresponding OWL</label><pre class="src src-ttl" id="org5037ae1"><span style="color: #d33682;">@prefix</span> <span style="color: #268bd2;">xsd:</span> <span style="color: #b58900;"><a href="http://www.w3.org/2001/XMLSchema#">&lt;http://www.w3.org/2001/XMLSchema#&gt;</a></span><span style="color: #93a1a1; font-style: italic;"> .</span>
+
+:<span style="color: #268bd2;">example</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Module</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 19: </span>SDML Importing Member</label><pre class="src src-sdml" id="orgcce177c"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">import</span> <span style="color: #268bd2;">xsd:integer</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 20: </span>SDML Importing Member, Corresponding OWL</label><pre class="src src-ttl" id="org107d1b1"><span style="color: #d33682;">@prefix</span> <span style="color: #268bd2;">xsd:</span> <span style="color: #b58900;"><a href="http://www.w3.org/2001/XMLSchema#">&lt;http://www.w3.org/2001/XMLSchema#&gt;</a></span><span style="color: #93a1a1; font-style: italic;"> .</span>
+
+:<span style="color: #268bd2;">example</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Module</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 21: </span>SDML Importing a List</label><pre class="src src-sdml" id="org01d8d4e"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">import</span> <span style="color: #657b83; background-color: #fdf6e3;">[</span> <span style="color: #268bd2;">dc:title</span> <span style="color: #268bd2;">dc:author</span> <span style="color: #657b83; background-color: #fdf6e3;">]</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 22: </span>SDML Importing From URL</label><pre class="src src-sdml" id="org990a327"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">import</span> <span style="color: #268bd2;">show</span> from <span style="color: #2aa198; font-weight: bold;"><a href="http://example.org/vocab/show/">&lt;http://example.org/vocab/show/&gt;</a></span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 23: </span>SDML Importing From URL, Corresponding OWL</label><pre class="src src-ttl" id="org913a1d1"><span style="color: #d33682;">@prefix</span> <span style="color: #268bd2;">show:</span> <span style="color: #b58900;"><a href="http://example.org/vocab/show/">&lt;http://example.org/vocab/show/&gt;</a></span> <span style="color: #268bd2;">.</span>
+
+<span style="color: #268bd2;">:</span><span style="color: #268bd2;">example</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Module</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd8b76f3" class="outline-3">
+<h3 id="orgd8b76f3"><span class="section-number-3">3.4.</span> <a id="org66045bf"></a> Data Types</h3>
+<div class="outline-text-3" id="text-3-4">
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 24: </span>SDML Datatype</label><pre class="src src-sdml" id="org151d817"><span style="color: #859900;">datatype</span> name &lt;- xsd:string
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 25: </span>SDML Datatype, Corresponding OWL</label><pre class="src src-ttl" id="orgea7c60c"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">name</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Datatype</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">onDatatype</span> <span style="color: #268bd2;">xsd:</span><span style="color: #268bd2;">string</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 26: </span>SDML Datatype with Restrictions</label><pre class="src src-sdml" id="org94d1600"><span style="color: #859900;">datatype</span> name &lt;- xsd:string <span style="color: #859900;">is</span>
+  @xsd:minLength = <span style="color: #268bd2;">5</span>
+  @xsd:maxLength = <span style="color: #268bd2;">25</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 27: </span>SDML Datatype with Restrictions, Corresponding OWL</label><pre class="src src-ttl" id="org6a7de10"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">name</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Datatype</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">onDatatype</span> <span style="color: #268bd2;">xsd:</span><span style="color: #268bd2;">string</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">withRestrictions</span> <span style="color: #657b83;">(</span>
+        <span style="color: #2aa198;">[</span> <span style="color: #268bd2;">xsd:</span><span style="color: #268bd2;">minLength</span> <span style="color: #2aa198;">"5"</span><span style="color: #d33682;">^^xsd:nonNegativeInteger </span><span style="color: #2aa198;">]</span>
+<span style="color: #d33682;">        </span><span style="color: #2aa198;">[</span><span style="color: #d33682;"> xsd:maxLength "25"^^xsd:nonNegativeInteger </span><span style="color: #2aa198;">]</span>
+<span style="color: #d33682;">    </span><span style="color: #657b83;">)</span><span style="color: #d33682;"> </span><span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<p>
+From <a href="https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide">OWL 2 Web Ontology Language Quick Reference Guide (Second Edition)</a>:
+</p>
+
+<table id="orgc6b4aeb" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 1:</span> OWL Built-in Datatype Facets</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Facet</th>
+<th scope="col" class="org-left">Value</th>
+<th scope="col" class="org-left">Applicable Datatypes</th>
+<th scope="col" class="org-left">Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>xsd:minInclusive</code>, <code>xsd:maxInclusive</code>, <code>xsd:minExclusive</code>, <code>xsd:maxExclusive</code></td>
+<td class="org-left">literal in the corresponding datatype</td>
+<td class="org-left">Numbers, Time Instants</td>
+<td class="org-left">Restricts the value-space to greater than (equal to) or lesser than (equal to) a value</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>xsd:minLength</code>, <code>xsd:maxLength</code>, <code>xsd:length</code></td>
+<td class="org-left">Non-negative integer</td>
+<td class="org-left">Strings, Binary Data, IRIs</td>
+<td class="org-left">Restricts the value-space based on the lengths of the literals</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>xsd:pattern</code></td>
+<td class="org-left"><code>xsd:string</code> literal as a regular expression</td>
+<td class="org-left">Strings, IRIs</td>
+<td class="org-left">Restricts the value space to literals that match the regular expression</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>rdf:langRange</code></td>
+<td class="org-left"><code>xsd:string</code> literal as a regular expression</td>
+<td class="org-left"><code>rdf:PlainLiteral</code></td>
+<td class="org-left">Restricts the value space to literals with language tags that match the regular expression</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orge816765" class="outline-3">
+<h3 id="orge816765"><span class="section-number-3">3.5.</span> Annotations</h3>
+<div class="outline-text-3" id="text-3-5">
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 28: </span>SDML Annotation Property</label><pre class="src src-sdml" id="org8f487b6">@xml:base <a href="https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org">&lt;https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org&gt;</a>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 29: </span>SDML Annotation Property List</label><pre class="src src-sdml" id="org5c3f160">@skos:prefLabel <span style="color: #657b83; background-color: #fdf6e3;">[</span>
+  "example"@en
+  "exemple"@fr
+  "&#20363;&#23376;"@zh-CH
+<span style="color: #657b83; background-color: #fdf6e3;">]</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 30: </span>SDML Annotated Module</label><pre class="src src-sdml" id="org906d660"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+
+  <span style="color: #859900;">import</span> <span style="color: #268bd2;">xml</span> skos
+
+  @xml:base <a href="https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org">&lt;https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org&gt;</a>
+
+  @skos:prefLabel "Example Module"@en
+
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<p>
+From <a href="https://www.w3.org/TR/owl-ref/#AnnotationProperty-def">OWL Web Ontology Language Reference</a>, Appendix E: Rules of Thumb for OWL DL ontologies:
+</p>
+
+<blockquote>
+<p>
+If a property <code>a</code> is used where an annotation property is expected then it should either be one of the built in
+annotation properties (<code>owl:versionInfo</code>, <code>rdfs:label</code>, <code>rdfs:comment</code>, <code>rdfs:seeAlso</code>, and <code>rdfs:isDefinedBy</code>) or there
+should be a triple:
+</p>
+
+<p>
+<code>a rdf:type owl:AnnotationProperty</code>
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org492e2ad" class="outline-3">
+<h3 id="org492e2ad"><span class="section-number-3">3.6.</span> Structured Types</h3>
+<div class="outline-text-3" id="text-3-6">
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 31: </span>SDML Empty Structure</label><pre class="src src-sdml" id="orgdf41572"><span style="color: #859900;">structure</span> Length
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 32: </span>SDML Empty Structure, Corresponding OWL</label><pre class="src src-ttl" id="orga0208f2"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">Length</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">sdml:</span><span style="color: #268bd2;">Structure</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">isDefinedBy</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">module</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 33: </span>SDML Annotated Structure</label><pre class="src src-sdml" id="org51a442f"><span style="color: #859900;">structure</span> Length <span style="color: #859900;">is</span>
+  @skos:prefLabel "Length"@en
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 34: </span>SDML Annotated Structure, Corresponding OWL</label><pre class="src src-ttl" id="org3fd8eba"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">Length</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">sdml:</span><span style="color: #268bd2;">Structure</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">prefLabel</span> <span style="color: #2aa198;">"Length"</span><span style="color: #d33682;">@en</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 35: </span>SDML Structure Members</label><pre class="src src-sdml" id="org5d5a7d4"><span style="color: #859900;">structure</span> Length <span style="color: #859900;">is</span>
+  @skos:prefLabel "Length"@en
+
+  value -&gt; Decimal
+  unit -&gt; DistanceUnit
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 36: </span>SDML Structure Members, Corresponding OWL</label><pre class="src src-ttl" id="org56f0c6e"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">Length</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">sdml:</span><span style="color: #268bd2;">Structure</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">skos:</span><span style="color: #268bd2;">prefLabel</span> <span style="color: #2aa198;">"Length"</span><span style="color: #d33682;">@en</span> <span style="color: #859900;">.</span>
+    <span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasMember</span> <span style="color: #657b83;">[</span>
+        <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">label</span> <span style="color: #2aa198;">"value"</span> <span style="color: #859900;">;</span>
+        <span style="color: #268bd2;">:</span><span style="color: #268bd2;">targetClassifier</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Decimal</span> <span style="color: #859900;">;</span>
+    <span style="color: #657b83;">]</span> <span style="color: #859900;">,</span>
+    <span style="color: #657b83;">[</span>
+        <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">label</span> <span style="color: #2aa198;">"unit"</span> <span style="color: #859900;">;</span>
+        <span style="color: #268bd2;">:</span><span style="color: #268bd2;">targetClassifier</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">DistanceUnit</span> <span style="color: #859900;">;</span>
+    <span style="color: #657b83;">]</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 37: </span>SDML Structure MembersGroups</label><pre class="src src-sdml" id="orgb4482b7"><span style="color: #859900;">structure</span> Account <span style="color: #859900;">is</span>
+  @skos:prefLabel "Customer Account"@en
+
+  <span style="color: #859900;">group</span>
+    @skos:prefLabel "Metadata"
+   created -&gt; xsd:dateTime
+  <span style="color: #859900;">end</span>
+
+  <span style="color: #859900;">group</span>
+    @skos:prefLabel "Customer Information"
+    <span style="color: #859900;">ref</span> customer -&gt; <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">1</span>..<span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> Customer
+  <span style="color: #859900;">end</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org08b0c16" class="outline-4">
+<h4 id="org08b0c16"><span class="section-number-4">3.6.1.</span> Entities</h4>
+<div class="outline-text-4" id="text-3-6-1">
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 38: </span>SDML Empty Entity</label><pre class="src src-sdml" id="orgfee6f55"><span style="color: #859900;">entity</span> Person
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 39: </span>SDML Empty Entity, Corresponding OWL</label><pre class="src src-ttl" id="orgbfb493f"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">Person</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">sdml:</span><span style="color: #268bd2;">Entity</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 40: </span>SDML Entity with Identifying Member</label><pre class="src src-sdml" id="org8ee3bc6"><span style="color: #859900;">entity</span> Person <span style="color: #859900;">is</span>
+  identifier id -&gt; PersonId
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 41: </span>SDML Entity with Identifying Member, Corresponding OWL</label><pre class="src src-ttl" id="org3609170"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">Person</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">sdml:</span><span style="color: #268bd2;">Entity</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasIdentifyingMember</span> <span style="color: #657b83;">[</span>
+        <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">label</span> <span style="color: #2aa198;">"id"</span> <span style="color: #859900;">;</span>
+        <span style="color: #268bd2;">:</span><span style="color: #268bd2;">targetClassifier</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Person</span> <span style="color: #859900;">;</span>
+    <span style="color: #657b83;">]</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 42: </span>SDML Entity with Reference Member</label><pre class="src src-sdml" id="org5889ae5"><span style="color: #859900;">entity</span> Person <span style="color: #859900;">is</span>
+  <span style="color: #859900;">ref</span> contact <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">0</span>..<span style="color: #657b83; background-color: #fdf6e3;">}</span> -&gt; <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">0</span>..<span style="color: #268bd2;">2</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> Person <span style="color: #859900;">is</span>
+    @dc:description "Emergency contact person"
+  <span style="color: #859900;">end</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 43: </span>SDML Entity with Reference Member, Corresponding OWL</label><pre class="src src-ttl" id="orgb4c33ed"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">Person</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">sdml:</span><span style="color: #268bd2;">Entity</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasReferenceMember</span> <span style="color: #657b83;">[</span>
+        <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">label</span> <span style="color: #2aa198;">"contact"</span> <span style="color: #859900;">;</span>
+        <span style="color: #268bd2;">:</span><span style="color: #268bd2;">targetClassifier</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Person</span> <span style="color: #859900;">;</span>
+        <span style="color: #268bd2;">:</span><span style="color: #268bd2;">sourceCardinality</span> <span style="color: #2aa198;">[</span>
+            <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">minCardinality</span> 0 <span style="color: #859900;">;</span>
+        <span style="color: #2aa198;">]</span> <span style="color: #859900;">;</span>
+        <span style="color: #268bd2;">:</span><span style="color: #268bd2;">targetCardinality</span> <span style="color: #2aa198;">[</span>
+            <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">minCardinality</span> 0 <span style="color: #859900;">;</span>
+            <span style="color: #268bd2;">owl:</span><span style="color: #268bd2;">maxCardinality</span> 2 <span style="color: #859900;">;</span>
+        <span style="color: #2aa198;">]</span>
+        <span style="color: #268bd2;">dc::</span><span style="color: #268bd2;">description</span> <span style="color: #2aa198;">"Emergency contact person"</span>
+    <span style="color: #657b83;">]</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6865b5b" class="outline-4">
+<h4 id="org6865b5b"><span class="section-number-4">3.6.2.</span> Enums</h4>
+<div class="outline-text-4" id="text-3-6-2">
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 44: </span>SDML Empty Enum</label><pre class="src src-sdml" id="org26b9459"><span style="color: #859900;">enum</span> DistanceUnit
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 45: </span>SDML Empty Enum, Corresponding OWL</label><pre class="src src-ttl" id="org07c4ff8"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">DistanceUnit</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">sdml:</span><span style="color: #268bd2;">Enumeration</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 46: </span>SDML Enum With Variants</label><pre class="src src-sdml" id="org1125585"><span style="color: #859900;">enum</span> DistanceUnit <span style="color: #859900;">is</span>
+  Meter = <span style="color: #268bd2;">1</span>
+  Foot = <span style="color: #268bd2;">2</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 47: </span>SDML Enum With Variants, Corresponding OWL</label><pre class="src src-ttl" id="org12c823d"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">DistanceUnit</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">sdml:</span><span style="color: #268bd2;">Enumeration</span>
+    <span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasVariant</span> <span style="color: #657b83;">[</span>
+        <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">label</span> <span style="color: #2aa198;">"Meter"</span> <span style="color: #859900;">;</span>
+        <span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasValue</span> 1 
+    <span style="color: #657b83;">]</span> <span style="color: #859900;">,</span>
+    <span style="color: #657b83;">[</span>
+        <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">label</span> <span style="color: #2aa198;">"Foot"</span> <span style="color: #859900;">;</span>
+        <span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasValue</span> 2
+    <span style="color: #657b83;">]</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5924c76" class="outline-4">
+<h4 id="org5924c76"><span class="section-number-4">3.6.3.</span> Events</h4>
+<div class="outline-text-4" id="text-3-6-3">
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 48: </span>SDML Empty Event</label><pre class="src src-sdml" id="org8ad84f8"><span style="color: #859900;">event</span> PersonNameChanged <span style="color: #859900;">source</span> Person
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 49: </span>SDML Empty Event, Corresponding OWL</label><pre class="src src-ttl" id="org8f5188d"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">PersonNameChanged</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">sdml:</span><span style="color: #268bd2;">Event</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">sdml:</span><span style="color: #268bd2;">eventSource</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Person</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 50: </span>SDML Event</label><pre class="src src-sdml" id="org86800c4"><span style="color: #859900;">event</span> PersonNameChanged <span style="color: #859900;">source</span> Person <span style="color: #859900;">is</span>
+  <span style="color: #93a1a1; font-style: italic;">;; identifier members will be copied from Person </span>
+  fromValue -&gt; Name
+  toValue -&gt; Name
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 51: </span>SDML Event, Corresponding OWL</label><pre class="src src-ttl" id="org1df1370"><span style="color: #268bd2;">:</span><span style="color: #268bd2;">PersonNameChanged</span> <span style="color: #268bd2;">rdf:</span><span style="color: #268bd2;">type</span> <span style="color: #268bd2;">sdml:</span><span style="color: #268bd2;">Event</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">sdml:</span><span style="color: #268bd2;">eventSource</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Person</span> <span style="color: #859900;">;</span>
+    <span style="color: #268bd2;">:</span><span style="color: #268bd2;">hasMember</span> <span style="color: #657b83;">[</span>
+        <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Label</span> <span style="color: #2aa198;">"personId"</span> <span style="color: #859900;">;</span>
+        <span style="color: #268bd2;">:</span><span style="color: #268bd2;">targetClassifier</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Person</span>
+    <span style="color: #657b83;">]</span> <span style="color: #859900;">,</span>
+    <span style="color: #657b83;">[</span>
+        <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Label</span> <span style="color: #2aa198;">"fromValue"</span> <span style="color: #859900;">;</span>
+        <span style="color: #268bd2;">:</span><span style="color: #268bd2;">targetClassifier</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Name</span>
+    <span style="color: #657b83;">]</span> <span style="color: #859900;">,</span>
+    <span style="color: #657b83;">[</span>
+        <span style="color: #268bd2;">rdfs:</span><span style="color: #268bd2;">Label</span> <span style="color: #2aa198;">"toValue"</span> <span style="color: #859900;">;</span>
+        <span style="color: #268bd2;">:</span><span style="color: #268bd2;">targetClassifier</span> <span style="color: #268bd2;">:</span><span style="color: #268bd2;">Name</span>
+    <span style="color: #657b83;">]</span> <span style="color: #859900;">.</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgfb0d8d1" class="outline-2">
+<h2 id="orgfb0d8d1"><span class="section-number-2">4.</span> Walk-Through Example</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+The following section walks through the process of model creation and iterative elaboration to add detail as domain
+experts provide more information. In our example we will build a domain model for a vehicle rental company. So, as you
+might imagine we can start the model with some pretty obvious entities, but with no detail beyond their names. Listing
+<a href="#org60e1da5">52</a> is this first-pass domain model.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 52: </span>First Pass Concepts</label><pre class="src src-sdml" id="org60e1da5"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Vehicle</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Location</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Customer</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Booking</span>
+
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<p>
+The <code>sdml</code> tool can be used to generate a concept diagram, a high-level view of only the entities in the model and their
+relationships. The following command-line will generate figure <a href="#orgcc36838">4</a> from listing
+<a href="#org60e1da5">52</a>.
+</p>
+
+<pre class="example" id="org4f7b752">
+sdml draw --diagram concepts \
+          --output-format svg \
+          --output-file ./rentals-concept-1.svg \
+          tests/rental-1.sdm
+</pre>
+
+
+<div id="orgcc36838" class="figure">
+<p><img src="./rentals-concept-1.svg" alt="rentals-concept-1.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 4: </span>First Pass Concept Diagram</p>
+</div>
+
+<p>
+Figure <a href="#org38cd7c2">53</a> is the second-pass at our model, adding relationships from the <code>Booking</code> entity to the
+<code>Customer</code>, <code>Location</code>, and  <code>Vehicle</code> entities. Adding a body to the <code>Booking</code> entity, between <code>is</code> … <code>end</code>, requires the entity
+specify an identifier. To allow the addition of <code>bookingCode</code> without spending time on the details of it's type the
+keyword <code>unknown</code> is used to defer the type until later.
+</p>
+
+<p>
+Additionally, the <code>vehicle</code> relationship specifies a new cardinality overriding the usual <code>0..</code> with <code>0..1</code>.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 53: </span>Basic Relationships</label><pre class="src src-sdml" id="org38cd7c2"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Vehicle</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Location</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Customer</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Booking</span> <span style="color: #859900;">is</span>
+    <span style="color: #859900;">identity</span> <span style="color: #6c71c4;">bookingCode</span> <span style="color: #859900;">-&gt;</span> <span style="color: #859900;">unknown</span>
+
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">vehicle</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">0</span><span style="color: #859900;">..</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Vehicle</span>
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">from</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">Location</span>
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">customer</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">Customer</span>
+  <span style="color: #859900;">end</span>
+
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<p>
+Re-running the <code>sdml</code> tool on listing <a href="#org38cd7c2">53</a> will result in the relationships added, as shown in figure
+<a href="#org2798bb6">5</a>.
+</p>
+
+
+<div id="org2798bb6" class="figure">
+<p><img src="./rentals-concept-2.svg" alt="rentals-concept-2.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 5: </span>Basic Relationships</p>
+</div>
+
+<p>
+In the next edit of our rentals model we see some additions:
+</p>
+
+<ol class="org-ol">
+<li>The use of <code>import</code> to use the <code>VehicleIdentificationNumber</code> data type from the <code>cids</code> (Common Identifiers) model.</li>
+<li>The new entity <code>Class</code> to model the rental class of a vehicle.</li>
+<li><code>Vehicle</code> now has an identifier, a relationship to the new <code>Class</code> entity, and a relationship to <code>Location</code>.</li>
+<li><code>Booking</code> also has a relationship to the new <code>Class</code> entity.</li>
+<li>We demonstrate the non-range cardinality notation, <code>{1}</code>, which is a shortcut for the range <code>1..1</code>.</li>
+</ol>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 54: </span>Some More Detail</label><pre class="src src-sdml" id="org09c376a"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
+
+  <span style="color: #859900;">import</span> <span style="color: #268bd2;">cids:VehicleIdentificationNumber</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Class</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Vehicle</span> <span style="color: #859900;">is</span>
+    <span style="color: #859900;">identity</span> <span style="color: #6c71c4;">vin</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">VehicleIdentificationNumber</span>
+
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">rentalClass</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Class</span>
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">onProperty</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">0</span><span style="color: #859900;">..</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Location</span>
+  <span style="color: #859900;">end</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Location</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Customer</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Booking</span> <span style="color: #859900;">is</span>
+    <span style="color: #859900;">identity</span> <span style="color: #6c71c4;">bookingCode</span> <span style="color: #859900;">-&gt;</span> <span style="color: #859900;">unknown</span>
+
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">bookingClass</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Class</span>
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">vehicle</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">0</span><span style="color: #859900;">..</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Vehicle</span>
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">from</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">Location</span>
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">customer</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Customer</span>
+  <span style="color: #859900;">end</span>
+
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<p>
+As usual we generate the concept diagram in figure <a href="#orgfb8253f">6</a> from listing <a href="#org09c376a">54</a>.
+</p>
+
+
+<div id="orgfb8253f" class="figure">
+<p><img src="./rentals-concept-3.svg" alt="rentals-concept-3.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 6: </span>Some More Detail</p>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 55: </span>Non-Entity Detail</label><pre class="src src-sdml" id="orgbd33609"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
+
+  <span style="color: #859900;">import</span> <span style="color: #268bd2;">cids:VehicleIdentificationNumber</span>
+  <span style="color: #859900;">import</span> <span style="color: #657b83; background-color: #fdf6e3;">[</span><span style="color: #268bd2;">xsd:date</span> <span style="color: #268bd2;">xsd:string</span><span style="color: #657b83; background-color: #fdf6e3;">]</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Class</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Vehicle</span> <span style="color: #859900;">is</span>
+    <span style="color: #859900;">identity</span> <span style="color: #6c71c4;">vin</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">VehicleIdentificationNumber</span>
+
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">rentalClass</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Class</span>
+  <span style="color: #859900;">end</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Location</span> <span style="color: #859900;">is</span>
+    <span style="color: #859900;">identity</span> <span style="color: #6c71c4;">id</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">cids:Uuid</span>
+
+    address: <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> Address
+  <span style="color: #859900;">end</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Customer</span> <span style="color: #859900;">is</span>
+    <span style="color: #859900;">identity</span> <span style="color: #6c71c4;">id</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">cids:Uuid</span>
+
+    <span style="color: #6c71c4;">contactAddress</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Address</span>
+    <span style="color: #6c71c4;">driverLicense</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">0</span><span style="color: #859900;">..</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">LicenseInformation</span>
+  <span style="color: #859900;">end</span>
+
+  <span style="color: #859900;">structure</span> <span style="color: #268bd2;">Address</span>
+
+  <span style="color: #859900;">structure</span> <span style="color: #268bd2;">LicenseInformation</span> <span style="color: #859900;">is</span>
+    <span style="color: #6c71c4;">number</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">xsd:string</span>
+    <span style="color: #6c71c4;">state</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">xsd:string</span>
+    <span style="color: #6c71c4;">expiration</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">xsd:date</span>
+  <span style="color: #859900;">end</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Booking</span> <span style="color: #859900;">is</span>
+    <span style="color: #859900;">identity</span> <span style="color: #6c71c4;">bookingCode</span> <span style="color: #859900;">-&gt;</span> <span style="color: #859900;">unknown</span>
+
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">bookingClass</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Class</span>
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">vehicle</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">0</span><span style="color: #859900;">..</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Vehicle</span>
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">pickup</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Location</span>
+    <span style="color: #6c71c4;">pickupDate</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">xsd:date</span>
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">dropoff</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Location</span>
+    <span style="color: #6c71c4;">dropoffDate</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">xsd:date</span>
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">customer</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Customer</span>
+  <span style="color: #859900;">end</span>
+
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<p>
+As usual we generate the concept diagram in figure <a href="#org7139f7b">7</a> from listing <a href="#orgbd33609">55</a>.
+</p>
+
+
+<div id="org7139f7b" class="figure">
+<p><img src="./rentals-concept-4.svg" alt="rentals-concept-4.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 7: </span>Non-Entity Detail</p>
+</div>
+
+
+<div id="org01ebc4e" class="figure">
+<p><img src="./rentals-erd-4.svg" alt="rentals-erd-4.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 8: </span>ERD Diagram</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1a44906" class="outline-2">
+<h2 id="org1a44906"><span class="section-number-2">5.</span> Transforms</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+TBD
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgdeb1b97" class="outline-2">
+<h2 id="orgdeb1b97"><span class="section-number-2">6.</span> Implementation (Tree-Sitter)</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+The core of the implementation 
+</p>
+</div>
+
+<div id="outline-container-org4757715" class="outline-3">
+<h3 id="org4757715"><span class="section-number-3">6.1.</span> Build</h3>
+<div class="outline-text-3" id="text-6-1">
+<pre class="example" id="org0f5eabb">
+git clone https://github.com/johnstonskj/tree-sitter-sdml
+</pre>
+
+<pre class="example" id="org093be18">
+make setup
+</pre>
+
+<pre class="example" id="orgcf3c479">
+make build
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org6edd18c" class="outline-2">
+<h2 id="org6edd18c"><span class="section-number-2">7.</span> Tools</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-org10fd1a9" class="outline-3">
+<h3 id="org10fd1a9"><span class="section-number-3">7.1.</span> Command-Line Tool</h3>
+</div>
+
+<div id="outline-container-orgb934b79" class="outline-3">
+<h3 id="orgb934b79"><span class="section-number-3">7.2.</span> Editor Support</h3>
+<div class="outline-text-3" id="text-7-2">
+</div>
+<div id="outline-container-orgee9a75d" class="outline-4">
+<h4 id="orgee9a75d"><span class="section-number-4">7.2.1.</span> VSCode</h4>
+<div class="outline-text-4" id="text-7-2-1">
+<p>
+Try here: <a href="https://github.com/georgewfraser/vscode-tree-sitter">https://github.com/georgewfraser/vscode-tree-sitter</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd8ba069" class="outline-4">
+<h4 id="orgd8ba069"><span class="section-number-4">7.2.2.</span> Emacs (&lt; 29)</h4>
+<div class="outline-text-4" id="text-7-2-2">
+<p>
+Follow the directions in the <i>read-me</i> file for the Emacs <a href="https://github.com/johnstonskj/emacs-sdml-mode">tree-sitter</a> package.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org49e4e91" class="outline-4">
+<h4 id="org49e4e91"><span class="section-number-4">7.2.3.</span> Emacs (&gt;= 29)</h4>
+<div class="outline-text-4" id="text-7-2-3">
+<p>
+TBD
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5e0911f" class="outline-4">
+<h4 id="org5e0911f"><span class="section-number-4">7.2.4.</span> Neovim</h4>
+<div class="outline-text-4" id="text-7-2-4">
+<p>
+TBD
+</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgb989592" class="outline-2">
+<h2 id="orgb989592"><span class="section-number-2">8.</span> Appendix: Surface Syntax to RDF</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+TBD
+</p>
+</div>
+</div>
+
+
+
+
+<div id="outline-container-orgd653c46" class="outline-2">
+<h2 id="orgd653c46"><span class="section-number-2">9.</span> Appendix: Tables of Other Content</h2>
+<div class="outline-text-2" id="text-9">
+<div id="list-of-tables">
+<h2>List of Tables</h2>
+<div id="text-list-of-tables">
+<ul>
+<li><a href="#orgc6b4aeb"><span class="table-number">Table 1:</span> OWL Built-in Datatype Facets</a></li>
+</ul>
+</div>
+</div>
+
+<div id="list-of-listings">
+<h2>List of Listings</h2>
+<div id="text-list-of-listings">
+<ul>
+<li><a href="#org5541a72"><span class="listing-number">Listing 1:</span> OWL: Top-Level Module</a></li>
+<li><a href="#org30a93ce"><span class="listing-number">Listing 2:</span> OWL: Classifiers, or Types</a></li>
+<li><a href="#org0ef9b00"><span class="listing-number">Listing 3:</span> OWL: Classifier Related Classes</a></li>
+<li><a href="#org5cbeb9d"><span class="listing-number">Listing 4:</span> OWL: Module Object Properties</a></li>
+<li><a href="#orgac6c29e"><span class="listing-number">Listing 5:</span> OWL: Classifier Object Properties</a></li>
+<li><a href="#orga881141"><span class="listing-number">Listing 6:</span> OWL: Classifier Member Properties</a></li>
+<li><a href="#org46a7725"><span class="listing-number">Listing 7:</span> OWL: Cardinality Object Properties</a></li>
+<li><a href="#org1f51f8f"><span class="listing-number">Listing 8:</span> OWL: Variant Value Property</a></li>
+<li><a href="#org6a2e77a"><span class="listing-number">Listing 9:</span> SDML Comments</a></li>
+<li><a href="#org109aaa1"><span class="listing-number">Listing 10:</span> SDML Identifier Examples</a></li>
+<li><a href="#org0af2001"><span class="listing-number">Listing 11:</span> SDML Qualified Identifier Example</a></li>
+<li><a href="#org64d670b"><span class="listing-number">Listing 12:</span> SDML Simple Value Examples</a></li>
+<li><a href="#org26b8a62"><span class="listing-number">Listing 13:</span> SDML Value List Example</a></li>
+<li><a href="#org5dee28b"><span class="listing-number">Listing 14:</span> SDML Type Constructor Example</a></li>
+<li><a href="#org045ed90"><span class="listing-number">Listing 15:</span> SDML Empty Module</a></li>
+<li><a href="#org00ed557"><span class="listing-number">Listing 16:</span> SDML Empty Module, Corresponding OWL</a></li>
+<li><a href="#orgee4bb3f"><span class="listing-number">Listing 17:</span> SDML Importing Module</a></li>
+<li><a href="#org5037ae1"><span class="listing-number">Listing 18:</span> SDML Importing Module, Corresponding OWL</a></li>
+<li><a href="#orgcce177c"><span class="listing-number">Listing 19:</span> SDML Importing Member</a></li>
+<li><a href="#org107d1b1"><span class="listing-number">Listing 20:</span> SDML Importing Member, Corresponding OWL</a></li>
+<li><a href="#org01d8d4e"><span class="listing-number">Listing 21:</span> SDML Importing a List</a></li>
+<li><a href="#org990a327"><span class="listing-number">Listing 22:</span> SDML Importing From URL</a></li>
+<li><a href="#org913a1d1"><span class="listing-number">Listing 23:</span> SDML Importing From URL, Corresponding OWL</a></li>
+<li><a href="#org151d817"><span class="listing-number">Listing 24:</span> SDML Datatype</a></li>
+<li><a href="#orgea7c60c"><span class="listing-number">Listing 25:</span> SDML Datatype, Corresponding OWL</a></li>
+<li><a href="#org94d1600"><span class="listing-number">Listing 26:</span> SDML Datatype with Restrictions</a></li>
+<li><a href="#org6a7de10"><span class="listing-number">Listing 27:</span> SDML Datatype with Restrictions, Corresponding OWL</a></li>
+<li><a href="#org8f487b6"><span class="listing-number">Listing 28:</span> SDML Annotation Property</a></li>
+<li><a href="#org5c3f160"><span class="listing-number">Listing 29:</span> SDML Annotation Property List</a></li>
+<li><a href="#org906d660"><span class="listing-number">Listing 30:</span> SDML Annotated Module</a></li>
+<li><a href="#orgdf41572"><span class="listing-number">Listing 31:</span> SDML Empty Structure</a></li>
+<li><a href="#orga0208f2"><span class="listing-number">Listing 32:</span> SDML Empty Structure, Corresponding OWL</a></li>
+<li><a href="#org51a442f"><span class="listing-number">Listing 33:</span> SDML Annotated Structure</a></li>
+<li><a href="#org3fd8eba"><span class="listing-number">Listing 34:</span> SDML Annotated Structure, Corresponding OWL</a></li>
+<li><a href="#org5d5a7d4"><span class="listing-number">Listing 35:</span> SDML Structure Members</a></li>
+<li><a href="#org56f0c6e"><span class="listing-number">Listing 36:</span> SDML Structure Members, Corresponding OWL</a></li>
+<li><a href="#orgb4482b7"><span class="listing-number">Listing 37:</span> SDML Structure MembersGroups</a></li>
+<li><a href="#orgfee6f55"><span class="listing-number">Listing 38:</span> SDML Empty Entity</a></li>
+<li><a href="#orgbfb493f"><span class="listing-number">Listing 39:</span> SDML Empty Entity, Corresponding OWL</a></li>
+<li><a href="#org8ee3bc6"><span class="listing-number">Listing 40:</span> SDML Entity with Identifying Member</a></li>
+<li><a href="#org3609170"><span class="listing-number">Listing 41:</span> SDML Entity with Identifying Member, Corresponding OWL</a></li>
+<li><a href="#org5889ae5"><span class="listing-number">Listing 42:</span> SDML Entity with Reference Member</a></li>
+<li><a href="#orgb4c33ed"><span class="listing-number">Listing 43:</span> SDML Entity with Reference Member, Corresponding OWL</a></li>
+<li><a href="#org26b9459"><span class="listing-number">Listing 44:</span> SDML Empty Enum</a></li>
+<li><a href="#org07c4ff8"><span class="listing-number">Listing 45:</span> SDML Empty Enum, Corresponding OWL</a></li>
+<li><a href="#org1125585"><span class="listing-number">Listing 46:</span> SDML Enum With Variants</a></li>
+<li><a href="#org12c823d"><span class="listing-number">Listing 47:</span> SDML Enum With Variants, Corresponding OWL</a></li>
+<li><a href="#org8ad84f8"><span class="listing-number">Listing 48:</span> SDML Empty Event</a></li>
+<li><a href="#org8f5188d"><span class="listing-number">Listing 49:</span> SDML Empty Event, Corresponding OWL</a></li>
+<li><a href="#org86800c4"><span class="listing-number">Listing 50:</span> SDML Event</a></li>
+<li><a href="#org1df1370"><span class="listing-number">Listing 51:</span> SDML Event, Corresponding OWL</a></li>
+<li><a href="#org60e1da5"><span class="listing-number">Listing 52:</span> First Pass Concepts</a></li>
+<li><a href="#org38cd7c2"><span class="listing-number">Listing 53:</span> Basic Relationships</a></li>
+<li><a href="#org09c376a"><span class="listing-number">Listing 54:</span> Some More Detail</a></li>
+<li><a href="#orgbd33609"><span class="listing-number">Listing 55:</span> Non-Entity Detail</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink">1</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+<a href="https://en.wikipedia.org/wiki/Domain-driven_design">Domain-Driven Design</a>, Wikipedia
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2" role="doc-backlink">2</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+<a href="https://en.wikipedia.org/wiki/Model-driven_engineering">Model-Driven Development</a>, Wikipedia
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3" role="doc-backlink">3</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+<a href="https://www.w3.org/TR/turtle/#sec-iri-references">RDF 1.1 Turtle</a>, 6.3 IRI References
+</p></div></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="author">Author: Simon Johnston</p>
+<p class="date">Created: 2023-05-23 Tue 09:31</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

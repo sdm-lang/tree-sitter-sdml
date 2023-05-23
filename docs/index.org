@@ -368,7 +368,7 @@ conventions for single, double, and triple comment characters are useful but in 
 ; comments start with ';' and go to end of line
 #+END_SRC
 
-** Identifiers and Values
+** Identifiers
 
 An identifier is a string of characters corresponding to the [[https://unicode.org/reports/tr44/#GC_Values_Table][Unicode General Category]] *Lu* (an uppercase letter) or *Ll* (a
 lowercase letter). No additional separator characters such as ='_'=, ='-'=, ='$'=, ='@'=, ='#'=, etc. are permitted.
@@ -401,40 +401,6 @@ SHOUTY
 module:Member
 #+END_SRC
 
-Simple Values:
-
-#+NAME: lst:sdml-ex-simple-values
-#+CAPTION: SDML Simple Value Examples
-#+BEGIN_SRC sdml
-"a string"
-"a language-tagged string"en-US
-<https://...>  ;; an IRI reference
-true false     ;; booleans
-123            ;; integer
-123.0          ;; decimal
-123.0e-10      ;; double
-#+END_SRC
-
-IRI references are more permissive in the SDML grammar than the Turtle[fn:3] language. 
-
-Value Lists:
-
-#+NAME: lst:sdml-ex-value-lists
-#+CAPTION: SDML Value List Example
-#+BEGIN_SRC sdml
-[ "yes" "no" "maybe" ]
-#+END_SRC
-
-Value Constructors:
-
-#+NAME: lst:sdml-ex-type-constructor
-#+CAPTION: SDML Type Constructor Example
-#+BEGIN_SRC sdml
-xsd:unsigned(1)
-#+END_SRC
-
-See [[sec:data-types]]
-
 ** Module Declaration and Imports
 
 An empty module, specifically a module with an empty /body/ which is the content between the keywords *=is=* and *=end=*. 
@@ -443,12 +409,6 @@ An empty module, specifically a module with an empty /body/ which is the content
 #+CAPTION: SDML Empty Module
 #+BEGIN_SRC sdml
 module example is end
-#+END_SRC
-
-#+NAME: lst:sdml-ex-empty-module-owl
-#+CAPTION: SDML Empty Module, Corresponding OWL
-#+BEGIN_SRC ttl
-:example rdf:type :Module .
 #+END_SRC
 
 This module contains a single import statement bringing in the module named =xsd= making it's members available in the
@@ -462,28 +422,12 @@ module example is
 end
 #+END_SRC
 
-#+NAME: lst:sdml-ex-import-module-owl
-#+CAPTION: SDML Importing Module, Corresponding OWL
-#+BEGIN_SRC ttl
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
-:example rdf:type :Module .
-#+END_SRC
-
 #+NAME: lst:sdml-ex-import-member
 #+CAPTION: SDML Importing Member
 #+BEGIN_SRC sdml
 module example is
   import xsd:integer
 end
-#+END_SRC
-
-#+NAME: lst:sdml-ex-import-member-owl
-#+CAPTION: SDML Importing Member, Corresponding OWL
-#+BEGIN_SRC ttl
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
-:example rdf:type :Module .
 #+END_SRC
 
 #+NAME: lst:sdml-ex-import-list
@@ -502,27 +446,46 @@ module example is
 end
 #+END_SRC
 
-#+NAME: lst:sdml-ex-import-from-owl
-#+CAPTION: SDML Importing From URL, Corresponding OWL
-#+BEGIN_SRC ttl
-@prefix show: <http://example.org/vocab/show/> .
+** Data Types and Values
 
-:example rdf:type :Module .
+*** Simple Values
+
+#+NAME: lst:sdml-ex-simple-values
+#+CAPTION: SDML Simple Value Examples
+#+BEGIN_SRC sdml
+"a string"
+"a language-tagged string"@en-US
+<https://...>  ;; an IRI reference
+true false     ;; booleans
+123            ;; integer
+123.0          ;; decimal
+123.0e-10      ;; double
 #+END_SRC
 
-** <<sec:data-types>> Data Types
+IRI references are more permissive in the SDML grammar than the Turtle[fn:3] language. 
+
+*** Value Lists
+
+#+NAME: lst:sdml-ex-value-lists
+#+CAPTION: SDML Value List Example
+#+BEGIN_SRC sdml
+[ "yes" "no" "maybe" ]
+#+END_SRC
+
+*** Value Constructors
+
+#+NAME: lst:sdml-ex-type-constructor
+#+CAPTION: SDML Type Constructor Example
+#+BEGIN_SRC sdml
+xsd:unsigned(1)
+#+END_SRC
+
+*** Defining Data Types
 
 #+NAME: lst:sdml-ex-datatype
 #+CAPTION: SDML Datatype
 #+BEGIN_SRC sdml
 datatype name <- xsd:string
-#+END_SRC
-
-#+NAME: lst:sdml-ex-datatype-owl
-#+CAPTION: SDML Datatype, Corresponding OWL
-#+BEGIN_SRC ttl
-:name rdf:type rdfs:Datatype ;
-    owl:onDatatype xsd:string .
 #+END_SRC
 
 #+NAME: lst:sdml-ex-restricted-datatype
@@ -532,17 +495,6 @@ datatype name <- xsd:string is
   @xsd:minLength = 5
   @xsd:maxLength = 25
 end
-#+END_SRC
-
-#+NAME: lst:sdml-ex-restricted-datatype-owl
-#+CAPTION: SDML Datatype with Restrictions, Corresponding OWL
-#+BEGIN_SRC ttl
-:name rdf:type rdfs:Datatype ;
-    owl:onDatatype xsd:string ;
-    owl:withRestrictions (
-        [ xsd:minLength "5"^^xsd:nonNegativeInteger ]
-        [ xsd:maxLength "25"^^xsd:nonNegativeInteger ]
-    ) .
 #+END_SRC
 
 From [[https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide][OWL 2 Web Ontology Language Quick Reference Guide (Second Edition)]]:
@@ -606,26 +558,12 @@ should be a triple:
 structure Length
 #+END_SRC
 
-#+NAME: lst:sdml-ex-empty-structure-owl
-#+CAPTION: SDML Empty Structure, Corresponding OWL
-#+BEGIN_SRC ttl
-:Length rdf:type sdml:Structure ;
-    rdfs:isDefinedBy :module .
-#+END_SRC
-
 #+NAME: lst:sdml-ex-annotated-structure
 #+CAPTION: SDML Annotated Structure
 #+BEGIN_SRC sdml
 structure Length is
   @skos:prefLabel "Length"@en
 end
-#+END_SRC
-
-#+NAME: lst:sdml-ex-annotated-structure-owl
-#+CAPTION: SDML Annotated Structure, Corresponding OWL
-#+BEGIN_SRC ttl
-:Length rdf:type sdml:Structure ;
-    skos:prefLabel "Length"@en .
 #+END_SRC
 
 #+NAME: lst:sdml-ex-structure-members
@@ -637,21 +575,6 @@ structure Length is
   value -> Decimal
   unit -> DistanceUnit
 end
-#+END_SRC
-
-#+NAME: lst:sdml-ex-structure-members-owl
-#+CAPTION: SDML Structure Members, Corresponding OWL
-#+BEGIN_SRC ttl
-:Length rdf:type sdml:Structure ;
-    skos:prefLabel "Length"@en .
-    :hasMember [
-        rdfs:label "value" ;
-        :targetClassifier :Decimal ;
-    ] ,
-    [
-        rdfs:label "unit" ;
-        :targetClassifier :DistanceUnit ;
-    ] .
 #+END_SRC
 
 #+NAME: lst:sdml-ex-structure-groups
@@ -680,28 +603,12 @@ end
 entity Person
 #+END_SRC
 
-#+NAME: lst:sdml-ex-empty-entity-owl
-#+CAPTION: SDML Empty Entity, Corresponding OWL
-#+BEGIN_SRC ttl
-:Person rdf:type sdml:Entity .
-#+END_SRC
-
 #+NAME: lst:sdml-ex-entity-identifying-member
 #+CAPTION: SDML Entity with Identifying Member
 #+BEGIN_SRC sdml
 entity Person is
   identifier id -> PersonId
 end
-#+END_SRC
-
-#+NAME: lst:sdml-ex-entity-identifying-member-owl
-#+CAPTION: SDML Entity with Identifying Member, Corresponding OWL
-#+BEGIN_SRC ttl
-:Person rdf:type sdml:Entity ;
-    :hasIdentifyingMember [
-        rdfs:label "id" ;
-        :targetClassifier :Person ;
-    ] .
 #+END_SRC
 
 #+NAME: lst:sdml-ex-entity-ref-member
@@ -714,36 +621,12 @@ entity Person is
 end
 #+END_SRC
 
-#+NAME: lst:sdml-ex-entity-ref-member-owl
-#+CAPTION: SDML Entity with Reference Member, Corresponding OWL
-#+BEGIN_SRC ttl
-:Person rdf:type sdml:Entity ;
-    :hasReferenceMember [
-        rdfs:label "contact" ;
-        :targetClassifier :Person ;
-        :sourceCardinality [
-            owl:minCardinality 0 ;
-        ] ;
-        :targetCardinality [
-            owl:minCardinality 0 ;
-            owl:maxCardinality 2 ;
-        ]
-        dc::description "Emergency contact person"
-    ] .
-#+END_SRC
-
 *** Enums
 
 #+NAME: lst:sdml-ex-empty-enum
 #+CAPTION: SDML Empty Enum
 #+BEGIN_SRC sdml
 enum DistanceUnit
-#+END_SRC
-
-#+NAME: lst:sdml-ex-empty-enum-owl
-#+CAPTION: SDML Empty Enum, Corresponding OWL
-#+BEGIN_SRC ttl
-:DistanceUnit rdf:type sdml:Enumeration .
 #+END_SRC
 
 #+NAME: lst:sdml-ex-enum
@@ -755,33 +638,12 @@ enum DistanceUnit is
 end
 #+END_SRC
 
-#+NAME: lst:sdml-ex-enum-owl
-#+CAPTION: SDML Enum With Variants, Corresponding OWL
-#+BEGIN_SRC ttl
-:DistanceUnit rdf:type sdml:Enumeration
-    :hasVariant [
-        rdfs:label "Meter" ;
-        :hasValue 1 
-    ] ,
-    [
-        rdfs:label "Foot" ;
-        :hasValue 2
-    ] .
-#+END_SRC
-
 *** Events
 
 #+NAME: lst:sdml-ex-empty-event
 #+CAPTION: SDML Empty Event
 #+BEGIN_SRC sdml
 event PersonNameChanged source Person
-#+END_SRC
-
-#+NAME: lst:sdml-ex-empty-event-owl
-#+CAPTION: SDML Empty Event, Corresponding OWL
-#+BEGIN_SRC ttl
-:PersonNameChanged rdf:type sdml:Event ;
-    sdml:eventSource :Person .
 #+END_SRC
 
 #+NAME: lst:sdml-ex-event
@@ -792,25 +654,6 @@ event PersonNameChanged source Person is
   fromValue -> Name
   toValue -> Name
 end
-#+END_SRC
-
-#+NAME: lst:sdml-ex-event-owl
-#+CAPTION: SDML Event, Corresponding OWL
-#+BEGIN_SRC ttl
-:PersonNameChanged rdf:type sdml:Event ;
-    sdml:eventSource :Person ;
-    :hasMember [
-        rdfs:Label "personId" ;
-        :targetClassifier :Person
-    ] ,
-    [
-        rdfs:Label "fromValue" ;
-        :targetClassifier :Name
-    ] ,
-    [
-        rdfs:Label "toValue" ;
-        :targetClassifier :Name
-    ] .
 #+END_SRC
 
 # ----- Footnotes
@@ -1000,16 +843,88 @@ As usual we generate the concept diagram in figure [[fig:example-fourth-pass]] f
 #+CAPTION: ERD Diagram
 [[./rentals-erd-4.svg]]
 
+
 * Transforms
 
 TBD
 
 
-* Implementation (Tree-Sitter)
+* Implementation and Tools
 
-The core of the implementation 
+#+NAME: fig:implementation-overview
+#+BEGIN_SRC dot :file implementation-overview.png :exports results
+digraph G {
+    bgcolor="transparent";
+    rankdir="TB";
+    fontname="Helvetica,Arial,sans-serif";
+    node [fontname="Helvetica,Arial,sans-serif"; fontsize=10];
+    edge [fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="dimgrey"; labelfontcolor="blue"; labeldistance=2.0];
 
-** Build
+    subgraph cluster_0 {
+        label = "Core Library";
+        grammar [label="Grammar\nDefinition"];
+        parser [label="Parser\nDylib"];
+        rust [label="Rust\nBindings"];
+        npm [label="Node\nBindings"];
+        wasm [label="WASM\nBindings"];
+
+        grammar -> parser;
+        parser -> rust;
+        parser -> npm;
+        parser -> wasm;
+    }
+
+    treesit [shape=rect; label="Tree-Sitter\nC Library"];
+    treesit -> grammar;
+
+    subgraph cluster_1 {
+        label = "Emacs Support";
+        emode [label="Editing Mode"];
+        spell [label="Spell Checker"];
+        flycheck [label="Flycheck"];
+        emode -> spell;
+        emode -> flycheck;
+
+        parser -> emode;
+    }
+
+    ets [shape=rect; label="Emacs\nTree-Sitter"];
+    ets_hl [shape=rect; label="Tree-Sitter\nHighlighter"];
+    ets_indent [shape=rect; label="Tree-Sitter\nIndenter"];
+    ets_fold [shape=rect; label="Tree-Sitter\nFolder"];
+
+    treesit -> ets;
+    ets -> ets_hl;
+    ets -> ets_indent;
+    ets -> ets_fold;
+
+    ets_hl -> emode;
+    ets_indent -> emode;
+    ets_fold -> emode;
+
+    subgraph cluster_2 {
+        label = "Command-Line Tool";
+        api [label="API"];
+        fmt [label="Formatter"];
+        linter [label="Linter"];
+        diagrams [label="Diagrammer"];
+
+        rust -> api;
+        api -> fmt;
+        api -> linter;
+        api -> diagrams;
+    }
+}
+#+END_SRC
+ 
+#+CAPTION: Implementation Overview
+#+RESULTS: fig:implementation-overview
+[[file:implementation-overview.png]]
+
+
+** Core Library
+
+Build.
 
 #+BEGIN_EXAMPLE
 git clone https://github.com/johnstonskj/tree-sitter-sdml
@@ -1023,16 +938,9 @@ make setup
 make build
 #+END_EXAMPLE
  
-
-* Tools
-
 ** Command-Line Tool
 
 ** Editor Support
-
-*** VSCode
-
-Try here: https://github.com/georgewfraser/vscode-tree-sitter
 
 *** Emacs (< 29)
 
@@ -1046,12 +954,417 @@ TBD
 
 TBD
 
+*** VSCode
+
+Try here: https://github.com/georgewfraser/vscode-tree-sitter
+
 
 * Appendix: Surface Syntax to RDF
 
 TBD
 
+** Whitespace
 
+Whitespace present in the surface syntax has *no* effect on the corresponding RDF.
+
+** Comments
+
+Comments present in the surface syntax are *not* translated into the corresponding RDF.;
+
+** Identifiers
+
+Identifiers for modules and type definitions are appended to the base IRI of the module resource, making individual
+types within a module directly addressable.
+
+*Example:*
+
+Given a resource retrieved from =https://example.com/v/example/= and containing the following:
+
+#+BEGIN_SRC sdml
+module example is
+end
+#+END_SRC
+
+The module within has the IRI identifier =https://example.com/v/example/example=.
+
+However, if the module overrides the retrieved location using =xml:base=, as follows:
+
+#+BEGIN_SRC sdml
+module example is
+  import xml:base
+  @xml:base = <https://example.org/langs/Example#>
+end
+#+END_SRC
+
+The module within this resource now has the IRI identifier =https://example.org/langs/Example#example=.
+
+The remainder of this section will use example modules with =xml:base= to make identifier IRIs more easily understood.
+
+** Values
+
+*** Simple Value Literals
+
+| SDML Type     | Underlying Type | Value Space                                                  | Lexical Space  |
+|---------------+-----------------+--------------------------------------------------------------+----------------|
+| =boolean=       | =xsd:boolean=     | The values =true= and =false=                                    | =true= and =false= |
+| =decimal=       | =xsd:decimal=     | A 128-bit representation of a fixed-precision decimal number | [[https://www.w3.org/TR/xmlschema-2/#decimal][XML Schema]]     |
+| =double=        | =xsd:double=      | An IEEE double-precision 64-bit floating point type          | [[https://www.w3.org/TR/xmlschema-2/#double][XML Schema]]     |
+| =integer=       | =xsd:integer=     | A signed 64-bit integer                                      |                |
+| =iri_reference= | =xsd:AnyURI=      | Represents a Uniform Resource Identifier Reference (URI)     | [[https://www.w3.org/TR/xmlschema-2/#anyURI][XML Schema]]     |
+| =string=        | =rdfs:langString= |                                                              | [[https://www.w3.org/TR/rdf11-concepts/#section-Graph-Literal][RDF]]            |
+
+*** List Literals
+
+*Example:*
+
+Given the following list literal:
+
+#+BEGIN_SRC sdml
+@skos:altLabel = [ "yes" "no" "maybe" ]
+#+END_SRC
+
+The generated RDF consists of separate statements for each value in the list.
+
+#+BEGIN_SRC ttl
+:thing skos:altLabel "yes" .
+:thing skos:altLabel "no" .
+:thing skos:altLabel "maybe" .
+#+END_SRC
+
+For clarity and brevity this is usually written in Turtle as an object list (Turtle [[https://www.w3.org/TR/turtle/#object-lists][2.3 Object Lists]]):
+
+#+BEGIN_SRC ttl
+:thing skos:altLabel "yes", "no", "maybe" .
+#+END_SRC
+
+Currently there is no mapping from the surface syntax to list values, that is an RDF Collection (Turtle [[https://www.w3.org/TR/turtle/#collections][2.8 Collections]])
+which constructs a list using the =rdf:first= and =rdf:rest= predicates. This would result in the following RDF:
+
+#+BEGIN_SRC ttl
+:thing skos:altLabel ( "yes", "no", "maybe" ) .
+#+END_SRC
+
+*** Value Constructors
+
+** Modules
+
+*Example with Implied Base:*
+
+#+BEGIN_SRC sdml
+module example is end
+#+END_SRC
+
+
+#+BEGIN_SRC ttl
+@base <https://example.com/v/example/> .
+@prefix : <https://example.com/v/example/> .
+@prefix sdml: <https://api.amazonadvertising.com/domain-model> .
+
+:example rdf:type sdml:Module .
+#+END_SRC
+
+*Example with Explicit Base:*
+
+#+BEGIN_SRC sdml
+module example is
+  import xml:base
+  @xml:base = <https://example.org/langs/Example#>
+end
+#+END_SRC
+
+
+#+BEGIN_SRC ttl
+@base <https://example.org/langs/Example#> .
+@prefix : <https://example.org/langs/Example#> .
+@prefix sdml: <https://api.amazonadvertising.com/domain-model> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+
+:example rdf:type sdml:Module .
+#+END_SRC
+
+** Imports
+
+*Example with Implicit Location:*
+
+#+BEGIN_SRC sdml
+module example is
+  import xml
+end
+#+END_SRC
+
+
+*Example with Explicit Location:*
+
+#+BEGIN_SRC sdml
+module example is
+  import xml from <file:///usr/local/share/schema/xml.ttl>
+end
+#+END_SRC
+
+** Annotations
+
+** Data Type Definition
+
+*Example:*
+
+#+BEGIN_SRC sdml
+datatype name <- xsd:string
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:name rdf:type rdfs:Datatype ;
+    owl:onDatatype xsd:string .
+#+END_SRC
+
+*Example with Restrictions:*
+
+#+BEGIN_SRC sdml
+datatype name <- xsd:string is
+  @xsd:minLength = 5
+  @xsd:maxLength = 25
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:name rdf:type rdfs:Datatype ;
+    owl:onDatatype xsd:string ;
+    owl:withRestrictions (
+        [ xsd:minLength "5"^^xsd:nonNegativeInteger ]
+        [ xsd:maxLength "25"^^xsd:nonNegativeInteger ]
+    ) .
+#+END_SRC
+
+** Entity Definition
+
+*Example Empty Entity:*
+
+#+BEGIN_SRC sdml
+entity Person
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Person rdf:type sdml:Entity .
+#+END_SRC
+
+*Example Entity with Identity:*
+
+#+BEGIN_SRC sdml
+entity Person is
+  identifier id -> PersonId
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Person rdf:type sdml:Entity ;
+    :hasIdentifyingMember [
+        rdfs:label "id" ;
+        :targetClassifier :Person ;
+    ] .
+#+END_SRC
+
+*Example Entity with By-Value Member:*
+
+TBD
+
+*Example Entity with By-Reference Member:*
+
+#+BEGIN_SRC sdml
+entity Person is
+  ref contact {0..} -> {0..2} Person is
+    @dc:description "Emergency contact person"
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Person rdf:type sdml:Entity ;
+    :hasReferenceMember [
+        rdfs:label "contact" ;
+        :targetClassifier :Person ;
+        :sourceCardinality [
+            owl:minCardinality 0 ;
+        ] ;
+        :targetCardinality [
+            owl:minCardinality 0 ;
+            owl:maxCardinality 2 ;
+        ]
+        dc::description "Emergency contact person"
+    ] .
+#+END_SRC
+
+*Example Entity with Group:*
+
+TBD
+
+** Enumeration Definition
+
+*Example Empty Enumeration:*
+
+#+BEGIN_SRC sdml
+enum DistanceUnit
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:DistanceUnit rdf:type sdml:Enumeration .
+#+END_SRC
+
+*Example Enumeration with Variants:*
+
+#+BEGIN_SRC sdml
+enum DistanceUnit is
+  Meter = 1
+  Foot = 2
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:DistanceUnit rdf:type sdml:Enumeration
+    :hasVariant [
+        rdfs:label "Meter" ;
+        :hasValue 1 
+    ] ,
+    [
+        rdfs:label "Foot" ;
+        :hasValue 2
+    ] .
+#+END_SRC
+
+** Event Definition
+
+*Example Empty Event:*
+
+#+BEGIN_SRC sdml
+event PersonNameChanged source Person
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:PersonNameChanged rdf:type sdml:Event ;
+    sdml:eventSource :Person .
+#+END_SRC
+
+*Example Event with Members:*
+
+#+BEGIN_SRC sdml
+event PersonNameChanged source Person is
+  ;; identifier members will be copied from Person 
+  fromValue -> Name
+  toValue -> Name
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:PersonNameChanged rdf:type sdml:Event ;
+    sdml:eventSource :Person ;
+    :hasMember [
+        rdfs:Label "personId" ;
+        :targetClassifier :Person
+    ] ,
+    [
+        rdfs:Label "fromValue" ;
+        :targetClassifier :Name
+    ] ,
+    [
+        rdfs:Label "toValue" ;
+        :targetClassifier :Name
+    ] .
+#+END_SRC
+
+** Structure Definition
+
+*Example Empty Structure:*
+
+#+BEGIN_SRC sdml
+structure Length
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Length rdf:type sdml:Structure ;
+    rdfs:isDefinedBy :module .
+#+END_SRC
+
+*Example Structure with Annotation:*
+
+#+BEGIN_SRC sdml
+structure Length is
+  @skos:prefLabel "Length"@en
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Length rdf:type sdml:Structure ;
+    skos:prefLabel "Length"@en .
+#+END_SRC
+
+*Example Structure with Members:*
+
+#+BEGIN_SRC sdml
+structure Length is
+  @skos:prefLabel "Length"@en
+
+  value -> Decimal
+  unit -> DistanceUnit
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Length rdf:type sdml:Structure ;
+    skos:prefLabel "Length"@en .
+    :hasMember [
+        rdfs:label "value" ;
+        :targetClassifier :Decimal ;
+    ] ,
+    [
+        rdfs:label "unit" ;
+        :targetClassifier :DistanceUnit ;
+    ] .
+#+END_SRC
+
+*Example Structure with Groups:*
+
+#+BEGIN_SRC sdml
+structure Account is
+  @skos:prefLabel "Customer Account"@en
+
+  group
+    @skos:prefLabel "Metadata"
+   created -> xsd:dateTime
+  end
+
+  group
+    @skos:prefLabel "Customer Information"
+    ref customer -> {1..1} Customer
+  end
+end
+#+END_SRC
+
+
+* Appendix: Known URI Prefixes
+
+The following prefixes may be used in import statements without the need to reference their location directly. Either
+the namespace URI will be used to retrieve the corresponding resource or a local copy will be used.
+
+| Prefix    | URI                                           |
+|-----------+-----------------------------------------------|
+| =dbpedia=   | <http://dbpedia.org/resource/>                |
+| =dbpprop=   | <http://dbpedia.org/property/>                |
+| =dc=        | <http://purl.org/dc/elements/1.1/>            |
+| =dcterms=   | <http://purl.org/dc/terms/>                   |
+| =dctype=    | <http://purl.org/dc/dcmitype/>                |
+| =dcam=      | <http://purl.org/dc/dcam/>                    |
+| =foaf=      | <http://xmlns.com/foaf/0.1/>                  |
+| =geo=       | <http://www.w3.org/2003/01/geo/wgs84_pos#>    |
+| =ldp=       | <http://www.w3.org/ns/ldp#>                   |
+| =math=      | <http://www.w3.org/2000/10/swap/math#>        |
+| =owl=       | <http://www.w3.org/2002/07/owl#>              |
+| =rdf=       | <http://www.w3.org/1999/02/22-rdf-syntax-ns#> |
+| =rdfs=      | <http://www.w3.org/2000/01/rdf-schema#>       |
+| =sioc=      | <http://rdfs.org/sioc/ns#>                    |
+| =skos=      | <http://www.w3.org/2004/02/skos/core#>        |
+| =vcard=     | <http://www.w3.org/2001/vcard-rdf/3.0#>       |
+| =vcard2006= | <http://www.w3.org/2006/vcard/ns#>            |
+| =void=      | <http://rdfs.org/ns/void#>                    |
+| =xml=       | <http://www.w3.org/XML/1998/namespace>        |
+| =xsd=       | <http://www.w3.org/2001/XMLSchema#>           |
 
 
 * Appendix: Tables of Other Content

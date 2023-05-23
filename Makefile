@@ -153,6 +153,7 @@ $(INSTALL_INCLUDE_DIR)/tree_sitter/parser.h: $(SRC_DIR)/tree_sitter/parser.h
 # ----------------------------------------------------------------------------
 
 EMACS_TS_DIR ?= $(HOME)/.tree-sitter/bin
+EMACS_ABI := 13
 EMACS_BINDING := $(EMACS_TS_DIR)/$(SHORT_NAME).$(DYLIB_EXT)
 
 emacs: $(EMACS_BINDING)
@@ -162,7 +163,7 @@ $(EMACS_BINDING): generate_for_emacs build_parser
  
 .PHONY: generate_for_emacs
 generate_for_emacs:
-	$(TS_CLI) $(TS_GENERATE)
+	$(TS_CLI) generate --abi=$(EMACS_ABI)
 
 # ----------------------------------------------------------------------------
 # Build ❯ Bindings

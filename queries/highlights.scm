@@ -74,11 +74,6 @@ name: (identifier) @type.definition)
  "->" @operator
  target: (_) @type)
 
-(identity_member
- name: (identifier) @variable.field
- "->" @operator
- target: (_) @type)
-
 (member_by_value
  name: (identifier) @variable.field
  "->" @operator

@@ -5,14 +5,15 @@ Entity, With Groups
 module Campaign is
 
   entity Campaign is
+    identity id -> xs:string
 
-  group
-a -> xsd:string
-  end
+    group
+      a -> xsd:string
+    end
 
-group
-b -> xsd:integer
-end
+    group
+      b -> xsd:integer
+    end
 
   end
 
@@ -26,6 +27,12 @@ end
     (entity_def
       name: (identifier)
       body: (entity_body
+        identity: (identity_member
+          name: (identifier)
+          target: (identifier_reference
+            (qualified_identifier
+              module: (identifier)
+              member: (identifier))))
         (entity_group
           (member_by_value
             name: (identifier)

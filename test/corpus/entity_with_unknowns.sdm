@@ -1,0 +1,39 @@
+=================================
+Entity, With Unknown Member Types
+=================================
+
+module Campaign is
+
+  entity Campaign is
+
+    identity id -> unknown
+
+    a -> unknown
+
+    group
+      b -> unknown
+    end
+
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (entity_def
+      name: (identifier)
+      body: (entity_body
+        identity: (identity_member
+          name: (identifier)
+target: (unknown_type))
+(member_by_value
+name: (identifier)
+target: (unknown_type))
+            (entity_group
+              (member_by_value
+                name: (identifier)
+                target: (unknown_type)))))))
+

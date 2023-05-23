@@ -2,6 +2,8 @@ module campaign is
 
   import [xsd skos xml:base dc]
 
+  import foo
+
   @xml:base = <https://advertising.amazon.com/api-model>
 
   @skos:version = xsd:decimal(2)
@@ -26,13 +28,9 @@ module campaign is
   entity Campaign is
     identity campaignId -> CampaignId
 
-    name -> Name is
-      @skos:definition = ""
-    end
+    name -> unknown
 
-    group
-      tag -> {0..} Tag
-    end
+    tag -> {0..} Tag
 
     ref target {0..1} -> {0..} Target
   end

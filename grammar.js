@@ -59,25 +59,25 @@ module.exports = grammar({
 
         module_body: $ => seq(
             keyword('is'),
-            repeat($.import),
+            repeat($._import_statement),
             repeat($.annotation),
             repeat($._type_def),
             keyword('end')
         ),
 
-        import: $ => seq(
+        _import_statement: $ => seq(
             keyword('import'),
             choice(
-                $._single_import,
+                $.import,
                 seq(
                     '[',
-                    repeat1($._single_import),
+                    repeat1($.import),
                     ']'
                 )
             )
         ),
 
-        _single_import: $ => choice(
+        import: $ => choice(
             $.member_import,
             $.module_import
         ),
@@ -114,14 +114,8 @@ module.exports = grammar({
         ),
 
         // -----------------------------------------------------------------------
-        // Annotations and Expressions
+        // Annotations
         // -----------------------------------------------------------------------
-
-        annotation_only_body: $ => seq(
-            keyword('is'),
-            repeat1($.annotation),
-            keyword('end')
-        ),
 
         annotation: $ => seq(
             token('@'),
@@ -129,182 +123,6 @@ module.exports = grammar({
            operator('='),
             field('value', $.value)
         ),
-
-        _type_expression: $ => seq(
-            operator('->'),
-            field('target', $.identifier_reference)
-        ),
-
-        _type_restriction: $ => seq(
-            operator('<-'),
-            field('base', $.identifier_reference)
-        ),
-
-        _type_expression_to: $ => seq(
-            operator('->'),
-            optional(
-                field('targetCardinality', $.cardinality_expression)
-            ),
-            field('target', $.identifier_reference)
-        ),
-
-        _type_expression_from_to: $ => seq(
-            optional(
-                field('sourceCardinality', $.cardinality_expression)
-            ),
-            $._type_expression_to
-        ),
-
-        cardinality_expression: $ => seq(
-            '{',
-            field('min', $.unsigned),
-            optional(
-                seq(
-                    token.immediate('..'),
-                    field('max', optional($.unsigned))
-                )
-            ),
-            '}'
-        ),
-
-        // -----------------------------------------------------------------------
-        // Type Definitions
-        // -----------------------------------------------------------------------
-
-        _type_def: $ => choice(
-            $.entity_def,
-            $.structure_def,
-            $.event_def,
-            $.enum_def,
-            $.data_type_def
-        ),
-
-        entity_def: $ => seq(
-            keyword('entity'),
-            field('name', $.identifier),
-            field('body', optional($.entity_body))
-        ),
-
-        entity_group: $ => seq(
-            keyword('group'),
-            repeat($.annotation),
-            repeat(
-                choice(
-                    $.member_by_value,
-                    $.member_by_reference
-                )
-            ),
-            keyword('end')
-        ),
-
-        entity_body: $ => seq(
-            keyword('is'),
-            repeat($.annotation),
-            optional(field('identity', $.identity_member)),
-            repeat(
-                choice(
-                    $.entity_group,
-                    $.member_by_value,
-                    $.member_by_reference
-                )
-            ),
-            keyword('end')
-        ),
-
-        structure_def: $ => seq(
-            keyword('structure'),
-            field('name', $.identifier),
-            optional(field('body', $.structure_body))
-        ),
-
-        structure_group: $ => seq(
-            keyword('group'),
-            repeat($.annotation),
-            repeat(
-                choice(
-                    $.member_by_value
-                )
-            ),
-            keyword('end')
-        ),
-
-        structure_body: $ => seq(
-            keyword('is'),
-            repeat($.annotation),
-            repeat(
-                choice(
-                    $.structure_group,
-                    $.member_by_value
-                )
-            ),
-            keyword('end')
-        ),
-
-        event_def: $ => seq(
-            keyword('event'),
-            field('name', $.identifier),
-            keyword('source'),
-            field('source', $.identifier_reference),
-            optional(field('body', $.structure_body))
-        ),
-
-        enum_def: $ => seq(
-            keyword('enum'),
-            field('name', $.identifier),
-            optional(field('body', $.enum_body))
-        ),
-
-        enum_body: $ => seq(
-            keyword('is'),
-            repeat($.annotation),
-            repeat1($.enum_variant),
-            keyword('end')
-        ),
-
-        enum_variant: $ => seq(
-            field('name', $.identifier),
-            operator('='),
-            field('value', $.unsigned),
-            optional(field('body', $.annotation_only_body))
-        ),
-
-        data_type_def: $ => seq(
-            keyword('datatype'),
-            field('name', $.identifier),
-            $._type_restriction,
-            optional(field('body', $.annotation_only_body))
-        ),
-
-        // -----------------------------------------------------------------------
-        // Members
-        // -----------------------------------------------------------------------
-
-        // Default cardinality: !{1..1} -> !{1..1}
-        identity_member: $ => seq(
-            keyword('identity'),
-            field('name', $.identifier),
-            $._type_expression,
-            optional(field('body', $.annotation_only_body))
-        ),
-
-        // Default cardinality: !{1..1} -> {1..}
-        member_by_value: $ => seq(
-            field('name', $.identifier),
-            $._type_expression_to,
-            optional(field('body', $.annotation_only_body))
-        ),
-
-        // Default cardinality: {0..} -> {0..}
-        member_by_reference: $ => seq(
-            keyword('ref'),
-            field('name', $.identifier),
-            $._type_expression_from_to,
-            optional(field('body', $.annotation_only_body))
-        ),
-
-        // -----------------------------------------------------------------------
-        // (Annotation) Values
-        // -----------------------------------------------------------------------
 
         value: $ => choice(
             $._simple_value,
@@ -314,13 +132,7 @@ module.exports = grammar({
 
         list_of_values: $ => seq(
             '[',
-            choice(
-                repeat1($.string),
-                repeat1($.double),
-                repeat1($.decimal),
-                repeat1($.integer),
-                repeat1($.iri_reference),
-            ),
+            repeat1($._simple_value),
             ']'
         ),
 
@@ -398,6 +210,189 @@ module.exports = grammar({
             keyword('true'),
             keyword('false')
         ),
+
+        // -----------------------------------------------------------------------
+        // Type Definitions
+        // -----------------------------------------------------------------------
+
+        _type_def: $ => choice(
+            $.entity_def,
+            $.structure_def,
+            $.event_def,
+            $.enum_def,
+            $.data_type_def
+        ),
+
+        entity_def: $ => seq(
+            keyword('entity'),
+            field('name', $.identifier),
+            optional(field('body', $.entity_body))
+        ),
+
+        entity_group: $ => seq(
+            keyword('group'),
+            repeat($.annotation),
+            repeat(
+                choice(
+                    $.member_by_value,
+                    $.member_by_reference
+                )
+            ),
+            keyword('end')
+        ),
+
+        entity_body: $ => seq(
+            keyword('is'),
+            repeat($.annotation),
+            field('identity', $.identity_member),
+            repeat(
+                choice(
+                    $.entity_group,
+                    $.member_by_value,
+                    $.member_by_reference
+                )
+            ),
+            keyword('end')
+        ),
+
+        structure_def: $ => seq(
+            keyword('structure'),
+            field('name', $.identifier),
+            optional(field('body', $.structure_body))
+        ),
+
+        structure_group: $ => seq(
+            keyword('group'),
+            repeat($.annotation),
+            repeat(
+                choice(
+                    $.member_by_value
+                )
+            ),
+            keyword('end')
+        ),
+
+        structure_body: $ => seq(
+            keyword('is'),
+            repeat($.annotation),
+            repeat(
+                choice(
+                    $.structure_group,
+                    $.member_by_value
+                )
+            ),
+            keyword('end')
+        ),
+
+        event_def: $ => seq(
+            keyword('event'),
+            field('name', $.identifier),
+            keyword('source'),
+            field('source', $.identifier_reference),
+            optional(field('body', $.structure_body))
+        ),
+
+        enum_def: $ => seq(
+            keyword('enum'),
+            field('name', $.identifier),
+            optional(field('body', $.enum_body))
+        ),
+
+        enum_body: $ => seq(
+            keyword('is'),
+            repeat($.annotation),
+            repeat1($.enum_variant),
+            keyword('end')
+        ),
+
+        enum_variant: $ => seq(
+            field('name', $.identifier),
+            operator('='),
+            field('value', $.unsigned),
+            optional(field('body', $.annotation_only_body))
+        ),
+
+        data_type_def: $ => seq(
+            keyword('datatype'),
+            field('name', $.identifier),
+            operator('<-'),
+            field('base', $.identifier_reference),
+            optional(field('body', $.annotation_only_body))
+        ),
+
+        annotation_only_body: $ => seq(
+            keyword('is'),
+            repeat1($.annotation),
+            keyword('end')
+        ),
+
+        // -----------------------------------------------------------------------
+        // Members
+        // -----------------------------------------------------------------------
+
+        // Default cardinality: !{1..1} -> !{1..1}
+        identity_member: $ => seq(
+            keyword('identity'),
+            field('name', $.identifier),
+            $._type_expression,
+            optional(field('body', $.annotation_only_body))
+        ),
+
+        // Default cardinality: !{1..1} -> {1..}
+        member_by_value: $ => seq(
+            field('name', $.identifier),
+            $._type_expression_to,
+            optional(field('body', $.annotation_only_body))
+        ),
+
+        // Default cardinality: {0..} -> {0..}
+        member_by_reference: $ => seq(
+            keyword('ref'),
+            field('name', $.identifier),
+            $._type_expression_from_to,
+            optional(field('body', $.annotation_only_body))
+        ),
+
+        _type_expression: $ => seq(
+            operator('->'),
+            field('target', $._member_type_target)
+        ),
+
+        _type_expression_to: $ => seq(
+            operator('->'),
+            optional(
+                field('targetCardinality', $.cardinality_expression)
+            ),
+            field('target', $._member_type_target)
+        ),
+
+        _type_expression_from_to: $ => seq(
+            optional(
+                field('sourceCardinality', $.cardinality_expression)
+            ),
+            $._type_expression_to
+        ),
+
+        _member_type_target: $ => choice(
+            $.unknown_type,
+            $.identifier_reference
+        ),
+
+        unknown_type: $ => keyword('unknown'),
+
+        cardinality_expression: $ => seq(
+            '{',
+            field('min', $.unsigned),
+            optional(
+                seq(
+                    $.cardinality_range,
+                    field('max', optional($.unsigned))
+                )
+            ),
+            '}'
+        ),
+
+        cardinality_range: $ => operator('..'),
 
         // -----------------------------------------------------------------------
         // Comments

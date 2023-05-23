@@ -5,18 +5,15 @@
 (module
  name: (identifier) @name) @definition.module
 
-(import
- (module_import
-  name: (identifier) @name)) @reference.module
+(module_import
+ name: (identifier) @name) @reference.module
 
-(import
- (member_import
-  name: (qualified_identifier
-         module: (identifier) @name))) @reference.module
+(member_import
+ name: (qualified_identifier
+        module: (identifier) @name)) @reference.module
 
-(import
- (member_import
-  name: (qualified_identifier) @name)) @reference.class
+(member_import
+ name: (qualified_identifier) @name) @reference.class
 
 ;; ---------------------------------------------------------------------------
 ;; Types and Members

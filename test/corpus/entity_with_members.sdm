@@ -6,6 +6,8 @@ module Campaign is
 
   entity Campaign is
 
+    identity id -> xs:string
+
     a -> xsd:string
     b -> xsd:integer
 
@@ -16,20 +18,26 @@ end
 ---
 
 (module
-name: (identifier)
-body: (module_body
-(entity_def
-name: (identifier)
-body: (entity_body
-(member_by_value
-name: (identifier)
-target: (identifier_reference
-(qualified_identifier
-module: (identifier)
-member: (identifier))))
-(member_by_value
-name: (identifier)
-target: (identifier_reference
-(qualified_identifier
-module: (identifier)
-member: (identifier))))))))
+  name: (identifier)
+  body: (module_body
+    (entity_def
+      name: (identifier)
+      body: (entity_body
+        identity: (identity_member
+          name: (identifier)
+          target: (identifier_reference
+            (qualified_identifier
+              module: (identifier)
+              member: (identifier))))
+      (member_by_value
+        name: (identifier)
+        target: (identifier_reference
+          (qualified_identifier
+            module: (identifier)
+            member: (identifier))))
+      (member_by_value
+        name: (identifier)
+        target: (identifier_reference
+          (qualified_identifier
+            module: (identifier)
+            member: (identifier))))))))

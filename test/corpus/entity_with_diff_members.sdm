@@ -9,7 +9,7 @@ module Campaign is
     identity a -> CampaignId
 
     b -> xsd:string
-    
+
     ref c -> Target
 
   end
@@ -38,4 +38,3 @@ end
           name: (identifier)
           target: (identifier_reference
             (identifier)))))))
- 

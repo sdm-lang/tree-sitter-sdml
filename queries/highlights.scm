@@ -23,6 +23,7 @@
  "ref"
  "source"
  "structure"
+ (unknown_type)
  ] @keyword
 
 (module name: (identifier) @module.definition)

@@ -798,7 +798,7 @@ module rentals is
   entity Class
 
   entity Vehicle is
-    identity vin -> VehicleIdentificationNumber
+    identity vin -> cids:VehicleIdentificationNumber
 
     ref rentalClass -> {1} Class
     ref onProperty -> {0..1} Location
@@ -831,13 +831,13 @@ As usual we generate the concept diagram in figure [[fig:example-third-pass]] fr
 #+BEGIN_SRC sdml
 module rentals is
 
-  import cids:VehicleIdentificationNumber
+  import [cids:VehicleIdentificationNumber cids:Uuid]
   import [xsd:date xsd:string]
 
   entity Class
 
   entity Vehicle is
-    identity vin -> VehicleIdentificationNumber
+    identity vin -> cids:VehicleIdentificationNumber
 
     ref rentalClass -> {1} Class
   end
@@ -969,6 +969,8 @@ digraph G {
 
 ** Core Library
 
+- Source at [[https://github.com/johnstonskj/tree-sitter-sdml][Github]]
+
 Build.
 
 #+BEGIN_EXAMPLE
@@ -982,11 +984,21 @@ make setup
 #+BEGIN_EXAMPLE
 make build
 #+END_EXAMPLE
+
+*Bindings:*
+
+- Node binding, published to [[https://www.npmjs.com/package/tree-sitter-sdml][npm.js]]
+- Rust binding, published to [[https://crates.io/crates/tree-sitter-sdml][crates.io]]
  
 ** Command-Line Tool
 
+- Source at [[https://github.com/johnstonskj/rust-sdml][Github]]
+- Published to [[https://crates.io/crates/sdml][crates.io]]
+
 ** Editor Support
 
+- Emacs [[https://github.com/johnstonskj/emacs-sdml-mode][sdml-mode]]
+  
 *** Emacs (< 29)
 
 Follow the directions in the /read-me/ file for the Emacs [[https://github.com/johnstonskj/emacs-sdml-mode][tree-sitter]] package.

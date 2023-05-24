@@ -1,7 +1,7 @@
 # tree-sitter-sdml
 
 A [tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for the Simple Domain Modeling Language (SDML).
-For more information on the language, see the [documentation](docs/sdml.org).
+For more information on the language, see the [documentation](https://simonkjohnston.life/tree-sitter-sdml/).
 
 # Example
 

@@ -1,12 +1,12 @@
 module rentals is
 
-  import cids:VehicleIdentificationNumber
+  import  [cids:VehicleIdentificationNumber cids:Uuid]
   import [xsd:date xsd:string]
 
   entity Class
 
   entity Vehicle is
-    identity vin -> VehicleIdentificationNumber
+    identity vin -> cids:VehicleIdentificationNumber
 
     ref rentalClass -> {1} Class
   end

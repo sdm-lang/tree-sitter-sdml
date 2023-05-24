@@ -95,6 +95,365 @@ digraph G {
 [fn:2] [[https://en.wikipedia.org/wiki/Model-driven_engineering][Model-Driven Development]], Wikipedia
 
 
+* Surface Syntax
+
+The following describes the SDML surface syntax, a syntax intended to look and feel like a programming language but with
+extensibility provided by it's underlying RDF and OWL foundation. The goal of the following syntax is to allow for
+rapid capture of domain information but allowing elaboration of details over time. Therefore we have made language
+features optional wherever possible so that the minimum information is required to build a valid model. To this end we
+use the terms /valid/ to denote a model that has no syntactic errors and /complete/ to denote a valid model that has no
+short-form, or /incomplete/, model elements.
+
+** Whitespace and Comments
+
+This grammar chooses to use the JavaScript regular expression character class =\s= which includes the following values,
+including all Unicode whitespace.
+
+=/[\f\n\r\t\v\u0020\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]/=
+
+Comments follow Lisp-like forms, starting with a semi-colon character and continuing to the end of line. Lisp
+conventions for single, double, and triple comment characters are useful but in no way enforced.
+
+#+NAME: lst:sdml-ex-comments
+#+CAPTION: Comments
+#+BEGIN_SRC sdml
+; comments start with ';' and go to end of line
+#+END_SRC
+
+** Identifiers
+
+An identifier is a string of characters corresponding to the [[https://unicode.org/reports/tr44/#GC_Values_Table][Unicode General Category]] *Lu* (an uppercase letter) or *Ll* (a
+lowercase letter). No additional separator characters such as ='_'=, ='-'=, ='$'=, ='@'=, ='#'=, etc. are permitted.
+
+Naming Conventions:
+
+#+NAME: lst:sdml-ex-identifiers
+#+CAPTION: Identifier Examples
+#+BEGIN_SRC sdml
+UpperCamel
+lowerCamel
+SHOUTY
+#+END_SRC
+
+- *Module Name* :: lower Camel Case; i.e. =xsd=, =skos=, =bank=, or =customer=. In general this should be a broad noun.
+- *Structure/Entity/Event/Enum Name* :: Upper Camel Case; i.e. =Customer=, =Account=, =Address=, or =Name=. In general
+  these are nouns related to, and often narrower than, the module name.
+- *Data Type Name* :: Upper Camel Case; i.e. =ShortString=, =AccountNumber=, or =SocialSecurityNumber=. In general these are
+  broad nouns, with either a property noun suffix as in =AccountNumber= or a qualifier noun prefix as in =ShortString=. Do
+  not create capitalized acronym (SSN) or abbreviation (ID) forms unless these are universally understood within the
+  domain.
+- *Type Member Name* :: lower Camel Case; i.e. =street=, =accountName=, or =currentValue=. As in data type definitions these are
+  broad nouns, with either a property noun suffix as in =accountNumber= or a qualifier noun prefix as in =shortName=. These
+  are commonly simply the lower Camel Case version of the corresponding type name.
+- *Enum Variant Name* :: Upper Camel Case is the preferred, although SHOUTY CASE is acceptable.
+
+#+NAME: lst:sdml-ex-qualified-identifiers
+#+CAPTION: Qualified Identifier Example
+#+BEGIN_SRC sdml
+module:Member
+#+END_SRC
+
+** Module Declaration and Imports
+
+An empty module, specifically a module with an empty /body/ which is the content between the keywords *=is=* and *=end=*. 
+
+#+NAME: lst:sdml-ex-empty-module
+#+CAPTION: Empty Module
+#+BEGIN_SRC sdml
+module example is end
+#+END_SRC
+
+This module contains a single import statement bringing in the module named =xsd= making it's members available in the
+qualified form =xsd:*=.
+
+#+NAME: lst:sdml-ex-import-module
+#+CAPTION: Importing Module
+#+BEGIN_SRC sdml
+module example is
+  import xsd
+end
+#+END_SRC
+
+#+NAME: lst:sdml-ex-import-member
+#+CAPTION: Importing Member
+#+BEGIN_SRC sdml
+module example is
+  import xsd:integer
+end
+#+END_SRC
+
+#+NAME: lst:sdml-ex-import-list
+#+CAPTION: Importing a List
+#+BEGIN_SRC sdml
+module example is
+  import [ dc:title dc:author ]
+end
+#+END_SRC
+
+#+NAME: lst:sdml-ex-import-from
+#+CAPTION: Importing From URL
+#+BEGIN_SRC sdml
+module example is
+  import show from <http://example.org/vocab/show/>
+end
+#+END_SRC
+
+** Data Types and Values
+
+*** Simple Values
+
+#+NAME: lst:sdml-ex-simple-values
+#+CAPTION: Simple Value Examples
+#+BEGIN_SRC sdml
+"a string"
+"a language-tagged string"@en-US
+<https://...>  ;; an IRI reference
+true false     ;; booleans
+123            ;; integer
+123.0          ;; decimal
+123.0e-10      ;; double
+#+END_SRC
+
+IRI references are more permissive in the SDML grammar than the Turtle[fn:3] language. 
+
+*** Value Lists
+
+#+NAME: lst:sdml-ex-value-lists
+#+CAPTION: Value List Example
+#+BEGIN_SRC sdml
+[ "yes" "no" "maybe" ]
+#+END_SRC
+
+*** Value Constructors
+
+#+NAME: lst:sdml-ex-type-constructor
+#+CAPTION: Value Constructor Example
+#+BEGIN_SRC sdml
+xsd:unsigned(1)
+#+END_SRC
+
+*** Defining Data Types
+
+#+NAME: lst:sdml-ex-datatype
+#+CAPTION: Datatype
+#+BEGIN_SRC sdml
+datatype name <- xsd:string
+#+END_SRC
+
+#+NAME: lst:sdml-ex-restricted-datatype
+#+CAPTION: Datatype with Restrictions
+#+BEGIN_SRC sdml
+datatype name <- xsd:string is
+  @xsd:minLength = 5
+  @xsd:maxLength = 25
+end
+#+END_SRC
+
+From [[https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide][OWL 2 Web Ontology Language Quick Reference Guide (Second Edition)]]:
+
+#+NAME: tbl:owl-facets
+#+CAPTION: OWL Built-in Datatype Facets
+| Facet                                                                  | Value                                      | Applicable Datatypes       | Explanation                                                                                |
+|------------------------------------------------------------------------+--------------------------------------------+----------------------------+--------------------------------------------------------------------------------------------|
+| =xsd:minInclusive=, =xsd:maxInclusive=, =xsd:minExclusive=, =xsd:maxExclusive= | literal in the corresponding datatype      | Numbers, Time Instants     | Restricts the value-space to greater than (equal to) or lesser than (equal to) a value     |
+| =xsd:minLength=, =xsd:maxLength=, =xsd:length=                               | Non-negative integer                       | Strings, Binary Data, IRIs | Restricts the value-space based on the lengths of the literals                             |
+| =xsd:pattern=                                                            | =xsd:string= literal as a regular expression | Strings, IRIs              | Restricts the value space to literals that match the regular expression                    |
+| =rdf:langRange=                                                          | =xsd:string= literal as a regular expression | =rdf:PlainLiteral=           | Restricts the value space to literals with language tags that match the regular expression |
+
+** Annotations
+
+#+NAME: lst:sdml-ex-annotation-property
+#+CAPTION: Annotation Property
+#+BEGIN_SRC sdml
+@xml:base <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org>
+#+END_SRC
+
+#+NAME: lst:sdml-ex-annotation-property-list
+#+CAPTION: Annotation Property List
+#+BEGIN_SRC sdml
+@skos:prefLabel [
+  "example"@en
+  "exemple"@fr
+  "例子"@zh-CH
+]
+#+END_SRC
+
+#+NAME: lst:sdml-ex-annotated-module
+#+CAPTION: Annotated Module
+#+BEGIN_SRC sdml
+module example is
+
+  import xml skos
+
+  @xml:base <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org>
+
+  @skos:prefLabel "Example Module"@en
+
+end
+#+END_SRC
+
+From [[https://www.w3.org/TR/owl-ref/#AnnotationProperty-def][OWL Web Ontology Language Reference]], Appendix E: Rules of Thumb for OWL DL ontologies:
+
+#+BEGIN_QUOTE
+If a property =a= is used where an annotation property is expected then it should either be one of the built in
+annotation properties (=owl:versionInfo=, =rdfs:label=, =rdfs:comment=, =rdfs:seeAlso=, and =rdfs:isDefinedBy=) or there
+should be a triple:
+
+=a rdf:type owl:AnnotationProperty=
+#+END_QUOTE
+
+** Structured Types
+
+Structured types are those which have a set of /members/ that define their type. Types have identity but also a value
+space which is a product of the value space of each member. Each member has a name, a type reference and cardinality
+specifiers where appropriate.
+
+*** Members
+
+Structured type members fall into the following categories.
+
+- Identity :: A particular kind of member only available on entities, and required by them, to name the identifier for
+  that entity type.
+- By-Value :: A reference to a value type, i.e. Enumeration, Event, or Structure. Such a member may indicate the
+  cardinality of the target.
+- By-Reference :: A reference to an Entity type. Such a member may indicate the cardinality of both the source and the
+  target.
+- Variants :: A member within an enumeration that specifies a numeric value for each member rather than a type.
+
+For identity, by-value, and by-reference members the general syntax is /name/ ~->~ /type/ with additional keywords and
+cardinality included as follows.
+
+#+NAME: tbl:member-summary
+#+CAPTION: Summary of Member Formats
+| Kind         | Keyword  | From-Cardinality | To-Cardinality | Target Types                     |
+|--------------+----------+------------------+----------------+----------------------------------|
+| Identity     | ~identity~ | No               | No             | Enumeration, Event, or Structure |
+| By-Value     |          | No               | Yes            | Enumeration, Event, or Structure |
+| By-Reference | ~ref~      | Yes              | Yes            | Entity                           |
+
+Additionally, to allow for the capture of member names before the elaboration of all types the language allows for the
+target type to be replaced with the keyword ~unknown~. This marks the member, and by extension it's owning type, as
+/incomplete/.
+
+*** Entities
+
+#+NAME: lst:sdml-ex-empty-entity
+#+CAPTION: Empty Entity
+#+BEGIN_SRC sdml
+entity Person
+#+END_SRC
+
+The entity ~Person~ is /valid/ but /incomplete/.
+
+#+NAME: lst:sdml-ex-entity-identifying-member
+#+CAPTION: Entity with Identifying Member
+#+BEGIN_SRC sdml
+entity Person is
+  identifier id -> PersonId
+end
+#+END_SRC
+
+#+NAME: lst:sdml-ex-entity-ref-member
+#+CAPTION: Entity with Reference Member
+#+BEGIN_SRC sdml
+entity Person is
+  ref contact {0..} -> {0..2} Person is
+    @dc:description "Emergency contact person"
+  end
+end
+#+END_SRC
+
+*** Enums
+
+#+NAME: lst:sdml-ex-empty-enum
+#+CAPTION: Empty Enum
+#+BEGIN_SRC sdml
+enum DistanceUnit
+#+END_SRC
+
+The enumeration ~DistanceUnit~ is valid but incomplete.
+
+#+NAME: lst:sdml-ex-enum
+#+CAPTION: Enum With Variants
+#+BEGIN_SRC sdml
+enum DistanceUnit is
+  Meter = 1
+  Foot = 2
+end
+#+END_SRC
+
+*** Events
+
+#+NAME: lst:sdml-ex-empty-event
+#+CAPTION: Empty Event
+#+BEGIN_SRC sdml
+event PersonNameChanged source Person
+#+END_SRC
+
+The event ~PersonNameChanged~ is valid but incomplete.
+
+#+NAME: lst:sdml-ex-event
+#+CAPTION: Event
+#+BEGIN_SRC sdml
+event PersonNameChanged source Person is
+  ;; identifier members will be copied from Person 
+  fromValue -> Name
+  toValue -> Name
+end
+#+END_SRC
+
+*** Structures
+
+#+NAME: lst:sdml-ex-empty-structure
+#+CAPTION: Empty Structure
+#+BEGIN_SRC sdml
+structure Length
+#+END_SRC
+
+The structure ~Length~ is valid but incomplete.
+
+#+NAME: lst:sdml-ex-annotated-structure
+#+CAPTION: Annotated Structure
+#+BEGIN_SRC sdml
+structure Length is
+  @skos:prefLabel "Length"@en
+end
+#+END_SRC
+
+#+NAME: lst:sdml-ex-structure-members
+#+CAPTION: Structure Members
+#+BEGIN_SRC sdml
+structure Length is
+  @skos:prefLabel "Length"@en
+
+  value -> Decimal
+  unit -> DistanceUnit
+end
+#+END_SRC
+
+#+NAME: lst:sdml-ex-structure-groups
+#+CAPTION: Structure MembersGroups
+#+BEGIN_SRC sdml
+structure Account is
+  @skos:prefLabel "Customer Account"@en
+
+  group
+    @skos:prefLabel "Metadata"
+   created -> xsd:dateTime
+  end
+
+  group
+    @skos:prefLabel "Customer Information"
+    ref customer -> {1..1} Customer
+  end
+end
+#+END_SRC
+
+# ----- Footnotes
+
+[fn:3] [[https://www.w3.org/TR/turtle/#sec-iri-references][RDF 1.1 Turtle]], 6.3 IRI References
+
+
 * RDF Abstract Model
 
 Why RDF? ...
@@ -347,320 +706,6 @@ Properties concerning structured type members
 #+END_SRC
 
 
-* Surface Syntax
-
-The following describes the SDML surface syntax, a syntax intended to look and feel like a programming language but with
-extensibility provided by it's underlying RDF and OWL foundation.
-
-** Whitespace and Comments
-
-This grammar chooses to use the JavaScript regular expression character class =\s= which includes the following values,
-including all Unicode whitespace.
-
-=/[\f\n\r\t\v\u0020\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]/=
-
-Comments follow Lisp-like forms, starting with a semi-colon character and continuing to the end of line. Lisp
-conventions for single, double, and triple comment characters are useful but in no way enforced.
-
-#+NAME: lst:sdml-ex-comments
-#+CAPTION: SDML Comments
-#+BEGIN_SRC sdml
-; comments start with ';' and go to end of line
-#+END_SRC
-
-** Identifiers
-
-An identifier is a string of characters corresponding to the [[https://unicode.org/reports/tr44/#GC_Values_Table][Unicode General Category]] *Lu* (an uppercase letter) or *Ll* (a
-lowercase letter). No additional separator characters such as ='_'=, ='-'=, ='$'=, ='@'=, ='#'=, etc. are permitted.
-
-Naming Conventions:
-
-#+NAME: lst:sdml-ex-identifiers
-#+CAPTION: SDML Identifier Examples
-#+BEGIN_SRC sdml
-UpperCamel
-lowerCamel
-SHOUTY
-#+END_SRC
-
-- *Module Name* :: lower Camel Case; i.e. =xsd=, =skos=, =bank=, or =customer=. In general this should be a broad noun.
-- *Structure/Entity/Event/Enum Name* :: Upper Camel Case; i.e. =Customer=, =Account=, =Address=, or =Name=. In general
-  these are nouns related to, and often narrower than, the module name.
-- *Data Type Name* :: Upper Camel Case; i.e. =ShortString=, =AccountNumber=, or =SocialSecurityNumber=. In general these are
-  broad nouns, with either a property noun suffix as in =AccountNumber= or a qualifier noun prefix as in =ShortString=. Do
-  not create capitalized acronym (SSN) or abbreviation (ID) forms unless these are universally understood within the
-  domain.
-- *Type Member Name* :: lower Camel Case; i.e. =street=, =accountName=, or =currentValue=. As in data type definitions these are
-  broad nouns, with either a property noun suffix as in =accountNumber= or a qualifier noun prefix as in =shortName=. These
-  are commonly simply the lower Camel Case version of the corresponding type name.
-- *Enum Variant Name* :: Upper Camel Case is the preferred, although SHOUTY CASE is acceptable.
-
-#+NAME: lst:sdml-ex-qualified-identifiers
-#+CAPTION: SDML Qualified Identifier Example
-#+BEGIN_SRC sdml
-module:Member
-#+END_SRC
-
-** Module Declaration and Imports
-
-An empty module, specifically a module with an empty /body/ which is the content between the keywords *=is=* and *=end=*. 
-
-#+NAME: lst:sdml-ex-empty-module
-#+CAPTION: SDML Empty Module
-#+BEGIN_SRC sdml
-module example is end
-#+END_SRC
-
-This module contains a single import statement bringing in the module named =xsd= making it's members available in the
-qualified form =xsd:*=.
-
-#+NAME: lst:sdml-ex-import-module
-#+CAPTION: SDML Importing Module
-#+BEGIN_SRC sdml
-module example is
-  import xsd
-end
-#+END_SRC
-
-#+NAME: lst:sdml-ex-import-member
-#+CAPTION: SDML Importing Member
-#+BEGIN_SRC sdml
-module example is
-  import xsd:integer
-end
-#+END_SRC
-
-#+NAME: lst:sdml-ex-import-list
-#+CAPTION: SDML Importing a List
-#+BEGIN_SRC sdml
-module example is
-  import [ dc:title dc:author ]
-end
-#+END_SRC
-
-#+NAME: lst:sdml-ex-import-from
-#+CAPTION: SDML Importing From URL
-#+BEGIN_SRC sdml
-module example is
-  import show from <http://example.org/vocab/show/>
-end
-#+END_SRC
-
-** Data Types and Values
-
-*** Simple Values
-
-#+NAME: lst:sdml-ex-simple-values
-#+CAPTION: SDML Simple Value Examples
-#+BEGIN_SRC sdml
-"a string"
-"a language-tagged string"@en-US
-<https://...>  ;; an IRI reference
-true false     ;; booleans
-123            ;; integer
-123.0          ;; decimal
-123.0e-10      ;; double
-#+END_SRC
-
-IRI references are more permissive in the SDML grammar than the Turtle[fn:3] language. 
-
-*** Value Lists
-
-#+NAME: lst:sdml-ex-value-lists
-#+CAPTION: SDML Value List Example
-#+BEGIN_SRC sdml
-[ "yes" "no" "maybe" ]
-#+END_SRC
-
-*** Value Constructors
-
-#+NAME: lst:sdml-ex-type-constructor
-#+CAPTION: SDML Type Constructor Example
-#+BEGIN_SRC sdml
-xsd:unsigned(1)
-#+END_SRC
-
-*** Defining Data Types
-
-#+NAME: lst:sdml-ex-datatype
-#+CAPTION: SDML Datatype
-#+BEGIN_SRC sdml
-datatype name <- xsd:string
-#+END_SRC
-
-#+NAME: lst:sdml-ex-restricted-datatype
-#+CAPTION: SDML Datatype with Restrictions
-#+BEGIN_SRC sdml
-datatype name <- xsd:string is
-  @xsd:minLength = 5
-  @xsd:maxLength = 25
-end
-#+END_SRC
-
-From [[https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide][OWL 2 Web Ontology Language Quick Reference Guide (Second Edition)]]:
-
-#+NAME: tbl:owl-facets
-#+CAPTION: OWL Built-in Datatype Facets
-| Facet                                                                  | Value                                      | Applicable Datatypes       | Explanation                                                                                |
-|------------------------------------------------------------------------+--------------------------------------------+----------------------------+--------------------------------------------------------------------------------------------|
-| =xsd:minInclusive=, =xsd:maxInclusive=, =xsd:minExclusive=, =xsd:maxExclusive= | literal in the corresponding datatype      | Numbers, Time Instants     | Restricts the value-space to greater than (equal to) or lesser than (equal to) a value     |
-| =xsd:minLength=, =xsd:maxLength=, =xsd:length=                               | Non-negative integer                       | Strings, Binary Data, IRIs | Restricts the value-space based on the lengths of the literals                             |
-| =xsd:pattern=                                                            | =xsd:string= literal as a regular expression | Strings, IRIs              | Restricts the value space to literals that match the regular expression                    |
-| =rdf:langRange=                                                          | =xsd:string= literal as a regular expression | =rdf:PlainLiteral=           | Restricts the value space to literals with language tags that match the regular expression |
-
-** Annotations
-
-#+NAME: lst:sdml-ex-annotation-property
-#+CAPTION: SDML Annotation Property
-#+BEGIN_SRC sdml
-@xml:base <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org>
-#+END_SRC
-
-#+NAME: lst:sdml-ex-annotation-property-list
-#+CAPTION: SDML Annotation Property List
-#+BEGIN_SRC sdml
-@skos:prefLabel [
-  "example"@en
-  "exemple"@fr
-  "例子"@zh-CH
-]
-#+END_SRC
-
-#+NAME: lst:sdml-ex-annotated-module
-#+CAPTION: SDML Annotated Module
-#+BEGIN_SRC sdml
-module example is
-
-  import xml skos
-
-  @xml:base <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org>
-
-  @skos:prefLabel "Example Module"@en
-
-end
-#+END_SRC
-
-From [[https://www.w3.org/TR/owl-ref/#AnnotationProperty-def][OWL Web Ontology Language Reference]], Appendix E: Rules of Thumb for OWL DL ontologies:
-
-#+BEGIN_QUOTE
-If a property =a= is used where an annotation property is expected then it should either be one of the built in
-annotation properties (=owl:versionInfo=, =rdfs:label=, =rdfs:comment=, =rdfs:seeAlso=, and =rdfs:isDefinedBy=) or there
-should be a triple:
-
-=a rdf:type owl:AnnotationProperty=
-#+END_QUOTE
-
-** Structured Types
-
-#+NAME: lst:sdml-ex-empty-structure
-#+CAPTION: SDML Empty Structure
-#+BEGIN_SRC sdml
-structure Length
-#+END_SRC
-
-#+NAME: lst:sdml-ex-annotated-structure
-#+CAPTION: SDML Annotated Structure
-#+BEGIN_SRC sdml
-structure Length is
-  @skos:prefLabel "Length"@en
-end
-#+END_SRC
-
-#+NAME: lst:sdml-ex-structure-members
-#+CAPTION: SDML Structure Members
-#+BEGIN_SRC sdml
-structure Length is
-  @skos:prefLabel "Length"@en
-
-  value -> Decimal
-  unit -> DistanceUnit
-end
-#+END_SRC
-
-#+NAME: lst:sdml-ex-structure-groups
-#+CAPTION: SDML Structure MembersGroups
-#+BEGIN_SRC sdml
-structure Account is
-  @skos:prefLabel "Customer Account"@en
-
-  group
-    @skos:prefLabel "Metadata"
-   created -> xsd:dateTime
-  end
-
-  group
-    @skos:prefLabel "Customer Information"
-    ref customer -> {1..1} Customer
-  end
-end
-#+END_SRC
-
-*** Entities
-
-#+NAME: lst:sdml-ex-empty-entity
-#+CAPTION: SDML Empty Entity
-#+BEGIN_SRC sdml
-entity Person
-#+END_SRC
-
-#+NAME: lst:sdml-ex-entity-identifying-member
-#+CAPTION: SDML Entity with Identifying Member
-#+BEGIN_SRC sdml
-entity Person is
-  identifier id -> PersonId
-end
-#+END_SRC
-
-#+NAME: lst:sdml-ex-entity-ref-member
-#+CAPTION: SDML Entity with Reference Member
-#+BEGIN_SRC sdml
-entity Person is
-  ref contact {0..} -> {0..2} Person is
-    @dc:description "Emergency contact person"
-  end
-end
-#+END_SRC
-
-*** Enums
-
-#+NAME: lst:sdml-ex-empty-enum
-#+CAPTION: SDML Empty Enum
-#+BEGIN_SRC sdml
-enum DistanceUnit
-#+END_SRC
-
-#+NAME: lst:sdml-ex-enum
-#+CAPTION: SDML Enum With Variants
-#+BEGIN_SRC sdml
-enum DistanceUnit is
-  Meter = 1
-  Foot = 2
-end
-#+END_SRC
-
-*** Events
-
-#+NAME: lst:sdml-ex-empty-event
-#+CAPTION: SDML Empty Event
-#+BEGIN_SRC sdml
-event PersonNameChanged source Person
-#+END_SRC
-
-#+NAME: lst:sdml-ex-event
-#+CAPTION: SDML Event
-#+BEGIN_SRC sdml
-event PersonNameChanged source Person is
-  ;; identifier members will be copied from Person 
-  fromValue -> Name
-  toValue -> Name
-end
-#+END_SRC
-
-# ----- Footnotes
-
-[fn:3] [[https://www.w3.org/TR/turtle/#sec-iri-references][RDF 1.1 Turtle]], 6.3 IRI References
-
-
 * Walk-Through Example
 
 The following section walks through the process of model creation and iterative elaboration to add detail as domain
@@ -669,7 +714,7 @@ might imagine we can start the model with some pretty obvious entities, but with
 [[lst:example-first-pass]] is this first-pass domain model.
 
 #+NAME: lst:example-first-pass
-#+CAPTION: First Pass Concepts
+#+CAPTION: Rentals Concepts (First Pass)
 #+BEGIN_SRC sdml
 module rentals is
 
@@ -696,7 +741,7 @@ sdml draw --diagram concepts \
 #+END_EXAMPLE
 
 #+NAME: fig:example-first-pass
-#+CAPTION: First Pass Concept Diagram
+#+CAPTION: Rentals Concepts (First Pass)
 [[./rentals-concept-1.svg]]
 
 Figure [[lst:example-second-pass]] is the second-pass at our model, adding relationships from the ~Booking~ entity to the
@@ -707,7 +752,7 @@ keyword ~unknown~ is used to defer the type until later.
 Additionally, the ~vehicle~ relationship specifies a new cardinality overriding the usual =0..= with =0..1=.
 
 #+NAME: lst:example-second-pass
-#+CAPTION: Basic Relationships
+#+CAPTION: Rentals Basic Relationships
 #+BEGIN_SRC sdml
 module rentals is
 
@@ -732,7 +777,7 @@ Re-running the =sdml= tool on listing [[lst:example-second-pass]] will result in
 [[fig:example-second-pass]].
 
 #+NAME: fig:example-second-pass
-#+CAPTION: Basic Relationships
+#+CAPTION: Rentals Basic Relationships
 [[./rentals-concept-2.svg]]
 
 In the next edit of our rentals model we see some additions:
@@ -744,7 +789,7 @@ In the next edit of our rentals model we see some additions:
 1. We demonstrate the non-range cardinality notation, ={1}=, which is a shortcut for the range =1..1=.
 
 #+NAME: lst:example-third-pass
-#+CAPTION: Some More Detail
+#+CAPTION: Rentals More Detail
 #+BEGIN_SRC sdml
 module rentals is
 
@@ -778,11 +823,11 @@ end
 As usual we generate the concept diagram in figure [[fig:example-third-pass]] from listing [[lst:example-third-pass]].
 
 #+NAME: fig:example-third-pass
-#+CAPTION: Some More Detail
+#+CAPTION: Rentals More Detail
 [[./rentals-concept-3.svg]]
 
 #+NAME: lst:example-fourth-pass
-#+CAPTION: Non-Entity Detail
+#+CAPTION: Rentals Non-Entity Detail
 #+BEGIN_SRC sdml
 module rentals is
 
@@ -836,11 +881,11 @@ end
 As usual we generate the concept diagram in figure [[fig:example-fourth-pass]] from listing [[lst:example-fourth-pass]].
 
 #+NAME: fig:example-fourth-pass
-#+CAPTION: Non-Entity Detail
+#+CAPTION: Rentals Non-Entity Detail
 [[./rentals-concept-4.svg]]
 
 #+NAME: fig:example-fourth-pass-erd
-#+CAPTION: ERD Diagram
+#+CAPTION: Rentals ERD Diagram
 [[./rentals-erd-4.svg]]
 
 
@@ -1004,6 +1049,8 @@ The remainder of this section will use example modules with =xml:base= to make i
 
 *** Simple Value Literals
 
+#+NAME: tbl:value-literals
+#+CAPTION: Summary of Value Literals
 | SDML Type     | Underlying Type | Value Space                                                  | Lexical Space  |
 |---------------+-----------------+--------------------------------------------------------------+----------------|
 | =boolean=       | =xsd:boolean=     | The values =true= and =false=                                    | =true= and =false= |
@@ -1041,10 +1088,20 @@ Currently there is no mapping from the surface syntax to list values, that is an
 which constructs a list using the =rdf:first= and =rdf:rest= predicates. This would result in the following RDF:
 
 #+BEGIN_SRC ttl
-:thing skos:altLabel ( "yes", "no", "maybe" ) .
+:thing skos:altLabel ( "yes" "no" "maybe" ) .
 #+END_SRC
 
 *** Value Constructors
+
+A value constructor allows for the precise specification of a datatype for a literal.
+
+#+BEGIN_SRC sdml
+@sdml:defaultVariant = xsd:nonNegativeInteger(0)
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:thing sdml:defaultVariant "0"^^xsd:nonNegativeInteger .
+#+END_SRC
 
 ** Modules
 
@@ -1343,6 +1400,8 @@ end
 The following prefixes may be used in import statements without the need to reference their location directly. Either
 the namespace URI will be used to retrieve the corresponding resource or a local copy will be used.
 
+#+NAME: tbl:rdf-prefixes
+#+CAPTION: List of Known URI Prefixes
 | Prefix    | URI                                           |
 |-----------+-----------------------------------------------|
 | =dbpedia=   | <http://dbpedia.org/resource/>                |

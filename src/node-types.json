@@ -467,6 +467,10 @@
           "named": true
         },
         {
+          "type": "identifier_reference",
+          "named": true
+        },
+        {
           "type": "integer",
           "named": true
         },
@@ -476,6 +480,10 @@
         },
         {
           "type": "string",
+          "named": true
+        },
+        {
+          "type": "value_constructor",
           "named": true
         }
       ]
@@ -669,16 +677,6 @@
             "named": true
           }
         ]
-      },
-      "source": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "iri_reference",
-            "named": true
-          }
-        ]
       }
     }
   },
@@ -820,6 +818,10 @@
         },
         {
           "type": "double",
+          "named": true
+        },
+        {
+          "type": "identifier_reference",
           "named": true
         },
         {
@@ -969,10 +971,6 @@
   },
   {
     "type": "false",
-    "named": false
-  },
-  {
-    "type": "from",
     "named": false
   },
   {

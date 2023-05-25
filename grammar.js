@@ -9,9 +9,9 @@
 //
 // -------------------------------------------------------------------
 
-const IDENTIFIER = /[\p{Lu}\p{Ll}]+/;
+const IDENTIFIER = /[\p{Lu}\p{Ll}]+(_[\p{Lu}\p{Ll}]+)*/;
 
-const STRING_CHAR = /([^\x00-\x08\x0B-\x1F\x7F"\\\\])|\\\\(["\\\\bfnrtv\/]|u\{[0-9a-fA-F]{2,6}\})/;
+const STRING_CHAR = /([^\x00-\x08\x0B-\x1F\x7F"\\\\])|\\\\(["\\\\abefnrtv\/]|u\{[0-9a-fA-F]{2,6}\})/;
 
 function keyword(str) {
     return token(
@@ -88,12 +88,6 @@ module.exports = grammar({
 
         module_import: $ => seq(
             field('name', $.identifier),
-            optional(
-                seq(
-                    keyword('from'),
-                    field('source', $.iri_reference)
-                )
-            )
         ),
 
         // -----------------------------------------------------------------------
@@ -126,13 +120,20 @@ module.exports = grammar({
 
         value: $ => choice(
             $._simple_value,
+            $.value_constructor,
+            $.identifier_reference,
             $.list_of_values,
-            $.value_constructor
         ),
 
         list_of_values: $ => seq(
             '[',
-            repeat1($._simple_value),
+            repeat1(
+                choice(
+                    $._simple_value,
+                    $.value_constructor,
+                    $.identifier_reference,
+                )
+            ),
             ']'
         ),
 

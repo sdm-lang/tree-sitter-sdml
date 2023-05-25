@@ -1,0 +1,11 @@
+===============================
+Module, with underscore in name
+===============================
+
+module Rental_Cars is end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body))

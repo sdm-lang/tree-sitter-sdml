@@ -163,38 +163,6 @@
             "type": "SYMBOL",
             "name": "identifier"
           }
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "TOKEN",
-                  "content": {
-                    "type": "PREC",
-                    "value": 2,
-                    "content": {
-                      "type": "STRING",
-                      "value": "from"
-                    }
-                  }
-                },
-                {
-                  "type": "FIELD",
-                  "name": "source",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "iri_reference"
-                  }
-                }
-              ]
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
         }
       ]
     },
@@ -202,7 +170,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PATTERN",
-        "value": "[\\p{Lu}\\p{Ll}]+"
+        "value": "[\\p{Lu}\\p{Ll}]+(_[\\p{Lu}\\p{Ll}]+)*"
       }
     },
     "qualified_identifier": {
@@ -294,11 +262,15 @@
         },
         {
           "type": "SYMBOL",
-          "name": "list_of_values"
+          "name": "value_constructor"
         },
         {
           "type": "SYMBOL",
-          "name": "value_constructor"
+          "name": "identifier_reference"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "list_of_values"
         }
       ]
     },
@@ -312,8 +284,21 @@
         {
           "type": "REPEAT1",
           "content": {
-            "type": "SYMBOL",
-            "name": "_simple_value"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_simple_value"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "value_constructor"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "identifier_reference"
+              }
+            ]
           }
         },
         {

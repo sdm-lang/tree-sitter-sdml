@@ -128,4 +128,7 @@ name: (identifier) @type.definition)
 ;; Highlight errors in red. This is not very useful in practice, as text will
 ;; be highlighted as user types, and the error could be elsewhere in the code.
 
-(ERROR) @error
+(
+ (ERROR) @error
+ (#set! "priority" 110)
+)

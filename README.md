@@ -48,11 +48,9 @@ module Campaign is
 end
 ```
 
-# Published Bindings
+# Additional Links
 
-* [npm.js](https://www.npmjs.com/package/tree-sitter-sdml)
-* [crates.io](https://crates.io/crates/tree-sitter-sdml)
-
-# Editor Support
-
-* Emacs [sdml-mode](https://github.com/johnstonskj/emacs-sdml-mode)
+* Node bindings -- [npm.js](https://www.npmjs.com/package/tree-sitter-sdml)
+* Rust bindings -- [crates.io](https://crates.io/crates/tree-sitter-sdml)
+* Emacs -- [sdml-mode](https://github.com/johnstonskj/emacs-sdml-mode)
+* Command-line tool -- [rust-sdml](https://github.com/johnstonskj/rust-sdml)

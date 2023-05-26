@@ -108,6 +108,7 @@ $(SRC_DIR)/parser.c: $(ROOT)/grammar.js
 
 test_grammar: clean_grammar $(SRC_DIR)/grammar.json
 	$(TS_CLI) $(TS_TEST) $(TS_TEST_FLAGS)
+	$(TS_CLI) parse docs/*.sdm --quiet --time
 	$(TS_CLI) parse examples/*.sdm --quiet --time
 
 .PHONY: clean_grammar

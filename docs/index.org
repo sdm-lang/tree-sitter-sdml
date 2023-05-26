@@ -1167,23 +1167,244 @@ prefixes:
 
 ** Emacs Support
 
-- Emacs [[https://github.com/johnstonskj/emacs-sdml-mode][sdml-mode]]
-  
-*** Emacs (< 29)
+Emacs has been the primary /playground/ for SDML and as such has some tools already built for editing and documentation.
+The package [[https://github.com/johnstonskj/emacs-sdml-mode][sdml-mode]] (currently not in any package repository) is associated with any file ending in =.sdm= or =.sdml= with
+highlighting and indentation support. Follow the installation instructions on the package site.
 
-Follow the directions in the /read-me/ file for the Emacs [[https://github.com/johnstonskj/emacs-sdml-mode][tree-sitter]] package.
+Emacs standard customization allows for managing all package variables and can be accessed via:
 
+=M-x customize-group RET sdml RET=
 
+*** Highlighting
 
-** Other Editors
+Syntax highlighting is enabled by the =tree-sitter-hl-mode= minor mode based on the configuration in the constant
+=sdml-mode-tree-sitter-hl-patterns=. The highlighting also carries over into Org Babel source blocks and into generated
+content such as this documentation.
 
-*** Neovim
+The =sdml-mode= also adds to the =prettify-symbols-alist= list, the set of symbols is in the custom variable
+=sdml-prettify-symbols-alist=.
 
-TBD
+*** Indentation
 
-*** VSCode
+Line indentation is enabled by the =tree-sitter-indent-mode= minor mode based on the configuration in the constant
+=sdml-mode-folding-definitions=.
+
+Default indentation is two spaces, although this can be overridden by the custom variable =sdml-indent-offset=.
+
+*** Code Folding
+
+Block Folding is provided by the =ts-fold-mode= minor mode based on the configuration in the constant
+=tree-sitter-indent-sdml-scopes=. Note that folding of groups of line comments is also supported.
+
+- =C-c C-s -= -- fold item
+- =C-c C-s += -- unfold item
+- =C-c C-s C--= -- fold all items in buffer
+- =C-c C-s C-+= -- unfold all items in buffer
+- =C-c C-s /= -- unfold item and all children
+- =C-c C-s .= -- toggle fold/unfold state
+
+As well as the mechanics of folding, the =ts-fold= package also has indicator support for windowed clients and this is
+enabled by default with =window-system= is non-nil.
+
+*** Debugging
+
+The following two comands are provided by the underlying =tree-sitter= package, but exposed here with the common key
+prefix.
+
+- =C-c C-s d= -- open the tree-sitter debug view
+- =C-c C-s q= -- open the tree-sitter query builder
+
+*** Ispell
+
+The additional package =sdml-ispell= provides *selective* spell checking by only checking selected nodes in the tree.
+
+- =C-c C-s s= -- spell check the item at point
+- =C-c C-s C-s= -- spell check all items in the buffer
+
+By default only strings and comments will be checked, although this can be overridden by the custom variable
+=tree-sitter-ispell-sdml-text-mapping=.
+
+*** Flycheck
+
+The additional package =flycheck-sdml= provides on-the-fly linting for SDML buffers. To enable, simply ensure Flycheck
+mode is enabled for your buffer. Rather than per-buffer, you can enable this by setting =flycheck-mode= for all SDML files
+with a hook.
+
+The entire set of lint rules are stored in the custom variable =sdml-lint-rules= with the form:
+
+#+BEGIN_SRC emacs-lisp
+'(rule-id "Issue message" level "tree-sitter query")
+#+END_SRC
+
+For example, the following rule returns the name of the module, but only if the first character is an upper case letter.
+This is marked as a warning by Flycheck and provided with the necessary message.
+
+#+BEGIN_SRC emacs-lisp
+'(module-name-case
+  "Module names may not start with upper-case"
+  warning
+  "((module name: (identifier) @name) (#match? @name \"^[:upper:]\"))")
+#+END_SRC
+
+*** Org-Babel
+
+Org-Babel support provides the ability to call the SDML [[https://github.com/johnstonskj/rust-sdml][command-line tool]] to produce diagrams and more. For example, the
+following source block calls the CLI to draw a concept diagram for the enclosed module.
+
+#+BEGIN_EXAMPLE
+#+NAME: lst:rentals-example
+#+CAPTION: Rentals Concepts
+#+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-concepts.svg :exports both
+module rentals is
+
+  entity Vehicle
+  entity Location
+  entity Customer
+  entity Booking
+
+end
+#+END_SRC
+#+END_EXAMPLE
+
+The results block then references the resulting image.
+
+#+BEGIN_EXAMPLE
+#+NAME: fig:rentals-example-concepts
+#+CAPTION: Rentals Concepts
+#+RESULTS: lst:rentals-example
+[[file:./rentals-concepts.svg]]
+#+END_EXAMPLE
+
+But, what if we want to produce more than one diagram from the same source? By using the built-in
+/[[https://orgmode.org/manual/Noweb-Reference-Syntax.html][noweb]]/ syntax we can create a new source block, but
+reference the original content. This source block has different command-line parameters and has it's own results block
+as well.
+
+#+BEGIN_EXAMPLE
+#+NAME: fig:rentals-example-erd
+#+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-erd.svg :exports results :noweb yes
+<<lst:rentals-example>>
+#+END_SRC
+#+END_EXAMPLE
+
+** Neovim
+
+[[https://neovim.io/][Neovim]] has some great tree-sitter support with the [[https://github.com/nvim-treesitter/nvim-treesitter][nvim-tree-sitter]] and a nice in-editor [[https://github.com/nvim-treesitter/playground][playground]]. Firstly, add the
+tree-sitter plugin, but don't install yet, as shown on the nvim-treesitter page (using [[https://github.com/junegunn/vim-plug][vim-plug]]):
+
+#+NAME: lst:vim-ts-plugin
+#+BEGIN_SRC vimrc-mode :noeval
+call plug#begin()
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+call plug#end()
+#+END_SRC
+
+Now, add the following Lua block, using content from the homepage, and then set the ~ensure_installed~ to include the
+query language and so highlight tree-sitter queries and set ~ignore_install~ to include sdml *before* installing the
+tree-sitter plugin. The builtin sdml grammar will unfortunately install queries that will then be a problem so we want
+to avoid that.
+
+#+NAME: lst:vim-ts-config
+#+BEGIN_SRC lua :noeval
+require'nvim-treesitter.configs'.setup {
+    ensure_installed = { "query" }, 
+    sync_install = false,
+    auto_install = true,
+    highlight = {
+        enable = true,
+        disable = {},
+        additional_vim_regex_highlighting = false,
+    },
+    incremental_selection = {
+        enable = true,
+        keymaps = {
+            init_selection = "gnn",
+            node_incremental = "grn",
+            scope_incremental = "grc",
+            node_decremental = "grm",
+        },
+    },
+    indent = {
+        enable = true
+    },
+    query_linter = {
+        enable = true,
+        use_virtual_text = true,
+        lint_events = {"BufWrite", "CursorHold"},
+    },
+}
+#+END_SRC
+
+To allow tree-sitter to do folding based on =folds.scm=, add the following to =init.vim=.
+
+#+NAME: lst:vim-ts-folding
+#+BEGIN_SRC vimrc-mode :noeval
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
+#+END_SRC
+
+Once the core plugin has been installed you can add the following Lua block in =init.vim= to install /this/ grammar.
+
+#+NAME: lst:vim-ts-add-sdml
+#+BEGIN_SRC lua :noeval
+local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+
+parser_config.sdml = {
+    install_info = {
+        url = "https://github.com/johnstonskj/tree-sitter-sdml",
+        files = {"src/parser.c"},
+        generate_requires_npm = true, 
+        requires_generate_from_grammar = true,  
+    },
+    filetype = "sdm",
+    maintainers = { "@johnstonskj" },
+}
+#+END_SRC
+
+Additionally, try the  [[https://github.com/nvim-treesitter/nvim-treesitter-context][nvim-treesitter-context]] and [[https://github.com/nvim-treesitter/nvim-treesitter-refactor][nvim-treesitter-refactor]] plugins based on tree-sitter.
+
+#+NAME: lst:vim-ts-extras
+#+BEGIN_SRC vimrc-mode :noeval
+call plug#begin()
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-context' 
+Plug 'nvim-treesitter/playground'
+
+call plug#end()
+#+END_SRC
+
+Add the corresponding configuration:
+
+#+NAME: lst:vim-ts-playground-config
+#+BEGIN_SRC lua :noeval
+require'nvim-treesitter.configs'.setup {
+    // …
+    playground = {
+        enable = true,
+        disable = {},
+        updatetime = 25,
+        persist_queries = false,
+        keybindings = {
+            toggle_query_editor = 'o',
+            toggle_hl_groups = 'i',
+            toggle_injected_languages = 't',
+            toggle_anonymous_nodes = 'a',
+            toggle_language_display = 'I',
+            focus_language = 'f',
+            unfocus_language = 'F',
+            update = 'R',
+            goto_node = '<cr>',
+            show_help = '?',
+        },
+    }
+}
+#+END_SRC
+
+** VSCode
 
 Try here: https://github.com/georgewfraser/vscode-tree-sitter
+https://github.com/EvgeniyPeshkov/syntax-highlighter
 
 
 * Appendix: Surface Syntax to RDF
@@ -1228,6 +1449,9 @@ The module within this resource now has the IRI identifier =https://example.org/
 The remainder of this section will use example modules with =xml:base= to make identifier IRIs more easily understood.
 
 ** Values
+
+Value Literals are necessary for the specification of annotation values. Literals fall into two categories, simple
+values and lists with an additional non-literal form the value constructor.
 
 *** <<sec:mapping-values>> Simple Value Literals
 
@@ -1302,8 +1526,9 @@ module example is end
 @base <https://example.com/v/example/> .
 @prefix : <https://example.com/v/example/> .
 @prefix sdml: <https://api.amazonadvertising.com/domain-model> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 
-:example rdf:type sdml:Module .
+:example rdf:type sdml:Module, owl:NamedIndividual .
 #+END_SRC
 
 *Example with Explicit Base:*
@@ -1320,14 +1545,15 @@ end
 @base <https://example.org/langs/Example#> .
 @prefix : <https://example.org/langs/Example#> .
 @prefix sdml: <https://api.amazonadvertising.com/domain-model> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 
-:example rdf:type sdml:Module .
+:example rdf:type sdml:Module, owl:NamedIndividual .
 #+END_SRC
 
 ** Imports
 
-*Example with Implicit Location:*
+*Example:*
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
@@ -1336,12 +1562,14 @@ end
 #+END_SRC
 
 
-*Example with Explicit Location:*
+#+BEGIN_SRC ttl
+@base <https://example.org/langs/Example#> .
+@prefix : <https://example.org/langs/Example#> .
+@prefix sdml: <https://api.amazonadvertising.com/domain-model> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
 
-#+BEGIN_SRC sdml :exports code :noeval
-module example is
-  import xml from <file:///usr/local/share/schema/xml.ttl>
-end
+:example rdf:type sdml:Module, owl:NamedIndividual .
 #+END_SRC
 
 ** Annotations
@@ -1356,7 +1584,7 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:name rdf:type rdfs:Datatype ;
+:name rdf:type rdfs:Datatype, owl:NamedIndividual ;
     owl:onDatatype xsd:string .
 #+END_SRC
 
@@ -1372,7 +1600,7 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:name rdf:type rdfs:Datatype ;
+:name rdf:type rdfs:Datatype, owl:NamedIndividual ;
     owl:onDatatype xsd:string ;
     owl:withRestrictions (
         [ xsd:minLength "5"^^xsd:nonNegativeInteger ]
@@ -1391,7 +1619,7 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Person rdf:type sdml:Entity .
+:Person rdf:type sdml:Entity, owl:NamedIndividual .
 #+END_SRC
 
 *Example Entity with Identity:*
@@ -1405,7 +1633,7 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Person rdf:type sdml:Entity ;
+:Person rdf:type sdml:Entity, owl:NamedIndividual ;
     :hasIdentifyingMember [
         rdfs:label "id" ;
         :targetClassifier :Person ;
@@ -1417,7 +1645,7 @@ end
     rdfs:label "id" ;
     :targetClassifier :Person .
 
-:Person rdf:type sdml:Entity ;
+:Person rdf:type sdml:Entity, owl:NamedIndividual ;
     :hasIdentifyingMember :Person_id .
 #+END_SRC
 
@@ -1440,7 +1668,7 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Person rdf:type sdml:Entity ;
+:Person rdf:type sdml:Entity, owl:NamedIndividual ;
     :hasReferenceMember [
         rdfs:label "contact" ;
         :targetClassifier :Person ;
@@ -1461,16 +1689,32 @@ TBD
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
-  entity Vehicle is
-    identity vin -> csids:VehicleIdentificationNumber
+  entity Person is
+    identity id -> PersonId
 
     group
       @skos:prefLabel = "Identification"
-      make -> xsd:string
-      model -> xsd:string
+      pref_name -> xsd:string
+      alt_name -> xsd:string
     end
   end
 end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Person rdf:type sdml:Entity, owl:NamedIndividual ;
+    :hasReferenceMember [
+        rdfs:label "contact" ;
+        :targetClassifier :Person ;
+        :sourceCardinality [
+            owl:minCardinality 0 ;
+        ] ;
+        :targetCardinality [
+            owl:minCardinality 0 ;
+            owl:maxCardinality 2 ;
+        ] ;
+        dc::description "Emergency contact person"
+    ] .
 #+END_SRC
 
 ** Enumeration Definition
@@ -1484,7 +1728,7 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:DistanceUnit rdf:type sdml:Enumeration .
+:DistanceUnit rdf:type sdml:Enumeration, owl:NamedIndividual .
 #+END_SRC
 
 *Example Enumeration with Variants:*
@@ -1499,7 +1743,7 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:DistanceUnit rdf:type sdml:Enumeration
+:DistanceUnit rdf:type sdml:Enumeration, owl:NamedIndividual ;
     :hasVariant [
         rdfs:label "Meter" ;
         :hasValue 1 
@@ -1521,7 +1765,7 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:PersonNameChanged rdf:type sdml:Event ;
+:PersonNameChanged rdf:type sdml:Event, owl:NamedIndividual ;
     sdml:eventSource :Person .
 #+END_SRC
 
@@ -1538,7 +1782,7 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:PersonNameChanged rdf:type sdml:Event ;
+:PersonNameChanged rdf:type sdml:Event, owl:NamedIndividual ;
     sdml:eventSource :Person ;
     :hasMember [
         rdfs:Label "personId" ;
@@ -1565,7 +1809,7 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Length rdf:type sdml:Structure ;
+:Length rdf:type sdml:Structure, owl:NamedIndividual ;
     rdfs:isDefinedBy :module .
 #+END_SRC
 
@@ -1580,7 +1824,7 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Length rdf:type sdml:Structure ;
+:Length rdf:type sdml:Structure, owl:NamedIndividual ;
     skos:prefLabel "Length"@en .
 #+END_SRC
 
@@ -1598,7 +1842,7 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Length rdf:type sdml:Structure ;
+:Length rdf:type sdml:Structure, owl:NamedIndividual ;
     skos:prefLabel "Length"@en .
     :hasMember [
         rdfs:label "value" ;
@@ -1632,7 +1876,7 @@ end
 * <<app:domain-modeling>> Appendix: Domain Modeling
 
 There is often confusion around the use of the term /Domain Model/ especially in regard to terms such as /Data Model/, /Class
-Model/, /Schema/ and more. This short noteappendix is an attempt to clarify the terminology and how the relevant modeling
+Model/, /Schema/ and more. This short appendix is an attempt to clarify the terminology and how the relevant modeling
 efforts are undertaken. This is not intended as an exhaustive review of modelling approaches, standards, or technologies
 and neither does it make any judgement as to the usefulness of any approach or technology.
 

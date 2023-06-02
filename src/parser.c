@@ -654,9 +654,9 @@ enum {
   field_module = 8,
   field_name = 9,
   field_source = 10,
-  field_sourceCardinality = 11,
+  field_source_cardinality = 11,
   field_target = 12,
-  field_targetCardinality = 13,
+  field_target_cardinality = 13,
   field_value = 14,
 };
 
@@ -672,9 +672,9 @@ static const char * const ts_field_names[] = {
   [field_module] = "module",
   [field_name] = "name",
   [field_source] = "source",
-  [field_sourceCardinality] = "sourceCardinality",
+  [field_source_cardinality] = "source_cardinality",
   [field_target] = "target",
-  [field_targetCardinality] = "targetCardinality",
+  [field_target_cardinality] = "target_cardinality",
   [field_value] = "value",
 };
 
@@ -734,7 +734,7 @@ static const TSFieldMapEntry ts_field_map_entries[] = {
   [14] =
     {field_name, 0},
     {field_target, 1, .inherited = true},
-    {field_targetCardinality, 1, .inherited = true},
+    {field_target_cardinality, 1, .inherited = true},
   [17] =
     {field_body, 4},
     {field_name, 1},
@@ -754,7 +754,7 @@ static const TSFieldMapEntry ts_field_map_entries[] = {
     {field_body, 2},
     {field_name, 0},
     {field_target, 1, .inherited = true},
-    {field_targetCardinality, 1, .inherited = true},
+    {field_target_cardinality, 1, .inherited = true},
   [31] =
     {field_name, 0},
     {field_value, 2},
@@ -764,15 +764,15 @@ static const TSFieldMapEntry ts_field_map_entries[] = {
     {field_target, 2, .inherited = true},
   [36] =
     {field_target, 0, .inherited = true},
-    {field_targetCardinality, 0, .inherited = true},
+    {field_target_cardinality, 0, .inherited = true},
   [38] =
     {field_name, 1},
-    {field_sourceCardinality, 2, .inherited = true},
+    {field_source_cardinality, 2, .inherited = true},
     {field_target, 2, .inherited = true},
-    {field_targetCardinality, 2, .inherited = true},
+    {field_target_cardinality, 2, .inherited = true},
   [42] =
     {field_target, 2},
-    {field_targetCardinality, 1},
+    {field_target_cardinality, 1},
   [44] =
     {field_body, 3},
     {field_name, 0},
@@ -780,13 +780,13 @@ static const TSFieldMapEntry ts_field_map_entries[] = {
   [47] =
     {field_body, 3},
     {field_name, 1},
-    {field_sourceCardinality, 2, .inherited = true},
+    {field_source_cardinality, 2, .inherited = true},
     {field_target, 2, .inherited = true},
-    {field_targetCardinality, 2, .inherited = true},
+    {field_target_cardinality, 2, .inherited = true},
   [52] =
-    {field_sourceCardinality, 0},
+    {field_source_cardinality, 0},
     {field_target, 1, .inherited = true},
-    {field_targetCardinality, 1, .inherited = true},
+    {field_target_cardinality, 1, .inherited = true},
   [55] =
     {field_min, 1},
   [56] =

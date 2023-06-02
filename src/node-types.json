@@ -468,7 +468,7 @@
           }
         ]
       },
-      "sourceCardinality": {
+      "source_cardinality": {
         "multiple": false,
         "required": false,
         "types": [
@@ -488,7 +488,7 @@
           }
         ]
       },
-      "targetCardinality": {
+      "target_cardinality": {
         "multiple": false,
         "required": false,
         "types": [
@@ -534,7 +534,7 @@
           }
         ]
       },
-      "targetCardinality": {
+      "target_cardinality": {
         "multiple": false,
         "required": false,
         "types": [

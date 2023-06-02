@@ -50,6 +50,11 @@ end
 
 # Changes
 
+**Version: 0.1.7**
+
+* Made field name `sourceCardinality` into `source_cardinality`.
+* Made field name `targetCardinality` into `target_cardinality`.
+
 **Version: 0.1.6**
 
 * Made `_simple_value` into `simple_value` named rule.

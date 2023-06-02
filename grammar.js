@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.6
+// Version:    0.1.7
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    MIT
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -357,14 +357,14 @@ module.exports = grammar({
         _type_expression_to: $ => seq(
             operator('->'),
             optional(
-                field('targetCardinality', $.cardinality_expression)
+                field('target_cardinality', $.cardinality_expression)
             ),
             field('target', $.type_reference)
         ),
 
         _type_expression_from_to: $ => seq(
             optional(
-                field('sourceCardinality', $.cardinality_expression)
+                field('source_cardinality', $.cardinality_expression)
             ),
             $._type_expression_to
         ),

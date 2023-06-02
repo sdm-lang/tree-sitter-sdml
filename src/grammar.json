@@ -1286,7 +1286,7 @@
           "members": [
             {
               "type": "FIELD",
-              "name": "targetCardinality",
+              "name": "target_cardinality",
               "content": {
                 "type": "SYMBOL",
                 "name": "cardinality_expression"
@@ -1315,7 +1315,7 @@
           "members": [
             {
               "type": "FIELD",
-              "name": "sourceCardinality",
+              "name": "source_cardinality",
               "content": {
                 "type": "SYMBOL",
                 "name": "cardinality_expression"

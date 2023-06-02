@@ -94,7 +94,7 @@ name: (identifier) @type.definition)
 
 (string
  (quoted_string) @string
- (language_tag)? @property)
+ language: (language_tag)? @property)
 
 (iri_reference) @string.special
 

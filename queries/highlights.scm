@@ -96,7 +96,7 @@ name: (identifier) @type.definition)
  (quoted_string) @string
  (language_tag)? @property)
 
-(iri_reference) @string
+(iri_reference) @string.special
 
 [
  (decimal)

@@ -21,20 +21,24 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (entity_def
-      name: (identifier)
-      body: (entity_body
-        identity: (identity_member
-          name: (identifier)
-          target: (identifier_reference
-            (identifier)))
-        (member_by_value
-          name: (identifier)
-          target: (identifier_reference
-            (qualified_identifier
-              module: (identifier)
-              member: (identifier))))
-        (member_by_reference
-          name: (identifier)
-          target: (identifier_reference
-            (identifier)))))))
+    (type_def
+      (entity_def
+        name: (identifier)
+        body: (entity_body
+          identity: (identity_member
+            name: (identifier)
+            target: (type_reference
+              (identifier_reference
+                (identifier))))
+          (member_by_value
+            name: (identifier)
+            target: (type_reference
+              (identifier_reference
+                (qualified_identifier
+                  module: (identifier)
+                  member: (identifier)))))
+          (member_by_reference
+            name: (identifier)
+            target: (type_reference
+              (identifier_reference
+                (identifier)))))))))

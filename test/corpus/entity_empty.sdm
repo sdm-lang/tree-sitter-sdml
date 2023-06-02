@@ -13,5 +13,6 @@ end
 (module
   name: (identifier)
   body: (module_body
-          (entity_def
-            name: (identifier))))
+    (type_def
+      (entity_def
+        name: (identifier)))))

@@ -15,8 +15,8 @@ end
   body: (module_body
     (annotation
       name: (identifier_reference
-              (qualified_identifier
-                module: (identifier)
-                member: (identifier)))
-                 value: (value
-                          (decimal)))))
+        (qualified_identifier
+          module: (identifier)
+          member: (identifier)))
+          value: (value
+            (simple_value (decimal))))))

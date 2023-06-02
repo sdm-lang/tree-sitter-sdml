@@ -15,9 +15,10 @@ end
   body: (module_body
     (annotation
       name: (identifier_reference
-              (qualified_identifier
-                module: (identifier)
-                member: (identifier)))
-                 value: (value
-                          (string
-                            (quoted_string))))))
+      (qualified_identifier
+        module: (identifier)
+        member: (identifier)))
+         value: (value
+           (simple_value
+              (string
+                (quoted_string)))))))

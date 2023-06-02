@@ -18,10 +18,12 @@ end
   body: (module_body
     (annotation
       name: (identifier_reference
-              (qualified_identifier
-                module: (identifier)
-                member: (identifier)))
-                 value: (value
-                          (list_of_values
-                            (iri_reference)
-                            (iri_reference))))))
+        (qualified_identifier
+          module: (identifier)
+          member: (identifier)))
+      value: (value
+        (list_of_values
+          (simple_value
+            (iri_reference))
+          (simple_value
+            (iri_reference)))))))

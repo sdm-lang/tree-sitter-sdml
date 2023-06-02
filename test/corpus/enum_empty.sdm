@@ -13,5 +13,6 @@ end
 (module
   name: (identifier)
   body: (module_body
-          (enum_def
-            name: (identifier))))
+    (type_def
+      (enum_def
+        name: (identifier)))))

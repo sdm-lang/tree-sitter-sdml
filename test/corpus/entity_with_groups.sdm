@@ -24,26 +24,30 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (entity_def
-      name: (identifier)
-      body: (entity_body
-        identity: (identity_member
-          name: (identifier)
-          target: (identifier_reference
-            (qualified_identifier
-              module: (identifier)
-              member: (identifier))))
-        (entity_group
-          (member_by_value
+    (type_def
+      (entity_def
+        name: (identifier)
+        body: (entity_body
+          identity: (identity_member
             name: (identifier)
-            target: (identifier_reference
-              (qualified_identifier
-                module: (identifier)
-                member: (identifier)))))
-        (entity_group
-          (member_by_value
-            name: (identifier)
-            target: (identifier_reference
-              (qualified_identifier
-                module: (identifier)
-                member: (identifier)))))))))
+            target: (type_reference
+              (identifier_reference
+                (qualified_identifier
+                  module: (identifier)
+                  member: (identifier)))))
+          (entity_group
+            (member_by_value
+              name: (identifier)
+              target: (type_reference
+                (identifier_reference
+                  (qualified_identifier
+                    module: (identifier)
+                    member: (identifier))))))
+          (entity_group
+            (member_by_value
+              name: (identifier)
+              target: (type_reference
+                (identifier_reference
+                  (qualified_identifier
+                    module: (identifier)
+                    member: (identifier)))))))))))

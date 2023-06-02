@@ -41,13 +41,13 @@
  base: (identifier_reference) @name) @reference.class
 
 (identity_member
- target: (identifier_reference) @name) @reference.class
+ target: (type_reference (identifier_reference) @name)) @reference.class
 
 (member_by_value
- target: (identifier_reference) @name) @reference.class
+ target: (type_reference (identifier_reference) @name)) @reference.class
 
 (member_by_reference
- target: (identifier_reference) @name) @reference.class
+ target: (type_reference (identifier_reference) @name)) @reference.class
 
 ;; ---------------------------------------------------------------------------
 ;; Annotations

@@ -13,10 +13,11 @@ end
 (module
   name: (identifier)
   body: (module_body
-          (data_type_def
-            name: (identifier)
-            base: (identifier_reference
-               (qualified_identifier
-                 module: (identifier)
-                 member: (identifier))))))
+    (type_def
+      (data_type_def
+        name: (identifier)
+        base: (identifier_reference
+           (qualified_identifier
+             module: (identifier)
+             member: (identifier)))))))
 

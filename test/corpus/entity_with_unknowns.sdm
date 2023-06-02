@@ -23,17 +23,20 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (entity_def
-      name: (identifier)
-      body: (entity_body
-        identity: (identity_member
-          name: (identifier)
-target: (unknown_type))
-(member_by_value
-name: (identifier)
-target: (unknown_type))
-            (entity_group
-              (member_by_value
-                name: (identifier)
-                target: (unknown_type)))))))
-
+    (type_def
+      (entity_def
+        name: (identifier)
+        body: (entity_body
+          identity: (identity_member
+            name: (identifier)
+            target: (type_reference
+              (unknown_type)))
+          (member_by_value
+            name: (identifier)
+            target: (type_reference
+              (unknown_type)))
+          (entity_group
+            (member_by_value
+              name: (identifier)
+              target: (type_reference
+                (unknown_type)))))))))

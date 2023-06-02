@@ -1,45 +1,5 @@
 [
   {
-    "type": "_single_import",
-    "named": true,
-    "subtypes": [
-      {
-        "type": "member_import",
-        "named": true
-      },
-      {
-        "type": "module_import",
-        "named": true
-      }
-    ]
-  },
-  {
-    "type": "_type_def",
-    "named": true,
-    "subtypes": [
-      {
-        "type": "data_type_def",
-        "named": true
-      },
-      {
-        "type": "entity_def",
-        "named": true
-      },
-      {
-        "type": "enum_def",
-        "named": true
-      },
-      {
-        "type": "event_def",
-        "named": true
-      },
-      {
-        "type": "structure_def",
-        "named": true
-      }
-    ]
-  },
-  {
     "type": "annotation",
     "named": true,
     "fields": {
@@ -415,11 +375,7 @@
         "required": true,
         "types": [
           {
-            "type": "identifier_reference",
-            "named": true
-          },
-          {
-            "type": "unknown_type",
+            "type": "type_reference",
             "named": true
           }
         ]
@@ -431,11 +387,30 @@
     "named": true,
     "fields": {},
     "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "member_import",
+          "named": true
+        },
+        {
+          "type": "module_import",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "import_statement",
+    "named": true,
+    "fields": {},
+    "children": {
       "multiple": true,
       "required": true,
       "types": [
         {
-          "type": "_single_import",
+          "type": "import",
           "named": true
         }
       ]
@@ -455,31 +430,11 @@
       "required": true,
       "types": [
         {
-          "type": "boolean",
-          "named": true
-        },
-        {
-          "type": "decimal",
-          "named": true
-        },
-        {
-          "type": "double",
-          "named": true
-        },
-        {
           "type": "identifier_reference",
           "named": true
         },
         {
-          "type": "integer",
-          "named": true
-        },
-        {
-          "type": "iri_reference",
-          "named": true
-        },
-        {
-          "type": "string",
+          "type": "simple_value",
           "named": true
         },
         {
@@ -528,11 +483,7 @@
         "required": true,
         "types": [
           {
-            "type": "identifier_reference",
-            "named": true
-          },
-          {
-            "type": "unknown_type",
+            "type": "type_reference",
             "named": true
           }
         ]
@@ -578,11 +529,7 @@
         "required": true,
         "types": [
           {
-            "type": "identifier_reference",
-            "named": true
-          },
-          {
-            "type": "unknown_type",
+            "type": "type_reference",
             "named": true
           }
         ]
@@ -650,15 +597,15 @@
       "required": false,
       "types": [
         {
-          "type": "_type_def",
-          "named": true
-        },
-        {
           "type": "annotation",
           "named": true
         },
         {
-          "type": "import",
+          "type": "import_statement",
+          "named": true
+        },
+        {
+          "type": "type_def",
           "named": true
         }
       ]
@@ -704,6 +651,41 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "simple_value",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "boolean",
+          "named": true
+        },
+        {
+          "type": "decimal",
+          "named": true
+        },
+        {
+          "type": "double",
+          "named": true
+        },
+        {
+          "type": "integer",
+          "named": true
+        },
+        {
+          "type": "iri_reference",
+          "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -801,6 +783,56 @@
     }
   },
   {
+    "type": "type_def",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "data_type_def",
+          "named": true
+        },
+        {
+          "type": "entity_def",
+          "named": true
+        },
+        {
+          "type": "enum_def",
+          "named": true
+        },
+        {
+          "type": "event_def",
+          "named": true
+        },
+        {
+          "type": "structure_def",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_reference",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier_reference",
+          "named": true
+        },
+        {
+          "type": "unknown_type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "value",
     "named": true,
     "fields": {},
@@ -809,27 +841,7 @@
       "required": true,
       "types": [
         {
-          "type": "boolean",
-          "named": true
-        },
-        {
-          "type": "decimal",
-          "named": true
-        },
-        {
-          "type": "double",
-          "named": true
-        },
-        {
           "type": "identifier_reference",
-          "named": true
-        },
-        {
-          "type": "integer",
-          "named": true
-        },
-        {
-          "type": "iri_reference",
           "named": true
         },
         {
@@ -837,7 +849,7 @@
           "named": true
         },
         {
-          "type": "string",
+          "type": "simple_value",
           "named": true
         },
         {
@@ -866,27 +878,7 @@
         "required": true,
         "types": [
           {
-            "type": "boolean",
-            "named": true
-          },
-          {
-            "type": "decimal",
-            "named": true
-          },
-          {
-            "type": "double",
-            "named": true
-          },
-          {
-            "type": "integer",
-            "named": true
-          },
-          {
-            "type": "iri_reference",
-            "named": true
-          },
-          {
-            "type": "string",
+            "type": "simple_value",
             "named": true
           }
         ]

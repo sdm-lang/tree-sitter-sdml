@@ -48,6 +48,13 @@ module Campaign is
 end
 ```
 
+# Changes
+
+**Version: 0.1.6**
+
+* Made `_simple_value` into `simple_value` named rule.
+* Made `_type_reference` into `type_reference` named rule.
+
 # Additional Links
 
 * Node bindings -- [npm.js](https://www.npmjs.com/package/tree-sitter-sdml)

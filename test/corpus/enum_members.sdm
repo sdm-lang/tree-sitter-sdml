@@ -1,6 +1,6 @@
-============
-Enum, Empty
-============
+===================
+Enum, With Variants
+===================
 
 module campaign is
 
@@ -16,12 +16,13 @@ end
 (module
   name: (identifier)
   body: (module_body
-          (enum_def
+    (type_def
+      (enum_def
+        name: (identifier)
+        body: (enum_body
+          (enum_variant
             name: (identifier)
-            body: (enum_body
-                    (enum_variant
-                      name: (identifier)
-                      value: (unsigned))
-                    (enum_variant
-                      name: (identifier)
-                      value: (unsigned))))))
+            value: (unsigned))
+          (enum_variant
+            name: (identifier)
+            value: (unsigned)))))))

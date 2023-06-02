@@ -13,5 +13,6 @@ end
 (module
   name: (identifier)
   body: (module_body
-          (structure_def
-            name: (identifier))))
+    (type_def
+      (structure_def
+        name: (identifier)))))

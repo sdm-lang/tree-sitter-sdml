@@ -16,7 +16,7 @@ module Campaign is
   ; <- property
   ;^ property
   ;         ^ operator
-  ;           ^ string
+  ;           ^ string.special
   
   @skos:version = xsd:decimal(2)
   ; <- property

@@ -13,7 +13,8 @@ end
 (module
   name: (identifier)
   body: (module_body
-          (event_def
-            name: (identifier)
-            source: (identifier_reference
-               (identifier)))))
+    (type_def
+      (event_def
+        name: (identifier)
+        source: (identifier_reference
+           (identifier))))))

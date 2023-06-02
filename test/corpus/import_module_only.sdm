@@ -13,6 +13,7 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (import
-      (module_import
-        name: (identifier)))))
+    (import_statement
+      (import
+        (module_import
+          name: (identifier))))))

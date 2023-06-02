@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.5
+// Version:    0.1.6
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    MIT
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -30,11 +30,6 @@ module.exports = grammar({
 
     word: $ => $.identifier,
 
-    supertypes: $ => [
-        $._single_import,
-        $._type_def
-    ],
-
     // -----------------------------------------------------------------------
     // Whitespace
     // -----------------------------------------------------------------------
@@ -59,25 +54,25 @@ module.exports = grammar({
 
         module_body: $ => seq(
             keyword('is'),
-            repeat($.import),
+            repeat($.import_statement),
             repeat($.annotation),
-            repeat($._type_def),
+            repeat($.type_def),
             keyword('end')
         ),
 
-        import: $ => seq(
+        import_statement: $ => seq(
             keyword('import'),
             choice(
-                $._single_import,
+                $.import,
                 seq(
                     '[',
-                    repeat1($._single_import),
+                    repeat1($.import),
                     ']'
                 )
             )
         ),
 
-        _single_import: $ => choice(
+        import: $ => choice(
             $.member_import,
             $.module_import
         ),
@@ -119,7 +114,7 @@ module.exports = grammar({
         ),
 
         value: $ => choice(
-            $._simple_value,
+            $.simple_value,
             $.value_constructor,
             $.identifier_reference,
             $.list_of_values,
@@ -129,7 +124,7 @@ module.exports = grammar({
             '[',
             repeat1(
                 choice(
-                    $._simple_value,
+                    $.simple_value,
                     $.value_constructor,
                     $.identifier_reference,
                 )
@@ -140,11 +135,11 @@ module.exports = grammar({
         value_constructor: $ => seq(
             field('name', $.identifier_reference),
             '(',
-            field('value', $._simple_value),
+            field('value', $.simple_value),
             ')'
         ),
 
-        _simple_value: $ => choice(
+        simple_value: $ => choice(
             $.string,
             $.double,
             $.decimal,
@@ -216,7 +211,7 @@ module.exports = grammar({
         // Type Definitions
         // -----------------------------------------------------------------------
 
-        _type_def: $ => choice(
+        type_def: $ => choice(
             $.entity_def,
             $.structure_def,
             $.event_def,
@@ -356,7 +351,7 @@ module.exports = grammar({
 
         _type_expression: $ => seq(
             operator('->'),
-            field('target', $._member_type_target)
+            field('target', $.type_reference)
         ),
 
         _type_expression_to: $ => seq(
@@ -364,7 +359,7 @@ module.exports = grammar({
             optional(
                 field('targetCardinality', $.cardinality_expression)
             ),
-            field('target', $._member_type_target)
+            field('target', $.type_reference)
         ),
 
         _type_expression_from_to: $ => seq(
@@ -374,7 +369,7 @@ module.exports = grammar({
             $._type_expression_to
         ),
 
-        _member_type_target: $ => choice(
+        type_reference: $ => choice(
             $.unknown_type,
             $.identifier_reference
         ),

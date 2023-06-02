@@ -15,11 +15,11 @@ end
   body: (module_body
     (annotation
       name: (identifier_reference
-              (qualified_identifier
-                module: (identifier)
-                member: (identifier)))
-                 value: (value
-                          (list_of_values
-                            (integer)
-                            (integer)
-                            (integer))))))
+      (qualified_identifier
+        module: (identifier)
+        member: (identifier)))
+        value: (value
+          (list_of_values
+            (simple_value (integer))
+            (simple_value (integer))
+            (simple_value (integer)))))))

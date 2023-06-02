@@ -1122,22 +1122,145 @@ make build
 - Source at [[https://github.com/johnstonskj/rust-sdml][Github]]
 - Published to [[https://crates.io/crates/sdml][crates.io]]
 
-*** Projects, Domains, and Modules
+#+BEGIN_SRC bash :noeval
+$ sdml --help
+Rust CLI for Simple Domain Modeling Language (SDML)
 
-TBD
+Usage: sdml [OPTIONS] <COMMAND>
+
+Commands:
+  highlight  Highlight file
+  tags       Extract tags from file
+  convert    Convert model files into other formats
+  draw       Draw diagrams from models
+  help       Print this message or the help of the given subcommand(s)
+
+Options:
+  -v, --verbose...  More output per occurrence
+  -q, --quiet...    Less output per occurrence
+  -h, --help        Print help
+  -V, --version     Print version
+#+END_SRC
+
+For most commands the tool accepts a pair of arguments that determine the format and location of the generated output.
+These commands =--output-format= / =-f= and =--output-file= / =-o= can be used in the following manner.
+
+``` shell
+--output-format svg --output-file rentals.svg
+-output-file rentals.svg
+```
+
+In the second example above the format is not specified and so the tool will use the extension of the output file as the
+format specifier. If the output file is not specified the output is written to stdout. If neither argument is provided
+the output is written to stdout in the default format.
+
+Similarly most tools use the module resolution rules for loading a module and so the input *file* is actually specified
+as a module name. To allow for searches in non-standard locations the argument =--base-path= / =-b= can be used to
+prepend a path to the standard search path. Thus the two examples below are identical as the current directory is always
+a component of the search path.
+
+#+BEGIN_SRC bash :noeval
+--base-path . rentals
+rentals
+#+END_SRC
+
+*** Highlighting
+
+#+BEGIN_SRC bash :noeval
+$ sdlml highlight --help
+Highlight an SDML source file
+
+Usage: sdml highlight [OPTIONS] <MODULE>
+
+Arguments:
+  <MODULE>
+          SDML module to convert
+
+Options:
+  -f, --output-format <OUTPUT_FORMAT>
+          Format to convert into
+          
+          [default: ansi]
+
+          Possible values:
+          - ansi:            ANSI escape for console
+          - html:            HTML pre-formatted element
+          - html-standalone: HTML stand-alone document
+
+  -v, --verbose...
+          More output per occurrence
+
+  -o, --output-file <OUTPUT_FILE>
+          File name to write to, if not provided will write to stdout
+
+  -q, --quiet...
+          Less output per occurrence
+
+  -b, --base-path <BASE_PATH>
+          The path to use as the IRI base for modules
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
+#+END_SRC
+
+For the console this uses ANSI escape sequences to format the text. 
+
+#+BEGIN_SRC bash :noeval
+sdml highlight --output-format ansi rentals
+#+END_SRC
+
+To generate formatted and highlighted HTML the tool accepts two different format specifiers, =html= for simply a block
+of HTML that can be inserted into another document, or =html-standalone= to generate a full document around the
+highlighted code block.
+
+#+BEGIN_SRC bash :noeval
+sdml highlight --output-format html rentals
+sdml highlight --output-format html-standalone rentals
+#+END_SRC
+
+*** Draw Diagrams
+
+To draw a high-level Concepts diagram, use the diagram specifier =concepts=.
+
+#+BEGIN_SRC bash :noeval
+sdml draw --diagram concepts \
+          --output-format svg --output-file rentals.svg \
+          --base-path . rentals
+#+END_SRC
+
+For more detail an Entity-Relationship diagram can be generated with the diagram specifier =entity-relationship=.
+
+#+BEGIN_SRC bash :noeval
+sdml draw --diagram entity-relationship \
+          --output-format svg --output-file rentals.svg \
+          --base-path . rentals
+#+END_SRC
+
+For the mose detail a UML Class diagram can be generated with the diagram specifier =uml-class=.
+
+#+BEGIN_SRC bash :noeval
+sdml draw --diagram uml-class \
+          --output-format svg --output-file rentals.svg \
+          --base-path . rentals
+#+END_SRC
 
 *** Module Resolution
 
-By convention the CLI expects /projects/ to have the following organization.
+The resolver uses the environment variable =SDML_PATH=, ...
+
+For example, the command =sdml highlight rentals= will look for the following files:
 
 #+BEGIN_EXAMPLE
-domain-root/
-  |--sub-domain/
-  |    |-- sub-domain.sdml
-  |    '-- other.sdml
-  |--other-sub-domain/
-  '--resolver.yaml
+{prefix}rentals.sdm
+{prefix}rentals.sdml
+{prefix}rentals/rentals.sdm
+{prefix}rentals/rentals.sdml
 #+END_EXAMPLE
+  
+- =sdml highlight --base-path ./examples rentals=
 
 #+BEGIN_SRC sdml :exports code :noeval
 module subDomain is
@@ -1151,18 +1274,6 @@ module subDomain is
   import somethingElse
 
 end
-#+END_SRC
-
-*** Resolver File
-
-#+BEGIN_SRC yaml
-version: 1
-base: https://example.com/some/base
-prefixes:
-  somethingElse:
-    iri: ...
-    local: ...
-    override: ...
 #+END_SRC
 
 ** Emacs Support

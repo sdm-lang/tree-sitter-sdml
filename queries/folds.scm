@@ -4,11 +4,12 @@
  (enum_def)
  (event_def)
  (structure_def)
+ (union_def)
  ;; ----------------
  (entity_body)
  (entity_group)
+ (enum_body)
  (structure_body)
  (structure_group)
- (enum_body)
  (annotation_only_body)
  ] @fold

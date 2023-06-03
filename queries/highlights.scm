@@ -23,6 +23,7 @@
  "ref"
  "source"
  "structure"
+ "union"
  (unknown_type)
  ] @keyword
 
@@ -47,11 +48,13 @@
 ;; Types
 ;; ---------------------------------------------------------------------------
 
+(data_type_def
+ name: (identifier) @type.definition
+ "<-" @operator
+ base: (identifier_reference) @type)
+
 (entity_def
 name: (identifier) @type.definition)
-
-(structure_def
- name: (identifier) @type.definition)
 
 (enum_def
  name: (identifier) @type.definition)
@@ -60,10 +63,11 @@ name: (identifier) @type.definition)
  name: (identifier) @type.definition
  source: (identifier_reference) @type)
 
-(data_type_def
- name: (identifier) @type.definition
- "<-" @operator
- base: (identifier_reference) @type)
+(structure_def
+ name: (identifier) @type.definition)
+
+(union_def
+ name: (identifier) @type.definition)
 
 ;; ---------------------------------------------------------------------------
 ;; Members
@@ -82,6 +86,15 @@ name: (identifier) @type.definition)
 (member_by_reference
  name: (identifier) @variable.field
  "->" @operator
+ target: (_) @type)
+
+(enum_variant
+ name: (identifier) @constant
+ "=" @operator)
+
+(union_variant
+ name: (identifier) @constant
+  "->" @operator
  target: (_) @type)
 
 (cardinality_expression

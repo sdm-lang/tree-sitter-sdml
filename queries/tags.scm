@@ -19,10 +19,13 @@
 ;; Types and Members
 ;; ---------------------------------------------------------------------------
 
-(entity_def
+(data_type_def
  name: (identifier) @name) @definition.class
 
-(structure_def
+(data_type_def
+ base: (identifier_reference) @name) @reference.class
+
+(entity_def
  name: (identifier) @name) @definition.class
 
 (enum_def
@@ -34,11 +37,11 @@
 (event_def
  source: (identifier_reference) @name) @reference.class
 
-(data_type_def
+(structure_def
  name: (identifier) @name) @definition.class
 
-(data_type_def
- base: (identifier_reference) @name) @reference.class
+(union_def
+ name: (identifier) @name) @definition.class
 
 (identity_member
  target: (type_reference (identifier_reference) @name)) @reference.class
@@ -47,6 +50,9 @@
  target: (type_reference (identifier_reference) @name)) @reference.class
 
 (member_by_reference
+ target: (type_reference (identifier_reference) @name)) @reference.class
+
+(union_variant
  target: (type_reference (identifier_reference) @name)) @reference.class
 
 ;; ---------------------------------------------------------------------------
@@ -64,9 +70,6 @@
 ;; Field Names
 ;; ---------------------------------------------------------------------------
 
-(enum_variant
- name: (identifier) @name) @definition.variant
-
 (identity_member
  name: (identifier) @name) @definition.field
 
@@ -75,3 +78,9 @@
 
 (member_by_reference
  name: (identifier) @name) @definition.field
+
+(enum_variant
+ name: (identifier) @name) @constant
+
+(union_variant
+ name: (identifier) @name) @constant

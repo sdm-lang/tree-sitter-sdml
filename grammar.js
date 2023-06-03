@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.7
+// Version:    0.1.8
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    MIT
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -212,11 +212,26 @@ module.exports = grammar({
         // -----------------------------------------------------------------------
 
         type_def: $ => choice(
+            $.data_type_def,
             $.entity_def,
-            $.structure_def,
-            $.event_def,
             $.enum_def,
-            $.data_type_def
+            $.event_def,
+            $.structure_def,
+            $.union_def,
+        ),
+
+        data_type_def: $ => seq(
+            keyword('datatype'),
+            field('name', $.identifier),
+            operator('<-'),
+            field('base', $.identifier_reference),
+            optional(field('body', $.annotation_only_body))
+        ),
+
+        annotation_only_body: $ => seq(
+            keyword('is'),
+            repeat1($.annotation),
+            keyword('end')
         ),
 
         entity_def: $ => seq(
@@ -251,6 +266,34 @@ module.exports = grammar({
             keyword('end')
         ),
 
+        enum_def: $ => seq(
+            keyword('enum'),
+            field('name', $.identifier),
+            optional(field('body', $.enum_body))
+        ),
+
+        enum_body: $ => seq(
+            keyword('is'),
+            repeat($.annotation),
+            repeat1($.enum_variant),
+            keyword('end')
+        ),
+
+        enum_variant: $ => seq(
+            field('name', $.identifier),
+            operator('='),
+            field('value', $.unsigned),
+            optional(field('body', $.annotation_only_body))
+        ),
+
+        event_def: $ => seq(
+            keyword('event'),
+            field('name', $.identifier),
+            keyword('source'),
+            field('source', $.identifier_reference),
+            optional(field('body', $.structure_body))
+        ),
+
         structure_def: $ => seq(
             keyword('structure'),
             field('name', $.identifier),
@@ -280,46 +323,23 @@ module.exports = grammar({
             keyword('end')
         ),
 
-        event_def: $ => seq(
-            keyword('event'),
+        union_def: $ => seq(
+            keyword('union'),
             field('name', $.identifier),
-            keyword('source'),
-            field('source', $.identifier_reference),
-            optional(field('body', $.structure_body))
+            optional(field('body', $.union_body))
         ),
 
-        enum_def: $ => seq(
-            keyword('enum'),
-            field('name', $.identifier),
-            optional(field('body', $.enum_body))
-        ),
-
-        enum_body: $ => seq(
+        union_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
-            repeat1($.enum_variant),
+            repeat1($.union_variant),
             keyword('end')
         ),
 
-        enum_variant: $ => seq(
+        union_variant: $ => seq(
             field('name', $.identifier),
-            operator('='),
-            field('value', $.unsigned),
+            $._type_expression,
             optional(field('body', $.annotation_only_body))
-        ),
-
-        data_type_def: $ => seq(
-            keyword('datatype'),
-            field('name', $.identifier),
-            operator('<-'),
-            field('base', $.identifier_reference),
-            optional(field('body', $.annotation_only_body))
-        ),
-
-        annotation_only_body: $ => seq(
-            keyword('is'),
-            repeat1($.annotation),
-            keyword('end')
         ),
 
         // -----------------------------------------------------------------------

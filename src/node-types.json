@@ -809,6 +809,10 @@
         {
           "type": "structure_def",
           "named": true
+        },
+        {
+          "type": "union_def",
+          "named": true
         }
       ]
     }
@@ -830,6 +834,87 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "union_body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "annotation",
+          "named": true
+        },
+        {
+          "type": "union_variant",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "union_def",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "union_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "union_variant",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "annotation_only_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_reference",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -1019,6 +1104,10 @@
   },
   {
     "type": "true",
+    "named": false
+  },
+  {
+    "type": "union",
     "named": false
   },
   {

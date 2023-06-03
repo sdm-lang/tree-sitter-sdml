@@ -1,0 +1,32 @@
+====================
+Union, With Variants
+====================
+
+module campaign is
+
+  union VehicleClass is
+    Car -> Car
+    Boat -> Boat
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (type_def
+      (union_def
+        name: (identifier)
+        body: (union_body
+          (union_variant
+            name: (identifier)
+            target: (type_reference
+              (identifier_reference
+                (identifier))))
+          (union_variant
+            name: (identifier)
+             target: (type_reference
+              (identifier_reference
+                (identifier)))))))))

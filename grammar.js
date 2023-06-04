@@ -304,9 +304,7 @@ module.exports = grammar({
             keyword('group'),
             repeat($.annotation),
             repeat(
-                choice(
-                    $.member_by_value
-                )
+                $.member_by_value
             ),
             keyword('end')
         ),

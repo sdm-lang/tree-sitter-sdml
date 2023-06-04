@@ -12,8 +12,8 @@
 
 #+BEGIN_SRC emacs-lisp :exports none
 (require 'ob-dot) ;; builtin
-(require 'ob-bnf)
 (require 'ob-sdml)
+(require 'ebnf-mode)
 #+END_SRC
 
 
@@ -105,40 +105,64 @@ digraph G {
 This section describes the SDML surface syntax, a syntax intended to look and feel like a programming language but with
 extensibility provided by it's underlying RDF and OWL foundation. The goal of the following syntax is to allow for rapid
 capture of domain information but allowing elaboration of details over time. To this end we have made language features
-optional wherever possible such that the minimum information neccessary beis required to build a valid model. This
+optional wherever possible such that the minimum information neccessary is required to build a valid model. This
 document will use the terms /valid/ to denote a model that has no syntactic errors and /complete/ to denote a valid model
 that has no short-form, or /incomplete/, model elements.
+
+The grammar of the surface syntax is presented in Extended Backus–Naur form (EBNF). The addition of a character literal
+range operation =..= reduces the number of single character alternatives for clarity. There are also a set of pre-defined
+terminals such as =ASCII_DIGIT=, =ASCII_HEX_DIGIT=, =UC_LETTER_UPPER=, and =UC_LETTER_LOWER= used to simplify character ranges
+as well.
 
 ** Whitespace and Comments
 
 This grammar chooses to use the JavaScript regular expression character class =\s= which includes the following values,
 including all Unicode whitespace.
 
-=/[\f\n\r\t\v\u0020\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]/=
+#+NAME: lst:grammar-whitespace
+#+BEGIN_SRC ebnf
+Whitespace      =
+    "\f" | "\n" | "\r" | "\t" | "\v"
+    | "\u{0020}" | "\u{00a0}" | "\u{1680}" | "\u{2000}".."\u{200a}"
+    | "\u{2028}" | "\u{2029}" | "\u{202f}" | "\u{205f}" | "\u{3000}"
+    | "\u{feff}"
+#+END_SRC
 
-Comments follow Lisp-like forms, starting with a semi-colon character and continuing to the end of line. Lisp
-conventions for single, double, and triple comment characters are useful but in no way enforced.
+
+Comments follow Lisp-like forms, starting with a semi-colon character and continuing to the end of line.
+
+#+NAME: lst:grammar-line-comment
+#+BEGIN_SRC ebnf
+LineComment     = ";", ( -( "\r" | "\n" ) )*
+#+END_SRC
 
 #+NAME: lst:sdml-ex-comments
 #+CAPTION: Comments
 #+BEGIN_SRC sdml :exports code :noeval
-; comments start with ';' and go to end of line
+; <- comments start here, end here ->
+#+END_SRC
+
+Lisp conventions for single, double, and triple comment characters are useful but in no way enforced.
+
+#+NAME: lst:sdml-ex-comment-conventions
+#+CAPTION: Comments
+#+BEGIN_SRC sdml :exports code :noeval
+;;; File-level comment
+;; Comment at-point
+; Comments in right margin
 #+END_SRC
 
 ** Identifiers
 
-An identifier is a string of characters corresponding to the
-[[https://unicode.org/reports/tr44/#GC_Values_Table][Unicode General Category]] *Lu* (an uppercase letter) or *Ll* (a
+An identifier is a string of characters corresponding to the [[https://unicode.org/reports/tr44/#GC_Values_Table][Unicode General Category]] *Lu* (an uppercase letter) or *Ll* (a
 lowercase letter) or the Unicode Low Line (underscore, "_", =U+005F=) character. Specifically an identifer *must* start with
 and *must* end with a letter such that the low line character may only appear /within/ the identifier. The following is a
 brief BNF description of the identifier syntax.
 
-#+BEGIN_SRC bnf
-<identifier>   ::= <word>   | <identifier> _ <word>
-
-<word>         ::= <letter> | <word> <letter>
-
-<letter>       ::= UNICODE_LETTER_UPPER | UNICODE_LETTER_LOWER
+#+NAME: lst:grammar-identifier
+#+BEGIN_SRC ebnf
+IdentifierWord  = ( UC_LETTER_UPPER | UC_LETTER_LOWER )+
+Identifier      = IdentifierWord, ( "_", IdentifierWord )*
 #+END_SRC
     
 Naming Conventions:
@@ -153,21 +177,23 @@ Naming Conventions:
 - *Type Member Name* :: lower Camel Case; i.e. =street=, =accountName=, or =currentValue=. As in data type definitions these are
   broad nouns, with either a property noun suffix as in =accountNumber= or a qualifier noun prefix as in =shortName=. These
   are commonly simply the lower Camel Case version of the corresponding type name.
-- *Enum Variant Name* :: Upper Camel Case is the preferred, although SHOUTY CASE is acceptable.
+- *Enum and Union Variant Name* :: Upper Camel Case is the preferred, although SHOUTY CASE is acceptable.
 
 *** Qualified Identifier
 
 A qualified identifier comprises a module identifier followed by the Colon (":", =U+003A=) character and the identifier of a
 member within that module.
 
-#+BEGIN_SRC bnf
-<qualident>   ::= <identifier> : <identifier>
+#+NAME: lst:grammar-qualified-identifier
+#+BEGIN_SRC ebnf
+QualifiedIdentifier = Identifier, ":", Identifier
 #+END_SRC
 
 A type reference may be to a locally defined type by an identifier, or an imported type by a qualified identifier.
 
-#+BEGIN_SRC bnf
-<identref>   ::= <identifier> | <qualident>
+#+NAME: lst:grammar-identifier-reference
+#+BEGIN_SRC ebnf
+IdentifierReference = QualifiedIdentifier | Identifier
 #+END_SRC
 
 ** <<sec:modules-and-imports>> Module Declaration and Imports
@@ -175,6 +201,12 @@ A type reference may be to a locally defined type by an identifier, or an import
 A module is the container for a set of type definitions and typically models a /Domain/ or /Sub-domain/. A single resource
 (in the web sense of some /thing/ identified by an IRI) may contain only a single module. Therefore, the smallest valid
 resource is one with an empty model.
+
+#+NAME: lst:grammar-module
+#+BEGIN_SRC ebnf
+ModuleBody      = "is", ImportStatement*, Annotation*, TypeDef*, "end"
+Module          = "module", Identifier, ModuleBody
+#+END_SRC
 
 An empty module (listing [[lst:sdml-ex-empty-module]]), specifically a module with an empty /body/ which is the content
 between the keywords *=is=* and *=end=*.
@@ -184,6 +216,18 @@ between the keywords *=is=* and *=end=*.
 #+BEGIN_SRC sdml :exports code :noeval
 module example is end
 #+END_SRC
+
+To import types from other modules you add one or more import statements to the module body. Each statement may
+reference one or more module names or the qualified name of a type within a module.
+
+#+NAME: lst:grammar-import-statement
+#+BEGIN_SRC ebnf
+MemberImport    = QualifiedIdentifier
+ModuleImport    = Identifer
+Import          = MemberImport | ModuleImport
+ImportStatement = "import", ( Import | "[", Import+, "]" )
+#+END_SRC
+
 
 The module in listing [[lst:sdml-ex-import-module]] contains a single import statement /referencing/ the module named =xsd=
 making it's members /visible/ in the qualified form =xsd:*=.
@@ -222,28 +266,93 @@ end
 
 ** Data Types and Values
 
-The core data types supported by SDML are Boolean, Integer, Decimal, Double, String, (Language-Tagged String), and IRI
-References. Values corresponding to these types are termed /simple values/.
+A data /value/ is either a simple value, a value constructor expression, an identifier reference or a list of values.
+
+#+NAME: lst:grammar-value
+#+BEGIN_SRC ebnf
+Value           =
+    SimpleValue
+    | ValueConstructor
+    | IdentifierReference
+    | ListOfValues
+#+END_SRC
 
 *** Simple Values
 
+The core data types supported by SDML are Boolean, Integer, Decimal, Double, String, (Language-Tagged String), and IRI
+References. Values corresponding to these types are termed /simple values/.
+
+#+NAME: lst:grammar-simple-value
+#+BEGIN_SRC ebnf
+SimpleValue     =
+    String
+    | Double
+    | Decimal
+    | Integer
+    | Boolean
+    | IriReference
+#+END_SRC
+
 A Boolean value in SDML is either the keyword ~true~ or ~false~.
+
+#+NAME: lst:grammar-boolean
+#+BEGIN_SRC ebnf
+Boolean         = "true" | "false"
+#+END_SRC
 
 An Integer value in SDML is a string of ASCII decimal digits, without leading zeros; zero, =0=, is a valid value however
 =00= and =01= are not. The Integer type corresponds to a 64-bit signed integer number.
 
+#+NAME: lst:grammar-integer
+#+BEGIN_SRC ebnf
+NumericSign     = "+" | "-"
+Zero            = "0"
+NonZero         = "1".."9"
+Unsigned        = Zero | NonZero, ( ASCII_DIGIT )*
+Integer         = NumericSign?, Unsigned
+#+END_SRC
+
 A Decimal value in SDML is an integer-like value, followed by the Full Stop (".", =U+002E=) character and another
 integer-like value. The Decimal type corresponds to a 128-bit representation of a fixed-precision decimal number.
+
+#+NAME: lst:grammar-decimal
+#+BEGIN_SRC ebnf
+Decimal         = Integer, ".", ( ASCII_DIGIT )+
+#+END_SRC
 
 A Double value in SDML is a decimal-like value followed by a lower or upper case letter E (Latin Small Letter E, "e",
 =U+0065= or Latin Capital Letter E, "E", =U+0045=), a sign character (Hyphen Minus, "-", =U+002D= or Plus Sign, "+", =U+002B=)
 and an integer-like value. The Double type is a 64-bit floating point number (specifically, the "binary64" type defined
 in IEEE 754-2008).
 
+#+NAME: lst:grammar-double
+#+BEGIN_SRC ebnf
+ExponentChar    = "e" | "E"
+Double          = Decimal, ExponentChar, NumericSign?, Integer
+#+END_SRC
+
 A String value in SDML is a sequence of Unicode characters starting and ending with a Quotation Mark ('"', =U+0022=) character. While
 standard escape sequences allow for embedding non-printing characters. The form =\u{XXXX}=, where =X= is a single hex digit,
 allows for the inclusion of any Unicode characters by their code point. Note that this form requires a minimum of 2 and
 a maximum of 6 such digits. In addition,the following single-character escape characters are supported.
+
+#+NAME: lst:grammar-string
+#+BEGIN_SRC ebnf
+HexPair         = ASCII_HEX_DIGIT, ASCII_HEX_DIGIT
+CharacterEscape = "\\", ( "\"" | "\\" | "\/" | "a" | "b"
+                          "e" | "f" | "n" | "r" | "t" | "v" )
+UnicodeEscape   = "\\u{", HexPair, ( HexPair ( HexPair )? )?, "}"
+NotAllowed      = "\"" | "\\" | "\u{00}".."\u{08}" | "\u{0B}".."\u{1F}" | "\u{7F}"
+QuotedString    = "\"", ( -NotAllowed | CharacterEscape | UnicodeEscape )*, "\""
+LanguageTag     =
+    "@", ASCII_LETTER_LOWER, ASCII_LETTER_LOWER, ASCII_LETTER_LOWER?
+        ( "-", ASCII_LETTER_UPPER, ASCII_LETTER_UPPER, ASCII_LETTER_UPPER )?
+        ( "-", ASCII_LETTER_UPPER, ASCII_LETTER_LOWER,
+               ASCII_LETTER_LOWER, ASCII_LETTER_LOWER )?
+        ( "-", ( ( ASCII_LETTER_UPPER, ASCII_LETTER_UPPER )
+               | ( ASCII_DIGIT, ASCII_DIGIT, ASCII_DIGIT ) ) )
+String          = QuotedString, LanguageTag?
+#+END_SRC
 
 #+NAME: tbl:string-escape-characters
 #+CAPTION: String Escape Characters
@@ -269,15 +378,35 @@ An IRI Reference value in SDML is a value IRI value, either absolute or relative
 character and a Greater-Than Sign (">", =U+003E=) character. IRI references are more permissive in the SDML grammar than
 the Turtle[fn:3] language.
 
+#+NAME: lst:grammar-iri-reference
+#+BEGIN_SRC ebnf
+IriReference    ::=
+    "<",
+    (
+    - ("<" | ">" | "\"" | "{" | "}" | "|" | "^" | "`" | "\\" | "\u{00}".."\u{20}")
+    | UnicodeEscape
+    )*,
+    ">"
+#+END_SRC
+
 See section [[sec:mapping-values]] for a more detailed description of values, literals, and data types.
 
 *** Value Constructors
 
 While the value =101= is defined to be an Integer literal, in the presence of sub-types how do you specify the type of a
 literal? To accomplish this a /value constructor/ allows for specifying the precise type, or casting a value to a specific
-type. The syntax appears as a function call with a type reference followed by a valid /simple value/ surrounded by the
-Left Parenthesis ("(", =U+0028=) and Right Parenthesis (")", =U+0029=) characters. The literal value MUST be valid for the
+type.
+
+The syntax appears as a function call with a type reference followed by a valid /simple value/ surrounded by the Left
+Parenthesis ("(", =U+0028=) and Right Parenthesis (")", =U+0029=) characters. The literal value MUST be valid for the
 referenced type, or one of it's super-types.
+
+#+NAME: lst:grammar-value-constructor
+#+BEGIN_SRC ebnf
+ValueConstructor    = IdentifierReference, "(", SimpleValue, ")"
+#+END_SRC
+
+Here we assert that the value =1= is an unsigned rather than the default signed integer.
 
 #+NAME: lst:sdml-ex-type-constructor
 #+CAPTION: Value Constructor Example
@@ -292,6 +421,12 @@ character and end with the Right Square Bracket ("]", =U+005D=) character with n
 the list. Value lists are, as one might expect, lists of values and specifically of simple values. Value lists are also
 heterogeneous and may contain elements of different types.
 
+#+NAME: lst:grammar-list-of-values
+#+BEGIN_SRC js :noeval
+ListOfValues    =
+    "[", ( SimpleValue | ValueConstructor | IdentifierReference )+, "]"
+#+END_SRC
+
 #+NAME: lst:sdml-ex-value-lists
 #+CAPTION: Value List Example
 #+BEGIN_SRC sdml :exports code :noeval
@@ -300,9 +435,16 @@ heterogeneous and may contain elements of different types.
 
 *** Defining Data Types
 
-A datatype definition introduces a new data type by /restriction/ of some existing base type. Listing
-[[lst:sdml-ex-datatype]] shows the /type restriction/ operator, =<-=, defining a new type named ~name~ as a restriction on the
-existing XML Schema data type ~xsd:string~.
+A datatype definition introduces a new simple data type by /restriction/ of some existing base type.
+
+#+NAME: lst:grammar-data-type-def
+#+BEGIN_SRC ebnf
+DataTypeDef     =
+    "datatype", Identifier, "<-", IdentifierReference, AnnotationOnlyBody?
+#+END_SRC
+
+Listing [[lst:sdml-ex-datatype]] shows the /type restriction/ operator, =<-=, defining a new type named ~name~ as a restriction on
+the existing XML Schema data type ~xsd:string~.
 
 #+NAME: lst:sdml-ex-datatype
 #+CAPTION: New Datatype
@@ -336,6 +478,18 @@ From [[https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide][OWL 2 Web Ontolog
 | =rdf:langRange=                                                          | =xsd:string= literal as a regular expression | =rdf:PlainLiteral=           | Restricts the value space to literals with language tags that match the regular expression |
 
 ** Annotations
+
+Annotations are an extension mechanism that interacts directly with the underlying RDF representation of the subject
+model element. While these may look like Java /annotations/, Python /decorators/, or Rust /attributes/ it is more powerful in
+that it can express arbitrary statements about the model element. An SDML annotation starts with the symbol "@" and then
+has an identifier that resolves to an OWL annotation property, and a value for the corresponding property range.
+
+#+NAME: lst:grammar-annotation
+#+BEGIN_SRC ebnf
+Annotation      = "@", IdentiferReference, "=", Value
+#+END_SRC
+
+The following example demonstrates an annotation attached to a module.
 
 #+NAME: lst:sdml-ex-annotation-property
 #+CAPTION: Annotation Property
@@ -391,6 +545,17 @@ Structured types are those which have a set of /members/ that define their type.
 space which is a product of the value space of each member. Each member has a name, a type reference and cardinality
 specifiers where appropriate.
 
+#+NAME: lst:grammar-type-def
+#+BEGIN_SRC ebnf
+TypeDef         =
+    DataTypeDef
+    | EntityDef
+    | EnumDef
+    | EventDef
+    | StructureDef
+    | UnionDef
+#+END_SRC
+
 *** Members
 
 Structured type members fall into the following categories.
@@ -402,6 +567,16 @@ Structured type members fall into the following categories.
 - By-Reference :: A reference to an Entity type. Such a member may indicate the cardinality of both the source and the
   target.
 - Variants :: A member within an enumeration that specifies a numeric value for each member rather than a type.
+
+#+NAME: lst:grammar-members
+#+BEGIN_SRC ebnf
+IdentityMember      =
+    "identity", identifier, TypeExpression, AnnotationOnlyBody?
+MemberByValue       =
+    identifier, TypeExpressionTo, AnnotationOnlyBody?
+MemberByReference   =
+    "ref", Identifier, TypeExpressionFromTo,AnnotationOnlyBody?
+#+END_SRC
 
 For identity, by-value, and by-reference members the general syntax uses the /type reference/ operator, /name/ ~->~ /type/, with
 additional keywords and cardinality included as follows.
@@ -418,7 +593,34 @@ Additionally, to allow for the capture of member names before the elaboration of
 target type to be replaced with the keyword ~unknown~. This marks the member, and by extension it's owning type, as
 /incomplete/.
 
+#+NAME: lst:grammar-type-expressions
+#+BEGIN_SRC js :noeval
+TypeExpression          = "->" TypeReference
+TypeExpressionTo        = "->" Cardinality? TypeReference
+TypeExpressionFromto    = Cardinality? TypeExpressionTo
+TypeReference           = IdentifierReference | UnknownType
+UnknownType             = "unknown"
+#+END_SRC
+
+#+NAME: lst:grammar-cardinality
+#+BEGIN_SRC ebnf
+CardinalityExpression   = "{", Unsigned, CardinalityRange?, "}"
+CardinalityRange        = "..", Unsigned?
+#+END_SRC
+
 *** Entities
+
+#+NAME: lst:grammar-entity-def
+#+BEGIN_SRC ebnf
+EntityGroup     = "group", Annotation*, ( MemberByValue | MemberByReference )*
+EntityBody      =
+    "is",
+    Annotation*,
+    IdentityMember,
+    ( MemberByValue | MemberByReference | EntityGroup )*,
+    "end"
+Entity          = "entity", Identifier, EntityBody?
+#+END_SRC
 
 #+NAME: lst:sdml-ex-empty-entity
 #+CAPTION: Empty Entity
@@ -452,7 +654,13 @@ module example is
 end
 #+END_SRC
 
-*** Enums
+*** Enumerations
+
+#+NAME: lst:grammar-enum-def
+#+BEGIN_SRC ebnf
+EnumBody        = "is", Annotation*, EnumVariant+, "end"
+EnumDef         = "enum", Identifier, EnumBody?
+#+END_SRC
 
 #+NAME: lst:sdml-ex-empty-enum
 #+CAPTION: Empty Enum
@@ -463,6 +671,11 @@ end
 #+END_SRC
 
 The enumeration ~DistanceUnit~ is valid but incomplete.
+
+#+NAME: lst:grammar-enum-variant
+#+BEGIN_SRC ebnf
+EnumVariant     = Identifier, "=", Unsigned, AnnotationOnlyBody?
+#+END_SRC
 
 #+NAME: lst:sdml-ex-enum
 #+CAPTION: Enum With Variants
@@ -475,7 +688,15 @@ module example is
 end
 #+END_SRC
 
-*** Events
+*** Entity Events
+
+#+NAME: lst:grammar-event-def
+#+BEGIN_SRC ebnf
+EventDef        =
+    "event", Identifier,
+    "source", IdentifierReference,
+    StructureBody?
+#+END_SRC
 
 #+NAME: lst:sdml-ex-empty-event
 #+CAPTION: Empty Event
@@ -500,6 +721,13 @@ end
 #+END_SRC
 
 *** Structures
+
+#+NAME: lst:grammar-structure-def
+#+BEGIN_SRC ebnf
+StructureGroup  = "group", Annotation*, MemberByValue*, "end"
+StructureBody   = "is", Annotation*, ( MemberByValue | StructureGroup )*, "end"
+Structuredef    = "structure", Identifier, StructureBody?
+#+END_SRC
 
 #+NAME: lst:sdml-ex-empty-structure
 #+CAPTION: Empty Structure
@@ -560,6 +788,44 @@ end
 
 [fn:3] [[https://www.w3.org/TR/turtle/#sec-iri-references][RDF 1.1 Turtle]], 6.3 IRI References
 
+*** Disjoint Unions
+
+A disjoint, or discriminated, union is a mechanism to allow for a selection of disjoint types to be treated as a single
+type.
+
+#+NAME: lst:grammar-union-def
+#+BEGIN_SRC ebnf
+UnionBody       = "is", Annotation*, UnionVariant+, "end"
+UnionDef        = "union", Identifier, UnionBody?
+#+END_SRC
+
+#+NAME: lst:sdml-ex-empty-union
+#+CAPTION: Empty Union
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  union VehicleClass
+end
+#+END_SRC
+
+The union ~VehicleClass~ is valid but incomplete.
+
+#+NAME: lst:grammar-union-variant
+#+BEGIN_SRC ebnf
+UnionVariant    = Identifier, TypeExpression, AnnotationOnlyBody?
+#+END_SRC
+
+#+NAME: lst:sdml-ex-union
+#+CAPTION: Union With Variants
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  union VehicleClass is
+    Car -> Car
+    Van -> Van
+    Truck -> Truck
+  end
+end
+#+END_SRC
+
 
 * RDF Abstract Model
 
@@ -584,11 +850,14 @@ digraph G {
   Group [shape=ellipse];
   Member [shape=ellipse];
   Structure [shape=ellipse];
-  Variant [shape=ellipse];
+  Union [shape=ellipse];
+  EnumVariant [shape=ellipse];
+  UnionVariant [shape=ellipse];
   Datatype [shape=ellipse;label="rdfs:Datatype"];
 
   Module -> Classifier [label="hasDefinition";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
 
+  Union -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
   Structure -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
   Entity -> Structure [label="rdfs:subClassOf";arrowhead=empty];
   Enumeration -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
@@ -605,7 +874,9 @@ digraph G {
 
   Group -> Member [label="hasMember";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
 
-  Enumeration -> Variant [label="hasVariant";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
+  Enumeration -> EnumVariant [label="hasVariant";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
+
+  Union -> UnionVariant [label="hasVariant";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
 
   Member -> Cardinality [label="sourceCardinality";dir=both;arrowtail=diamond;arrowhead=open;headlabel="?"];
   Member -> Classifier [label="targetClassifier";dir=both;arrowtail=odiamond;arrowhead=open];
@@ -616,7 +887,8 @@ digraph G {
   Cardinality -> integer [label="owl:maxCardinality";dir=both;arrowtail=diamond;arrowhead=open;headlabel="?"];
   Cardinality -> integer [label="owl:minCardinality";dir=both;arrowtail=diamond;arrowhead=open];
 
-  Variant -> integer [label="hasValue";dir=both;arrowtail=diamond;arrowhead=open];
+  EnumVariant -> integer [label="hasValue";dir=both;arrowtail=diamond;arrowhead=open];
+  UnionVariant -> Classifier [label="targetClassifier";dir=both;arrowtail=odiamond;arrowhead=open];
 }
 #+END_SRC
 
@@ -1122,7 +1394,7 @@ make build
 - Source at [[https://github.com/johnstonskj/rust-sdml][Github]]
 - Published to [[https://crates.io/crates/sdml][crates.io]]
 
-#+BEGIN_SRC bash :noeval
+#+BEGIN_EXAMPLE
 $ sdml --help
 Rust CLI for Simple Domain Modeling Language (SDML)
 
@@ -1140,15 +1412,15 @@ Options:
   -q, --quiet...    Less output per occurrence
   -h, --help        Print help
   -V, --version     Print version
-#+END_SRC
+#+END_EXAMPLE
 
 For most commands the tool accepts a pair of arguments that determine the format and location of the generated output.
 These commands =--output-format= / =-f= and =--output-file= / =-o= can be used in the following manner.
 
-``` shell
+#+BEGIN_EXAMPLE
 --output-format svg --output-file rentals.svg
 -output-file rentals.svg
-```
+#+END_EXAMPLE
 
 In the second example above the format is not specified and so the tool will use the extension of the output file as the
 format specifier. If the output file is not specified the output is written to stdout. If neither argument is provided
@@ -1159,14 +1431,14 @@ as a module name. To allow for searches in non-standard locations the argument =
 prepend a path to the standard search path. Thus the two examples below are identical as the current directory is always
 a component of the search path.
 
-#+BEGIN_SRC bash :noeval
+#+BEGIN_EXAMPLE
 --base-path . rentals
 rentals
-#+END_SRC
+#+END_EXAMPLE
 
 *** Highlighting
 
-#+BEGIN_SRC bash :noeval
+#+BEGIN_EXAMPLE
 $ sdlml highlight --help
 Highlight an SDML source file
 
@@ -1204,48 +1476,48 @@ Options:
 
   -V, --version
           Print version
-#+END_SRC
+#+END_EXAMPLE
 
 For the console this uses ANSI escape sequences to format the text. 
 
-#+BEGIN_SRC bash :noeval
+#+BEGIN_EXAMPLE
 sdml highlight --output-format ansi rentals
-#+END_SRC
+#+END_EXAMPLE
 
 To generate formatted and highlighted HTML the tool accepts two different format specifiers, =html= for simply a block
 of HTML that can be inserted into another document, or =html-standalone= to generate a full document around the
 highlighted code block.
 
-#+BEGIN_SRC bash :noeval
+#+BEGIN_EXAMPLE
 sdml highlight --output-format html rentals
 sdml highlight --output-format html-standalone rentals
-#+END_SRC
+#+END_EXAMPLE
 
 *** Draw Diagrams
 
 To draw a high-level Concepts diagram, use the diagram specifier =concepts=.
 
-#+BEGIN_SRC bash :noeval
+#+BEGIN_EXAMPLE
 sdml draw --diagram concepts \
           --output-format svg --output-file rentals.svg \
           --base-path . rentals
-#+END_SRC
+#+END_EXAMPLE
 
 For more detail an Entity-Relationship diagram can be generated with the diagram specifier =entity-relationship=.
 
-#+BEGIN_SRC bash :noeval
+#+BEGIN_EXAMPLE
 sdml draw --diagram entity-relationship \
           --output-format svg --output-file rentals.svg \
           --base-path . rentals
-#+END_SRC
+#+END_EXAMPLE
 
 For the mose detail a UML Class diagram can be generated with the diagram specifier =uml-class=.
 
-#+BEGIN_SRC bash :noeval
+#+BEGIN_EXAMPLE
 sdml draw --diagram uml-class \
           --output-format svg --output-file rentals.svg \
           --base-path . rentals
-#+END_SRC
+#+END_EXAMPLE
 
 *** Module Resolution
 

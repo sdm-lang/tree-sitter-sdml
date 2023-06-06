@@ -1,3 +1,14 @@
+# -------------------------------------------------------------------
+#
+# Project:    tree-sitter-sdml
+# Author:     Simon Johnston <johntonskj@gmail.com>
+# Version:    0.1.9
+# Repository: https://github.com/johnstonskj/tree-sitter-sdml
+# License:    MIT
+# Copyright:  Copyright (c) 2023 Simon Johnston
+#
+# -------------------------------------------------------------------
+
 @prefix : <https://sdml.io/sdml-owl.ttl#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -16,7 +27,9 @@
     dc:license <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/LICENSE> ;
     rdf:seeAlso <https://sdml.io/> .
 
+# -------------------------------------------------------------------
 # Classes
+# -------------------------------------------------------------------
 
 :Module rdf:type owl:Class ;
     rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
@@ -170,7 +183,9 @@
     skos:prefLabel "Enumeration Variant"@en ;
     skos:definition "A variant within an Enumeration."@en .
 
+# -------------------------------------------------------------------
 # Object Properties
+# -------------------------------------------------------------------
 
 :hasDefinition rdf:type owl:ObjectProperty ;
     owl:inverseOf :isDefinedBy ;
@@ -188,8 +203,6 @@
     rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
     skos:prefLabel "defined by module"@en ;
     skos:definition "Relates a type definition to the enclosing module."@en .
-
-# Properties concerning structured types.
 
 :entityHasGroup rdf:type owl:ObjectProperty ;
     rdfs:domain rdfs:Entity ;
@@ -258,8 +271,6 @@
     skos:prefLabel "entity emits event"@en ;
     skos:definition ""@en .
 
-# Properties concerning structured type members
-
 :hasMember rdf:type owl:ObjectProperty ;
     rdfs:range :Member ;
     owl:inverseOf :isMemberOf ;
@@ -327,7 +338,9 @@
     skos:prefLabel "target classifier cardinality"@en ;
     skos:definition "The cardinality of the target classifier for this member."@en .
 
+# -------------------------------------------------------------------
 # Datatype Properties
+# -------------------------------------------------------------------
 
 :minOccurs rdf:type owl:DatatypeProperty ;
     rdfs:domain :Cardinality ;
@@ -351,7 +364,9 @@
     skos:prefLabel "has value"@en ;
     skos:definition "Relates an enumeration variant to a numeric value."@en .
 
+# -------------------------------------------------------------------
 # Annotation Properties
+# -------------------------------------------------------------------
 
 :defaultVariant rdf:type owl:AnnotationProperty ;
     rdfs:domain :Enumeration ;

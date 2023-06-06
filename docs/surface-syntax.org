@@ -1,7 +1,6 @@
 #+LANGUAGE: en
 #+STARTUP: overview hidestars inlineimages entitiespretty
 
-
 * Surface Syntax
 
 This section describes the SDML surface syntax, a syntax intended to look and feel like a programming language but with
@@ -445,9 +444,12 @@ should be a triple:
 
 ** Structured Types
 
-Structured types are those which have a set of /members/ that define their type. Types have identity but also a value
-space which is a product of the value space of each member. Each member has a name, a type reference and cardinality
-specifiers where appropriate.
+Structured types fall into two primary categories, /Product/ types and /Sum/ types. Product types have named and typed
+/Members/ and in SDML these are structures, entities and events. Sum types on the other hand have /Variants/ and in SDML
+these are enumerations and disjoint unions.
+
+Along with the previously described datatype these comprise the set of type definitions available in SDML; this is
+represented in listing [[lst:grammar-type-def]].
 
 #+NAME: lst:grammar-type-def
 #+BEGIN_SRC ebnf
@@ -470,14 +472,17 @@ Structured type members fall into the following categories.
   cardinality of the target.
 - By-Reference :: A reference to an Entity type. Such a member may indicate the cardinality of both the source and the
   target.
-- Variants :: A member within an enumeration that specifies a numeric value for each member rather than a type.
+- Variant :: A member within an enumeration that specifies a numeric value for each member rather than a type.
+- *Type Variant* :: A type reference that is a unique variant of a disjoint union.
 
 #+NAME: lst:grammar-members
 #+BEGIN_SRC ebnf
 IdentityMember      =
     "identity", identifier, TypeExpression, AnnotationOnlyBody?
+
 MemberByValue       =
     identifier, TypeExpressionTo, AnnotationOnlyBody?
+
 MemberByReference   =
     "ref", Identifier, TypeExpressionFromTo,AnnotationOnlyBody?
 #+END_SRC
@@ -506,11 +511,100 @@ TypeReference           = IdentifierReference | UnknownType
 UnknownType             = "unknown"
 #+END_SRC
 
+The cardinality of a member is specified as a range operation with a minimum and maximum number of occurrences
+specified.
+
+- The form ~{1..3}~ specifies a cardinality of 1 to 3 inclusive, or $[1,3]$ in interval notation.
+- The form ~{1..}~ specifies a minimum of 1 occurrences an unbounded maximum, or $[1,\infty]$ in interval notation.
+- The form ~{1}~ specifies that 1 is both the minimum and maximum value, or $[1,1]$ in interval notation, commonly termed
+  a /degenerate/ interval.
+
 #+NAME: lst:grammar-cardinality
 #+BEGIN_SRC ebnf
 CardinalityExpression   = "{", Unsigned, CardinalityRange?, "}"
 CardinalityRange        = "..", Unsigned?
 #+END_SRC
+
+*** Structures
+
+A structure is a product type that is composed of named and typed members. A structure is therefore akin to a record
+type, a table in data modeling, or a class in object modeling.
+
+#+NAME: lst:grammar-structure-def
+#+BEGIN_SRC ebnf
+StructureDef    = "structure", Identifier, StructureBody?
+StructureBody   = "is", Annotation*, ( MemberByValue | StructureGroup )*, "end"
+StructureGroup  = "group", Annotation*, MemberByValue*, "end"
+#+END_SRC
+
+As only the keyword ~structure~ and the identifier are required, the listing [[lst:sdml-ex-empty-structure]] is therefore a
+valid model.
+
+#+NAME: lst:sdml-ex-empty-structure
+#+CAPTION: Empty Structure
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  structure Length
+end
+#+END_SRC
+
+The structure ~Length~ in listing [[lst:sdml-ex-empty-structure]] is /valid/ but considered incomplete. Adding a body to the
+structure, between ~is~ and ~end~, makes it complete even if it has no actual members. In listing
+[[lst:sdml-ex-annotated-structure]] the structure Length is now complete.
+
+#+NAME: lst:sdml-ex-annotated-structure
+#+CAPTION: Annotated Structure
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  structure Length is
+    @skos:prefLabel = "Length"@en
+  end
+end
+#+END_SRC
+
+Listing [[lst:sdml-ex-structure-members]] adds the members ~value~ and ~unit~ and their corresponding types.
+
+#+NAME: lst:sdml-ex-structure-members
+#+CAPTION: Structure Members
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  structure Length is
+    @skos:prefLabel = "Length"@en
+
+    value -> Decimal
+    unit -> DistanceUnit
+  end
+end
+#+END_SRC
+
+In listing [[lst:sdml-ex-structure-groups]] we see a more complex structure with both members and groups.
+
+#+NAME: lst:sdml-ex-structure-groups
+#+CAPTION: Structure Members and Groups
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  structure Account is
+    @skos:prefLabel = "Customer Account"@en
+
+    group
+      @skos:prefLabel = "Metadata"
+      created -> xsd:dateTime
+      lastModified -> xsd:dateTime
+    end
+
+    group
+      @skos:prefLabel = "Customer Information"
+      ref customer -> {1..1} Customer
+    end
+  end
+
+end
+#+END_SRC
+
+# ----- Footnotes
+
+[fn:3] [[https://www.w3.org/TR/turtle/#sec-iri-references][RDF 1.1 Turtle]], 6.3 IRI References
 
 *** Entities
 
@@ -558,40 +652,6 @@ module example is
 end
 #+END_SRC
 
-*** Enumerations
-
-#+NAME: lst:grammar-enum-def
-#+BEGIN_SRC ebnf
-EnumBody        = "is", Annotation*, EnumVariant+, "end"
-EnumDef         = "enum", Identifier, EnumBody?
-#+END_SRC
-
-#+NAME: lst:sdml-ex-empty-enum
-#+CAPTION: Empty Enum
-#+BEGIN_SRC sdml :exports code :noeval
-module example is
-  enum DistanceUnit
-end
-#+END_SRC
-
-The enumeration ~DistanceUnit~ is valid but incomplete.
-
-#+NAME: lst:grammar-enum-variant
-#+BEGIN_SRC ebnf
-EnumVariant     = Identifier, "=", Unsigned, AnnotationOnlyBody?
-#+END_SRC
-
-#+NAME: lst:sdml-ex-enum
-#+CAPTION: Enum With Variants
-#+BEGIN_SRC sdml :exports code :noeval
-module example is
-  enum DistanceUnit is
-    Meter = 1
-    Foot = 2
-  end
-end
-#+END_SRC
-
 *** Entity Events
 
 #+NAME: lst:grammar-event-def
@@ -624,73 +684,39 @@ module example is
 end
 #+END_SRC
 
-*** Structures
+*** Enumerations
 
-#+NAME: lst:grammar-structure-def
+#+NAME: lst:grammar-enum-def
 #+BEGIN_SRC ebnf
-StructureGroup  = "group", Annotation*, MemberByValue*, "end"
-StructureBody   = "is", Annotation*, ( MemberByValue | StructureGroup )*, "end"
-Structuredef    = "structure", Identifier, StructureBody?
+EnumBody        = "is", Annotation*, EnumVariant+, "end"
+EnumDef         = "enum", Identifier, EnumBody?
 #+END_SRC
 
-#+NAME: lst:sdml-ex-empty-structure
-#+CAPTION: Empty Structure
+#+NAME: lst:sdml-ex-empty-enum
+#+CAPTION: Empty Enum
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
-  structure Length
+  enum DistanceUnit
 end
 #+END_SRC
 
-The structure ~Length~ is valid but incomplete.
+The enumeration ~DistanceUnit~ is valid but incomplete.
 
-#+NAME: lst:sdml-ex-annotated-structure
-#+CAPTION: Annotated Structure
+#+NAME: lst:grammar-enum-variant
+#+BEGIN_SRC ebnf
+EnumVariant     = Identifier, "=", Unsigned, AnnotationOnlyBody?
+#+END_SRC
+
+#+NAME: lst:sdml-ex-enum
+#+CAPTION: Enum With Variants
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
-  structure Length is
-    @skos:prefLabel = "Length"@en
+  enum DistanceUnit of
+    Meter = 1
+    Foot = 2
   end
 end
 #+END_SRC
-
-#+NAME: lst:sdml-ex-structure-members
-#+CAPTION: Structure Members
-#+BEGIN_SRC sdml :exports code :noeval
-module example is
-  structure Length is
-    @skos:prefLabel = "Length"@en
-
-    value -> Decimal
-    unit -> DistanceUnit
-  end
-end
-#+END_SRC
-
-#+NAME: lst:sdml-ex-structure-groups
-#+CAPTION: Structure MembersGroups
-#+BEGIN_SRC sdml :exports code :noeval
-module example is
-
-  structure Account is
-    @skos:prefLabel = "Customer Account"@en
-
-    group
-      @skos:prefLabel = "Metadata"
-      created -> xsd:dateTime
-    end
-
-    group
-      @skos:prefLabel = "Customer Information"
-      ref customer -> {1..1} Customer
-    end
-  end
-
-end
-#+END_SRC
-
-# ----- Footnotes
-
-[fn:3] [[https://www.w3.org/TR/turtle/#sec-iri-references][RDF 1.1 Turtle]], 6.3 IRI References
 
 *** Disjoint Unions
 
@@ -700,8 +726,9 @@ type. As such the /elements/ of the union are simply type names and do not allow
 
 #+NAME: lst:grammar-union-def
 #+BEGIN_SRC ebnf
-UnionBody       = "is", Annotation*, IdentifierReference+, "end"
 UnionDef        = "union", Identifier, UnionBody?
+UnionBody       = "of", Annotation*, TypeVariant*, "end"
+TypeVariant     = IdentifierReference
 #+END_SRC
 
 #+NAME: lst:sdml-ex-empty-union

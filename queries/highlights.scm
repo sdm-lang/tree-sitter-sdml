@@ -94,7 +94,8 @@ name: (identifier) @type.definition)
  "=" @operator)
 
 (union_body
- (identifier_reference) @type)
+ (type_variant
+  (identifier_reference) @type))
 
 (cardinality_expression
  (cardinality_range

@@ -39,7 +39,9 @@ EntityGroup         = "group", Annotation*, ( MemberByValue | MemberByReference 
 
 EnumDef             = "enum", Identifier, EnumBody?
 
-EnumBody            = "is", Annotation*, EnumVariant+, "end"
+EnumBody            = "is", Annotation*, EnumVariant*, "end"
+
+EnumVariant         = Identifier, "=", Unsigned, AnnotationOnlyBody?
 
 EventDef            =
     "event", Identifier, "source", IdentifierReference, StructureBody?
@@ -52,7 +54,9 @@ StructureGroup      = "group", Annotation*, MemberByValue*, "end"
 
 UnionDef            = "union", Identifier, UnionBody?
 
-UnionBody           = "is", Annotation*, IdentifierReference+, "end"
+UnionBody           = "is", Annotation*, TypeVariant*, "end"
+
+TypeVariant         = IdentifierReference
 
 IdentityMember      =
     "identity", identifier, TypeExpression, AnnotationOnlyBody?

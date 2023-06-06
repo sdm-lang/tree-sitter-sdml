@@ -53,7 +53,7 @@
  target: (type_reference (identifier_reference) @name)) @reference.class
 
 (union_body
- (identifier_reference) @name) @reference.class
+ (type_variant (identifier_reference) @name)) @reference.class
 
 ;; ---------------------------------------------------------------------------
 ;; Annotations

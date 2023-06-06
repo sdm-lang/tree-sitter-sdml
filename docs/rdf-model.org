@@ -106,7 +106,7 @@ properties from the Dublin Core [[https://www.dublincore.org/specifications/dubl
     rdf:type owl:Ontology ;
     skos:prefLabel "Simple Domain Modeling Language"@en ;
     skos:altLabel "SDML"@en ;
-    dc:hasVersion "0.1.8" ;
+    dc:hasVersion "0.1.10" ;
     dc:creator "Simon Johnston <johntonskj@gmail.com>" ;
     dc:license <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/LICENSE> ;
     rdf:seeAlso <https://sdml.io/> .

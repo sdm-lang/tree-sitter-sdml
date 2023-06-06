@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-06-06 Tue 09:55 -->
+<!-- 2023-06-06 Tue 10:49 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Simple Domain Modeling Language</title>
@@ -22,7 +22,39 @@
 <style>div.figure { text-align: center; }</style>
 <style>div.figure p { text-align: center; }</style>
 <style>p,li,dd { text-align: justify; }</style>
-<style>ul.nav > li { text-align: left;47M; }</style>
+<style>ul.nav > li { text-align: left; }</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
 </head>
 <body>
 <div id="content" class="content">
@@ -31,133 +63,133 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd3f8f68">1. Introduction</a></li>
-<li><a href="#org0d76ba5">2. Surface Syntax</a>
+<li><a href="#org422148b">1. Introduction</a></li>
+<li><a href="#org110a67c">2. Surface Syntax</a>
 <ul>
-<li><a href="#orgf8e0a79">2.1. Whitespace and Comments</a></li>
-<li><a href="#org4a328f7">2.2. Identifiers</a>
+<li><a href="#org75f95cc">2.1. Whitespace and Comments</a></li>
+<li><a href="#orgb803842">2.2. Identifiers</a>
 <ul>
-<li><a href="#org539285a">2.2.1. Qualified Identifier</a></li>
+<li><a href="#org9728984">2.2.1. Qualified Identifier</a></li>
 </ul>
 </li>
-<li><a href="#org51f61d7">2.3. Module Declaration and Imports</a></li>
-<li><a href="#orgd47094a">2.4. Data Types and Values</a>
+<li><a href="#org89939a1">2.3. Module Declaration and Imports</a></li>
+<li><a href="#orgfdccb82">2.4. Data Types and Values</a>
 <ul>
-<li><a href="#orgc2710ec">2.4.1. Simple Values</a></li>
-<li><a href="#orgaf089e7">2.4.2. Value Constructors</a></li>
-<li><a href="#orgd4f25a9">2.4.3. Value Lists</a></li>
-<li><a href="#orgdab4d9b">2.4.4. Defining Data Types</a></li>
+<li><a href="#org328c0da">2.4.1. Simple Values</a></li>
+<li><a href="#org74f8f2a">2.4.2. Value Constructors</a></li>
+<li><a href="#org3fd05ad">2.4.3. Value Lists</a></li>
+<li><a href="#org5b88da9">2.4.4. Defining Data Types</a></li>
 </ul>
 </li>
-<li><a href="#org1735da9">2.5. Annotations</a></li>
-<li><a href="#orga4fedd3">2.6. Structured Types</a>
+<li><a href="#org09fe8cf">2.5. Annotations</a></li>
+<li><a href="#orgbcffdb4">2.6. Structured Types</a>
 <ul>
-<li><a href="#org6c010c2">2.6.1. Members</a></li>
-<li><a href="#org2c22569">2.6.2. Entities</a></li>
-<li><a href="#org1f0c431">2.6.3. Enumerations</a></li>
-<li><a href="#org1780c96">2.6.4. Entity Events</a></li>
-<li><a href="#orgf055c71">2.6.5. Structures</a></li>
-<li><a href="#org3b82235">2.6.6. Disjoint Unions</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#org5195096">3. RDF Abstract Model</a>
-<ul>
-<li><a href="#org33cf7b4">3.1. SDML Ontology</a></li>
-<li><a href="#orgdf3ef86">3.2. Classes</a></li>
-<li><a href="#org09acead">3.3. Object Properties</a></li>
-<li><a href="#orga6f253c">3.4. Datatype Properties</a></li>
-<li><a href="#orga9d933e">3.5. Annotation Properties</a></li>
-<li><a href="#orgaacd2af">3.6. Commonly Used Annotations</a></li>
-</ul>
-</li>
-<li><a href="#org093b4f5">4. Walk-Through Example</a></li>
-<li><a href="#org6d64ba2">5. Transformations</a></li>
-<li><a href="#org2e12b76">6. Implementation and Tools</a>
-<ul>
-<li><a href="#orge1f2fff">6.1. Core Library</a></li>
-<li><a href="#org2606789">6.2. Command-Line Tool</a>
-<ul>
-<li><a href="#orgd9f8a8a">6.2.1. Highlighting</a></li>
-<li><a href="#orgde609e1">6.2.2. Draw Diagrams</a></li>
-<li><a href="#org2455a48">6.2.3. Module Resolution</a></li>
-</ul>
-</li>
-<li><a href="#org3af160a">6.3. Emacs Support</a>
-<ul>
-<li><a href="#orgf98c691">6.3.1. Highlighting</a></li>
-<li><a href="#org481f916">6.3.2. Indentation</a></li>
-<li><a href="#orgce805dd">6.3.3. Code Folding</a></li>
-<li><a href="#org82a7f35">6.3.4. Debugging</a></li>
-<li><a href="#org2ba5ad4">6.3.5. Ispell</a></li>
-<li><a href="#orgb72ae2f">6.3.6. Flycheck</a></li>
-<li><a href="#orgb8be175">6.3.7. Org-Babel</a></li>
-</ul>
-</li>
-<li><a href="#org3078b44">6.4. Neovim</a></li>
-<li><a href="#org3f28832">6.5. VSCode</a></li>
-</ul>
-</li>
-<li><a href="#orge61b5ab">7. Appendix: Complete Surface Syntax Grammar</a></li>
-<li><a href="#org0229b7a">8. Appendix: Surface Syntax to RDF</a>
-<ul>
-<li><a href="#org37c87a6">8.1. Whitespace</a></li>
-<li><a href="#org4a17b4b">8.2. Comments</a></li>
-<li><a href="#org305c89b">8.3. Identifiers</a></li>
-<li><a href="#orgee2c441">8.4. Values</a>
-<ul>
-<li><a href="#org07cd506">8.4.1. Simple Value Literals</a></li>
-<li><a href="#orgfcf039c">8.4.2. List Literals</a></li>
-<li><a href="#org36c1d02">8.4.3. Value Constructors</a></li>
-</ul>
-</li>
-<li><a href="#orgb4f656a">8.5. Modules</a></li>
-<li><a href="#orgfbad489">8.6. Imports</a></li>
-<li><a href="#org591bd97">8.7. Annotations</a></li>
-<li><a href="#orgec0df44">8.8. Data Type Definition</a></li>
-<li><a href="#org990d1e0">8.9. Entity Definition</a></li>
-<li><a href="#org1bf907d">8.10. Enumeration Definition</a></li>
-<li><a href="#org2a490b9">8.11. Event Definition</a></li>
-<li><a href="#orgfe38a47">8.12. Structure Definition</a></li>
-<li><a href="#orgb93d0e1">8.13. Union Definition</a></li>
-</ul>
-</li>
-<li><a href="#org4c5c0a7">9. Appendix: Domain Modeling</a>
-<ul>
-<li><a href="#org82167b9">9.1. Model Terminology</a></li>
-<li><a href="#org5dc787f">9.2. Modeling Language/Notation</a></li>
-<li><a href="#org01e2964">9.3. Domain-Driven Design</a></li>
-</ul>
-</li>
-<li><a href="#org3939f39">10. Appendix: Known URI Prefixes</a>
-<ul>
-<li><a href="#org4dd2f7c">10.1. Recommended Usage</a>
-<ul>
-<li><a href="#orgd29b7cc">10.1.1. Resource Identification</a></li>
-<li><a href="#orge0be469">10.1.2. Labels and Descriptions</a></li>
-<li><a href="#org06bd71d">10.1.3. Data Type Restrictions</a></li>
+<li><a href="#org7d4c215">2.6.1. Members</a></li>
+<li><a href="#orgaf63d97">2.6.2. Structures</a></li>
+<li><a href="#orgfc8674b">2.6.3. Entities</a></li>
+<li><a href="#orgcd7aa82">2.6.4. Entity Events</a></li>
+<li><a href="#orgb22fb1f">2.6.5. Enumerations</a></li>
+<li><a href="#org2cd48d3">2.6.6. Disjoint Unions</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org6167c75">11. Appendix: License</a></li>
-<li><a href="#org102dc44">12. Appendix: Tables of Other Content</a></li>
+<li><a href="#org1f8467f">3. RDF Abstract Model</a>
+<ul>
+<li><a href="#org8f808a0">3.1. SDML Ontology</a></li>
+<li><a href="#org819fe95">3.2. Classes</a></li>
+<li><a href="#orga13cf6d">3.3. Object Properties</a></li>
+<li><a href="#org6d24182">3.4. Datatype Properties</a></li>
+<li><a href="#org7aae48e">3.5. Annotation Properties</a></li>
+<li><a href="#org20bccac">3.6. Commonly Used Annotations</a></li>
+</ul>
+</li>
+<li><a href="#orgbe40715">4. Walk-Through Example</a></li>
+<li><a href="#org07ea6c8">5. Transformations</a></li>
+<li><a href="#org2030b42">6. Implementation and Tools</a>
+<ul>
+<li><a href="#orgc20f21a">6.1. Core Library</a></li>
+<li><a href="#org2d83312">6.2. Command-Line Tool</a>
+<ul>
+<li><a href="#orge45201c">6.2.1. Highlighting</a></li>
+<li><a href="#orgdec2573">6.2.2. Draw Diagrams</a></li>
+<li><a href="#orgf87cd18">6.2.3. Module Resolution</a></li>
+</ul>
+</li>
+<li><a href="#orgf6df32e">6.3. Emacs Support</a>
+<ul>
+<li><a href="#orge54f630">6.3.1. Highlighting</a></li>
+<li><a href="#org6cbfda4">6.3.2. Indentation</a></li>
+<li><a href="#org38080ba">6.3.3. Code Folding</a></li>
+<li><a href="#org84f12ec">6.3.4. Debugging</a></li>
+<li><a href="#org29e6847">6.3.5. Ispell</a></li>
+<li><a href="#org2d3b949">6.3.6. Flycheck</a></li>
+<li><a href="#org605d4af">6.3.7. Org-Babel</a></li>
+</ul>
+</li>
+<li><a href="#org7f7f9d5">6.4. Neovim</a></li>
+<li><a href="#org8a89ed4">6.5. VSCode</a></li>
+</ul>
+</li>
+<li><a href="#orge1c2441">7. Appendix: Complete Surface Syntax Grammar</a></li>
+<li><a href="#org2cda828">8. Appendix: Surface Syntax to RDF</a>
+<ul>
+<li><a href="#org88262a8">8.1. Whitespace</a></li>
+<li><a href="#orgf7c0ebd">8.2. Comments</a></li>
+<li><a href="#org866aa86">8.3. Identifiers</a></li>
+<li><a href="#org0bfd42b">8.4. Values</a>
+<ul>
+<li><a href="#org4465e99">8.4.1. Simple Value Literals</a></li>
+<li><a href="#org828a363">8.4.2. List Literals</a></li>
+<li><a href="#orgfb32625">8.4.3. Value Constructors</a></li>
+</ul>
+</li>
+<li><a href="#orgb409f3b">8.5. Modules</a></li>
+<li><a href="#org1b52403">8.6. Imports</a></li>
+<li><a href="#org686f459">8.7. Annotations</a></li>
+<li><a href="#org5b3ac7b">8.8. Data Type Definition</a></li>
+<li><a href="#orgfd7cd0b">8.9. Entity Definition</a></li>
+<li><a href="#orge3b2add">8.10. Enumeration Definition</a></li>
+<li><a href="#org46d5efc">8.11. Event Definition</a></li>
+<li><a href="#orge3cb33f">8.12. Structure Definition</a></li>
+<li><a href="#org106e3bd">8.13. Union Definition</a></li>
+</ul>
+</li>
+<li><a href="#orgfc8fa19">9. Appendix: Domain Modeling</a>
+<ul>
+<li><a href="#org25440b6">9.1. Model Terminology</a></li>
+<li><a href="#org4a4db65">9.2. Modeling Language/Notation</a></li>
+<li><a href="#org126dd51">9.3. Domain-Driven Design</a></li>
+</ul>
+</li>
+<li><a href="#org1acc20b">10. Appendix: Known URI Prefixes</a>
+<ul>
+<li><a href="#org63d2afc">10.1. Recommended Usage</a>
+<ul>
+<li><a href="#org8fadc0a">10.1.1. Resource Identification</a></li>
+<li><a href="#org1e714ee">10.1.2. Labels and Descriptions</a></li>
+<li><a href="#org3931102">10.1.3. Data Type Restrictions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org3cfd6c5">11. Appendix: License</a></li>
+<li><a href="#org0123d6f">12. Appendix: Tables of Other Content</a></li>
 </ul>
 </div>
 </div>
 
 
-<div id="outline-container-orgd3f8f68" class="outline-2">
-<h2 id="orgd3f8f68"><span class="section-number-2">1.</span> Introduction</h2>
+<div id="outline-container-org422148b" class="outline-2">
+<h2 id="org422148b"><span class="section-number-2">1.</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 The Simple Domain Modeling Language (<a href="https://sdml.io/">home</a> | <a href="https://github.com/johnstonskj/tree-sitter-sdml">Github</a>) is a small data-oriented language for constructing, documenting, and
-reasoning about a conceptual domain model. For a background on domain modeling see appendix <a href="#org5d19b7e">9</a>. At it's
+reasoning about a conceptual domain model. For a background on domain modeling see appendix <a href="#org4689b7b">9</a>. At it's
 core SDML comprises an <i>abstract model</i> whose structure and semantics are described by an <a href="https://www.w3.org/OWL/">OWL</a> (<a href="https://www.w3.org/RDF/">RDF</a>) ontology, and a
 <i>surface syntax</i> for editing and sharing concrete models. This document covers both the OWL and SDML representations and
 the correspondence between them, however the primary focus of the documentation is the surface syntax as most users will
-be interacting with it alone. Figure <a href="#org044309a">1</a> shows the relationship between these high-level components.
+be interacting with it alone. Figure <a href="#org7fc8e93">1</a> shows the relationship between these high-level components.
 </p>
 
 <p>
@@ -170,14 +202,14 @@ does not include the following as first-class concepts: <i>aggregates</i>, <i>re
 </p>
 
 
-<div id="org044309a" class="figure">
+<div id="org7fc8e93" class="figure">
 <p><img src="sdml-overview.png" alt="sdml-overview.png" />
 </p>
 <p><span class="figure-number">Figure 1: </span>Model Overview</p>
 </div>
 
 <p>
-One element that is not included in figure <a href="#org044309a">1</a>, as it is primarily an implementation decision, is
+One element that is not included in figure <a href="#org7fc8e93">1</a>, as it is primarily an implementation decision, is
 that the reference implementation for SDML is provided as a <a href="https://tree-sitter.github.io/tree-sitter/">Tree-Sitter</a>
 package. While generated tree-sitter parsers are not intended to be fast, or to be part of a compilation processes they
 do provide a multitude of language bindings, and a concrete syntax tree allowing easy development of the relatively
@@ -185,12 +217,12 @@ simple tools required for SDML usage.
 </p>
 
 <p>
-Figure <a href="#org557b7f8">2</a> demonstrates another key element of a <i>Model-Driven Development</i><sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup> style, the transformation
+Figure <a href="#orgc7c7c02">2</a> demonstrates another key element of a <i>Model-Driven Development</i><sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup> style, the transformation
 between models and between models and other development artifacts.
 </p>
 
 
-<div id="org557b7f8" class="figure">
+<div id="orgc7c7c02" class="figure">
 <p><img src="sdml-transforms.png" alt="sdml-transforms.png" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Model Transformations</p>
@@ -198,9 +230,8 @@ between models and between models and other development artifacts.
 </div>
 </div>
 
-
-<div id="outline-container-org0d76ba5" class="outline-2">
-<h2 id="org0d76ba5"><span class="section-number-2">2.</span> Surface Syntax</h2>
+<div id="outline-container-org110a67c" class="outline-2">
+<h2 id="org110a67c"><span class="section-number-2">2.</span> Surface Syntax</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 This section describes the SDML surface syntax, a syntax intended to look and feel like a programming language but with
@@ -212,12 +243,12 @@ that has no short-form, or <i>incomplete</i>, model elements.
 </p>
 
 <p>
-For the complete grammar, and notes on BNF notation, see Appendix <a href="#org3be6de4">7</a>.
+For the complete grammar, and notes on BNF notation, see Appendix <a href="#org8377c86">7</a>.
 </p>
 </div>
 
-<div id="outline-container-orgf8e0a79" class="outline-3">
-<h3 id="orgf8e0a79"><span class="section-number-3">2.1.</span> Whitespace and Comments</h3>
+<div id="outline-container-org75f95cc" class="outline-3">
+<h3 id="org75f95cc"><span class="section-number-3">2.1.</span> Whitespace and Comments</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 This grammar chooses to use the JavaScript regular expression character class <code>\s</code> which includes the following values,
@@ -225,7 +256,7 @@ including all Unicode whitespace.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="org6e581c0"><span style="color: #6c71c4;">Whitespace</span>      =
+<pre class="src src-ebnf" id="org534170f"><span style="color: #6c71c4;">Whitespace</span>      =
     <span style="color: #2aa198;">"\f"</span> | <span style="color: #2aa198;">"\n"</span> | <span style="color: #2aa198;">"\r"</span> | <span style="color: #2aa198;">"\t"</span> | <span style="color: #2aa198;">"\v"</span>
     | <span style="color: #2aa198;">"\u{0020}"</span> | <span style="color: #2aa198;">"\u{00a0}"</span> | <span style="color: #2aa198;">"\u{1680}"</span> | <span style="color: #2aa198;">"\u{2000}"</span><span style="color: #dc322f; font-weight: bold;">..</span><span style="color: #2aa198;">"\u{200a}"</span>
     | <span style="color: #2aa198;">"\u{2028}"</span> | <span style="color: #2aa198;">"\u{2029}"</span> | <span style="color: #2aa198;">"\u{202f}"</span> | <span style="color: #2aa198;">"\u{205f}"</span> | <span style="color: #2aa198;">"\u{3000}"</span>
@@ -238,12 +269,12 @@ Comments follow Lisp-like forms, starting with a semi-colon character and contin
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="org2c0e03c"><span style="color: #6c71c4;">LineComment</span>     = <span style="color: #2aa198;">";"</span>, <span style="color: #657b83;">(</span> -<span style="color: #2aa198;">(</span> <span style="color: #2aa198;">"\r"</span> | <span style="color: #2aa198;">"\n"</span> <span style="color: #2aa198;">)</span> <span style="color: #657b83;">)</span>*
+<pre class="src src-ebnf" id="orga27f98b"><span style="color: #6c71c4;">LineComment</span>     = <span style="color: #2aa198;">";"</span>, <span style="color: #657b83;">(</span> -<span style="color: #2aa198;">(</span> <span style="color: #2aa198;">"\r"</span> | <span style="color: #2aa198;">"\n"</span> <span style="color: #2aa198;">)</span> <span style="color: #657b83;">)</span>*
 </pre>
 </div>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 1: </span>Comments</label><pre class="src src-sdml" id="org2516b33"><span style="color: #93a1a1; font-style: italic;">; &lt;- comments start here, end here -&gt;</span>
+<label class="org-src-name"><span class="listing-number">Listing 1: </span>Comments</label><pre class="src src-sdml" id="org4dd24bf"><span style="color: #93a1a1; font-style: italic;">; &lt;- comments start here, end here -&gt;</span>
 </pre>
 </div>
 
@@ -252,7 +283,7 @@ Lisp conventions for single, double, and triple comment characters are useful bu
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 2: </span>Comments</label><pre class="src src-sdml" id="org6d868e9"><span style="color: #93a1a1; font-style: italic;">;;; File-level comment</span>
+<label class="org-src-name"><span class="listing-number">Listing 2: </span>Comments</label><pre class="src src-sdml" id="orgf664596"><span style="color: #93a1a1; font-style: italic;">;;; File-level comment</span>
 <span style="color: #93a1a1; font-style: italic;">;; Comment at-point</span>
 <span style="color: #93a1a1; font-style: italic;">; Comments in right margin</span>
 </pre>
@@ -260,8 +291,8 @@ Lisp conventions for single, double, and triple comment characters are useful bu
 </div>
 </div>
 
-<div id="outline-container-org4a328f7" class="outline-3">
-<h3 id="org4a328f7"><span class="section-number-3">2.2.</span> Identifiers</h3>
+<div id="outline-container-orgb803842" class="outline-3">
+<h3 id="orgb803842"><span class="section-number-3">2.2.</span> Identifiers</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 An identifier is a string of characters corresponding to the <a href="https://unicode.org/reports/tr44/#GC_Values_Table">Unicode General Category</a> <b>Lu</b> (an uppercase letter) or <b>Ll</b> (a
@@ -271,7 +302,7 @@ brief BNF description of the identifier syntax.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="orgf4da60f"><span style="color: #6c71c4;">IdentifierWord</span>  = <span style="color: #657b83;">(</span> UC_LETTER_UPPER | UC_LETTER_LOWER <span style="color: #657b83;">)</span>+
+<pre class="src src-ebnf" id="org5e944a9"><span style="color: #6c71c4;">IdentifierWord</span>  = <span style="color: #657b83;">(</span> UC_LETTER_UPPER | UC_LETTER_LOWER <span style="color: #657b83;">)</span>+
 <span style="color: #6c71c4;">Identifier</span>      = IdentifierWord, <span style="color: #657b83;">(</span> <span style="color: #2aa198;">"_"</span>, IdentifierWord <span style="color: #657b83;">)</span>*
 </pre>
 </div>
@@ -295,8 +326,8 @@ are commonly simply the lower Camel Case version of the corresponding type name.
 </dl>
 </div>
 
-<div id="outline-container-org539285a" class="outline-4">
-<h4 id="org539285a"><span class="section-number-4">2.2.1.</span> Qualified Identifier</h4>
+<div id="outline-container-org9728984" class="outline-4">
+<h4 id="org9728984"><span class="section-number-4">2.2.1.</span> Qualified Identifier</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 A qualified identifier comprises a module identifier followed by the Colon (":", <code>U+003A</code>) character and the identifier of a
@@ -304,7 +335,7 @@ member within that module.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="org46e0afb"><span style="color: #6c71c4;">QualifiedIdentifier</span> = Identifier, <span style="color: #2aa198;">":"</span>, Identifier
+<pre class="src src-ebnf" id="org6ce3b2d"><span style="color: #6c71c4;">QualifiedIdentifier</span> = Identifier, <span style="color: #2aa198;">":"</span>, Identifier
 </pre>
 </div>
 
@@ -313,15 +344,15 @@ A type reference may be to a locally defined type by an identifier, or an import
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="orgbb9d48d"><span style="color: #6c71c4;">IdentifierReference</span> = QualifiedIdentifier | Identifier
+<pre class="src src-ebnf" id="org5513b86"><span style="color: #6c71c4;">IdentifierReference</span> = QualifiedIdentifier | Identifier
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org51f61d7" class="outline-3">
-<h3 id="org51f61d7"><span class="section-number-3">2.3.</span> <a id="orgfd2a054"></a> Module Declaration and Imports</h3>
+<div id="outline-container-org89939a1" class="outline-3">
+<h3 id="org89939a1"><span class="section-number-3">2.3.</span> <a id="orgedfd75e"></a> Module Declaration and Imports</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 A module is the container for a set of type definitions and typically models a <i>Domain</i> or <i>Sub-domain</i>. A single resource
@@ -330,18 +361,18 @@ resource is one with an empty model.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="org43ccdf2"><span style="color: #6c71c4;">ModuleBody</span>      = <span style="color: #2aa198;">"is"</span>, ImportStatement*, Annotation*, TypeDef*, <span style="color: #2aa198;">"end"</span>
+<pre class="src src-ebnf" id="org5600e95"><span style="color: #6c71c4;">ModuleBody</span>      = <span style="color: #2aa198;">"is"</span>, ImportStatement*, Annotation*, TypeDef*, <span style="color: #2aa198;">"end"</span>
 <span style="color: #6c71c4;">Module</span>          = <span style="color: #2aa198;">"module"</span>, Identifier, ModuleBody
 </pre>
 </div>
 
 <p>
-An empty module (listing <a href="#org117d40d">3</a>), specifically a module with an empty <i>body</i> which is the content
+An empty module (listing <a href="#orgc94a585">3</a>), specifically a module with an empty <i>body</i> which is the content
 between the keywords <b><code>is</code></b> and <b><code>end</code></b>.
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 3: </span>Empty Module</label><pre class="src src-sdml" id="org117d40d"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span> <span style="color: #859900;">end</span>
+<label class="org-src-name"><span class="listing-number">Listing 3: </span>Empty Module</label><pre class="src src-sdml" id="orgc94a585"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span> <span style="color: #859900;">end</span>
 </pre>
 </div>
 
@@ -351,7 +382,7 @@ reference one or more module names or the qualified name of a type within a modu
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="orgb9a6890"><span style="color: #6c71c4;">MemberImport</span>    = QualifiedIdentifier
+<pre class="src src-ebnf" id="orgc2b6bad"><span style="color: #6c71c4;">MemberImport</span>    = QualifiedIdentifier
 <span style="color: #6c71c4;">ModuleImport</span>    = Identifer
 <span style="color: #6c71c4;">Import</span>          = MemberImport | ModuleImport
 <span style="color: #6c71c4;">ImportStatement</span> = <span style="color: #2aa198;">"import"</span>, <span style="color: #657b83;">(</span> Import | <span style="color: #2aa198;">"["</span>, Import+, <span style="color: #2aa198;">"]"</span> <span style="color: #657b83;">)</span>
@@ -360,24 +391,24 @@ reference one or more module names or the qualified name of a type within a modu
 
 
 <p>
-The module in listing <a href="#org91534da">4</a> contains a single import statement <i>referencing</i> the module named <code>xsd</code>
+The module in listing <a href="#org03674f2">4</a> contains a single import statement <i>referencing</i> the module named <code>xsd</code>
 making it's members <i>visible</i> in the qualified form <code>xsd:*</code>.
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 4: </span>Importing Module</label><pre class="src src-sdml" id="org91534da"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 4: </span>Importing Module</label><pre class="src src-sdml" id="org03674f2"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
   <span style="color: #859900;">import</span> <span style="color: #268bd2;">xsd</span>
 <span style="color: #859900;">end</span>
 </pre>
 </div>
 
 <p>
-The module in listing <a href="#org2b36c65">5</a> contains a single import statement <i>referencing</i> the member named <code>integer</code> from
+The module in listing <a href="#org25458c3">5</a> contains a single import statement <i>referencing</i> the member named <code>integer</code> from
 the module <code>xsd</code> making it visible.
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 5: </span>Importing Member</label><pre class="src src-sdml" id="org2b36c65"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 5: </span>Importing Member</label><pre class="src src-sdml" id="org25458c3"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
   <span style="color: #859900;">import</span> <span style="color: #268bd2;">xsd:integer</span>
 <span style="color: #859900;">end</span>
 </pre>
@@ -385,13 +416,13 @@ the module <code>xsd</code> making it visible.
 
 <p>
 To reduce the number of import statements a list of identifiers, both module and member, may be <i>referenced</i> as a list.
-Listing <a href="#org3b9e41e">6</a> makes the members <code>author</code> and <code>title</code> from the module <code>dc</code> visible. Lists in SDML start
+Listing <a href="#org3dae1bd">6</a> makes the members <code>author</code> and <code>title</code> from the module <code>dc</code> visible. Lists in SDML start
 with the Left Square Bracket ("[", <code>U+005B</code>) character and end with the Right Square Bracket ("]", <code>U+005D</code>) character with
 no separator character between members of the list.
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 6: </span>Importing a List</label><pre class="src src-sdml" id="org3b9e41e"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 6: </span>Importing a List</label><pre class="src src-sdml" id="org3dae1bd"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
   <span style="color: #859900;">import</span> <span style="color: #657b83; background-color: #fdf6e3;">[</span> <span style="color: #268bd2;">dc:title</span> <span style="color: #268bd2;">dc:author</span> <span style="color: #657b83; background-color: #fdf6e3;">]</span>
 <span style="color: #859900;">end</span>
 </pre>
@@ -399,15 +430,15 @@ no separator character between members of the list.
 </div>
 </div>
 
-<div id="outline-container-orgd47094a" class="outline-3">
-<h3 id="orgd47094a"><span class="section-number-3">2.4.</span> Data Types and Values</h3>
+<div id="outline-container-orgfdccb82" class="outline-3">
+<h3 id="orgfdccb82"><span class="section-number-3">2.4.</span> Data Types and Values</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 A data <i>value</i> is either a simple value, a value constructor expression, an identifier reference or a list of values.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="orgaf03037"><span style="color: #6c71c4;">Value</span>           =
+<pre class="src src-ebnf" id="orgbab74df"><span style="color: #6c71c4;">Value</span>           =
     SimpleValue
     | ValueConstructor
     | IdentifierReference
@@ -420,8 +451,8 @@ The inclusion if an identifier reference allows for annotations whose value is a
 </p>
 </div>
 
-<div id="outline-container-orgc2710ec" class="outline-4">
-<h4 id="orgc2710ec"><span class="section-number-4">2.4.1.</span> Simple Values</h4>
+<div id="outline-container-org328c0da" class="outline-4">
+<h4 id="org328c0da"><span class="section-number-4">2.4.1.</span> Simple Values</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <p>
 The core data types supported by SDML are Boolean, Integer, Decimal, Double, String, (Language-Tagged String), and IRI
@@ -429,7 +460,7 @@ References. Values corresponding to these types are termed <i>simple values</i>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="org5a1cb01"><span style="color: #6c71c4;">SimpleValue</span>     =
+<pre class="src src-ebnf" id="org53a24d5"><span style="color: #6c71c4;">SimpleValue</span>     =
     String
     | Double
     | Decimal
@@ -444,7 +475,7 @@ A <b>Boolean</b> value in SDML is either the keyword <code>true</code> or <code>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="orgad5357c"><span style="color: #6c71c4;">Boolean</span>         = <span style="color: #2aa198;">"true"</span> | <span style="color: #2aa198;">"false"</span>
+<pre class="src src-ebnf" id="orgbf01e0d"><span style="color: #6c71c4;">Boolean</span>         = <span style="color: #2aa198;">"true"</span> | <span style="color: #2aa198;">"false"</span>
 </pre>
 </div>
 
@@ -454,7 +485,7 @@ An <b>Integer</b> value in SDML is a string of ASCII decimal digits, without lea
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="orge7f88b9"><span style="color: #6c71c4;">NumericSign</span>     = <span style="color: #2aa198;">"+"</span> | <span style="color: #2aa198;">"-"</span>
+<pre class="src src-ebnf" id="orgce0d381"><span style="color: #6c71c4;">NumericSign</span>     = <span style="color: #2aa198;">"+"</span> | <span style="color: #2aa198;">"-"</span>
 <span style="color: #6c71c4;">Zero</span>            = <span style="color: #2aa198;">"0"</span>
 <span style="color: #6c71c4;">NonZero</span>         = <span style="color: #2aa198;">"1"</span><span style="color: #dc322f; font-weight: bold;">..</span><span style="color: #2aa198;">"9"</span>
 <span style="color: #6c71c4;">Unsigned</span>        = Zero | NonZero, <span style="color: #657b83;">(</span> ASCII_DIGIT <span style="color: #657b83;">)</span>*
@@ -468,7 +499,7 @@ integer-like value. The Decimal type corresponds to a 128-bit representation of 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="orgdc4ec04"><span style="color: #6c71c4;">Decimal</span>         = Integer, <span style="color: #2aa198;">"."</span>, <span style="color: #657b83;">(</span> ASCII_DIGIT <span style="color: #657b83;">)</span>+
+<pre class="src src-ebnf" id="orgcd22306"><span style="color: #6c71c4;">Decimal</span>         = Integer, <span style="color: #2aa198;">"."</span>, <span style="color: #657b83;">(</span> ASCII_DIGIT <span style="color: #657b83;">)</span>+
 </pre>
 </div>
 
@@ -480,7 +511,7 @@ in IEEE 754-2008).
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="org6ee0749"><span style="color: #6c71c4;">ExponentChar</span>    = <span style="color: #2aa198;">"e"</span> | <span style="color: #2aa198;">"E"</span>
+<pre class="src src-ebnf" id="org0459d9d"><span style="color: #6c71c4;">ExponentChar</span>    = <span style="color: #2aa198;">"e"</span> | <span style="color: #2aa198;">"E"</span>
 <span style="color: #6c71c4;">Double</span>          = Decimal, ExponentChar, NumericSign?, Integer
 </pre>
 </div>
@@ -493,7 +524,7 @@ a maximum of 6 such digits. In addition,the following single-character escape ch
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="org2da09d1"><span style="color: #6c71c4;">HexPair</span>         = ASCII_HEX_DIGIT, ASCII_HEX_DIGIT
+<pre class="src src-ebnf" id="org9e06788"><span style="color: #6c71c4;">HexPair</span>         = ASCII_HEX_DIGIT, ASCII_HEX_DIGIT
 <span style="color: #6c71c4;">CharacterEscape</span> = <span style="color: #2aa198;">"\\"</span>, <span style="color: #657b83;">(</span> <span style="color: #2aa198;">"\""</span> | <span style="color: #2aa198;">"\\"</span> | <span style="color: #2aa198;">"\/"</span> | <span style="color: #2aa198;">"a"</span> | <span style="color: #2aa198;">"b"</span>
                           <span style="color: #2aa198;">"e"</span> | <span style="color: #2aa198;">"f"</span> | <span style="color: #2aa198;">"n"</span> | <span style="color: #2aa198;">"r"</span> | <span style="color: #2aa198;">"t"</span> | <span style="color: #2aa198;">"v"</span> <span style="color: #657b83;">)</span>
 <span style="color: #6c71c4;">UnicodeEscape</span>   = <span style="color: #2aa198;">"\\u{"</span>, HexPair, <span style="color: #657b83;">(</span> HexPair <span style="color: #2aa198;">(</span> HexPair <span style="color: #2aa198;">)</span>? <span style="color: #657b83;">)</span>?, <span style="color: #2aa198;">"}"</span>
@@ -516,7 +547,7 @@ Note also that strings allow literal newlines and do not <i>require</i> they be 
 string literal supports multiline forms.
 </p>
 
-<table id="orgb6a22dc" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table id="orgbf6c400" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption class="t-above"><span class="table-number">Table 1:</span> String Escape Characters</caption>
 
 <colgroup>
@@ -615,7 +646,7 @@ the Turtle<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3<
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="org5abed6d"><span style="color: #6c71c4;">IriReference</span>    =
+<pre class="src src-ebnf" id="orge4a68ba"><span style="color: #6c71c4;">IriReference</span>    =
     <span style="color: #2aa198;">"&lt;"</span>,
     <span style="color: #657b83;">(</span>
     - <span style="color: #2aa198;">(</span><span style="color: #2aa198;">"&lt;"</span> | <span style="color: #2aa198;">"&gt;"</span> | <span style="color: #2aa198;">"\""</span> | <span style="color: #2aa198;">"{"</span> | <span style="color: #2aa198;">"}"</span> | <span style="color: #2aa198;">"|"</span> | <span style="color: #2aa198;">"^"</span> | <span style="color: #2aa198;">"`"</span> | <span style="color: #2aa198;">"\\"</span> | <span style="color: #2aa198;">"\u{00}"</span><span style="color: #dc322f; font-weight: bold;">..</span><span style="color: #2aa198;">"\u{20}"</span><span style="color: #2aa198;">)</span>
@@ -626,13 +657,13 @@ the Turtle<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3<
 </div>
 
 <p>
-See section <a href="#orgbb3e994">8.4.1</a> for a more detailed description of values, literals, and data types.
+See section <a href="#orgcdfd649">8.4.1</a> for a more detailed description of values, literals, and data types.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgaf089e7" class="outline-4">
-<h4 id="orgaf089e7"><span class="section-number-4">2.4.2.</span> Value Constructors</h4>
+<div id="outline-container-org74f8f2a" class="outline-4">
+<h4 id="org74f8f2a"><span class="section-number-4">2.4.2.</span> Value Constructors</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <p>
 While the value <code>101</code> is defined to be an Integer literal, in the presence of sub-types how do you specify the type of a
@@ -647,7 +678,7 @@ referenced type, or one of it's super-types.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="org11580fc"><span style="color: #6c71c4;">ValueConstructor</span>    = IdentifierReference, <span style="color: #2aa198;">"("</span>, SimpleValue, <span style="color: #2aa198;">")"</span>
+<pre class="src src-ebnf" id="org6f00b39"><span style="color: #6c71c4;">ValueConstructor</span>    = IdentifierReference, <span style="color: #2aa198;">"("</span>, SimpleValue, <span style="color: #2aa198;">")"</span>
 </pre>
 </div>
 
@@ -656,67 +687,67 @@ Here we assert that the value <code>1</code> is an unsigned rather than the defa
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 7: </span>Value Constructor Example</label><pre class="src src-sdml" id="org04aa371">xsd:unsigned<span style="color: #657b83; background-color: #fdf6e3;">(</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">)</span>
+<label class="org-src-name"><span class="listing-number">Listing 7: </span>Value Constructor Example</label><pre class="src src-sdml" id="org52bd64a">xsd:unsigned<span style="color: #657b83; background-color: #fdf6e3;">(</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">)</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd4f25a9" class="outline-4">
-<h4 id="orgd4f25a9"><span class="section-number-4">2.4.3.</span> Value Lists</h4>
+<div id="outline-container-org3fd05ad" class="outline-4">
+<h4 id="org3fd05ad"><span class="section-number-4">2.4.3.</span> Value Lists</h4>
 <div class="outline-text-4" id="text-2-4-3">
 <p>
-As stated in section <a href="#orgfd2a054">2.3</a>, lists in SDML start with the Left Square Bracket ("[", <code>U+005B</code>)
+As stated in section <a href="#orgedfd75e">2.3</a>, lists in SDML start with the Left Square Bracket ("[", <code>U+005B</code>)
 character and end with the Right Square Bracket ("]", <code>U+005D</code>) character with no separator character between members of
 the list. Value lists are, as one might expect, lists of values and specifically of simple values. Value lists are also
 heterogeneous and may contain elements of different types.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js" id="org1f77426">ListOfValues    =
+<pre class="src src-js" id="org22e53b7">ListOfValues    =
     <span style="color: #2aa198;">"["</span>, <span style="color: #657b83;">(</span> SimpleValue | ValueConstructor | IdentifierReference <span style="color: #657b83;">)</span>+, <span style="color: #2aa198;">"]"</span>
 </pre>
 </div>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 8: </span>Value List Example</label><pre class="src src-sdml" id="orgd0471a5"><span style="color: #657b83; background-color: #fdf6e3;">[</span> "yes" "no" "maybe" <span style="color: #657b83; background-color: #fdf6e3;">]</span>
+<label class="org-src-name"><span class="listing-number">Listing 8: </span>Value List Example</label><pre class="src src-sdml" id="org9395ca0"><span style="color: #657b83; background-color: #fdf6e3;">[</span> "yes" "no" "maybe" <span style="color: #657b83; background-color: #fdf6e3;">]</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgdab4d9b" class="outline-4">
-<h4 id="orgdab4d9b"><span class="section-number-4">2.4.4.</span> Defining Data Types</h4>
+<div id="outline-container-org5b88da9" class="outline-4">
+<h4 id="org5b88da9"><span class="section-number-4">2.4.4.</span> Defining Data Types</h4>
 <div class="outline-text-4" id="text-2-4-4">
 <p>
 A datatype definition introduces a new simple data type by <i>restriction</i> of some existing base type.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="orgf3a4706"><span style="color: #6c71c4;">DataTypeDef</span>     =
+<pre class="src src-ebnf" id="orgb0b8b90"><span style="color: #6c71c4;">DataTypeDef</span>     =
     <span style="color: #2aa198;">"datatype"</span>, Identifier, <span style="color: #2aa198;">"&lt;-"</span>, IdentifierReference, AnnotationOnlyBody?
 </pre>
 </div>
 
 <p>
-Listing <a href="#org7c70c41">9</a> shows the <i>type restriction</i> operator, <code>&lt;-</code>, defining a new type named <code>name</code> as a restriction on
+Listing <a href="#org454b8e0">9</a> shows the <i>type restriction</i> operator, <code>&lt;-</code>, defining a new type named <code>name</code> as a restriction on
 the existing XML Schema data type <code>xsd:string</code>.
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 9: </span>New Datatype</label><pre class="src src-sdml" id="org7c70c41"><span style="color: #859900;">datatype</span> Name &lt;- xsd:string
+<label class="org-src-name"><span class="listing-number">Listing 9: </span>New Datatype</label><pre class="src src-sdml" id="org454b8e0"><span style="color: #859900;">datatype</span> Name &lt;- xsd:string
 </pre>
 </div>
 
 <p>
 While such a type is useful for conveying semantic meaning with types it doesn't provide any actual restriction on the
 value space of the type. This is accomplished by using a subset of the <i>facets</i> described in XML Schema part 2 to specify
-constraints on the new type. For example, in listing <a href="#org2d984b3">10</a> we now see that the Name type
+constraints on the new type. For example, in listing <a href="#org2834375">10</a> we now see that the Name type
 is a string whose length is between 5 and 25 characters only.
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 10: </span>New Datatype with Restrictions</label><pre class="src src-sdml" id="org2d984b3"><span style="color: #859900;">datatype</span> Name &lt;- xsd:string <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 10: </span>New Datatype with Restrictions</label><pre class="src src-sdml" id="org2834375"><span style="color: #859900;">datatype</span> Name &lt;- xsd:string <span style="color: #859900;">is</span>
   @xsd:minLength = <span style="color: #268bd2;">5</span>
   @xsd:maxLength = <span style="color: #268bd2;">25</span>
 <span style="color: #859900;">end</span>
@@ -727,7 +758,7 @@ is a string whose length is between 5 and 25 characters only.
 From <a href="https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide">OWL 2 Web Ontology Language Quick Reference Guide (Second Edition)</a>:
 </p>
 
-<table id="orgac6870f" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table id="org10920f9" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption class="t-above"><span class="table-number">Table 2:</span> OWL Built-in Datatype Facets</caption>
 
 <colgroup>
@@ -781,8 +812,8 @@ From <a href="https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide">OWL 2 Web 
 </div>
 </div>
 
-<div id="outline-container-org1735da9" class="outline-3">
-<h3 id="org1735da9"><span class="section-number-3">2.5.</span> Annotations</h3>
+<div id="outline-container-org09fe8cf" class="outline-3">
+<h3 id="org09fe8cf"><span class="section-number-3">2.5.</span> Annotations</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 Annotations are an extension mechanism that interacts directly with the underlying RDF representation of the subject
@@ -792,7 +823,7 @@ has an identifier that resolves to an OWL annotation property, and a value for t
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="org3b84a7a"><span style="color: #6c71c4;">Annotation</span>      = <span style="color: #2aa198;">"@"</span>, IdentiferReference, <span style="color: #2aa198;">"="</span>, Value
+<pre class="src src-ebnf" id="orgf227190"><span style="color: #6c71c4;">Annotation</span>      = <span style="color: #2aa198;">"@"</span>, IdentiferReference, <span style="color: #2aa198;">"="</span>, Value
 </pre>
 </div>
 
@@ -801,7 +832,7 @@ The following example demonstrates an annotation attached to a module.
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 11: </span>Annotation Property</label><pre class="src src-sdml" id="org1eb0a7e"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 11: </span>Annotation Property</label><pre class="src src-sdml" id="org5f6d8bc"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
   <span style="color: #859900;">import</span> <span style="color: #268bd2;">xml</span>
 
   <span style="color: #d33682;">@xml:base</span> <span style="color: #859900;">=</span> <span style="color: #2aa198; font-weight: bold;"><a href="https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org">&lt;https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org&gt;</a></span>
@@ -810,7 +841,7 @@ The following example demonstrates an annotation attached to a module.
 </div>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 12: </span>Annotation Property List</label><pre class="src src-sdml" id="orgab806a9"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 12: </span>Annotation Property List</label><pre class="src src-sdml" id="orgdc26766"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
   <span style="color: #859900;">import</span> <span style="color: #268bd2;">skos</span>
 
   <span style="color: #d33682;">@skos:prefLabel</span> <span style="color: #859900;">=</span> <span style="color: #657b83; background-color: #fdf6e3;">[</span>
@@ -823,7 +854,7 @@ The following example demonstrates an annotation attached to a module.
 </div>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 13: </span>Annotated Module</label><pre class="src src-sdml" id="org6851ed9"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 13: </span>Annotated Module</label><pre class="src src-sdml" id="org504da18"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
 
   <span style="color: #859900;">import</span> <span style="color: #657b83; background-color: #fdf6e3;">[</span> <span style="color: #268bd2;">xml</span> <span style="color: #268bd2;">skos</span> <span style="color: #657b83; background-color: #fdf6e3;">]</span>
 
@@ -853,17 +884,22 @@ should be a triple:
 </div>
 </div>
 
-<div id="outline-container-orga4fedd3" class="outline-3">
-<h3 id="orga4fedd3"><span class="section-number-3">2.6.</span> Structured Types</h3>
+<div id="outline-container-orgbcffdb4" class="outline-3">
+<h3 id="orgbcffdb4"><span class="section-number-3">2.6.</span> Structured Types</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
-Structured types are those which have a set of <i>members</i> that define their type. Types have identity but also a value
-space which is a product of the value space of each member. Each member has a name, a type reference and cardinality
-specifiers where appropriate.
+Structured types fall into two primary categories, <i>Product</i> types and <i>Sum</i> types. Product types have named and typed
+<i>Members</i> and in SDML these are structures, entities and events. Sum types on the other hand have <i>Variants</i> and in SDML
+these are enumerations and disjoint unions.
+</p>
+
+<p>
+Along with the previously described datatype these comprise the set of type definitions available in SDML; this is
+represented in listing <a href="#org27adae6">14</a>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="org38dfd65"><span style="color: #6c71c4;">TypeDef</span>         =
+<pre class="src src-ebnf" id="org27adae6"><span style="color: #6c71c4;">TypeDef</span>         =
     DataTypeDef
     | EntityDef
     | EnumDef
@@ -874,8 +910,8 @@ specifiers where appropriate.
 </div>
 </div>
 
-<div id="outline-container-org6c010c2" class="outline-4">
-<h4 id="org6c010c2"><span class="section-number-4">2.6.1.</span> Members</h4>
+<div id="outline-container-org7d4c215" class="outline-4">
+<h4 id="org7d4c215"><span class="section-number-4">2.6.1.</span> Members</h4>
 <div class="outline-text-4" id="text-2-6-1">
 <p>
 Structured type members fall into the following categories.
@@ -892,10 +928,12 @@ target.</dd>
 </dl>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="orgb0a5ca7"><span style="color: #6c71c4;">IdentityMember</span>      =
+<pre class="src src-ebnf" id="orga7140a7"><span style="color: #6c71c4;">IdentityMember</span>      =
     <span style="color: #2aa198;">"identity"</span>, identifier, TypeExpression, AnnotationOnlyBody?
+
 <span style="color: #6c71c4;">MemberByValue</span>       =
     identifier, TypeExpressionTo, AnnotationOnlyBody?
+
 <span style="color: #6c71c4;">MemberByReference</span>   =
     <span style="color: #2aa198;">"ref"</span>, Identifier, TypeExpressionFromTo,AnnotationOnlyBody?
 </pre>
@@ -906,7 +944,7 @@ For identity, by-value, and by-reference members the general syntax uses the <i>
 additional keywords and cardinality included as follows.
 </p>
 
-<table id="org43a89b0" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table id="orga70405d" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption class="t-above"><span class="table-number">Table 3:</span> Summary of Member Formats</caption>
 
 <colgroup>
@@ -963,7 +1001,7 @@ target type to be replaced with the keyword <code>unknown</code>. This marks the
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="orgd71ca1f"><span style="color: #6c71c4;">TypeExpression</span>          = <span style="color: #2aa198;">"-&gt;"</span> TypeReference
+<pre class="src src-ebnf" id="orgad7b4a4"><span style="color: #6c71c4;">TypeExpression</span>          = <span style="color: #2aa198;">"-&gt;"</span> TypeReference
 <span style="color: #6c71c4;">TypeExpressionTo</span>        = <span style="color: #2aa198;">"-&gt;"</span> Cardinality? TypeReference
 <span style="color: #6c71c4;">TypeExpressionFromto</span>    = Cardinality? TypeExpressionTo
 <span style="color: #6c71c4;">TypeReference</span>           = IdentifierReference | UnknownType
@@ -971,146 +1009,34 @@ target type to be replaced with the keyword <code>unknown</code>. This marks the
 </pre>
 </div>
 
+<p>
+The cardinality of a member is specified as a range operation with a minimum and maximum number of occurrences
+specified. The form <code>{1..3}</code> specifies a cardinality of 1 to 3 inclusive (or \([1,3]\) in interval notation), the form
+<code>{1..}</code> specifies a minimum of 1 occurrences an unbounded maximum (or \([1,\infty]\) in interval notation), and the form <code>{1}</code>
+specifies that 1 is both the minimum and maximum value (or \([1,1]\) in interval notation, commonly termed a <i>degenerate</i>
+interval).
+</p>
+
 <div class="org-src-container">
-<pre class="src src-ebnf" id="orgba7d74a"><span style="color: #6c71c4;">CardinalityExpression</span>   = <span style="color: #2aa198;">"{"</span>, Unsigned, CardinalityRange?, <span style="color: #2aa198;">"}"</span>
+<pre class="src src-ebnf" id="org54fe60a"><span style="color: #6c71c4;">CardinalityExpression</span>   = <span style="color: #2aa198;">"{"</span>, Unsigned, CardinalityRange?, <span style="color: #2aa198;">"}"</span>
 <span style="color: #6c71c4;">CardinalityRange</span>        = <span style="color: #2aa198;">".."</span>, Unsigned?
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2c22569" class="outline-4">
-<h4 id="org2c22569"><span class="section-number-4">2.6.2.</span> Entities</h4>
+<div id="outline-container-orgaf63d97" class="outline-4">
+<h4 id="orgaf63d97"><span class="section-number-4">2.6.2.</span> Structures</h4>
 <div class="outline-text-4" id="text-2-6-2">
 <div class="org-src-container">
-<pre class="src src-ebnf" id="org62fa76f"><span style="color: #6c71c4;">EntityGroup</span>     = <span style="color: #2aa198;">"group"</span>, Annotation*, <span style="color: #657b83;">(</span> MemberByValue | MemberByReference <span style="color: #657b83;">)</span>*
-<span style="color: #6c71c4;">EntityBody</span>      =
-    <span style="color: #2aa198;">"is"</span>,
-    Annotation*,
-    IdentityMember,
-    <span style="color: #657b83;">(</span> MemberByValue | MemberByReference | EntityGroup <span style="color: #657b83;">)</span>*,
-    <span style="color: #2aa198;">"end"</span>
-<span style="color: #6c71c4;">Entity</span>          = <span style="color: #2aa198;">"entity"</span>, Identifier, EntityBody?
-</pre>
-</div>
-
-<div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 14: </span>Empty Entity</label><pre class="src src-sdml" id="org3552528"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
-  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Person</span>
-<span style="color: #859900;">end</span>
-</pre>
-</div>
-
-<p>
-The entity <code>Person</code> is <i>valid</i> but <i>incomplete</i>.
-</p>
-
-<div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 15: </span>Entity with Identifying Member</label><pre class="src src-sdml" id="org5ebc00c"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
-  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Person</span> <span style="color: #859900;">is</span>
-    <span style="color: #859900;">identity</span> <span style="color: #6c71c4;">id</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">PersonId</span>
-  <span style="color: #859900;">end</span>
-<span style="color: #859900;">end</span>
-</pre>
-</div>
-
-<div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 16: </span>Entity with Reference Member</label><pre class="src src-sdml" id="org79c09f7"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
-  <span style="color: #859900;">entity</span> Person <span style="color: #859900;">is</span>
-    <span style="color: #859900;">ref</span> contact <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">0</span>..<span style="color: #657b83; background-color: #fdf6e3;">}</span> -&gt; <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">0</span>..<span style="color: #268bd2;">2</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Person</span> <span style="color: #859900;">is</span>
-      <span style="color: #d33682;">@dc:description</span> <span style="color: #859900;">=</span> "Emergency contact person"
-    <span style="color: #859900;">end</span>
-  <span style="color: #859900;">end</span>
-<span style="color: #859900;">end</span>
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org1f0c431" class="outline-4">
-<h4 id="org1f0c431"><span class="section-number-4">2.6.3.</span> Enumerations</h4>
-<div class="outline-text-4" id="text-2-6-3">
-<div class="org-src-container">
-<pre class="src src-ebnf" id="orgca78e35"><span style="color: #6c71c4;">EnumBody</span>        = <span style="color: #2aa198;">"is"</span>, Annotation*, EnumVariant+, <span style="color: #2aa198;">"end"</span>
-<span style="color: #6c71c4;">EnumDef</span>         = <span style="color: #2aa198;">"enum"</span>, Identifier, EnumBody?
-</pre>
-</div>
-
-<div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 17: </span>Empty Enum</label><pre class="src src-sdml" id="org47a6d48"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
-  <span style="color: #859900;">enum</span> <span style="color: #268bd2;">DistanceUnit</span>
-<span style="color: #859900;">end</span>
-</pre>
-</div>
-
-<p>
-The enumeration <code>DistanceUnit</code> is valid but incomplete.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-ebnf" id="orgc27dca6"><span style="color: #6c71c4;">EnumVariant</span>     = Identifier, <span style="color: #2aa198;">"="</span>, Unsigned, AnnotationOnlyBody?
-</pre>
-</div>
-
-<div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 18: </span>Enum With Variants</label><pre class="src src-sdml" id="org962f6d8"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
-  <span style="color: #859900;">enum</span> <span style="color: #268bd2;">DistanceUnit</span> <span style="color: #859900;">is</span>
-    Meter = <span style="color: #268bd2;">1</span>
-    Foot = <span style="color: #268bd2;">2</span>
-  <span style="color: #859900;">end</span>
-<span style="color: #859900;">end</span>
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org1780c96" class="outline-4">
-<h4 id="org1780c96"><span class="section-number-4">2.6.4.</span> Entity Events</h4>
-<div class="outline-text-4" id="text-2-6-4">
-<div class="org-src-container">
-<pre class="src src-ebnf" id="org292b91a"><span style="color: #6c71c4;">EventDef</span>        =
-    <span style="color: #2aa198;">"event"</span>, Identifier,
-    <span style="color: #2aa198;">"source"</span>, IdentifierReference,
-    StructureBody?
-</pre>
-</div>
-
-<div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 19: </span>Empty Event</label><pre class="src src-sdml" id="orgfc91523"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
-  <span style="color: #859900;">event</span> <span style="color: #268bd2;">PersonNameChanged</span> <span style="color: #859900;">source</span> <span style="color: #268bd2;">Person</span>
-<span style="color: #859900;">end</span>
-</pre>
-</div>
-
-<p>
-The event <code>PersonNameChanged</code> is valid but incomplete.
-</p>
-
-<div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 20: </span>Event</label><pre class="src src-sdml" id="orga2e161f"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
-  <span style="color: #859900;">event</span> <span style="color: #268bd2;">PersonNameChanged</span> <span style="color: #859900;">source</span> <span style="color: #268bd2;">Person</span> <span style="color: #859900;">is</span>
-    <span style="color: #93a1a1; font-style: italic;">;; identifier members will be copied from Person </span>
-    <span style="color: #6c71c4;">fromValue</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">Name</span>
-    <span style="color: #6c71c4;">toValue</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">Name</span>
-  <span style="color: #859900;">end</span>
-<span style="color: #859900;">end</span>
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgf055c71" class="outline-4">
-<h4 id="orgf055c71"><span class="section-number-4">2.6.5.</span> Structures</h4>
-<div class="outline-text-4" id="text-2-6-5">
-<div class="org-src-container">
-<pre class="src src-ebnf" id="org7d83281"><span style="color: #6c71c4;">StructureGroup</span>  = <span style="color: #2aa198;">"group"</span>, Annotation*, MemberByValue*, <span style="color: #2aa198;">"end"</span>
+<pre class="src src-ebnf" id="org4485ab1"><span style="color: #6c71c4;">StructureGroup</span>  = <span style="color: #2aa198;">"group"</span>, Annotation*, MemberByValue*, <span style="color: #2aa198;">"end"</span>
 <span style="color: #6c71c4;">StructureBody</span>   = <span style="color: #2aa198;">"is"</span>, Annotation*, <span style="color: #657b83;">(</span> MemberByValue | StructureGroup <span style="color: #657b83;">)</span>*, <span style="color: #2aa198;">"end"</span>
 <span style="color: #6c71c4;">Structuredef</span>    = <span style="color: #2aa198;">"structure"</span>, Identifier, StructureBody?
 </pre>
 </div>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 21: </span>Empty Structure</label><pre class="src src-sdml" id="org6430981"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 14: </span>Empty Structure</label><pre class="src src-sdml" id="org6359b41"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
   <span style="color: #859900;">structure</span> <span style="color: #268bd2;">Length</span>
 <span style="color: #859900;">end</span>
 </pre>
@@ -1121,7 +1047,7 @@ The structure <code>Length</code> is valid but incomplete.
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 22: </span>Annotated Structure</label><pre class="src src-sdml" id="org2c5af51"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 15: </span>Annotated Structure</label><pre class="src src-sdml" id="orgc4e705e"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
   <span style="color: #859900;">structure</span> <span style="color: #268bd2;">Length</span> <span style="color: #859900;">is</span>
     <span style="color: #d33682;">@skos:prefLabel</span> <span style="color: #859900;">=</span> <span style="color: #2aa198;">"Length"</span><span style="color: #268bd2; font-style: italic;">@en</span>
   <span style="color: #859900;">end</span>
@@ -1130,7 +1056,7 @@ The structure <code>Length</code> is valid but incomplete.
 </div>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 23: </span>Structure Members</label><pre class="src src-sdml" id="orgb7ce21b"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 16: </span>Structure Members</label><pre class="src src-sdml" id="orgd327f90"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
   <span style="color: #859900;">structure</span> <span style="color: #268bd2;">Length</span> <span style="color: #859900;">is</span>
     <span style="color: #d33682;">@skos:prefLabel</span> <span style="color: #859900;">=</span> <span style="color: #2aa198;">"Length"</span><span style="color: #268bd2; font-style: italic;">@en</span>
 
@@ -1142,7 +1068,7 @@ The structure <code>Length</code> is valid but incomplete.
 </div>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 24: </span>Structure MembersGroups</label><pre class="src src-sdml" id="orgb2d056a"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 17: </span>Structure MembersGroups</label><pre class="src src-sdml" id="orgc56b686"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
 
   <span style="color: #859900;">structure</span> <span style="color: #268bd2;">Account</span> <span style="color: #859900;">is</span>
     <span style="color: #d33682;">@skos:prefLabel</span> <span style="color: #859900;">=</span> <span style="color: #2aa198;">"Customer Account"</span><span style="color: #268bd2; font-style: italic;">@en</span>
@@ -1164,8 +1090,128 @@ The structure <code>Length</code> is valid but incomplete.
 </div>
 </div>
 
-<div id="outline-container-org3b82235" class="outline-4">
-<h4 id="org3b82235"><span class="section-number-4">2.6.6.</span> Disjoint Unions</h4>
+<div id="outline-container-orgfc8674b" class="outline-4">
+<h4 id="orgfc8674b"><span class="section-number-4">2.6.3.</span> Entities</h4>
+<div class="outline-text-4" id="text-2-6-3">
+<div class="org-src-container">
+<pre class="src src-ebnf" id="org6359354"><span style="color: #6c71c4;">EntityGroup</span>     = <span style="color: #2aa198;">"group"</span>, Annotation*, <span style="color: #657b83;">(</span> MemberByValue | MemberByReference <span style="color: #657b83;">)</span>*
+<span style="color: #6c71c4;">EntityBody</span>      =
+    <span style="color: #2aa198;">"is"</span>,
+    Annotation*,
+    IdentityMember,
+    <span style="color: #657b83;">(</span> MemberByValue | MemberByReference | EntityGroup <span style="color: #657b83;">)</span>*,
+    <span style="color: #2aa198;">"end"</span>
+<span style="color: #6c71c4;">Entity</span>          = <span style="color: #2aa198;">"entity"</span>, Identifier, EntityBody?
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 18: </span>Empty Entity</label><pre class="src src-sdml" id="org0686a77"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Person</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<p>
+The entity <code>Person</code> is <i>valid</i> but <i>incomplete</i>.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 19: </span>Entity with Identifying Member</label><pre class="src src-sdml" id="org5f91687"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Person</span> <span style="color: #859900;">is</span>
+    <span style="color: #859900;">identity</span> <span style="color: #6c71c4;">id</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">PersonId</span>
+  <span style="color: #859900;">end</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 20: </span>Entity with Reference Member</label><pre class="src src-sdml" id="org949396e"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">entity</span> Person <span style="color: #859900;">is</span>
+    <span style="color: #859900;">ref</span> contact <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">0</span>..<span style="color: #657b83; background-color: #fdf6e3;">}</span> -&gt; <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">0</span>..<span style="color: #268bd2;">2</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Person</span> <span style="color: #859900;">is</span>
+      <span style="color: #d33682;">@dc:description</span> <span style="color: #859900;">=</span> "Emergency contact person"
+    <span style="color: #859900;">end</span>
+  <span style="color: #859900;">end</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcd7aa82" class="outline-4">
+<h4 id="orgcd7aa82"><span class="section-number-4">2.6.4.</span> Entity Events</h4>
+<div class="outline-text-4" id="text-2-6-4">
+<div class="org-src-container">
+<pre class="src src-ebnf" id="org1704eb9"><span style="color: #6c71c4;">EventDef</span>        =
+    <span style="color: #2aa198;">"event"</span>, Identifier,
+    <span style="color: #2aa198;">"source"</span>, IdentifierReference,
+    StructureBody?
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 21: </span>Empty Event</label><pre class="src src-sdml" id="org2974610"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">event</span> <span style="color: #268bd2;">PersonNameChanged</span> <span style="color: #859900;">source</span> <span style="color: #268bd2;">Person</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<p>
+The event <code>PersonNameChanged</code> is valid but incomplete.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 22: </span>Event</label><pre class="src src-sdml" id="org42b662f"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">event</span> <span style="color: #268bd2;">PersonNameChanged</span> <span style="color: #859900;">source</span> <span style="color: #268bd2;">Person</span> <span style="color: #859900;">is</span>
+    <span style="color: #93a1a1; font-style: italic;">;; identifier members will be copied from Person </span>
+    <span style="color: #6c71c4;">fromValue</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">Name</span>
+    <span style="color: #6c71c4;">toValue</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">Name</span>
+  <span style="color: #859900;">end</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb22fb1f" class="outline-4">
+<h4 id="orgb22fb1f"><span class="section-number-4">2.6.5.</span> Enumerations</h4>
+<div class="outline-text-4" id="text-2-6-5">
+<div class="org-src-container">
+<pre class="src src-ebnf" id="orge2ef700"><span style="color: #6c71c4;">EnumBody</span>        = <span style="color: #2aa198;">"is"</span>, Annotation*, EnumVariant+, <span style="color: #2aa198;">"end"</span>
+<span style="color: #6c71c4;">EnumDef</span>         = <span style="color: #2aa198;">"enum"</span>, Identifier, EnumBody?
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 23: </span>Empty Enum</label><pre class="src src-sdml" id="orgb905f29"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">enum</span> <span style="color: #268bd2;">DistanceUnit</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+<p>
+The enumeration <code>DistanceUnit</code> is valid but incomplete.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ebnf" id="org3109584"><span style="color: #6c71c4;">EnumVariant</span>     = Identifier, <span style="color: #2aa198;">"="</span>, Unsigned, AnnotationOnlyBody?
+</pre>
+</div>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 24: </span>Enum With Variants</label><pre class="src src-sdml" id="orge2ce7e5"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">enum</span> <span style="color: #268bd2;">DistanceUnit</span> <span style="color: #859900;">is</span>
+    Meter = <span style="color: #268bd2;">1</span>
+    Foot = <span style="color: #268bd2;">2</span>
+  <span style="color: #859900;">end</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2cd48d3" class="outline-4">
+<h4 id="org2cd48d3"><span class="section-number-4">2.6.6.</span> Disjoint Unions</h4>
 <div class="outline-text-4" id="text-2-6-6">
 <p>
 A disjoint, or discriminated, union is a mechanism to allow for a selection of disjoint types to be treated as a single
@@ -1174,13 +1220,13 @@ type. As such the <i>elements</i> of the union are simply type names and do not 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-ebnf" id="org6746346"><span style="color: #6c71c4;">UnionBody</span>       = <span style="color: #2aa198;">"is"</span>, Annotation*, IdentifierReference+, <span style="color: #2aa198;">"end"</span>
+<pre class="src src-ebnf" id="org2328270"><span style="color: #6c71c4;">UnionBody</span>       = <span style="color: #2aa198;">"is"</span>, Annotation*, IdentifierReference+, <span style="color: #2aa198;">"end"</span>
 <span style="color: #6c71c4;">UnionDef</span>        = <span style="color: #2aa198;">"union"</span>, Identifier, UnionBody?
 </pre>
 </div>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 25: </span>Empty Union</label><pre class="src src-sdml" id="org075542a"><span style="color: #859900;">module</span> example of
+<label class="org-src-name"><span class="listing-number">Listing 25: </span>Empty Union</label><pre class="src src-sdml" id="org7f5a3c7"><span style="color: #859900;">module</span> example of
   union VehicleClass
 <span style="color: #859900;">end</span>
 </pre>
@@ -1191,7 +1237,7 @@ The union <code>VehicleClass</code> is valid but incomplete.
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 26: </span>Union With Variants</label><pre class="src src-sdml" id="org3e17fe4"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 26: </span>Union With Variants</label><pre class="src src-sdml" id="org4f39c1a"><span style="color: #859900;">module</span> <span style="color: #268bd2;">example</span> <span style="color: #859900;">is</span>
   union VehicleClass of
     Car
     Van
@@ -1205,8 +1251,8 @@ The union <code>VehicleClass</code> is valid but incomplete.
 </div>
 </div>
 
-<div id="outline-container-org5195096" class="outline-2">
-<h2 id="org5195096"><span class="section-number-2">3.</span> RDF Abstract Model</h2>
+<div id="outline-container-org1f8467f" class="outline-2">
+<h2 id="org1f8467f"><span class="section-number-2">3.</span> RDF Abstract Model</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Why RDF? &#x2026;
@@ -1220,20 +1266,20 @@ Why RDF? &#x2026;
 
 
 <p>
-Figure <a href="#org37138e8">3</a> is an overview of the OWL Ontology. For clarity this figure elides the sub classes of <i>Group</i> and
+Figure <a href="#orgf03af77">3</a> is an overview of the OWL Ontology. For clarity this figure elides the sub classes of <i>Group</i> and
 <i>Member</i>. Those classes in this diagram that are in a lighter color are <i>abstract</i> in that they exist only to be super-types
 of the classes actually referenced by other model elements.
 </p>
 
 
-<div id="org37138e8" class="figure">
+<div id="orgf03af77" class="figure">
 <p><img src="owl-ontology.png" alt="owl-ontology.png" />
 </p>
 <p><span class="figure-number">Figure 3: </span>OWL Ontology</p>
 </div>
 
 <p>
-Figure <a href="#org37138e8">3</a> uses some notation elements from UML, although not a UML diagram itself. 
+Figure <a href="#orgf03af77">3</a> uses some notation elements from UML, although not a UML diagram itself. 
 For a higher resolution version, <a href="owl-ontology.png">click here</a>.
 </p>
 
@@ -1244,17 +1290,17 @@ For a higher resolution version, <a href="owl-ontology.png">click here</a>.
 </ol>
 </div>
 
-<div id="outline-container-org33cf7b4" class="outline-3">
-<h3 id="org33cf7b4"><span class="section-number-3">3.1.</span> SDML Ontology</h3>
+<div id="outline-container-org8f808a0" class="outline-3">
+<h3 id="org8f808a0"><span class="section-number-3">3.1.</span> SDML Ontology</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
-Listing <a href="#org5b97065">27</a> is the ontology header that describes the Ontology itself. This shows the use of annotation
+Listing <a href="#orgdca9580">27</a> is the ontology header that describes the Ontology itself. This shows the use of annotation
 properties from the Dublin Core <a href="https://www.dublincore.org/specifications/dublin-core/dcmi-terms/">DCMI Terms</a> and the W3C Simple Knowledge Organization System (<a href="https://www.w3.org/TR/skos-reference/">SKOS</a>). Section
-<a href="#org998b12e">3.6</a> presents details on commonly used annotation properties found in the Ontology.
+<a href="#orge851fbe">3.6</a> presents details on commonly used annotation properties found in the Ontology.
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 27: </span>OWL: Ontology Header</label><pre class="src src-ttl" id="org5b97065"><span style="color: #d33682;">@prefix</span> <span style="color: #268bd2;">dc:</span> <span style="color: #b58900;"><a href="http://purl.org/dc/elements/1.1/&gt; .
+<label class="org-src-name"><span class="listing-number">Listing 27: </span>OWL: Ontology Header</label><pre class="src src-ttl" id="orgdca9580"><span style="color: #d33682;">@prefix</span> <span style="color: #268bd2;">dc:</span> <span style="color: #b58900;"><a href="http://purl.org/dc/elements/1.1/&gt; .
 @prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .
 @prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
 @prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .
@@ -1459,14 +1505,14 @@ properties from the Dublin Core <a href="https://www.dublincore.org/specificatio
 </div>
 </div>
 
-<div id="outline-container-orgdf3ef86" class="outline-3">
-<h3 id="orgdf3ef86"><span class="section-number-3">3.2.</span> Classes</h3>
+<div id="outline-container-org819fe95" class="outline-3">
+<h3 id="org819fe95"><span class="section-number-3">3.2.</span> Classes</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 All classes have an RDF type of <code>owl:Class</code>.
 </p>
 
-<table id="org9839a80" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table id="org7b2716c" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption class="t-above"><span class="table-number">Table 4:</span> OWL: Classes</caption>
 
 <colgroup>
@@ -1602,14 +1648,14 @@ All classes have an RDF type of <code>owl:Class</code>.
 </div>
 </div>
 
-<div id="outline-container-org09acead" class="outline-3">
-<h3 id="org09acead"><span class="section-number-3">3.3.</span> Object Properties</h3>
+<div id="outline-container-orga13cf6d" class="outline-3">
+<h3 id="orga13cf6d"><span class="section-number-3">3.3.</span> Object Properties</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 All object properties have an RDF type of <code>owl:ObjectProperty</code>.
 </p>
 
-<table id="org0ca19a3" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table id="org3dc9c01" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption class="t-above"><span class="table-number">Table 5:</span> OWL: Object Properties</caption>
 
 <colgroup>
@@ -1775,14 +1821,14 @@ Notes:
 </div>
 </div>
 
-<div id="outline-container-orga6f253c" class="outline-3">
-<h3 id="orga6f253c"><span class="section-number-3">3.4.</span> Datatype Properties</h3>
+<div id="outline-container-org6d24182" class="outline-3">
+<h3 id="org6d24182"><span class="section-number-3">3.4.</span> Datatype Properties</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 All datatype properties have an RDF type of <code>owl:DatatypeProperty</code>.
 </p>
 
-<table id="org33358dd" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table id="org8ea7393" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption class="t-above"><span class="table-number">Table 6:</span> OWL: Datatype Properties</caption>
 
 <colgroup>
@@ -1828,14 +1874,14 @@ All datatype properties have an RDF type of <code>owl:DatatypeProperty</code>.
 </div>
 </div>
 
-<div id="outline-container-orga9d933e" class="outline-3">
-<h3 id="orga9d933e"><span class="section-number-3">3.5.</span> Annotation Properties</h3>
+<div id="outline-container-org7aae48e" class="outline-3">
+<h3 id="org7aae48e"><span class="section-number-3">3.5.</span> Annotation Properties</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 All annotation properties have an RDF type of <code>owl:AnnotationProperty</code>.
 </p>
 
-<table id="org19a3d1a" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table id="org257beb7" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption class="t-above"><span class="table-number">Table 7:</span> OWL: Annotation Properties</caption>
 
 <colgroup>
@@ -1895,8 +1941,8 @@ conforms to the <a href="https://semver.org/">semver</a> form of <i>major.minor.
 </div>
 </div>
 
-<div id="outline-container-orgaacd2af" class="outline-3">
-<h3 id="orgaacd2af"><span class="section-number-3">3.6.</span> <a id="org998b12e"></a>Commonly Used Annotations</h3>
+<div id="outline-container-org20bccac" class="outline-3">
+<h3 id="org20bccac"><span class="section-number-3">3.6.</span> <a id="orge851fbe"></a>Commonly Used Annotations</h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 The following are annotation properties that are common in defining and using Ontologies and other forms of controlled
@@ -1904,7 +1950,7 @@ vocabularies. These are all well-defined as well as commonly understood and so s
 annotating a model.
 </p>
 
-<table id="org11ccf83" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table id="org5b5313d" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption class="t-above"><span class="table-number">Table 8:</span> Commonly Used Annotation Properties</caption>
 
 <colgroup>
@@ -2021,18 +2067,18 @@ annotating a model.
 </div>
 </div>
 
-<div id="outline-container-org093b4f5" class="outline-2">
-<h2 id="org093b4f5"><span class="section-number-2">4.</span> Walk-Through Example</h2>
+<div id="outline-container-orgbe40715" class="outline-2">
+<h2 id="orgbe40715"><span class="section-number-2">4.</span> Walk-Through Example</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 The following section walks through the process of model creation and iterative elaboration to add detail as domain
 experts provide more information. In our example we will build a domain model for a vehicle rental company. So, as you
 might imagine we can start the model with some pretty obvious entities, but with no detail beyond their names. Listing
-<a href="#org7f9a128">28</a> is this first-pass domain model.
+<a href="#org257440a">28</a> is this first-pass domain model.
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 28: </span>Rentals Concepts (First Pass)</label><pre class="src src-sdml" id="org7f9a128"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 28: </span>Rentals Concepts (First Pass)</label><pre class="src src-sdml" id="org257440a"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
 
   <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Vehicle</span>
 
@@ -2048,11 +2094,11 @@ might imagine we can start the model with some pretty obvious entities, but with
 
 <p>
 The <code>sdml</code> tool can be used to generate a concept diagram, a high-level view of only the entities in the model and their
-relationships. The following command-line will generate figure <a href="#orgcf35543">4</a> from listing
-<a href="#org7f9a128">28</a>.
+relationships. The following command-line will generate figure <a href="#org7727b77">4</a> from listing
+<a href="#org257440a">28</a>.
 </p>
 
-<pre class="example" id="orgc439051">
+<pre class="example" id="org36b489c">
 sdml draw --diagram concepts \
           --output-format svg \
           --output-file docs/rentals-concept-1.svg \
@@ -2060,14 +2106,14 @@ sdml draw --diagram concepts \
 </pre>
 
 
-<div id="orgcf35543" class="figure">
+<div id="org7727b77" class="figure">
 <p><img src="./rentals-concept-1.svg" alt="rentals-concept-1.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 4: </span>Rentals Concepts (First Pass)</p>
 </div>
 
 <p>
-Figure <a href="#org7da7669">29</a> is the second-pass at our model, adding relationships from the <code>Booking</code> entity to the
+Figure <a href="#orgaa7d4a9">29</a> is the second-pass at our model, adding relationships from the <code>Booking</code> entity to the
 <code>Customer</code>, <code>Location</code>, and  <code>Vehicle</code> entities. Adding a body to the <code>Booking</code> entity, between <code>is</code> … <code>end</code>, requires the entity
 specify an identifier. To allow the addition of <code>bookingCode</code> without spending time on the details of it's type the
 keyword <code>unknown</code> is used to defer the type until later.
@@ -2078,7 +2124,7 @@ Additionally, the <code>vehicle</code> relationship specifies a new cardinality 
 </p>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 29: </span>Rentals Basic Relationships</label><pre class="src src-sdml" id="org7da7669"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 29: </span>Rentals Basic Relationships</label><pre class="src src-sdml" id="orgaa7d4a9"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
 
   <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Vehicle</span>
 
@@ -2099,12 +2145,12 @@ Additionally, the <code>vehicle</code> relationship specifies a new cardinality 
 </div>
 
 <p>
-Re-running the <code>sdml</code> tool on listing <a href="#org7da7669">29</a> will result in the relationships added, as shown in figure
-<a href="#org988f1fb">5</a>.
+Re-running the <code>sdml</code> tool on listing <a href="#orgaa7d4a9">29</a> will result in the relationships added, as shown in figure
+<a href="#orgf39afae">5</a>.
 </p>
 
 
-<div id="org988f1fb" class="figure">
+<div id="orgf39afae" class="figure">
 <p><img src="./rentals-concept-2.svg" alt="rentals-concept-2.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 5: </span>Rentals Basic Relationships</p>
@@ -2123,7 +2169,7 @@ In the next edit of our rentals model we see some additions:
 </ol>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 30: </span>Rentals More Detail</label><pre class="src src-sdml" id="org721601f"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 30: </span>Rentals More Detail</label><pre class="src src-sdml" id="org7afd232"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
 
   <span style="color: #859900;">import</span> <span style="color: #268bd2;">cids:VehicleIdentificationNumber</span>
 
@@ -2154,18 +2200,18 @@ In the next edit of our rentals model we see some additions:
 </div>
 
 <p>
-As usual we generate the concept diagram in figure <a href="#org16ea180">6</a> from listing <a href="#org721601f">30</a>.
+As usual we generate the concept diagram in figure <a href="#org27a1855">6</a> from listing <a href="#org7afd232">30</a>.
 </p>
 
 
-<div id="org16ea180" class="figure">
+<div id="org27a1855" class="figure">
 <p><img src="./rentals-concept-3.svg" alt="rentals-concept-3.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 6: </span>Rentals More Detail</p>
 </div>
 
 <div class="org-src-container">
-<label class="org-src-name"><span class="listing-number">Listing 31: </span>Rentals Non-Entity Detail</label><pre class="src src-sdml" id="org613ab2e"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
+<label class="org-src-name"><span class="listing-number">Listing 31: </span>Rentals Non-Entity Detail</label><pre class="src src-sdml" id="orgb8f8083"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
 
   <span style="color: #859900;">import</span> <span style="color: #657b83; background-color: #fdf6e3;">[</span><span style="color: #268bd2;">cids:VehicleIdentificationNumber</span> <span style="color: #268bd2;">cids:Uuid</span><span style="color: #657b83; background-color: #fdf6e3;">]</span>
   <span style="color: #859900;">import</span> <span style="color: #657b83; background-color: #fdf6e3;">[</span><span style="color: #268bd2;">xsd:date</span> <span style="color: #268bd2;">xsd:string</span><span style="color: #657b83; background-color: #fdf6e3;">]</span>
@@ -2216,17 +2262,17 @@ As usual we generate the concept diagram in figure <a href="#org16ea180">6</a> f
 </div>
 
 <p>
-As usual we generate the concept diagram in figure <a href="#orgce2f8ec">7</a> from listing <a href="#org613ab2e">31</a>.
+As usual we generate the concept diagram in figure <a href="#org8df8b95">7</a> from listing <a href="#orgb8f8083">31</a>.
 </p>
 
 
-<div id="orgce2f8ec" class="figure">
+<div id="org8df8b95" class="figure">
 <p><img src="./rentals-concept-4.svg" alt="rentals-concept-4.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 7: </span>Rentals Non-Entity Detail</p>
 </div>
 
-<pre class="example" id="org6551dcd">
+<pre class="example" id="orgaa08015">
 sdml draw --diagram erd \
           --output-format svg \
           --output-file docs/rentals-concept-4.svg \
@@ -2234,7 +2280,7 @@ sdml draw --diagram erd \
 </pre>
 
 
-<div id="orgd3370e8" class="figure">
+<div id="orge879b24" class="figure">
 <p><img src="./rentals-erd-4.svg" alt="rentals-erd-4.svg" class="org-svg" />
 </p>
 <p><span class="figure-number">Figure 8: </span>Rentals ERD Diagram</p>
@@ -2242,8 +2288,8 @@ sdml draw --diagram erd \
 </div>
 </div>
 
-<div id="outline-container-org6d64ba2" class="outline-2">
-<h2 id="org6d64ba2"><span class="section-number-2">5.</span> Transformations</h2>
+<div id="outline-container-org07ea6c8" class="outline-2">
+<h2 id="org07ea6c8"><span class="section-number-2">5.</span> Transformations</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 TBD
@@ -2252,19 +2298,19 @@ TBD
 </div>
 
 
-<div id="outline-container-org2e12b76" class="outline-2">
-<h2 id="org2e12b76"><span class="section-number-2">6.</span> Implementation and Tools</h2>
+<div id="outline-container-org2030b42" class="outline-2">
+<h2 id="org2030b42"><span class="section-number-2">6.</span> Implementation and Tools</h2>
 <div class="outline-text-2" id="text-6">
 
-<div id="org26f744b" class="figure">
+<div id="org307fabd" class="figure">
 <p><img src="implementation-overview.png" alt="implementation-overview.png" />
 </p>
 <p><span class="figure-number">Figure 9: </span>Implementation Overview</p>
 </div>
 </div>
 
-<div id="outline-container-orge1f2fff" class="outline-3">
-<h3 id="orge1f2fff"><span class="section-number-3">6.1.</span> Core Library</h3>
+<div id="outline-container-orgc20f21a" class="outline-3">
+<h3 id="orgc20f21a"><span class="section-number-3">6.1.</span> Core Library</h3>
 <div class="outline-text-3" id="text-6-1">
 <ul class="org-ul">
 <li>Source at <a href="https://github.com/johnstonskj/tree-sitter-sdml">Github</a></li>
@@ -2274,15 +2320,15 @@ TBD
 Build.
 </p>
 
-<pre class="example" id="org9576180">
+<pre class="example" id="orgb5cfd4a">
 git clone https://github.com/johnstonskj/tree-sitter-sdml
 </pre>
 
-<pre class="example" id="org7551779">
+<pre class="example" id="orgc0ef42f">
 make setup
 </pre>
 
-<pre class="example" id="orga42e661">
+<pre class="example" id="org7b9b346">
 make build
 </pre>
 
@@ -2297,15 +2343,15 @@ make build
 </div>
 </div>
 
-<div id="outline-container-org2606789" class="outline-3">
-<h3 id="org2606789"><span class="section-number-3">6.2.</span> Command-Line Tool</h3>
+<div id="outline-container-org2d83312" class="outline-3">
+<h3 id="org2d83312"><span class="section-number-3">6.2.</span> Command-Line Tool</h3>
 <div class="outline-text-3" id="text-6-2">
 <ul class="org-ul">
 <li>Source at <a href="https://github.com/johnstonskj/rust-sdml">Github</a></li>
 <li>Published to <a href="https://crates.io/crates/sdml">crates.io</a></li>
 </ul>
 
-<pre class="example" id="org0b9a9aa">
+<pre class="example" id="orgb34e375">
 $ sdml --help
 Rust CLI for Simple Domain Modeling Language (SDML)
 
@@ -2330,7 +2376,7 @@ For most commands the tool accepts a pair of arguments that determine the format
 These commands <code>--output-format</code> / <code>-f</code> and <code>--output-file</code> / <code>-o</code> can be used in the following manner.
 </p>
 
-<pre class="example" id="org93565f8">
+<pre class="example" id="org0822ab8">
 --output-format svg --output-file rentals.svg
 -output-file rentals.svg
 </pre>
@@ -2348,16 +2394,16 @@ prepend a path to the standard search path. Thus the two examples below are iden
 a component of the search path.
 </p>
 
-<pre class="example" id="orgc1650d5">
+<pre class="example" id="orgd1d4794">
 --base-path . rentals
 rentals
 </pre>
 </div>
 
-<div id="outline-container-orgd9f8a8a" class="outline-4">
-<h4 id="orgd9f8a8a"><span class="section-number-4">6.2.1.</span> Highlighting</h4>
+<div id="outline-container-orge45201c" class="outline-4">
+<h4 id="orge45201c"><span class="section-number-4">6.2.1.</span> Highlighting</h4>
 <div class="outline-text-4" id="text-6-2-1">
-<pre class="example" id="org13aa54e">
+<pre class="example" id="orgf3d4661">
 $ sdlml highlight --help
 Highlight an SDML source file
 
@@ -2401,7 +2447,7 @@ Options:
 For the console this uses ANSI escape sequences to format the text. 
 </p>
 
-<pre class="example" id="orgb8a6dc3">
+<pre class="example" id="org6e85163">
 sdml highlight --output-format ansi rentals
 </pre>
 
@@ -2411,21 +2457,21 @@ of HTML that can be inserted into another document, or <code>html-standalone</co
 highlighted code block.
 </p>
 
-<pre class="example" id="orga0ef6a4">
+<pre class="example" id="org959dc71">
 sdml highlight --output-format html rentals
 sdml highlight --output-format html-standalone rentals
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgde609e1" class="outline-4">
-<h4 id="orgde609e1"><span class="section-number-4">6.2.2.</span> Draw Diagrams</h4>
+<div id="outline-container-orgdec2573" class="outline-4">
+<h4 id="orgdec2573"><span class="section-number-4">6.2.2.</span> Draw Diagrams</h4>
 <div class="outline-text-4" id="text-6-2-2">
 <p>
 To draw a high-level Concepts diagram, use the diagram specifier <code>concepts</code>.
 </p>
 
-<pre class="example" id="orgec882e8">
+<pre class="example" id="org4061f0c">
 sdml draw --diagram concepts \
           --output-format svg --output-file rentals.svg \
           --base-path . rentals
@@ -2435,7 +2481,7 @@ sdml draw --diagram concepts \
 For more detail an Entity-Relationship diagram can be generated with the diagram specifier <code>entity-relationship</code>.
 </p>
 
-<pre class="example" id="orgc6f13eb">
+<pre class="example" id="orgc146bf0">
 sdml draw --diagram entity-relationship \
           --output-format svg --output-file rentals.svg \
           --base-path . rentals
@@ -2445,7 +2491,7 @@ sdml draw --diagram entity-relationship \
 For the mose detail a UML Class diagram can be generated with the diagram specifier <code>uml-class</code>.
 </p>
 
-<pre class="example" id="org69f2349">
+<pre class="example" id="orgdf2d516">
 sdml draw --diagram uml-class \
           --output-format svg --output-file rentals.svg \
           --base-path . rentals
@@ -2453,8 +2499,8 @@ sdml draw --diagram uml-class \
 </div>
 </div>
 
-<div id="outline-container-org2455a48" class="outline-4">
-<h4 id="org2455a48"><span class="section-number-4">6.2.3.</span> Module Resolution</h4>
+<div id="outline-container-orgf87cd18" class="outline-4">
+<h4 id="orgf87cd18"><span class="section-number-4">6.2.3.</span> Module Resolution</h4>
 <div class="outline-text-4" id="text-6-2-3">
 <p>
 The resolver uses the environment variable <code>SDML_PATH</code>, &#x2026;
@@ -2464,7 +2510,7 @@ The resolver uses the environment variable <code>SDML_PATH</code>, &#x2026;
 For example, the command <code>sdml highlight rentals</code> will look for the following files:
 </p>
 
-<pre class="example" id="orgc9cf158">
+<pre class="example" id="orga2a1495">
 {prefix}rentals.sdm
 {prefix}rentals.sdml
 {prefix}rentals/rentals.sdm
@@ -2493,8 +2539,8 @@ For example, the command <code>sdml highlight rentals</code> will look for the f
 </div>
 </div>
 
-<div id="outline-container-org3af160a" class="outline-3">
-<h3 id="org3af160a"><span class="section-number-3">6.3.</span> Emacs Support</h3>
+<div id="outline-container-orgf6df32e" class="outline-3">
+<h3 id="orgf6df32e"><span class="section-number-3">6.3.</span> Emacs Support</h3>
 <div class="outline-text-3" id="text-6-3">
 <p>
 Emacs has been the primary <i>playground</i> for SDML and as such has some tools already built for editing and documentation.
@@ -2511,8 +2557,8 @@ Emacs standard customization allows for managing all package variables and can b
 </p>
 </div>
 
-<div id="outline-container-orgf98c691" class="outline-4">
-<h4 id="orgf98c691"><span class="section-number-4">6.3.1.</span> Highlighting</h4>
+<div id="outline-container-orge54f630" class="outline-4">
+<h4 id="orge54f630"><span class="section-number-4">6.3.1.</span> Highlighting</h4>
 <div class="outline-text-4" id="text-6-3-1">
 <p>
 Syntax highlighting is enabled by the <code>tree-sitter-hl-mode</code> minor mode based on the configuration in the constant
@@ -2527,8 +2573,8 @@ The <code>sdml-mode</code> also adds to the <code>prettify-symbols-alist</code> 
 </div>
 </div>
 
-<div id="outline-container-org481f916" class="outline-4">
-<h4 id="org481f916"><span class="section-number-4">6.3.2.</span> Indentation</h4>
+<div id="outline-container-org6cbfda4" class="outline-4">
+<h4 id="org6cbfda4"><span class="section-number-4">6.3.2.</span> Indentation</h4>
 <div class="outline-text-4" id="text-6-3-2">
 <p>
 Line indentation is enabled by the <code>tree-sitter-indent-mode</code> minor mode based on the configuration in the constant
@@ -2541,8 +2587,8 @@ Default indentation is two spaces, although this can be overridden by the custom
 </div>
 </div>
 
-<div id="outline-container-orgce805dd" class="outline-4">
-<h4 id="orgce805dd"><span class="section-number-4">6.3.3.</span> Code Folding</h4>
+<div id="outline-container-org38080ba" class="outline-4">
+<h4 id="org38080ba"><span class="section-number-4">6.3.3.</span> Code Folding</h4>
 <div class="outline-text-4" id="text-6-3-3">
 <p>
 Block Folding is provided by the <code>ts-fold-mode</code> minor mode based on the configuration in the constant
@@ -2565,8 +2611,8 @@ enabled by default with <code>window-system</code> is non-nil.
 </div>
 </div>
 
-<div id="outline-container-org82a7f35" class="outline-4">
-<h4 id="org82a7f35"><span class="section-number-4">6.3.4.</span> Debugging</h4>
+<div id="outline-container-org84f12ec" class="outline-4">
+<h4 id="org84f12ec"><span class="section-number-4">6.3.4.</span> Debugging</h4>
 <div class="outline-text-4" id="text-6-3-4">
 <p>
 The following two comands are provided by the underlying <code>tree-sitter</code> package, but exposed here with the common key
@@ -2580,8 +2626,8 @@ prefix.
 </div>
 </div>
 
-<div id="outline-container-org2ba5ad4" class="outline-4">
-<h4 id="org2ba5ad4"><span class="section-number-4">6.3.5.</span> Ispell</h4>
+<div id="outline-container-org29e6847" class="outline-4">
+<h4 id="org29e6847"><span class="section-number-4">6.3.5.</span> Ispell</h4>
 <div class="outline-text-4" id="text-6-3-5">
 <p>
 The additional package <code>sdml-ispell</code> provides <b>selective</b> spell checking by only checking selected nodes in the tree.
@@ -2599,8 +2645,8 @@ By default only strings and comments will be checked, although this can be overr
 </div>
 </div>
 
-<div id="outline-container-orgb72ae2f" class="outline-4">
-<h4 id="orgb72ae2f"><span class="section-number-4">6.3.6.</span> Flycheck</h4>
+<div id="outline-container-org2d3b949" class="outline-4">
+<h4 id="org2d3b949"><span class="section-number-4">6.3.6.</span> Flycheck</h4>
 <div class="outline-text-4" id="text-6-3-6">
 <p>
 The additional package <code>flycheck-sdml</code> provides on-the-fly linting for SDML buffers. To enable, simply ensure Flycheck
@@ -2632,15 +2678,15 @@ This is marked as a warning by Flycheck and provided with the necessary message.
 </div>
 </div>
 
-<div id="outline-container-orgb8be175" class="outline-4">
-<h4 id="orgb8be175"><span class="section-number-4">6.3.7.</span> Org-Babel</h4>
+<div id="outline-container-org605d4af" class="outline-4">
+<h4 id="org605d4af"><span class="section-number-4">6.3.7.</span> Org-Babel</h4>
 <div class="outline-text-4" id="text-6-3-7">
 <p>
 Org-Babel support provides the ability to call the SDML <a href="https://github.com/johnstonskj/rust-sdml">command-line tool</a> to produce diagrams and more. For example, the
 following source block calls the CLI to draw a concept diagram for the enclosed module.
 </p>
 
-<pre class="example" id="orgdb3d7ce">
+<pre class="example" id="orgfc8b262">
 #+NAME: lst:rentals-example
 #+CAPTION: Rentals Concepts
 #+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-concepts.svg :exports both
@@ -2659,7 +2705,7 @@ end
 The results block then references the resulting image.
 </p>
 
-<pre class="example" id="org539757a">
+<pre class="example" id="org5f40517">
 #+NAME: fig:rentals-example-concepts
 #+CAPTION: Rentals Concepts
 #+RESULTS: lst:rentals-example
@@ -2673,7 +2719,7 @@ reference the original content. This source block has different command-line par
 as well.
 </p>
 
-<pre class="example" id="orgacafc2a">
+<pre class="example" id="org0f85ca2">
 #+NAME: fig:rentals-example-erd
 #+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-erd.svg :exports results :noweb yes
 &lt;&lt;lst:rentals-example&gt;&gt;
@@ -2683,8 +2729,8 @@ as well.
 </div>
 </div>
 
-<div id="outline-container-org3078b44" class="outline-3">
-<h3 id="org3078b44"><span class="section-number-3">6.4.</span> Neovim</h3>
+<div id="outline-container-org7f7f9d5" class="outline-3">
+<h3 id="org7f7f9d5"><span class="section-number-3">6.4.</span> Neovim</h3>
 <div class="outline-text-3" id="text-6-4">
 <p>
 <a href="https://neovim.io/">Neovim</a> has some great tree-sitter support with the <a href="https://github.com/nvim-treesitter/nvim-treesitter">nvim-tree-sitter</a> and a nice in-editor <a href="https://github.com/nvim-treesitter/playground">playground</a>. Firstly, add the
@@ -2692,7 +2738,7 @@ tree-sitter plugin, but don't install yet, as shown on the nvim-treesitter page 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-vimrc-mode" id="orgc918f40">call plug#begin()
+<pre class="src src-vimrc-mode" id="orgf9ba2e0">call plug#begin()
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 call plug#end()
 </pre>
@@ -2706,7 +2752,7 @@ to avoid that.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lua" id="org37646f9">require'nvim-treesitter.configs'.setup {
+<pre class="src src-lua" id="org04f11d4">require'nvim-treesitter.configs'.setup {
     ensure_installed = { "query" }, 
     sync_install = false,
     auto_install = true,
@@ -2741,7 +2787,7 @@ To allow tree-sitter to do folding based on <code>folds.scm</code>, add the foll
 </p>
 
 <div class="org-src-container">
-<pre class="src src-vimrc-mode" id="org00510f9">set foldmethod=expr
+<pre class="src src-vimrc-mode" id="org31fe1ad">set foldmethod=expr
 set foldexpr=nvim_treesitter#foldexpr()
 </pre>
 </div>
@@ -2751,7 +2797,7 @@ Once the core plugin has been installed you can add the following Lua block in <
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lua" id="org2ec8b2e">local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+<pre class="src src-lua" id="org948faa2">local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
 
 parser_config.sdml = {
     install_info = {
@@ -2771,7 +2817,7 @@ Additionally, try the  <a href="https://github.com/nvim-treesitter/nvim-treesitt
 </p>
 
 <div class="org-src-container">
-<pre class="src src-vimrc-mode" id="orga9838b4">call plug#begin()
+<pre class="src src-vimrc-mode" id="orgabd9c49">call plug#begin()
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/nvim-treesitter-context' 
@@ -2786,7 +2832,7 @@ Add the corresponding configuration:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lua" id="org032bcbc">require'nvim-treesitter.configs'.setup {
+<pre class="src src-lua" id="org95fc22f">require'nvim-treesitter.configs'.setup {
     // …
     playground = {
         enable = true,
@@ -2812,8 +2858,8 @@ Add the corresponding configuration:
 </div>
 </div>
 
-<div id="outline-container-org3f28832" class="outline-3">
-<h3 id="org3f28832"><span class="section-number-3">6.5.</span> VSCode</h3>
+<div id="outline-container-org8a89ed4" class="outline-3">
+<h3 id="org8a89ed4"><span class="section-number-3">6.5.</span> VSCode</h3>
 <div class="outline-text-3" id="text-6-5">
 <p>
 Try here: <a href="https://github.com/georgewfraser/vscode-tree-sitter">https://github.com/georgewfraser/vscode-tree-sitter</a>
@@ -2823,8 +2869,8 @@ Try here: <a href="https://github.com/georgewfraser/vscode-tree-sitter">https://
 </div>
 </div>
 
-<div id="outline-container-orge61b5ab" class="outline-2">
-<h2 id="orge61b5ab"><span class="section-number-2">7.</span> <a id="org3be6de4"></a>Appendix: Complete Surface Syntax Grammar</h2>
+<div id="outline-container-orge1c2441" class="outline-2">
+<h2 id="orge1c2441"><span class="section-number-2">7.</span> <a id="org8377c86"></a>Appendix: Complete Surface Syntax Grammar</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 The grammar of the surface syntax is presented in Extended Backus–Naur form (EBNF). The addition of a character literal
@@ -2980,16 +3026,16 @@ terminals such as <code>ASCII_DIGIT</code>, <code>ASCII_HEX_DIGIT</code>, <code>
 </div>
 </div>
 
-<div id="outline-container-org0229b7a" class="outline-2">
-<h2 id="org0229b7a"><span class="section-number-2">8.</span> Appendix: Surface Syntax to RDF</h2>
+<div id="outline-container-org2cda828" class="outline-2">
+<h2 id="org2cda828"><span class="section-number-2">8.</span> Appendix: Surface Syntax to RDF</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 TBD
 </p>
 </div>
 
-<div id="outline-container-org37c87a6" class="outline-3">
-<h3 id="org37c87a6"><span class="section-number-3">8.1.</span> Whitespace</h3>
+<div id="outline-container-org88262a8" class="outline-3">
+<h3 id="org88262a8"><span class="section-number-3">8.1.</span> Whitespace</h3>
 <div class="outline-text-3" id="text-8-1">
 <p>
 Whitespace present in the surface syntax has <b>no</b> effect on the corresponding RDF.
@@ -2997,8 +3043,8 @@ Whitespace present in the surface syntax has <b>no</b> effect on the correspondi
 </div>
 </div>
 
-<div id="outline-container-org4a17b4b" class="outline-3">
-<h3 id="org4a17b4b"><span class="section-number-3">8.2.</span> Comments</h3>
+<div id="outline-container-orgf7c0ebd" class="outline-3">
+<h3 id="orgf7c0ebd"><span class="section-number-3">8.2.</span> Comments</h3>
 <div class="outline-text-3" id="text-8-2">
 <p>
 Comments present in the surface syntax are <b>not</b> translated into the corresponding RDF.;
@@ -3006,8 +3052,8 @@ Comments present in the surface syntax are <b>not</b> translated into the corres
 </div>
 </div>
 
-<div id="outline-container-org305c89b" class="outline-3">
-<h3 id="org305c89b"><span class="section-number-3">8.3.</span> Identifiers</h3>
+<div id="outline-container-org866aa86" class="outline-3">
+<h3 id="org866aa86"><span class="section-number-3">8.3.</span> Identifiers</h3>
 <div class="outline-text-3" id="text-8-3">
 <p>
 Identifiers for modules and type definitions are appended to the base IRI of the module resource, making individual
@@ -3054,8 +3100,8 @@ The remainder of this section will use example modules with <code>xml:base</code
 </div>
 </div>
 
-<div id="outline-container-orgee2c441" class="outline-3">
-<h3 id="orgee2c441"><span class="section-number-3">8.4.</span> Values</h3>
+<div id="outline-container-org0bfd42b" class="outline-3">
+<h3 id="org0bfd42b"><span class="section-number-3">8.4.</span> Values</h3>
 <div class="outline-text-3" id="text-8-4">
 <p>
 Value Literals are necessary for the specification of annotation values. Literals fall into two categories, simple
@@ -3063,10 +3109,10 @@ values and lists with an additional non-literal form the value constructor.
 </p>
 </div>
 
-<div id="outline-container-org07cd506" class="outline-4">
-<h4 id="org07cd506"><span class="section-number-4">8.4.1.</span> <a id="orgbb3e994"></a> Simple Value Literals</h4>
+<div id="outline-container-org4465e99" class="outline-4">
+<h4 id="org4465e99"><span class="section-number-4">8.4.1.</span> <a id="orgcdfd649"></a> Simple Value Literals</h4>
 <div class="outline-text-4" id="text-8-4-1">
-<table id="org8a6cc5c" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table id="org99e7ca5" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption class="t-above"><span class="table-number">Table 9:</span> Summary of Value Literals</caption>
 
 <colgroup>
@@ -3133,8 +3179,8 @@ values and lists with an additional non-literal form the value constructor.
 </div>
 </div>
 
-<div id="outline-container-orgfcf039c" class="outline-4">
-<h4 id="orgfcf039c"><span class="section-number-4">8.4.2.</span> List Literals</h4>
+<div id="outline-container-org828a363" class="outline-4">
+<h4 id="org828a363"><span class="section-number-4">8.4.2.</span> List Literals</h4>
 <div class="outline-text-4" id="text-8-4-2">
 <p>
 <b>Example:</b>
@@ -3183,8 +3229,8 @@ which constructs a list using the <code>rdf:first</code> and <code>rdf:rest</cod
 </div>
 </div>
 
-<div id="outline-container-org36c1d02" class="outline-4">
-<h4 id="org36c1d02"><span class="section-number-4">8.4.3.</span> Value Constructors</h4>
+<div id="outline-container-orgfb32625" class="outline-4">
+<h4 id="orgfb32625"><span class="section-number-4">8.4.3.</span> Value Constructors</h4>
 <div class="outline-text-4" id="text-8-4-3">
 <p>
 A value constructor allows for the precise specification of a datatype for a literal.
@@ -3205,8 +3251,8 @@ A value constructor allows for the precise specification of a datatype for a lit
 </div>
 </div>
 
-<div id="outline-container-orgb4f656a" class="outline-3">
-<h3 id="orgb4f656a"><span class="section-number-3">8.5.</span> Modules</h3>
+<div id="outline-container-orgb409f3b" class="outline-3">
+<h3 id="orgb409f3b"><span class="section-number-3">8.5.</span> Modules</h3>
 <div class="outline-text-3" id="text-8-5">
 <p>
 <b>Example with Implied Base:</b>
@@ -3381,8 +3427,8 @@ A value constructor allows for the precise specification of a datatype for a lit
 </div>
 </div>
 
-<div id="outline-container-orgfbad489" class="outline-3">
-<h3 id="orgfbad489"><span class="section-number-3">8.6.</span> Imports</h3>
+<div id="outline-container-org1b52403" class="outline-3">
+<h3 id="org1b52403"><span class="section-number-3">8.6.</span> Imports</h3>
 <div class="outline-text-3" id="text-8-6">
 <p>
 <b>Example:</b>
@@ -3529,11 +3575,11 @@ A value constructor allows for the precise specification of a datatype for a lit
 </div>
 </div>
 
-<div id="outline-container-org591bd97" class="outline-3">
-<h3 id="org591bd97"><span class="section-number-3">8.7.</span> Annotations</h3>
+<div id="outline-container-org686f459" class="outline-3">
+<h3 id="org686f459"><span class="section-number-3">8.7.</span> Annotations</h3>
 </div>
-<div id="outline-container-orgec0df44" class="outline-3">
-<h3 id="orgec0df44"><span class="section-number-3">8.8.</span> Data Type Definition</h3>
+<div id="outline-container-org5b3ac7b" class="outline-3">
+<h3 id="org5b3ac7b"><span class="section-number-3">8.8.</span> Data Type Definition</h3>
 <div class="outline-text-3" id="text-8-8">
 <p>
 <b>Example:</b>
@@ -3580,8 +3626,8 @@ A value constructor allows for the precise specification of a datatype for a lit
 </div>
 </div>
 
-<div id="outline-container-org990d1e0" class="outline-3">
-<h3 id="org990d1e0"><span class="section-number-3">8.9.</span> Entity Definition</h3>
+<div id="outline-container-orgfd7cd0b" class="outline-3">
+<h3 id="orgfd7cd0b"><span class="section-number-3">8.9.</span> Entity Definition</h3>
 <div class="outline-text-3" id="text-8-9">
 <p>
 <b>Example Empty Entity:</b>
@@ -3707,8 +3753,8 @@ TBD
 </div>
 </div>
 
-<div id="outline-container-org1bf907d" class="outline-3">
-<h3 id="org1bf907d"><span class="section-number-3">8.10.</span> Enumeration Definition</h3>
+<div id="outline-container-orge3b2add" class="outline-3">
+<h3 id="orge3b2add"><span class="section-number-3">8.10.</span> Enumeration Definition</h3>
 <div class="outline-text-3" id="text-8-10">
 <p>
 <b>Example Empty Enumeration:</b>
@@ -3757,8 +3803,8 @@ TBD
 </div>
 </div>
 
-<div id="outline-container-org2a490b9" class="outline-3">
-<h3 id="org2a490b9"><span class="section-number-3">8.11.</span> Event Definition</h3>
+<div id="outline-container-org46d5efc" class="outline-3">
+<h3 id="org46d5efc"><span class="section-number-3">8.11.</span> Event Definition</h3>
 <div class="outline-text-3" id="text-8-11">
 <p>
 <b>Example Empty Event:</b>
@@ -3814,8 +3860,8 @@ TBD
 </div>
 </div>
 
-<div id="outline-container-orgfe38a47" class="outline-3">
-<h3 id="orgfe38a47"><span class="section-number-3">8.12.</span> Structure Definition</h3>
+<div id="outline-container-orge3cb33f" class="outline-3">
+<h3 id="orge3cb33f"><span class="section-number-3">8.12.</span> Structure Definition</h3>
 <div class="outline-text-3" id="text-8-12">
 <p>
 <b>Example Empty Structure:</b>
@@ -3908,8 +3954,8 @@ TBD
 </div>
 </div>
 
-<div id="outline-container-orgb93d0e1" class="outline-3">
-<h3 id="orgb93d0e1"><span class="section-number-3">8.13.</span> Union Definition</h3>
+<div id="outline-container-org106e3bd" class="outline-3">
+<h3 id="org106e3bd"><span class="section-number-3">8.13.</span> Union Definition</h3>
 <div class="outline-text-3" id="text-8-13">
 <p>
 <b>Example Union Structure:</b>
@@ -3984,8 +4030,8 @@ TBD
 </div>
 </div>
 
-<div id="outline-container-org4c5c0a7" class="outline-2">
-<h2 id="org4c5c0a7"><span class="section-number-2">9.</span> <a id="org5d19b7e"></a> Appendix: Domain Modeling</h2>
+<div id="outline-container-orgfc8fa19" class="outline-2">
+<h2 id="orgfc8fa19"><span class="section-number-2">9.</span> <a id="org4689b7b"></a> Appendix: Domain Modeling</h2>
 <div class="outline-text-2" id="text-9">
 <p>
 There is often confusion around the use of the term <i>Domain Model</i> especially in regard to terms such as <i>Data Model</i>, <i>Class
@@ -3995,8 +4041,8 @@ and neither does it make any judgement as to the usefulness of any approach or t
 </p>
 </div>
 
-<div id="outline-container-org82167b9" class="outline-3">
-<h3 id="org82167b9"><span class="section-number-3">9.1.</span> Model Terminology</h3>
+<div id="outline-container-org25440b6" class="outline-3">
+<h3 id="org25440b6"><span class="section-number-3">9.1.</span> Model Terminology</h3>
 <div class="outline-text-3" id="text-9-1">
 <p>
 A model is an informative representation of an object, person or system. The term originally denoted the plans of a
@@ -4057,8 +4103,8 @@ With these two classifications we can construct a simple grammar for the qualifi
 </div>
 </div>
 
-<div id="outline-container-org5dc787f" class="outline-3">
-<h3 id="org5dc787f"><span class="section-number-3">9.2.</span> Modeling Language/Notation</h3>
+<div id="outline-container-org4a4db65" class="outline-3">
+<h3 id="org4a4db65"><span class="section-number-3">9.2.</span> Modeling Language/Notation</h3>
 <div class="outline-text-3" id="text-9-2">
 <p>
 There have been a number of modeling techniques, notations, and languages over the years. The following table describes
@@ -4125,8 +4171,8 @@ with specific extensions such as stereotypes for different key types.
 </div>
 </div>
 
-<div id="outline-container-org01e2964" class="outline-3">
-<h3 id="org01e2964"><span class="section-number-3">9.3.</span> Domain-Driven Design</h3>
+<div id="outline-container-org126dd51" class="outline-3">
+<h3 id="org126dd51"><span class="section-number-3">9.3.</span> Domain-Driven Design</h3>
 <div class="outline-text-3" id="text-9-3">
 <p>
 Domain-driven design (DDD) is a software design approach focusing on modeling software to match a domain according to
@@ -4162,15 +4208,15 @@ the Universal API where the model will represent our business model in different
 </div>
 </div>
 
-<div id="outline-container-org3939f39" class="outline-2">
-<h2 id="org3939f39"><span class="section-number-2">10.</span> Appendix: Known URI Prefixes</h2>
+<div id="outline-container-org1acc20b" class="outline-2">
+<h2 id="org1acc20b"><span class="section-number-2">10.</span> Appendix: Known URI Prefixes</h2>
 <div class="outline-text-2" id="text-10">
 <p>
 The following prefixes may be used in import statements without the need to reference their location directly. Either
 the namespace URI will be used to retrieve the corresponding resource or a local copy will be used.
 </p>
 
-<table id="org4a48801" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table id="org74cde97" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 <caption class="t-above"><span class="table-number">Table 10:</span> List of Known URI Prefixes</caption>
 
 <colgroup>
@@ -4288,12 +4334,12 @@ the namespace URI will be used to retrieve the corresponding resource or a local
 </table>
 </div>
 
-<div id="outline-container-org4dd2f7c" class="outline-3">
-<h3 id="org4dd2f7c"><span class="section-number-3">10.1.</span> Recommended Usage</h3>
+<div id="outline-container-org63d2afc" class="outline-3">
+<h3 id="org63d2afc"><span class="section-number-3">10.1.</span> Recommended Usage</h3>
 <div class="outline-text-3" id="text-10-1">
 </div>
-<div id="outline-container-orgd29b7cc" class="outline-4">
-<h4 id="orgd29b7cc"><span class="section-number-4">10.1.1.</span> Resource Identification</h4>
+<div id="outline-container-org8fadc0a" class="outline-4">
+<h4 id="org8fadc0a"><span class="section-number-4">10.1.1.</span> Resource Identification</h4>
 <div class="outline-text-4" id="text-10-1-1">
 <p>
 xml:base
@@ -4301,8 +4347,8 @@ xml:base
 </div>
 </div>
 
-<div id="outline-container-orge0be469" class="outline-4">
-<h4 id="orge0be469"><span class="section-number-4">10.1.2.</span> Labels and Descriptions</h4>
+<div id="outline-container-org1e714ee" class="outline-4">
+<h4 id="org1e714ee"><span class="section-number-4">10.1.2.</span> Labels and Descriptions</h4>
 <div class="outline-text-4" id="text-10-1-2">
 <p>
 skos, rdfs, dcterms
@@ -4310,8 +4356,8 @@ skos, rdfs, dcterms
 </div>
 </div>
 
-<div id="outline-container-org06bd71d" class="outline-4">
-<h4 id="org06bd71d"><span class="section-number-4">10.1.3.</span> Data Type Restrictions</h4>
+<div id="outline-container-org3931102" class="outline-4">
+<h4 id="org3931102"><span class="section-number-4">10.1.3.</span> Data Type Restrictions</h4>
 <div class="outline-text-4" id="text-10-1-3">
 <p>
 xsd
@@ -4321,10 +4367,10 @@ xsd
 </div>
 </div>
 
-<div id="outline-container-org6167c75" class="outline-2">
-<h2 id="org6167c75"><span class="section-number-2">11.</span> Appendix: License</h2>
+<div id="outline-container-org3cfd6c5" class="outline-2">
+<h2 id="org3cfd6c5"><span class="section-number-2">11.</span> Appendix: License</h2>
 <div class="outline-text-2" id="text-11">
-<pre class="example" id="org03a5948">
+<pre class="example" id="org000bfed">
 Copyright 2023 Simon Johnston &lt;johnstonskj@gmail.com&gt;
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -4343,23 +4389,23 @@ limitations under the License.
 </div>
 
 
-<div id="outline-container-org102dc44" class="outline-2">
-<h2 id="org102dc44"><span class="section-number-2">12.</span> Appendix: Tables of Other Content</h2>
+<div id="outline-container-org0123d6f" class="outline-2">
+<h2 id="org0123d6f"><span class="section-number-2">12.</span> Appendix: Tables of Other Content</h2>
 <div class="outline-text-2" id="text-12">
 <div id="list-of-tables">
 <h2>List of Tables</h2>
 <div id="text-list-of-tables">
 <ul>
-<li><a href="#orgb6a22dc"><span class="table-number">Table 1:</span> String Escape Characters</a></li>
-<li><a href="#orgac6870f"><span class="table-number">Table 2:</span> OWL Built-in Datatype Facets</a></li>
-<li><a href="#org43a89b0"><span class="table-number">Table 3:</span> Summary of Member Formats</a></li>
-<li><a href="#org9839a80"><span class="table-number">Table 4:</span> OWL: Classes</a></li>
-<li><a href="#org0ca19a3"><span class="table-number">Table 5:</span> OWL: Object Properties</a></li>
-<li><a href="#org33358dd"><span class="table-number">Table 6:</span> OWL: Datatype Properties</a></li>
-<li><a href="#org19a3d1a"><span class="table-number">Table 7:</span> OWL: Annotation Properties</a></li>
-<li><a href="#org11ccf83"><span class="table-number">Table 8:</span> Commonly Used Annotation Properties</a></li>
-<li><a href="#org8a6cc5c"><span class="table-number">Table 9:</span> Summary of Value Literals</a></li>
-<li><a href="#org4a48801"><span class="table-number">Table 10:</span> List of Known URI Prefixes</a></li>
+<li><a href="#orgbf6c400"><span class="table-number">Table 1:</span> String Escape Characters</a></li>
+<li><a href="#org10920f9"><span class="table-number">Table 2:</span> OWL Built-in Datatype Facets</a></li>
+<li><a href="#orga70405d"><span class="table-number">Table 3:</span> Summary of Member Formats</a></li>
+<li><a href="#org7b2716c"><span class="table-number">Table 4:</span> OWL: Classes</a></li>
+<li><a href="#org3dc9c01"><span class="table-number">Table 5:</span> OWL: Object Properties</a></li>
+<li><a href="#org8ea7393"><span class="table-number">Table 6:</span> OWL: Datatype Properties</a></li>
+<li><a href="#org257beb7"><span class="table-number">Table 7:</span> OWL: Annotation Properties</a></li>
+<li><a href="#org5b5313d"><span class="table-number">Table 8:</span> Commonly Used Annotation Properties</a></li>
+<li><a href="#org99e7ca5"><span class="table-number">Table 9:</span> Summary of Value Literals</a></li>
+<li><a href="#org74cde97"><span class="table-number">Table 10:</span> List of Known URI Prefixes</a></li>
 </ul>
 </div>
 </div>
@@ -4368,37 +4414,37 @@ limitations under the License.
 <h2>List of Listings</h2>
 <div id="text-list-of-listings">
 <ul>
-<li><a href="#org2516b33"><span class="listing-number">Listing 1:</span> Comments</a></li>
-<li><a href="#org6d868e9"><span class="listing-number">Listing 2:</span> Comments</a></li>
-<li><a href="#org117d40d"><span class="listing-number">Listing 3:</span> Empty Module</a></li>
-<li><a href="#org91534da"><span class="listing-number">Listing 4:</span> Importing Module</a></li>
-<li><a href="#org2b36c65"><span class="listing-number">Listing 5:</span> Importing Member</a></li>
-<li><a href="#org3b9e41e"><span class="listing-number">Listing 6:</span> Importing a List</a></li>
-<li><a href="#org04aa371"><span class="listing-number">Listing 7:</span> Value Constructor Example</a></li>
-<li><a href="#orgd0471a5"><span class="listing-number">Listing 8:</span> Value List Example</a></li>
-<li><a href="#org7c70c41"><span class="listing-number">Listing 9:</span> New Datatype</a></li>
-<li><a href="#org2d984b3"><span class="listing-number">Listing 10:</span> New Datatype with Restrictions</a></li>
-<li><a href="#org1eb0a7e"><span class="listing-number">Listing 11:</span> Annotation Property</a></li>
-<li><a href="#orgab806a9"><span class="listing-number">Listing 12:</span> Annotation Property List</a></li>
-<li><a href="#org6851ed9"><span class="listing-number">Listing 13:</span> Annotated Module</a></li>
-<li><a href="#org3552528"><span class="listing-number">Listing 14:</span> Empty Entity</a></li>
-<li><a href="#org5ebc00c"><span class="listing-number">Listing 15:</span> Entity with Identifying Member</a></li>
-<li><a href="#org79c09f7"><span class="listing-number">Listing 16:</span> Entity with Reference Member</a></li>
-<li><a href="#org47a6d48"><span class="listing-number">Listing 17:</span> Empty Enum</a></li>
-<li><a href="#org962f6d8"><span class="listing-number">Listing 18:</span> Enum With Variants</a></li>
-<li><a href="#orgfc91523"><span class="listing-number">Listing 19:</span> Empty Event</a></li>
-<li><a href="#orga2e161f"><span class="listing-number">Listing 20:</span> Event</a></li>
-<li><a href="#org6430981"><span class="listing-number">Listing 21:</span> Empty Structure</a></li>
-<li><a href="#org2c5af51"><span class="listing-number">Listing 22:</span> Annotated Structure</a></li>
-<li><a href="#orgb7ce21b"><span class="listing-number">Listing 23:</span> Structure Members</a></li>
-<li><a href="#orgb2d056a"><span class="listing-number">Listing 24:</span> Structure MembersGroups</a></li>
-<li><a href="#org075542a"><span class="listing-number">Listing 25:</span> Empty Union</a></li>
-<li><a href="#org3e17fe4"><span class="listing-number">Listing 26:</span> Union With Variants</a></li>
-<li><a href="#org5b97065"><span class="listing-number">Listing 27:</span> OWL: Ontology Header</a></li>
-<li><a href="#org7f9a128"><span class="listing-number">Listing 28:</span> Rentals Concepts (First Pass)</a></li>
-<li><a href="#org7da7669"><span class="listing-number">Listing 29:</span> Rentals Basic Relationships</a></li>
-<li><a href="#org721601f"><span class="listing-number">Listing 30:</span> Rentals More Detail</a></li>
-<li><a href="#org613ab2e"><span class="listing-number">Listing 31:</span> Rentals Non-Entity Detail</a></li>
+<li><a href="#org4dd24bf"><span class="listing-number">Listing 1:</span> Comments</a></li>
+<li><a href="#orgf664596"><span class="listing-number">Listing 2:</span> Comments</a></li>
+<li><a href="#orgc94a585"><span class="listing-number">Listing 3:</span> Empty Module</a></li>
+<li><a href="#org03674f2"><span class="listing-number">Listing 4:</span> Importing Module</a></li>
+<li><a href="#org25458c3"><span class="listing-number">Listing 5:</span> Importing Member</a></li>
+<li><a href="#org3dae1bd"><span class="listing-number">Listing 6:</span> Importing a List</a></li>
+<li><a href="#org52bd64a"><span class="listing-number">Listing 7:</span> Value Constructor Example</a></li>
+<li><a href="#org9395ca0"><span class="listing-number">Listing 8:</span> Value List Example</a></li>
+<li><a href="#org454b8e0"><span class="listing-number">Listing 9:</span> New Datatype</a></li>
+<li><a href="#org2834375"><span class="listing-number">Listing 10:</span> New Datatype with Restrictions</a></li>
+<li><a href="#org5f6d8bc"><span class="listing-number">Listing 11:</span> Annotation Property</a></li>
+<li><a href="#orgdc26766"><span class="listing-number">Listing 12:</span> Annotation Property List</a></li>
+<li><a href="#org504da18"><span class="listing-number">Listing 13:</span> Annotated Module</a></li>
+<li><a href="#org6359b41"><span class="listing-number">Listing 14:</span> Empty Structure</a></li>
+<li><a href="#orgc4e705e"><span class="listing-number">Listing 15:</span> Annotated Structure</a></li>
+<li><a href="#orgd327f90"><span class="listing-number">Listing 16:</span> Structure Members</a></li>
+<li><a href="#orgc56b686"><span class="listing-number">Listing 17:</span> Structure MembersGroups</a></li>
+<li><a href="#org0686a77"><span class="listing-number">Listing 18:</span> Empty Entity</a></li>
+<li><a href="#org5f91687"><span class="listing-number">Listing 19:</span> Entity with Identifying Member</a></li>
+<li><a href="#org949396e"><span class="listing-number">Listing 20:</span> Entity with Reference Member</a></li>
+<li><a href="#org2974610"><span class="listing-number">Listing 21:</span> Empty Event</a></li>
+<li><a href="#org42b662f"><span class="listing-number">Listing 22:</span> Event</a></li>
+<li><a href="#orgb905f29"><span class="listing-number">Listing 23:</span> Empty Enum</a></li>
+<li><a href="#orge2ce7e5"><span class="listing-number">Listing 24:</span> Enum With Variants</a></li>
+<li><a href="#org7f5a3c7"><span class="listing-number">Listing 25:</span> Empty Union</a></li>
+<li><a href="#org4f39c1a"><span class="listing-number">Listing 26:</span> Union With Variants</a></li>
+<li><a href="#orgdca9580"><span class="listing-number">Listing 27:</span> OWL: Ontology Header</a></li>
+<li><a href="#org257440a"><span class="listing-number">Listing 28:</span> Rentals Concepts (First Pass)</a></li>
+<li><a href="#orgaa7d4a9"><span class="listing-number">Listing 29:</span> Rentals Basic Relationships</a></li>
+<li><a href="#org7afd232"><span class="listing-number">Listing 30:</span> Rentals More Detail</a></li>
+<li><a href="#orgb8f8083"><span class="listing-number">Listing 31:</span> Rentals Non-Entity Detail</a></li>
 </ul>
 </div>
 </div>
@@ -4425,7 +4471,7 @@ limitations under the License.
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Simon Johnston</p>
-<p class="date">Created: 2023-06-06 Tue 09:55</p>
+<p class="date">Created: 2023-06-06 Tue 10:49</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

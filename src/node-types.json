@@ -216,7 +216,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "annotation",
@@ -837,19 +837,34 @@
     }
   },
   {
+    "type": "type_variant",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "union_body",
     "named": true,
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "annotation",
           "named": true
         },
         {
-          "type": "identifier_reference",
+          "type": "type_variant",
           "named": true
         }
       ]

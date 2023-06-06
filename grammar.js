@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.9
+// Version:    0.1.10
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -273,9 +273,9 @@ module.exports = grammar({
         ),
 
         enum_body: $ => seq(
-            keyword('is'),
+            keyword('of'),
             repeat($.annotation),
-            repeat1($.enum_variant),
+            repeat($.enum_variant),
             keyword('end')
         ),
 
@@ -330,9 +330,11 @@ module.exports = grammar({
         union_body: $ => seq(
             keyword('of'),
             repeat($.annotation),
-            repeat1($.identifier_reference),
+            repeat($.type_variant),
             keyword('end')
         ),
+
+        type_variant: $ => $.identifier_reference,
 
         // -----------------------------------------------------------------------
         // Members

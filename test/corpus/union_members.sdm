@@ -20,7 +20,9 @@ end
       (union_def
         name: (identifier)
         body: (union_body
-          (identifier_reference
-            (identifier))
-          (identifier_reference
-            (identifier)))))))
+          (type_variant
+            (identifier_reference
+              (identifier)))
+          (type_variant
+            (identifier_reference
+              (identifier))))))))

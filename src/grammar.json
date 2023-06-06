@@ -852,7 +852,7 @@
             "value": 2,
             "content": {
               "type": "STRING",
-              "value": "is"
+              "value": "of"
             }
           }
         },
@@ -864,7 +864,7 @@
           }
         },
         {
-          "type": "REPEAT1",
+          "type": "REPEAT",
           "content": {
             "type": "SYMBOL",
             "name": "enum_variant"
@@ -1183,10 +1183,10 @@
           }
         },
         {
-          "type": "REPEAT1",
+          "type": "REPEAT",
           "content": {
             "type": "SYMBOL",
-            "name": "identifier_reference"
+            "name": "type_variant"
           }
         },
         {
@@ -1201,6 +1201,10 @@
           }
         }
       ]
+    },
+    "type_variant": {
+      "type": "SYMBOL",
+      "name": "identifier_reference"
     },
     "identity_member": {
       "type": "SEQ",

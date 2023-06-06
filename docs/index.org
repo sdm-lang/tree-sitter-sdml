@@ -11,6 +11,7 @@
 #+HTML_HEAD: <style>div.figure { text-align: center; }</style>
 #+HTML_HEAD: <style>div.figure p { text-align: center; }</style>
 #+HTML_HEAD: <style>p,li,dd { text-align: justify; }</style>
+#+HTML_HEAD: <style>ul.nav > li { text-align: left; }</style>
 #+OPTIONS: toc:3
 
 #+BEGIN_SRC emacs-lisp :exports none

@@ -4,7 +4,7 @@
 // Author:     Simon Johnston <johntonskj@gmail.com>
 // Version:    0.1.9
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
-// License:    MIT
+// License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
 //
 // -------------------------------------------------------------------

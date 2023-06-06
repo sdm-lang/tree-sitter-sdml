@@ -107,10 +107,7 @@ optional wherever possible such that the minimum information neccessary is requi
 document will use the terms /valid/ to denote a model that has no syntactic errors and /complete/ to denote a valid model
 that has no short-form, or /incomplete/, model elements.
 
-The grammar of the surface syntax is presented in Extended Backus–Naur form (EBNF). The addition of a character literal
-range operation =..= reduces the number of single character alternatives for clarity. There are also a set of pre-defined
-terminals such as =ASCII_DIGIT=, =ASCII_HEX_DIGIT=, =UC_LETTER_UPPER=, and =UC_LETTER_LOWER= used to simplify character ranges
-as well.
+For the complete grammar, and notes on BNF notation, see Appendix [[app:syntax]].
 
 ** Whitespace and Comments
 
@@ -125,7 +122,6 @@ Whitespace      =
     | "\u{2028}" | "\u{2029}" | "\u{202f}" | "\u{205f}" | "\u{3000}"
     | "\u{feff}"
 #+END_SRC
-
 
 Comments follow Lisp-like forms, starting with a semi-colon character and continuing to the end of line.
 
@@ -904,9 +900,8 @@ For a higher resolution version, [[file:owl-ontology.png][click here]].
 ** SDML Ontology
 
 Listing [[lst:owl-ontology]] is the ontology header that describes the Ontology itself. This shows the use of annotation
-properties from the Dublin Core [[https://www.dublincore.org/specifications/dublin-core/dcmi-terms/][DCMI Terms]] and the W3C Simple Knowledge Organization System ([[https://www.w3.org/TR/skos-reference/][SKOS]]). These are used
-throughout the Ontology definition
-
+properties from the Dublin Core [[https://www.dublincore.org/specifications/dublin-core/dcmi-terms/][DCMI Terms]] and the W3C Simple Knowledge Organization System ([[https://www.w3.org/TR/skos-reference/][SKOS]]). Section
+[[sec:common-annotations]] presents details on commonly used annotation properties found in the Ontology.
 
 #+NAME: lst:owl-ontology
 #+CAPTION: OWL: Ontology Header
@@ -1017,7 +1012,7 @@ conforms to the [[https://semver.org/][semver]] form of /major.minor.path/ where
     ) .
 #+END_SRC
 
-** Commonly Used Annotations
+** <<sec:common-annotations>>Commonly Used Annotations
 
 The following are annotation properties that are common in defining and using Ontologies and other forms of controlled
 vocabularies. These are all well-defined as well as commonly understood and so should be used before others in
@@ -1747,7 +1742,12 @@ Try here: https://github.com/georgewfraser/vscode-tree-sitter
 https://github.com/EvgeniyPeshkov/syntax-highlighter
 
 
-* Appendix: Complete Surface Syntax Grammar
+* <<app:syntax>>Appendix: Complete Surface Syntax Grammar
+
+The grammar of the surface syntax is presented in Extended Backus–Naur form (EBNF). The addition of a character literal
+range operation =..= reduces the number of single character alternatives for clarity. There are also a set of pre-defined
+terminals such as =ASCII_DIGIT=, =ASCII_HEX_DIGIT=, =UC_LETTER_UPPER=, and =UC_LETTER_LOWER= used to simplify character ranges
+as well.
 
 #+BEGIN_SRC ebnf
 Module              = "module", Identifier, ModuleBody
@@ -1894,6 +1894,7 @@ Whitespace          =
     | "\u{feff}"
 #+END_SRC
 
+
 * Appendix: Surface Syntax to RDF
 
 TBD
@@ -1913,7 +1914,7 @@ types within a module directly addressable.
 
 *Example:*
 
-Given a resource retrieved from =https://example.com/v/example/= and containing the following:
+Given a module resource retrieved from =https://example.com/v/example/= and containing the following:
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
@@ -1944,14 +1945,14 @@ values and lists with an additional non-literal form the value constructor.
 
 #+NAME: tbl:value-literals
 #+CAPTION: Summary of Value Literals
-| SDML Type     | Underlying Type | Value Space                                                  | Lexical Space  |
-|---------------+-----------------+--------------------------------------------------------------+----------------|
-| =boolean=       | =xsd:boolean=     | The values =true= and =false=                                    | =true= and =false= |
-| =decimal=       | =xsd:decimal=     | A 128-bit representation of a fixed-precision decimal number | [[https://www.w3.org/TR/xmlschema-2/#decimal][XML Schema]]     |
-| =double=        | =xsd:double=      | An IEEE double-precision 64-bit floating point type          | [[https://www.w3.org/TR/xmlschema-2/#double][XML Schema]]     |
-| =integer=       | =xsd:integer=     | A signed 64-bit integer                                      |                |
-| =iri_reference= | =xsd:AnyURI=      | Represents a Uniform Resource Identifier Reference (URI)     | [[https://www.w3.org/TR/xmlschema-2/#anyURI][XML Schema]]     |
-| =string=        | =rdfs:langString= |                                                              | [[https://www.w3.org/TR/rdf11-concepts/#section-Graph-Literal][RDF]]            |
+| SDML Type     | Underlying Type | Value Space                                                   | Lexical Space  |
+|---------------+-----------------+---------------------------------------------------------------+----------------|
+| =boolean=       | =xsd:boolean=     | The values =true= and =false=.                                    | =true= and =false= |
+| =decimal=       | =xsd:decimal=     | A 128-bit representation of a fixed-precision decimal number. | [[https://www.w3.org/TR/xmlschema-2/#decimal][XML Schema]]     |
+| =double=        | =xsd:double=      | An IEEE double-precision 64-bit floating point type.          | [[https://www.w3.org/TR/xmlschema-2/#double][XML Schema]]     |
+| =integer=       | =xsd:integer=     | A signed 64-bit integer.                                      |                |
+| =iri_reference= | =xsd:AnyURI=      | Represents a Uniform Resource Identifier Reference (URI).     | [[https://www.w3.org/TR/xmlschema-2/#anyURI][XML Schema]]     |
+| =string=        | =rdf:langString= | A string value with optional language-tag.                    | [[https://www.w3.org/TR/rdf11-concepts/#section-Graph-Literal][RDF]]            |
 
 *** List Literals
 
@@ -2010,8 +2011,6 @@ module example is end
 
 
 #+BEGIN_SRC ttl
-@base <https://example.com/v/example/> .
-@prefix : <https://example.com/v/example/> .
 @prefix sdml: <https://api.amazonadvertising.com/domain-model> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 
@@ -2561,6 +2560,10 @@ skos, rdfs, dcterms
 
 xsd
 
+
+* Appendix: License
+
+#+INCLUDE: ../LICENSE example
 
 * Appendix: Tables of Other Content
 

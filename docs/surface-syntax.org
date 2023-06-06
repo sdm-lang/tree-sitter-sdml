@@ -58,8 +58,9 @@ brief BNF description of the identifier syntax.
 
 #+NAME: lst:grammar-identifier
 #+BEGIN_SRC ebnf
-IdentifierWord  = ( UC_LETTER_UPPER | UC_LETTER_LOWER )+
 Identifier      = IdentifierWord, ( "_", IdentifierWord )*
+
+IdentifierWord  = ( UC_LETTER_UPPER | UC_LETTER_LOWER )+
 #+END_SRC
     
 Naming Conventions:
@@ -204,11 +205,15 @@ An *Integer* value in SDML is a string of ASCII decimal digits, without leading 
 
 #+NAME: lst:grammar-integer
 #+BEGIN_SRC ebnf
-NumericSign     = "+" | "-"
-Zero            = "0"
-NonZero         = "1".."9"
-Unsigned        = Zero | NonZero, ( ASCII_DIGIT )*
 Integer         = NumericSign?, Unsigned
+
+Unsigned        = Zero | NonZero, ( ASCII_DIGIT )*
+
+NumericSign     = "+" | "-"
+
+Zero            = "0"
+
+NonZero         = "1".."9"
 #+END_SRC
 
 A *Decimal* value in SDML is an integer-like value, followed by the Full Stop (".", =U+002E=) character and another
@@ -226,8 +231,9 @@ in IEEE 754-2008).
 
 #+NAME: lst:grammar-double
 #+BEGIN_SRC ebnf
-ExponentChar    = "e" | "E"
 Double          = Decimal, ExponentChar, NumericSign?, Integer
+
+ExponentChar    = "e" | "E"
 #+END_SRC
 
 A *String* value in SDML is a sequence of Unicode characters starting and ending with a Quotation Mark ('"', =U+0022=) character. While
@@ -237,12 +243,18 @@ a maximum of 6 such digits. In addition,the following single-character escape ch
 
 #+NAME: lst:grammar-string
 #+BEGIN_SRC ebnf
-HexPair         = ASCII_HEX_DIGIT, ASCII_HEX_DIGIT
+String          = QuotedString, LanguageTag?
+
+QuotedString    = "\"", ( -NotAllowed | CharacterEscape | UnicodeEscape )*, "\""
+
+NotAllowed      = "\"" | "\\" | "\u{00}".."\u{08}" | "\u{0B}".."\u{1F}" | "\u{7F}"
+
 CharacterEscape = "\\", ( "\"" | "\\" | "\/" | "a" | "b"
                           "e" | "f" | "n" | "r" | "t" | "v" )
+
 UnicodeEscape   = "\\u{", HexPair, ( HexPair ( HexPair )? )?, "}"
-NotAllowed      = "\"" | "\\" | "\u{00}".."\u{08}" | "\u{0B}".."\u{1F}" | "\u{7F}"
-QuotedString    = "\"", ( -NotAllowed | CharacterEscape | UnicodeEscape )*, "\""
+
+HexPair         = ASCII_HEX_DIGIT, ASCII_HEX_DIGIT
 
 LanguageTag     =
     "@", ASCII_LETTER_LOWER, ASCII_LETTER_LOWER, ASCII_LETTER_LOWER?
@@ -251,7 +263,6 @@ LanguageTag     =
                ASCII_LETTER_LOWER, ASCII_LETTER_LOWER )?
         ( "-", ( ( ASCII_LETTER_UPPER, ASCII_LETTER_UPPER )
                | ( ASCII_DIGIT, ASCII_DIGIT, ASCII_DIGIT ) ) )
-String          = QuotedString, LanguageTag?
 #+END_SRC
 
 Note also that strings allow literal newlines and do not /require/ they be present in escaped form. This means that a
@@ -446,7 +457,8 @@ should be a triple:
 
 Structured types fall into two primary categories, /Product/ types and /Sum/ types. Product types have named and typed
 /Members/ and in SDML these are structures, entities and events. Sum types on the other hand have /Variants/ and in SDML
-these are enumerations and disjoint unions.
+these are enumerations and disjoint unions. In the surface syntax product type bodies are introduced by the keyword ~is~
+whereas sum type bodies are introduced by the keyword ~of~.
 
 Along with the previously described datatype these comprise the set of type definitions available in SDML; this is
 represented in listing [[lst:grammar-type-def]].
@@ -478,10 +490,10 @@ Structured type members fall into the following categories.
 #+NAME: lst:grammar-members
 #+BEGIN_SRC ebnf
 IdentityMember      =
-    "identity", identifier, TypeExpression, AnnotationOnlyBody?
+    "identity", Identifier, TypeExpression, AnnotationOnlyBody?
 
 MemberByValue       =
-    identifier, TypeExpressionTo, AnnotationOnlyBody?
+    Identifier, TypeExpressionTo, AnnotationOnlyBody?
 
 MemberByReference   =
     "ref", Identifier, TypeExpressionFromTo,AnnotationOnlyBody?
@@ -505,9 +517,13 @@ target type to be replaced with the keyword ~unknown~. This marks the member, an
 #+NAME: lst:grammar-type-expressions
 #+BEGIN_SRC ebnf
 TypeExpression          = "->" TypeReference
+
 TypeExpressionTo        = "->" Cardinality? TypeReference
+
 TypeExpressionFromto    = Cardinality? TypeExpressionTo
+
 TypeReference           = IdentifierReference | UnknownType
+
 UnknownType             = "unknown"
 #+END_SRC
 
@@ -522,6 +538,7 @@ specified.
 #+NAME: lst:grammar-cardinality
 #+BEGIN_SRC ebnf
 CardinalityExpression   = "{", Unsigned, CardinalityRange?, "}"
+
 CardinalityRange        = "..", Unsigned?
 #+END_SRC
 
@@ -533,8 +550,6 @@ type, a table in data modeling, or a class in object modeling.
 #+NAME: lst:grammar-structure-def
 #+BEGIN_SRC ebnf
 StructureDef    = "structure", Identifier, StructureBody?
-StructureBody   = "is", Annotation*, ( MemberByValue | StructureGroup )*, "end"
-StructureGroup  = "group", Annotation*, MemberByValue*, "end"
 #+END_SRC
 
 As only the keyword ~structure~ and the identifier are required, the listing [[lst:sdml-ex-empty-structure]] is therefore a
@@ -551,6 +566,12 @@ end
 The structure ~Length~ in listing [[lst:sdml-ex-empty-structure]] is /valid/ but considered incomplete. Adding a body to the
 structure, between ~is~ and ~end~, makes it complete even if it has no actual members. In listing
 [[lst:sdml-ex-annotated-structure]] the structure Length is now complete.
+
+
+#+NAME: lst:grammar-structure-body
+#+BEGIN_SRC ebnf
+StructureBody   = "is", Annotation*, ( MemberByValue | StructureGroup )*, "end"
+#+END_SRC
 
 #+NAME: lst:sdml-ex-annotated-structure
 #+CAPTION: Annotated Structure
@@ -578,6 +599,11 @@ end
 #+END_SRC
 
 In listing [[lst:sdml-ex-structure-groups]] we see a more complex structure with both members and groups.
+
+#+NAME: lst:grammar-structure-group
+#+BEGIN_SRC ebnf
+StructureGroup  = "group", Annotation*, MemberByValue*, "end"
+#+END_SRC
 
 #+NAME: lst:sdml-ex-structure-groups
 #+CAPTION: Structure Members and Groups
@@ -610,14 +636,16 @@ end
 
 #+NAME: lst:grammar-entity-def
 #+BEGIN_SRC ebnf
-EntityGroup     = "group", Annotation*, ( MemberByValue | MemberByReference )*
+EntityDef       = "entity", Identifier, EntityBody?
+
 EntityBody      =
     "is",
     Annotation*,
     IdentityMember,
     ( MemberByValue | MemberByReference | EntityGroup )*,
     "end"
-Entity          = "entity", Identifier, EntityBody?
+
+EntityGroup     = "group", Annotation*, ( MemberByValue | MemberByReference )*
 #+END_SRC
 
 #+NAME: lst:sdml-ex-empty-entity
@@ -628,7 +656,7 @@ module example is
 end
 #+END_SRC
 
-The entity ~Person~ is /valid/ but /incomplete/.
+The entity ~Person~ in listing [[lst:sdml-ex-empty-entity]] is /valid/ but /incomplete/.
 
 #+NAME: lst:sdml-ex-entity-identifying-member
 #+CAPTION: Entity with Identifying Member
@@ -640,11 +668,18 @@ module example is
 end
 #+END_SRC
 
+The ~identity~ member is a required part of the entity definition, it not only tells us what type represents the unique
+identifier for this entity but is also used in ~ref~ members and event sources (see section [[sec:entity-events]]). In the
+case of a ~ref~ member the target entity, in our example =Person= is not included in the entity's structure, it's identifier
+type, =PersonId= is instead.
+
 #+NAME: lst:sdml-ex-entity-ref-member
 #+CAPTION: Entity with Reference Member
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
   entity Person is
+    identity id -> PersonId
+
     ref contact {0..} -> {0..2} Person is
       @dc:description = "Emergency contact person"
     end
@@ -652,7 +687,7 @@ module example is
 end
 #+END_SRC
 
-*** Entity Events
+*** <<sec:entity-events>>Entity Events
 
 #+NAME: lst:grammar-event-def
 #+BEGIN_SRC ebnf
@@ -662,6 +697,9 @@ EventDef        =
     StructureBody?
 #+END_SRC
 
+The event ~source~ reference is the entity which generates this event. In this case each event structure has the
+identifiers of the source entity included.
+
 #+NAME: lst:sdml-ex-empty-event
 #+CAPTION: Empty Event
 #+BEGIN_SRC sdml :exports code :noeval
@@ -670,14 +708,25 @@ module example is
 end
 #+END_SRC
 
-The event ~PersonNameChanged~ is valid but incomplete.
+With the expansion of the ~source~ entity the event definition above is logically equivalent to the following structure.
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  structure PersonNameChanged is
+    id -> PersonId is
+      sdml:identifies Person
+    end
+  end
+end
+#+END_SRC
+
+As we have seen before, the event ~PersonNameChanged~ in listing [[lst:sdml-ex-empty-event]] is valid but incomplete.
 
 #+NAME: lst:sdml-ex-event
 #+CAPTION: Event
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
   event PersonNameChanged source Person is
-    ;; identifier members will be copied from Person 
     fromValue -> Name
     toValue -> Name
   end
@@ -688,8 +737,9 @@ end
 
 #+NAME: lst:grammar-enum-def
 #+BEGIN_SRC ebnf
-EnumBody        = "is", Annotation*, EnumVariant+, "end"
 EnumDef         = "enum", Identifier, EnumBody?
+
+EnumBody        = "of", Annotation*, EnumVariant*, "end"
 #+END_SRC
 
 #+NAME: lst:sdml-ex-empty-enum
@@ -700,7 +750,7 @@ module example is
 end
 #+END_SRC
 
-The enumeration ~DistanceUnit~ is valid but incomplete.
+The enumeration ~DistanceUnit~ in [[lst:sdml-ex-empty-enum]] is valid but incomplete.
 
 #+NAME: lst:grammar-enum-variant
 #+BEGIN_SRC ebnf
@@ -727,8 +777,8 @@ type. As such the /elements/ of the union are simply type names and do not allow
 #+NAME: lst:grammar-union-def
 #+BEGIN_SRC ebnf
 UnionDef        = "union", Identifier, UnionBody?
+
 UnionBody       = "of", Annotation*, TypeVariant*, "end"
-TypeVariant     = IdentifierReference
 #+END_SRC
 
 #+NAME: lst:sdml-ex-empty-union
@@ -739,7 +789,12 @@ module example of
 end
 #+END_SRC
 
-The union ~VehicleClass~ is valid but incomplete.
+The union ~VehicleClass~ in [[lst:sdml-ex-empty-union]] is valid but incomplete.
+
+#+NAME: lst:grammar-type-variant
+#+BEGIN_SRC ebnf
+TypeVariant     = IdentifierReference
+#+END_SRC
 
 #+NAME: lst:sdml-ex-union
 #+CAPTION: Union With Variants

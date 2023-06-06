@@ -3,16 +3,87 @@
 
 * RDF Abstract Model
 
-Why RDF? ...
+The W3C's [[https://www.w3.org/RDF/][Resource Description Framework]] (RDF) is a mature standard for the open development of vocabularies and
+knowledge representation. Key characteristics are that it has a fundamentally simple model, it is designed with an /open
+world/ assumption, and because of this it is inherently composable. RDF's core can be summarized with the following
+grammar, noting that at it's core it comprises a set of statements about things.
 
-- [[https://www.w3.org/TR/owl2-overview/][OWL 2 Web Ontology Language Document Overview (Second Edition)]]
-- [[https://www.cs.vu.nl/~guus/public/owl-restrictions/][OWL restrictions]]
-- [[https://cambridgesemantics.com/blog/semantic-university/learn-owl-rdfs/owl-references-humans/][OWL References for Humans]]
-  
+#+BEGIN_SRC ebnf
+Graph     = Statement*
+Statement = Subject Predicate Object
+Subject   = Named | Anonymous
+Predicate = Named
+Object    = Subject | Literal
+Named     = Uri
+#+END_SRC
 
-Figure [[fig:owl-ontology]] is an overview of the OWL Ontology. For clarity this figure elides the sub classes of /Group/ and
-/Member/. Those classes in this diagram that are in a lighter color are /abstract/ in that they exist only to be super-types
-of the classes actually referenced by other model elements.
+An example might be as follows where the subject of these 4 statements is some resource I have named =mytruck=. It's not
+much but it's a start.
+
+#+BEGIN_SRC ttl
+:mytruck rdf:type v:Truck .
+:mytruck v:make "Dodge" .
+:mytruck v:model "Ram 3500" .
+:mytruck v:yearModel "2009"^^xsd:int .
+#+END_SRC
+
+I then consider adding the VIN to my statements above, in the following manner.
+
+#+BEGIN_SRC ttl
+:mytruck v:hasVin "2G1FP22G522155049" .
+#+END_SRC
+
+However, I discover that my state Department of Transportation has an open dataset containing information recorded by
+VIN (just FYI, my state does not provide this).
+
+#+BEGIN_SRC ttl
+dot:US_2G1FP22G522155049 rdf:type dot:VehicleRecord ;
+    vso:engineDisplacement [
+        rdf:type gr:QuantitativeValueFloat ;
+        gr:hasValueFloat "6.7"^^xsd:float ;
+        gr:hasUnitOfMeasurement "LTR"^^xsd:string
+    ] ;
+    dot:engineConfiguration "Inline 6-cylinder" ;
+    dot:engineName dbpedia:Cummins_B_Series_engine ;
+    dot:engineManufacturer dbpedia:Cummins ;
+    dot:fuelType dbpedia:GasolineDiesel_fuel .
+#+END_SRC
+
+Each VIN is an addressable resource and so I can assert that my resource
+named =:mytruck= is the same as the resource =dot:US_2G1FP22G522155049= which has the effect of adding any statements made
+by the DOT to my record as well.
+
+#+BEGIN_SRC ttl
+:mytruck owl:sameAs dot:US_2G1FP22G522155049 .
+#+END_SRC
+
+If I now query my resource I should find that my handful of statements above now looks like this:
+
+#+BEGIN_SRC ttl
+:mytruck rdf:type v:Truck, dot:VehicleRecord ;
+    owl:sameAs dot:US_2G1FP22G522155049 ;
+    v:make "Dodge" ;
+    v:model "Ram 3500" ;
+    v:yearModel "2009"^^xsd:int ;
+    vso:engineDisplacement [
+        rdf:type gr:QuantitativeValueFloat ;
+        gr:hasValueFloat "6.7"^^xsd:float ;
+        gr:hasUnitOfMeasurement "LTR"^^xsd:string
+    ] ;
+    dot:engineConfiguration "Inline 6-cylinder" ;
+    dot:engineName dbpedia:Cummins_B_Series_engine ;
+    dot:engineManufacturer dbpedia:Cummins ;
+    dot:fuelType dbpedia:GasolineDiesel_fuel .
+#+END_SRC
+
+Why is this valuable? Because it allows us easily to add new statements about things at any future point. We don't have
+to worry about expanding a schema or changing table definitions we just add new statements and if their subjects are the
+same they will be combined. To manage the naming of things you will have noticed that names in the examples above have
+namespace prefixes and these namespaces correspond to definitions of /vocabularies/ or /ontologies/. Figure [[fig:owl-ontology]]
+is an overview of the OWL Ontology for SDML. For clarity this figure elides the sub classes of /Group/ and /Member/. Those
+classes in this diagram that are in a lighter color are /abstract/ in that they exist only to be super-types of the
+classes actually referenced by other model elements. For more information on OWL itself, see [[https://www.w3.org/TR/owl2-overview/][OWL 2 Web Ontology Language
+Document Overview (Second Edition)]] and [[https://cambridgesemantics.com/blog/semantic-university/learn-owl-rdfs/owl-references-humans/][OWL References for Humans]].
 
 #+NAME: fig:owl-ontology
 #+BEGIN_SRC dot :file owl-ontology.png :exports results

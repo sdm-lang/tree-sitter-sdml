@@ -28,7 +28,7 @@ TypeDef             =
 DataTypeDef         =
     "datatype", Identifier, "<-", IdentifierReference, AnnotationOnlyBody?
 
-Entity              = "entity", Identifier, EntityBody?
+EntityDef           = "entity", Identifier, EntityBody?
 
 EntityBody          =
     "is",
@@ -39,14 +39,14 @@ EntityGroup         = "group", Annotation*, ( MemberByValue | MemberByReference 
 
 EnumDef             = "enum", Identifier, EnumBody?
 
-EnumBody            = "is", Annotation*, EnumVariant*, "end"
+EnumBody            = "of", Annotation*, EnumVariant*, "end"
 
 EnumVariant         = Identifier, "=", Unsigned, AnnotationOnlyBody?
 
 EventDef            =
     "event", Identifier, "source", IdentifierReference, StructureBody?
 
-Structuredef        = "structure", Identifier, StructureBody?
+StructureDef        = "structure", Identifier, StructureBody?
 
 StructureBody       = "is", Annotation*, ( MemberByValue | StructureGroup )*, "end"
 
@@ -54,15 +54,15 @@ StructureGroup      = "group", Annotation*, MemberByValue*, "end"
 
 UnionDef            = "union", Identifier, UnionBody?
 
-UnionBody           = "is", Annotation*, TypeVariant*, "end"
+UnionBody           = "of", Annotation*, TypeVariant*, "end"
 
 TypeVariant         = IdentifierReference
 
 IdentityMember      =
-    "identity", identifier, TypeExpression, AnnotationOnlyBody?
+    "identity", Identifier, TypeExpression, AnnotationOnlyBody?
 
 MemberByValue       =
-    identifier, TypeExpressionTo, AnnotationOnlyBody?
+    Identifier, TypeExpressionTo, AnnotationOnlyBody?
 
 MemberByReference   =
     "ref", Identifier, TypeExpressionFromTo,AnnotationOnlyBody?

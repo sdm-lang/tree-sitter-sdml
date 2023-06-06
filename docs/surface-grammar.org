@@ -1,0 +1,154 @@
+#+LANGUAGE: en
+#+STARTUP: overview hidestars inlineimages entitiespretty
+
+* <<app:syntax>>Appendix: Complete Surface Syntax Grammar
+
+The grammar of the surface syntax is presented in Extended Backus–Naur form (EBNF). The addition of a character literal
+range operation =..= reduces the number of single character alternatives for clarity. There are also a set of pre-defined
+terminals such as =ASCII_DIGIT=, =ASCII_HEX_DIGIT=, =UC_LETTER_UPPER=, and =UC_LETTER_LOWER= used to simplify character ranges.
+
+#+BEGIN_SRC ebnf
+Module              = "module", Identifier, ModuleBody
+
+ModuleBody          = "is", ImportStatement*, Annotation*, TypeDef*, "end"
+
+MemberImport        = QualifiedIdentifier
+
+ModuleImport        = Identifer
+
+Import              = MemberImport | ModuleImport
+
+ImportStatement     = "import", ( Import | "[", Import+, "]" )
+
+Annotation          = "@", IdentiferReference, "=", Value
+
+TypeDef             =
+    DataTypeDef | EntityDef | EnumDef | EventDef | StructureDef | UnionDef
+
+DataTypeDef         =
+    "datatype", Identifier, "<-", IdentifierReference, AnnotationOnlyBody?
+
+Entity              = "entity", Identifier, EntityBody?
+
+EntityBody          =
+    "is",
+    Annotation*, IdentityMember, ( MemberByValue | MemberByReference | EntityGroup )*,
+    "end"
+
+EntityGroup         = "group", Annotation*, ( MemberByValue | MemberByReference )*
+
+EnumDef             = "enum", Identifier, EnumBody?
+
+EnumBody            = "is", Annotation*, EnumVariant+, "end"
+
+EventDef            =
+    "event", Identifier, "source", IdentifierReference, StructureBody?
+
+Structuredef        = "structure", Identifier, StructureBody?
+
+StructureBody       = "is", Annotation*, ( MemberByValue | StructureGroup )*, "end"
+
+StructureGroup      = "group", Annotation*, MemberByValue*, "end"
+
+UnionDef            = "union", Identifier, UnionBody?
+
+UnionBody           = "is", Annotation*, IdentifierReference+, "end"
+
+IdentityMember      =
+    "identity", identifier, TypeExpression, AnnotationOnlyBody?
+
+MemberByValue       =
+    identifier, TypeExpressionTo, AnnotationOnlyBody?
+
+MemberByReference   =
+    "ref", Identifier, TypeExpressionFromTo,AnnotationOnlyBody?
+
+TypeExpression      = "->" TypeReference
+
+TypeExpressionTo    = "->" Cardinality? TypeReference
+
+TypeExpressionFromto = Cardinality? TypeExpressionTo
+
+TypeReference       = IdentifierReference | UnknownType
+
+UnknownType         = "unknown"
+
+CardinalityExpression = "{", Unsigned, CardinalityRange?, "}"
+
+CardinalityRange    = "..", Unsigned?
+
+Value               =
+    SimpleValue | ValueConstructor | IdentifierReference | ListOfValues
+
+SimpleValue         =
+    String | Double | Decimal | Integer | Boolean | IriReference
+
+Boolean             = "true" | "false"
+
+NumericSign         = "+" | "-"
+
+Zero                = "0"
+
+NonZero             = "1".."9"
+
+Unsigned            = Zero | NonZero, ( ASCII_DIGIT )*
+
+Integer             = NumericSign?, Unsigned
+
+Decimal             = Integer, ".", ( ASCII_DIGIT )+
+
+ExponentChar        = "e" | "E"
+
+Double              = Decimal, ExponentChar, NumericSign?, Integer
+
+HexPair             = ASCII_HEX_DIGIT, ASCII_HEX_DIGIT
+
+CharacterEscape     = "\\", ( "\"" | "\\" | "\/" | "a" | "b"
+                          "e" | "f" | "n" | "r" | "t" | "v" )
+
+UnicodeEscape       = "\\u{", HexPair, ( HexPair ( HexPair )? )?, "}"
+
+NotAllowed          = "\"" | "\\" | "\u{00}".."\u{08}" | "\u{0B}".."\u{1F}" | "\u{7F}"
+
+QuotedString        = "\"", ( -NotAllowed | CharacterEscape | UnicodeEscape )*, "\""
+
+LanguageTag         =
+    "@", ASCII_LETTER_LOWER, ASCII_LETTER_LOWER, ASCII_LETTER_LOWER?
+        ( "-", ASCII_LETTER_UPPER, ASCII_LETTER_UPPER, ASCII_LETTER_UPPER )?
+        ( "-", ASCII_LETTER_UPPER, ASCII_LETTER_LOWER,
+               ASCII_LETTER_LOWER, ASCII_LETTER_LOWER )?
+        ( "-", ( ( ASCII_LETTER_UPPER, ASCII_LETTER_UPPER )
+               | ( ASCII_DIGIT, ASCII_DIGIT, ASCII_DIGIT ) ) )
+
+String              = QuotedString, LanguageTag?
+
+IriReference        =
+    "<",
+    (
+    - ("<" | ">" | "\"" | "{" | "}" | "|" | "^" | "`" | "\\" | "\u{00}".."\u{20}")
+    | UnicodeEscape
+    )*,
+    ">"
+
+ValueConstructor    = IdentifierReference, "(", SimpleValue, ")"
+
+ListOfValues        =
+    "[", ( SimpleValue | ValueConstructor | IdentifierReference )+, "]"
+
+IdentifierWord      = ( UC_LETTER_UPPER | UC_LETTER_LOWER )+
+
+Identifier          = IdentifierWord, ( "_", IdentifierWord )*
+
+QualifiedIdentifier = Identifier, ":", Identifier
+
+IdentifierReference = QualifiedIdentifier | Identifier
+
+LineComment         = ";", ( -( "\r" | "\n" ) )*
+
+Whitespace          =
+    "\f" | "\n" | "\r" | "\t" | "\v"
+    | "\u{0020}" | "\u{00a0}" | "\u{1680}" | "\u{2000}".."\u{200a}"
+    | "\u{2028}" | "\u{2029}" | "\u{202f}" | "\u{205f}" | "\u{3000}"
+    | "\u{feff}"
+#+END_SRC
+

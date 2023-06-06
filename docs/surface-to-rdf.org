@@ -1,0 +1,525 @@
+#+LANGUAGE: en
+#+STARTUP: overview hidestars inlineimages entitiespretty
+
+* Appendix: Surface Syntax to RDF
+
+TBD
+
+** Whitespace
+
+Whitespace present in the surface syntax has *no* effect on the corresponding RDF.
+
+** Comments
+
+Comments present in the surface syntax are *not* translated into the corresponding RDF.;
+
+** Identifiers
+
+Identifiers for modules and type definitions are appended to the base IRI of the module resource, making individual
+types within a module directly addressable.
+
+*Example:*
+
+Given a module resource retrieved from =https://example.com/v/example/= and containing the following:
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+end
+#+END_SRC
+
+The module within has the IRI identifier =https://example.com/v/example/example=.
+
+However, if the module overrides the retrieved location using =xml:base=, as follows:
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  import xml:base
+  @xml:base = <https://example.org/langs/Example#>
+end
+#+END_SRC
+
+The module within this resource now has the IRI identifier =https://example.org/langs/Example#example=.
+
+The remainder of this section will use example modules with =xml:base= to make identifier IRIs more easily understood.
+
+** Values
+
+Value Literals are necessary for the specification of annotation values. Literals fall into two categories, simple
+values and lists with an additional non-literal form the value constructor.
+
+*** <<sec:mapping-values>> Simple Value Literals
+
+#+NAME: tbl:value-literals
+#+CAPTION: Summary of Value Literals
+| SDML Type     | Underlying Type | Value Space                                                   | Lexical Space  |
+|---------------+-----------------+---------------------------------------------------------------+----------------|
+| =boolean=       | =xsd:boolean=     | The values =true= and =false=.                                    | =true= and =false= |
+| =decimal=       | =xsd:decimal=     | A 128-bit representation of a fixed-precision decimal number. | [[https://www.w3.org/TR/xmlschema-2/#decimal][XML Schema]]     |
+| =double=        | =xsd:double=      | An IEEE double-precision 64-bit floating point type.          | [[https://www.w3.org/TR/xmlschema-2/#double][XML Schema]]     |
+| =integer=       | =xsd:integer=     | A signed 64-bit integer.                                      |                |
+| =iri_reference= | =xsd:AnyURI=      | Represents a Uniform Resource Identifier Reference (URI).     | [[https://www.w3.org/TR/xmlschema-2/#anyURI][XML Schema]]     |
+| =string=        | =rdf:langString= | A string value with optional language-tag.                    | [[https://www.w3.org/TR/rdf11-concepts/#section-Graph-Literal][RDF]]            |
+
+*** List Literals
+
+*Example:*
+
+Given the following list literal:
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  @skos:altLabel = [ "yes" "no" "maybe" ]
+end
+#+END_SRC
+
+The generated RDF consists of separate statements for each value in the list.
+
+#+BEGIN_SRC ttl
+:thing skos:altLabel "yes" .
+:thing skos:altLabel "no" .
+:thing skos:altLabel "maybe" .
+#+END_SRC
+
+For clarity and brevity this is usually written in Turtle as an object list (Turtle [[https://www.w3.org/TR/turtle/#object-lists][2.3 Object Lists]]):
+
+#+BEGIN_SRC ttl
+:thing skos:altLabel "yes", "no", "maybe" .
+#+END_SRC
+
+Currently there is no mapping from the surface syntax to list values, that is an RDF Collection (Turtle [[https://www.w3.org/TR/turtle/#collections][2.8 Collections]])
+which constructs a list using the =rdf:first= and =rdf:rest= predicates. This would result in the following RDF:
+
+#+BEGIN_SRC ttl
+:thing skos:altLabel ( "yes" "no" "maybe" ) .
+#+END_SRC
+
+*** Value Constructors
+
+A value constructor allows for the precise specification of a datatype for a literal.
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  @sdml:defaultVariant = xsd:nonNegativeInteger(0)
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:thing sdml:defaultVariant "0"^^xsd:nonNegativeInteger .
+#+END_SRC
+
+** Modules
+
+*Example with Implied Base:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is end
+#+END_SRC
+
+
+#+BEGIN_SRC ttl
+@prefix sdml: <https://api.amazonadvertising.com/domain-model> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+:example rdf:type sdml:Module, owl:NamedIndividual .
+#+END_SRC
+
+*Example with Explicit Base:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  import xml:base
+  @xml:base = <https://example.org/langs/Example#>
+end
+#+END_SRC
+
+
+#+BEGIN_SRC ttl
+@base <https://example.org/langs/Example#> .
+@prefix : <https://example.org/langs/Example#> .
+@prefix sdml: <https://api.amazonadvertising.com/domain-model> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+
+:example rdf:type sdml:Module, owl:NamedIndividual .
+#+END_SRC
+
+** Imports
+
+*Example:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  import xml
+end
+#+END_SRC
+
+
+#+BEGIN_SRC ttl
+@base <https://example.org/langs/Example#> .
+@prefix : <https://example.org/langs/Example#> .
+@prefix sdml: <https://api.amazonadvertising.com/domain-model> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+
+:example rdf:type sdml:Module, owl:NamedIndividual .
+#+END_SRC
+
+** Annotations
+** Data Type Definition
+
+*Example:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  datatype name <- xsd:string
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:name rdf:type rdfs:Datatype, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
+    owl:onDatatype xsd:string .
+#+END_SRC
+
+*Example with Restrictions:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  datatype name <- xsd:string is
+    @xsd:minLength = 5
+    @xsd:maxLength = 25
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:name rdf:type rdfs:Datatype, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
+    owl:onDatatype xsd:string ;
+    owl:withRestrictions (
+        [ xsd:minLength "5"^^xsd:nonNegativeInteger ]
+        [ xsd:maxLength "25"^^xsd:nonNegativeInteger ]
+    ) .
+#+END_SRC
+
+** Entity Definition
+
+*Example Empty Entity:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  entity Person
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Person rdf:type sdml:Entity, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example .
+#+END_SRC
+
+*Example Entity with Identity:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  entity Person is
+    identity id -> PersonId
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Person rdf:type sdml:Entity, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
+    :hasIdentifyingMember [
+        rdfs:label "id" ;
+        :targetClassifier :Person ;
+    ] .
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Person_id rdf:type sdml:Member ;
+    rdfs:label "id" ;
+    :targetClassifier :Person .
+
+:Person rdf:type sdml:Entity, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
+    :hasIdentifyingMember :Person_id .
+#+END_SRC
+
+*Example Entity with By-Value Member:*
+
+TBD
+
+*Example Entity with By-Reference Member:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  entity Person is
+    identity id -> PersonId
+
+    ref contact {0..} -> {0..2} Person is
+      @dc:description = "Emergency contact person"
+    end
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Person rdf:type sdml:Entity, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
+    :hasReferenceMember [
+        rdfs:label "contact" ;
+        :targetClassifier :Person ;
+        :sourceCardinality [
+            owl:minCardinality 0 ;
+        ] ;
+        :targetCardinality [
+            owl:minCardinality 0 ;
+            owl:maxCardinality 2 ;
+        ] ;
+        dc::description "Emergency contact person"
+    ] .
+#+END_SRC
+
+*Example Entity with Group:*
+
+TBD
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  entity Person is
+    identity id -> PersonId
+
+    group
+      @skos:prefLabel = "Identification"
+      pref_name -> xsd:string
+      alt_name -> xsd:string
+    end
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+#+END_SRC
+
+** Enumeration Definition
+
+*Example Empty Enumeration:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  enum DistanceUnit
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:DistanceUnit rdf:type sdml:Enumeration, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example .
+#+END_SRC
+
+*Example Enumeration with Variants:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  enum DistanceUnit is
+    Meter = 1
+    Foot = 2
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:DistanceUnit rdf:type sdml:Enumeration, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
+    :hasVariant [
+        rdfs:label "Meter" ;
+        :hasValue 1 
+    ] ,
+    [
+        rdfs:label "Foot" ;
+        :hasValue 2
+    ] .
+#+END_SRC
+
+** Event Definition
+
+*Example Empty Event:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  event PersonNameChanged source Person
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:PersonNameChanged rdf:type sdml:Event, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
+    sdml:eventSource :Person .
+#+END_SRC
+
+*Example Event with Members:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  event PersonNameChanged source Person is
+    ;; identifier members will be copied from Person 
+    fromValue -> Name
+    toValue -> Name
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:PersonNameChanged rdf:type sdml:Event, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
+    sdml:eventSource :Person ;
+    :hasMember [
+        rdfs:Label "personId" ;
+        :targetClassifier :Person
+    ] ,
+    [
+        rdfs:Label "fromValue" ;
+        :targetClassifier :Name
+    ] ,
+    [
+        rdfs:Label "toValue" ;
+        :targetClassifier :Name
+    ] .
+#+END_SRC
+
+** Structure Definition
+
+*Example Empty Structure:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  structure Length
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Length rdf:type sdml:Structure, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example .
+#+END_SRC
+
+*Example Structure with Annotation:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  structure Length is
+    @skos:prefLabel = "Length"@en
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Length rdf:type sdml:Structure, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
+    skos:prefLabel "Length"@en .
+#+END_SRC
+
+*Example Structure with Members:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  structure Length is
+    @skos:prefLabel = "Length"@en
+
+    value -> Decimal
+    unit -> DistanceUnit
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Length rdf:type sdml:Structure, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
+    skos:prefLabel "Length"@en .
+    :hasMember [
+        rdfs:label "value" ;
+        :targetClassifier :Decimal ;
+    ] ,
+    [
+        rdfs:label "unit" ;
+        :targetClassifier :DistanceUnit ;
+    ] .
+#+END_SRC
+
+*Example Structure with Groups:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  structure Account is
+    @skos:prefLabel = "Customer Account"@en
+    group
+      @skos:prefLabel = "Metadata"@en
+      created -> xsd:dateTime
+    end
+    group
+      @skos:prefLabel = "Customer Information"@en
+      ref customer -> {1..1} Customer
+    end
+  end
+end
+#+END_SRC
+
+** Union Definition
+
+*Example Union Structure:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  union Vehicle
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Vehicle rdf:type sdml:Union, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example .
+#+END_SRC
+
+*Example Union with Types:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  union Vehicle of
+    Car
+    Truck
+    Boat
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Vehicle rdf:type sdml:Union, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example .
+    sdml:hasElementType :Car ;
+    sdml:hasElementType :Truck ;
+    sdml:hasElementType :Boat .
+#+END_SRC
+
+*Example Union with Annotation:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  union Vehicle is
+
+    @skos:prefLabel = "Vehicle"@en
+
+    Car
+    Truck
+    Boat
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Vehicle rdf:type sdml:Union, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example .
+    skos:prefLabel "Vehicle"@en .
+    sdml:hasElementType :Car ;
+    sdml:hasElementType :Truck ;
+    sdml:hasElementType :Boat .
+:Length rdf:type sdml:Union, owl:NamedIndividual ;
+#+END_SRC
+

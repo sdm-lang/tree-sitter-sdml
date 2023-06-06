@@ -1,0 +1,206 @@
+#+LANGUAGE: en
+#+STARTUP: overview hidestars inlineimages entitiespretty
+
+* Walk-Through Example
+
+The following section walks through the process of model creation and iterative elaboration to add detail as domain
+experts provide more information. In our example we will build a domain model for a vehicle rental company. So, as you
+might imagine we can start the model with some pretty obvious entities, but with no detail beyond their names. Listing
+[[lst:example-first-pass]] is this first-pass domain model.
+
+#+NAME: lst:example-first-pass
+#+CAPTION: Rentals Concepts (First Pass)
+#+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-concept-1.svg :exports both :noweb yes
+module rentals is
+
+  entity Vehicle
+
+  entity Location
+
+  entity Customer
+
+  entity Booking
+
+end
+#+END_SRC
+
+The =sdml= tool can be used to generate a concept diagram, a high-level view of only the entities in the model and their
+relationships. The following command-line will generate figure [[fig:example-first-pass]] from listing
+[[lst:example-first-pass]].
+
+#+BEGIN_EXAMPLE
+sdml draw --diagram concepts \
+          --output-format svg \
+          --output-file docs/rentals-concept-1.svg \
+          docs/rental-1.sdm
+#+END_EXAMPLE
+
+#+NAME: fig:example-first-pass
+#+CAPTION: Rentals Concepts (First Pass)
+#+RESULTS: lst:example-first-pass
+[[file:./rentals-concept-1.svg]]
+
+Figure [[lst:example-second-pass]] is the second-pass at our model, adding relationships from the ~Booking~ entity to the
+~Customer~, ~Location~, and  ~Vehicle~ entities. Adding a body to the ~Booking~ entity, between =is= … =end=, requires the entity
+specify an identifier. To allow the addition of ~bookingCode~ without spending time on the details of it's type the
+keyword ~unknown~ is used to defer the type until later.
+
+Additionally, the ~vehicle~ relationship specifies a new cardinality overriding the usual =0..= with =0..1=.
+
+#+NAME: lst:example-second-pass
+#+CAPTION: Rentals Basic Relationships
+#+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-concept-2.svg :exports both :noweb yes
+module rentals is
+
+  entity Vehicle
+
+  entity Location
+
+  entity Customer
+
+  entity Booking is
+    identity bookingCode -> unknown
+
+    ref vehicle -> {0..1} Vehicle
+    ref from -> Location
+    ref customer -> Customer
+  end
+
+end
+#+END_SRC
+
+Re-running the =sdml= tool on listing [[lst:example-second-pass]] will result in the relationships added, as shown in figure
+[[fig:example-second-pass]].
+
+#+NAME: fig:example-second-pass
+#+CAPTION: Rentals Basic Relationships
+#+RESULTS: lst:example-second-pass
+[[file:./rentals-concept-2.svg]]
+
+In the next edit of our rentals model we see some additions:
+
+1. The use of =import= to use the ~VehicleIdentificationNumber~ data type from the ~cids~ (Common Identifiers) model.
+1. The new entity ~Class~ to model the rental class of a vehicle.
+1. ~Vehicle~ now has an identifier, a relationship to the new ~Class~ entity, and a relationship to ~Location~.
+1. ~Booking~ also has a relationship to the new ~Class~ entity.
+1. We demonstrate the non-range cardinality notation, ={1}=, which is a shortcut for the range =1..1=.
+
+#+NAME: lst:example-third-pass
+#+CAPTION: Rentals More Detail
+#+BEGIN_SRC sdml :exports code :noeval
+module rentals is
+
+  import cids:VehicleIdentificationNumber
+
+  entity Class
+
+  entity Vehicle is
+    identity vin -> cids:VehicleIdentificationNumber
+
+    ref rentalClass -> {1} Class
+    ref onProperty -> {0..1} Location
+  end
+
+  entity Location
+
+  entity Customer
+
+  entity Booking is
+    identity bookingCode -> unknown
+
+    ref bookingClass -> {1} Class
+    ref vehicle -> {0..1} Vehicle
+    ref from -> Location
+    ref customer -> {1} Customer
+  end
+
+end
+#+END_SRC
+
+As usual we generate the concept diagram in figure [[fig:example-third-pass]] from listing [[lst:example-third-pass]].
+
+#+NAME: fig:example-third-pass
+#+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-concept-3.svg :exports results :noweb yes
+<<lst:example-third-pass>>
+#+END_SRC
+
+#+CAPTION: Rentals More Detail
+#+RESULTS: fig:example-third-pass
+[[./rentals-concept-3.svg]]
+
+#+NAME: lst:example-fourth-pass
+#+CAPTION: Rentals Non-Entity Detail
+#+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-concept-4.svg :exports both :noweb yes
+module rentals is
+
+  import [cids:VehicleIdentificationNumber cids:Uuid]
+  import [xsd:date xsd:string]
+
+  entity Class
+
+  entity Vehicle is
+    identity vin -> cids:VehicleIdentificationNumber
+
+    ref rentalClass -> {1} Class
+  end
+
+  entity Location is
+    identity id -> cids:Uuid
+
+    address -> {1} Address
+  end
+
+  entity Customer is
+    identity id -> cids:Uuid
+
+    contactAddress -> {1} Address
+    driverLicense -> {0..1} LicenseInformation
+  end
+
+  structure Address
+
+  structure LicenseInformation is
+    number -> xsd:string
+    state -> xsd:string
+    expiration -> xsd:date
+  end
+
+  entity Booking is
+    identity bookingCode -> unknown
+
+    ref bookingClass -> {1} Class
+    ref vehicle -> {0..1} Vehicle
+    ref pickup -> {1} Location
+    pickupDate -> {1} xsd:date
+    ref dropoff -> {1} Location
+    dropoffDate -> {1} xsd:date
+    ref customer -> {1} Customer
+  end
+
+end
+#+END_SRC
+
+As usual we generate the concept diagram in figure [[fig:example-fourth-pass]] from listing [[lst:example-fourth-pass]].
+
+#+NAME: fig:example-fourth-pass
+#+CAPTION: Rentals Non-Entity Detail
+#+RESULTS: lst:example-fourth-pass
+[[./rentals-concept-4.svg]]
+
+#+BEGIN_EXAMPLE
+sdml draw --diagram erd \
+          --output-format svg \
+          --output-file docs/rentals-concept-4.svg \
+          docs/rental-4.sdm
+#+END_EXAMPLE
+
+#+NAME: lst:example-fourth-pass-erd
+#+BEGIN_SRC sdml :cmdline draw --diagram erd :file ./rentals-erd-4.svg :exports results :noweb yes
+<<lst:example-third-pass>>
+#+END_SRC
+
+#+NAME: fig:example-fourth-pass-erd
+#+CAPTION: Rentals ERD Diagram
+#+RESULTS: lst:example-fourth-pass-erd
+[[./rentals-erd-4.svg]]
+

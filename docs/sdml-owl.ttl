@@ -467,6 +467,18 @@
         "Relates an enumeration variant to a numeric value."@en .
 
 # -------------------------------------------------------------------
+# Properties ❱ Annotation ❱ Entities
+# -------------------------------------------------------------------
+
+:rootEntity rdf:type owl:AnnotationProperty ;
+    rdfs:domain :Module ;
+    rdfs:range :Entity ;
+    rdfs:isDefinedBy : ;
+    skos:prefLabel "root entity"@en ;
+    skos:definition
+        "Denotes, if present, one or more root entities within this module."@en .
+
+# -------------------------------------------------------------------
 # Properties ❱ Annotation ❱ Variants
 # -------------------------------------------------------------------
 

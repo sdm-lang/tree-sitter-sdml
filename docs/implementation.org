@@ -1,0 +1,498 @@
+#+LANGUAGE: en
+#+STARTUP: overview hidestars inlineimages entitiespretty
+
+
+* Implementation and Tools
+
+#+NAME: fig:implementation-overview
+#+BEGIN_SRC dot :file implementation-overview.png :exports results
+digraph G {
+    bgcolor="transparent";
+    rankdir="TB";
+    fontname="Helvetica,Arial,sans-serif";
+    node [fontname="Helvetica,Arial,sans-serif"; fontsize=10];
+    edge [fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="dimgrey"; labelfontcolor="blue"; labeldistance=2.0];
+
+    subgraph cluster_0 {
+        label = "Core Library";
+        grammar [label="Grammar\nDefinition"];
+        parser [label="Parser\nDylib"];
+        rust [label="Rust\nBindings"];
+        npm [label="Node\nBindings"];
+        wasm [label="WASM\nBindings"];
+
+        grammar -> parser;
+        parser -> rust;
+        parser -> npm;
+        parser -> wasm;
+    }
+
+    treesit [shape=rect; label="Tree-Sitter\nC Library"];
+    treesit -> grammar;
+
+    subgraph cluster_1 {
+        label = "Emacs Support";
+        emode [label="Editing Mode"];
+        spell [label="Spell Checker"];
+        flycheck [label="Flycheck"];
+        emode -> spell;
+        emode -> flycheck;
+
+        parser -> emode;
+    }
+
+    ets [shape=rect; label="Emacs\nTree-Sitter"];
+    ets_hl [shape=rect; label="Tree-Sitter\nHighlighter"];
+    ets_indent [shape=rect; label="Tree-Sitter\nIndenter"];
+    ets_fold [shape=rect; label="Tree-Sitter\nFolder"];
+
+    treesit -> ets;
+    ets -> ets_hl;
+    ets -> ets_indent;
+    ets -> ets_fold;
+
+    ets_hl -> emode;
+    ets_indent -> emode;
+    ets_fold -> emode;
+
+    subgraph cluster_2 {
+        label = "Command-Line Tool";
+        api [label="API"];
+        fmt [label="Formatter"];
+        linter [label="Linter"];
+        diagrams [label="Diagrammer"];
+
+        rust -> api;
+        api -> fmt;
+        api -> linter;
+        api -> diagrams;
+    }
+}
+#+END_SRC
+ 
+#+CAPTION: Implementation Overview
+#+RESULTS: fig:implementation-overview
+[[file:implementation-overview.png]]
+
+** Core Library
+
+- Source at [[https://github.com/johnstonskj/tree-sitter-sdml][Github]]
+
+Build.
+
+#+BEGIN_EXAMPLE
+git clone https://github.com/johnstonskj/tree-sitter-sdml
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+make setup
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+make build
+#+END_EXAMPLE
+
+*Bindings:*
+
+- Node binding, published to [[https://www.npmjs.com/package/tree-sitter-sdml][npm.js]]
+- Rust binding, published to [[https://crates.io/crates/tree-sitter-sdml][crates.io]]
+ 
+** Command-Line Tool
+
+- Source at [[https://github.com/johnstonskj/rust-sdml][Github]]
+- Published to [[https://crates.io/crates/sdml][crates.io]]
+
+#+BEGIN_EXAMPLE
+$ sdml --help
+Rust CLI for Simple Domain Modeling Language (SDML)
+
+Usage: sdml [OPTIONS] <COMMAND>
+
+Commands:
+  highlight  Highlight file
+  tags       Extract tags from file
+  convert    Convert model files into other formats
+  draw       Draw diagrams from models
+  help       Print this message or the help of the given subcommand(s)
+
+Options:
+  -v, --verbose...  More output per occurrence
+  -q, --quiet...    Less output per occurrence
+  -h, --help        Print help
+  -V, --version     Print version
+#+END_EXAMPLE
+
+For most commands the tool accepts a pair of arguments that determine the format and location of the generated output.
+These commands =--output-format= / =-f= and =--output-file= / =-o= can be used in the following manner.
+
+#+BEGIN_EXAMPLE
+--output-format svg --output-file rentals.svg
+-output-file rentals.svg
+#+END_EXAMPLE
+
+In the second example above the format is not specified and so the tool will use the extension of the output file as the
+format specifier. If the output file is not specified the output is written to stdout. If neither argument is provided
+the output is written to stdout in the default format.
+
+Similarly most tools use the module resolution rules for loading a module and so the input *file* is actually specified
+as a module name. To allow for searches in non-standard locations the argument =--base-path= / =-b= can be used to
+prepend a path to the standard search path. Thus the two examples below are identical as the current directory is always
+a component of the search path.
+
+#+BEGIN_EXAMPLE
+--base-path . rentals
+rentals
+#+END_EXAMPLE
+
+*** Highlighting
+
+#+BEGIN_EXAMPLE
+$ sdlml highlight --help
+Highlight an SDML source file
+
+Usage: sdml highlight [OPTIONS] <MODULE>
+
+Arguments:
+  <MODULE>
+          SDML module to convert
+
+Options:
+  -f, --output-format <OUTPUT_FORMAT>
+          Format to convert into
+          
+          [default: ansi]
+
+          Possible values:
+          - ansi:            ANSI escape for console
+          - html:            HTML pre-formatted element
+          - html-standalone: HTML stand-alone document
+
+  -v, --verbose...
+          More output per occurrence
+
+  -o, --output-file <OUTPUT_FILE>
+          File name to write to, if not provided will write to stdout
+
+  -q, --quiet...
+          Less output per occurrence
+
+  -b, --base-path <BASE_PATH>
+          The path to use as the IRI base for modules
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
+#+END_EXAMPLE
+
+For the console this uses ANSI escape sequences to format the text. 
+
+#+BEGIN_EXAMPLE
+sdml highlight --output-format ansi rentals
+#+END_EXAMPLE
+
+To generate formatted and highlighted HTML the tool accepts two different format specifiers, =html= for simply a block
+of HTML that can be inserted into another document, or =html-standalone= to generate a full document around the
+highlighted code block.
+
+#+BEGIN_EXAMPLE
+sdml highlight --output-format html rentals
+sdml highlight --output-format html-standalone rentals
+#+END_EXAMPLE
+
+*** Draw Diagrams
+
+To draw a high-level Concepts diagram, use the diagram specifier =concepts=.
+
+#+BEGIN_EXAMPLE
+sdml draw --diagram concepts \
+          --output-format svg --output-file rentals.svg \
+          --base-path . rentals
+#+END_EXAMPLE
+
+For more detail an Entity-Relationship diagram can be generated with the diagram specifier =entity-relationship=.
+
+#+BEGIN_EXAMPLE
+sdml draw --diagram entity-relationship \
+          --output-format svg --output-file rentals.svg \
+          --base-path . rentals
+#+END_EXAMPLE
+
+For the mose detail a UML Class diagram can be generated with the diagram specifier =uml-class=.
+
+#+BEGIN_EXAMPLE
+sdml draw --diagram uml-class \
+          --output-format svg --output-file rentals.svg \
+          --base-path . rentals
+#+END_EXAMPLE
+
+*** Module Resolution
+
+The resolver uses the environment variable =SDML_PATH=, ...
+
+For example, the command =sdml highlight rentals= will look for the following files:
+
+#+BEGIN_EXAMPLE
+{prefix}rentals.sdm
+{prefix}rentals.sdml
+{prefix}rentals/rentals.sdm
+{prefix}rentals/rentals.sdml
+#+END_EXAMPLE
+  
+- =sdml highlight --base-path ./examples rentals=
+
+#+BEGIN_SRC sdml :exports code :noeval
+module subDomain is
+
+  import skos:prefLabel
+
+  import other:Something
+
+  import otherSubDomain
+
+  import somethingElse
+
+end
+#+END_SRC
+
+** Emacs Support
+
+Emacs has been the primary /playground/ for SDML and as such has some tools already built for editing and documentation.
+The package [[https://github.com/johnstonskj/emacs-sdml-mode][sdml-mode]] (currently not in any package repository) is associated with any file ending in =.sdm= or =.sdml= with
+highlighting and indentation support. Follow the installation instructions on the package site.
+
+Emacs standard customization allows for managing all package variables and can be accessed via:
+
+=M-x customize-group RET sdml RET=
+
+*** Highlighting
+
+Syntax highlighting is enabled by the =tree-sitter-hl-mode= minor mode based on the configuration in the constant
+=sdml-mode-tree-sitter-hl-patterns=. The highlighting also carries over into Org Babel source blocks and into generated
+content such as this documentation.
+
+The =sdml-mode= also adds to the =prettify-symbols-alist= list, the set of symbols is in the custom variable
+=sdml-prettify-symbols-alist=.
+
+*** Indentation
+
+Line indentation is enabled by the =tree-sitter-indent-mode= minor mode based on the configuration in the constant
+=sdml-mode-folding-definitions=.
+
+Default indentation is two spaces, although this can be overridden by the custom variable =sdml-indent-offset=.
+
+*** Code Folding
+
+Block Folding is provided by the =ts-fold-mode= minor mode based on the configuration in the constant
+=tree-sitter-indent-sdml-scopes=. Note that folding of groups of line comments is also supported.
+
+- =C-c C-s -= -- fold item
+- =C-c C-s += -- unfold item
+- =C-c C-s C--= -- fold all items in buffer
+- =C-c C-s C-+= -- unfold all items in buffer
+- =C-c C-s /= -- unfold item and all children
+- =C-c C-s .= -- toggle fold/unfold state
+
+As well as the mechanics of folding, the =ts-fold= package also has indicator support for windowed clients and this is
+enabled by default with =window-system= is non-nil.
+
+*** Debugging
+
+The following two comands are provided by the underlying =tree-sitter= package, but exposed here with the common key
+prefix.
+
+- =C-c C-s d= -- open the tree-sitter debug view
+- =C-c C-s q= -- open the tree-sitter query builder
+
+*** Ispell
+
+The additional package =sdml-ispell= provides *selective* spell checking by only checking selected nodes in the tree.
+
+- =C-c C-s s= -- spell check the item at point
+- =C-c C-s C-s= -- spell check all items in the buffer
+
+By default only strings and comments will be checked, although this can be overridden by the custom variable
+=tree-sitter-ispell-sdml-text-mapping=.
+
+*** Flycheck
+
+The additional package =flycheck-sdml= provides on-the-fly linting for SDML buffers. To enable, simply ensure Flycheck
+mode is enabled for your buffer. Rather than per-buffer, you can enable this by setting =flycheck-mode= for all SDML files
+with a hook.
+
+The entire set of lint rules are stored in the custom variable =sdml-lint-rules= with the form:
+
+#+BEGIN_SRC emacs-lisp
+'(rule-id "Issue message" level "tree-sitter query")
+#+END_SRC
+
+For example, the following rule returns the name of the module, but only if the first character is an upper case letter.
+This is marked as a warning by Flycheck and provided with the necessary message.
+
+#+BEGIN_SRC emacs-lisp
+'(module-name-case
+  "Module names may not start with upper-case"
+  warning
+  "((module name: (identifier) @name) (#match? @name \"^[:upper:]\"))")
+#+END_SRC
+
+*** Org-Babel
+
+Org-Babel support provides the ability to call the SDML [[https://github.com/johnstonskj/rust-sdml][command-line tool]] to produce diagrams and more. For example, the
+following source block calls the CLI to draw a concept diagram for the enclosed module.
+
+#+BEGIN_EXAMPLE
+#+NAME: lst:rentals-example
+#+CAPTION: Rentals Concepts
+#+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-concepts.svg :exports both
+module rentals is
+
+  entity Vehicle
+  entity Location
+  entity Customer
+  entity Booking
+
+end
+#+END_SRC
+#+END_EXAMPLE
+
+The results block then references the resulting image.
+
+#+BEGIN_EXAMPLE
+#+NAME: fig:rentals-example-concepts
+#+CAPTION: Rentals Concepts
+#+RESULTS: lst:rentals-example
+[[file:./rentals-concepts.svg]]
+#+END_EXAMPLE
+
+But, what if we want to produce more than one diagram from the same source? By using the built-in
+/[[https://orgmode.org/manual/Noweb-Reference-Syntax.html][noweb]]/ syntax we can create a new source block, but
+reference the original content. This source block has different command-line parameters and has it's own results block
+as well.
+
+#+BEGIN_EXAMPLE
+#+NAME: fig:rentals-example-erd
+#+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-erd.svg :exports results :noweb yes
+<<lst:rentals-example>>
+#+END_SRC
+#+END_EXAMPLE
+
+** Neovim
+
+[[https://neovim.io/][Neovim]] has some great tree-sitter support with the [[https://github.com/nvim-treesitter/nvim-treesitter][nvim-tree-sitter]] and a nice in-editor [[https://github.com/nvim-treesitter/playground][playground]]. Firstly, add the
+tree-sitter plugin, but don't install yet, as shown on the nvim-treesitter page (using [[https://github.com/junegunn/vim-plug][vim-plug]]):
+
+#+NAME: lst:vim-ts-plugin
+#+BEGIN_SRC vimrc-mode :noeval
+call plug#begin()
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+call plug#end()
+#+END_SRC
+
+Now, add the following Lua block, using content from the homepage, and then set the ~ensure_installed~ to include the
+query language and so highlight tree-sitter queries and set ~ignore_install~ to include sdml *before* installing the
+tree-sitter plugin. The builtin sdml grammar will unfortunately install queries that will then be a problem so we want
+to avoid that.
+
+#+NAME: lst:vim-ts-config
+#+BEGIN_SRC lua :noeval
+require'nvim-treesitter.configs'.setup {
+    ensure_installed = { "query" }, 
+    sync_install = false,
+    auto_install = true,
+    highlight = {
+        enable = true,
+        disable = {},
+        additional_vim_regex_highlighting = false,
+    },
+    incremental_selection = {
+        enable = true,
+        keymaps = {
+            init_selection = "gnn",
+            node_incremental = "grn",
+            scope_incremental = "grc",
+            node_decremental = "grm",
+        },
+    },
+    indent = {
+        enable = true
+    },
+    query_linter = {
+        enable = true,
+        use_virtual_text = true,
+        lint_events = {"BufWrite", "CursorHold"},
+    },
+}
+#+END_SRC
+
+To allow tree-sitter to do folding based on =folds.scm=, add the following to =init.vim=.
+
+#+NAME: lst:vim-ts-folding
+#+BEGIN_SRC vimrc-mode :noeval
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
+#+END_SRC
+
+Once the core plugin has been installed you can add the following Lua block in =init.vim= to install /this/ grammar.
+
+#+NAME: lst:vim-ts-add-sdml
+#+BEGIN_SRC lua :noeval
+local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+
+parser_config.sdml = {
+    install_info = {
+        url = "https://github.com/johnstonskj/tree-sitter-sdml",
+        files = {"src/parser.c"},
+        generate_requires_npm = true, 
+        requires_generate_from_grammar = true,  
+    },
+    filetype = "sdm",
+    maintainers = { "@johnstonskj" },
+}
+#+END_SRC
+
+Additionally, try the  [[https://github.com/nvim-treesitter/nvim-treesitter-context][nvim-treesitter-context]] and [[https://github.com/nvim-treesitter/nvim-treesitter-refactor][nvim-treesitter-refactor]] plugins based on tree-sitter.
+
+#+NAME: lst:vim-ts-extras
+#+BEGIN_SRC vimrc-mode :noeval
+call plug#begin()
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter-context' 
+Plug 'nvim-treesitter/playground'
+
+call plug#end()
+#+END_SRC
+
+Add the corresponding configuration:
+
+#+NAME: lst:vim-ts-playground-config
+#+BEGIN_SRC lua :noeval
+require'nvim-treesitter.configs'.setup {
+    // …
+    playground = {
+        enable = true,
+        disable = {},
+        updatetime = 25,
+        persist_queries = false,
+        keybindings = {
+            toggle_query_editor = 'o',
+            toggle_hl_groups = 'i',
+            toggle_injected_languages = 't',
+            toggle_anonymous_nodes = 'a',
+            toggle_language_display = 'I',
+            focus_language = 'f',
+            unfocus_language = 'F',
+            update = 'R',
+            goto_node = '<cr>',
+            show_help = '?',
+        },
+    }
+}
+#+END_SRC
+
+** VSCode
+
+Try here: https://github.com/georgewfraser/vscode-tree-sitter
+https://github.com/EvgeniyPeshkov/syntax-highlighter

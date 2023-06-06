@@ -50,6 +50,10 @@ end
 
 # Changes
 
+**Version: 0.1.9**
+
+* Simplified the disjoint `union` type.
+
 **Version: 0.1.8**
 
 * Added a disjoint `union` type.

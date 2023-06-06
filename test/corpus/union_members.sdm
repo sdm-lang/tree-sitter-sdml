@@ -4,9 +4,9 @@ Union, With Variants
 
 module campaign is
 
-  union VehicleClass is
-    Car -> Car
-    Boat -> Boat
+  union VehicleClass of
+    Car
+    Boat
   end
 
 end
@@ -20,13 +20,7 @@ end
       (union_def
         name: (identifier)
         body: (union_body
-          (union_variant
-            name: (identifier)
-            target: (type_reference
-              (identifier_reference
-                (identifier))))
-          (union_variant
-            name: (identifier)
-             target: (type_reference
-              (identifier_reference
-                (identifier)))))))))
+          (identifier_reference
+            (identifier))
+          (identifier_reference
+            (identifier)))))))

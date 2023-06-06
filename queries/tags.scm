@@ -52,8 +52,8 @@
 (member_by_reference
  target: (type_reference (identifier_reference) @name)) @reference.class
 
-(union_variant
- target: (type_reference (identifier_reference) @name)) @reference.class
+(union_body
+ (identifier_reference) @name) @reference.class
 
 ;; ---------------------------------------------------------------------------
 ;; Annotations
@@ -80,7 +80,4 @@
  name: (identifier) @name) @definition.field
 
 (enum_variant
- name: (identifier) @name) @constant
-
-(union_variant
  name: (identifier) @name) @constant

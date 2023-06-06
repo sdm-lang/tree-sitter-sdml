@@ -20,6 +20,7 @@
  "import"
  "is"
  "module"
+ "of"
  "ref"
  "source"
  "structure"
@@ -92,10 +93,8 @@ name: (identifier) @type.definition)
  name: (identifier) @constant
  "=" @operator)
 
-(union_variant
- name: (identifier) @constant
-  "->" @operator
- target: (_) @type)
+(union_body
+ (identifier_reference) @type)
 
 (cardinality_expression
  (cardinality_range

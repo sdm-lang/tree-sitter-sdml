@@ -328,16 +328,10 @@ module.exports = grammar({
         ),
 
         union_body: $ => seq(
-            keyword('is'),
+            keyword('of'),
             repeat($.annotation),
-            repeat1($.union_variant),
+            repeat1($.identifier_reference),
             keyword('end')
-        ),
-
-        union_variant: $ => seq(
-            field('name', $.identifier),
-            $._type_expression,
-            optional(field('body', $.annotation_only_body))
         ),
 
         // -----------------------------------------------------------------------

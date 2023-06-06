@@ -1,0 +1,381 @@
+@prefix : <https://sdml.io/sdml-owl.ttl#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@base <https://sdml.io/sdml-owl.ttl#> .
+
+<https://sdml.io/sdml-owl.ttl#>
+    rdf:type owl:Ontology ;
+    skos:prefLabel "Simple Domain Modeling Language"@en ;
+    skos:altLabel "SDML"@en ;
+    dc:hasVersion "0.1.8" ;
+    dc:creator "Simon Johnston <johntonskj@gmail.com>" ;
+    dc:license <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/LICENSE> ;
+    rdf:seeAlso <https://sdml.io/> .
+
+# Classes
+
+:Module rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Module"@en ;
+    skos:definition "A named container of type definitions."@en.
+
+:Classifier rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Classifier"@en ;
+    skos:altLabel "Type"@en ;
+    skos:definition "The base type of all type definitions."@en .
+
+:Datatype rdf:type owl:Class ;
+    rdfs:subClassOf :Classifier ;
+    rdfs:subClassOf rdfs:Datatype ;
+    owl:disjointWith
+        :Enumeration ,
+        :Structure ,
+        :Union ,
+        :Unknown ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Datatype"@en ;
+    skos:altLabel "Data Type"@en ;
+    skos:definition
+        "A type that expresses constraints over an existing data type."@en .
+
+:Entity rdf:type owl:Class ;
+    rdfs:subClassOf :Structure ;
+    owl:disjointWith
+        :Event ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Entity"@en ;
+    skos:altLabel "Independent Entity" ;
+    skos:definition
+        "An Entity is a named record type that has it's own identity and lifecycle."@en .
+
+:Enumeration rdf:type owl:Class ;
+    rdfs:subClassOf :Classifier ;
+    owl:disjointWith
+        :Datatype ,
+        :Structure ,
+        :Union ,
+        :Unknown ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Enumeration"@en ;
+    skos:definition
+        "An enumeration is a type that has a set of distinct variant values."@en .
+
+:Event rdf:type owl:Class ;
+    rdfs:subClassOf :Structure ;
+    owl:disjointWith :Entity ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Event"@en ;
+    skos:altLabel "Entity Event"@en ;
+    skos:definition
+        "An event is a named record type signaled by an Entity when some state changes."@en .
+
+:Structure rdf:type owl:Class ;
+    rdfs:subClassOf :Classifier ;
+    owl:disjointWith
+        :Datatype ,
+        :Enumeration ,
+        :Union ,
+        :Unknown ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Structure"@en ;
+    skos:altLabel "Struct"@en ;
+    skos:altLabel "Record"@en ;
+    skos:definition
+        "A structure is a named record type that does not have it's own identity or lifecycle"@en .
+
+:Union rdf:type owl:Class ;
+    rdfs:subClassOf :Classifier ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    owl:disjointWith
+        :Datatype ,
+        :Enumeration ,
+        :Structure ,
+        :Unknown ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Disjoint Union"@en ;
+    skos:altLabel "Tagged Union"@en ;
+    skos:altLabel "Union"@en ;
+    skos:definition "A union is a list of discrete types."@en .
+
+:Unknown rdf:type owl:Class ;
+    rdfs:subClassOf :Classifier ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    owl:disjointWith
+        :Datatype ,
+        :Enumeration ,
+        :Structure ,
+        :Union ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Unknown" ;
+    skos:altLabel "Unknown Type"@en ;
+    skos:definition "The unknown type, used as a marker in incomplete members."@en .
+
+:Group rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Group of Members"@en ;
+    skos:definition "A group of members within a record type."@en .
+
+:EntityGroup rdf:type owl:Class ;
+    rdfs:subClassOf :Group ;
+    owl:disjointWith :StructureGroup ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Entity Group"@en ;
+    skos:definition "A group of members within an Entity."@en .
+
+:StructureGroup rdf:type owl:Class ;
+    rdfs:subClassOf :Group ;
+    owl:disjointWith :EntityGroup ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Structure Group"@en ;
+    skos:definition "A group of members within a Structure, or Event."@en .
+
+:Member rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Member of Type"@en ;
+    skos:definition "A member of a record type."@en .
+
+:IdentityMember rdf:type owl:Class ;
+    rdfs:subClassOf :Member ;
+    owl:disjointWith :ByValueMember , :ByReferenceMember ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Identity Member"@en ;
+    skos:definition "The identity member of an Entity."@en .
+
+:ByValueMember rdf:type owl:Class ;
+    rdfs:subClassOf :Member ;
+    owl:disjointWith :IdentityMember , :ByReferenceMember ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "By-Value Member"@en ;
+    skos:definition "A member that represents an aggregate component."@en .
+
+:ByReferenceMember rdf:type owl:Class ;
+    rdfs:subClassOf :Member ;
+    owl:disjointWith :IdentityMember , :ByValueMember ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "By-Reference Member"@en ;
+    skos:definition "A member that represents a non-aggregate component."@en .
+
+:Cardinality rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Cardinality"@en ;
+    skos:definition "The cardinality of a member expression."@en .
+
+:Variant rdf:type owl:Class ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "Enumeration Variant"@en ;
+    skos:definition "A variant within an Enumeration."@en .
+
+# Object Properties
+
+:hasDefinition rdf:type owl:ObjectProperty ;
+    owl:inverseOf :isDefinedBy ;
+    rdfs:domain :Module ;
+    rdfs:Range  :Classifier ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "module has definition"@en ;
+    skos:definition "Relates a module to an enclosed type definition."@en .
+
+:isDefinedBy  rdf:type owl:ObjectProperty ;
+    rdfs:isSubPropertyOf rdfs:isDefinedBy ;
+    owl:inverseOf :hasDefinition ;
+    rdfs:domain :Classifier ;
+    rdfs:Range  :Module ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "defined by module"@en ;
+    skos:definition "Relates a type definition to the enclosing module."@en .
+
+# Properties concerning structured types.
+
+:entityHasGroup rdf:type owl:ObjectProperty ;
+    rdfs:domain rdfs:Entity ;
+    rdfs:range :EntityGroup ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "entity has group"@en ;
+    skos:definition ""@en .
+
+:structureHasGroup rdf:type owl:ObjectProperty ;
+    rdfs:domain rdfs:Structure ;
+    rdfs:range :StructureGroup ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "structure has group"@en ;
+    skos:definition ""@en .
+
+:hasVariant rdf:type owl:ObjectProperty ;
+    rdfs:domain :Enumeration ;
+    rdfs:range  :Variant ;
+    owl:inverseOf :isVariantOf ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "has variant"@en ;
+    skos:definition ""@en .
+
+:isVariantOf rdf:type owl:ObjectProperty ;
+    rdfs:domain :Variant ;
+    rdfs:range  :Enumeration ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "is variant of"@en ;
+    skos:definition ""@en .
+
+:hasElementType rdf:type owl:ObjectProperty ;
+    rdfs:domain :Union ;
+    rdfs:range  :Classifier ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "has element type"@en ;
+    skos:definition ""@en .
+
+:targetClassifier rdf:type owl:ObjectProperty ;
+    rdfs:domain :Member ;
+    rdfs:range  :Classifier ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "target classifier"@en ;
+    skos:definition ""@en .
+
+:baseDatatype rdf:type owl:ObjectProperty ;
+    rdfs:domain :Datatype ;
+    rdfs:range [
+        owl:unionOf ( :Datatype rdfs:Datatype )
+        ] ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "base datatype"@en ;
+    skos:definition ""@en .
+
+:eventSource rdf:type owl:ObjectProperty ;
+    rdfs:domain :Event ;
+    rdfs:range  :Entity ;
+    owl:inverseOf :emitsEvent ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "event source entity"@en ;
+    skos:definition ""@en .
+
+:emitsEvent rdf:type owl:ObjectProperty ;
+    rdfs:domain :Entity ;
+    rdfs:range  :Event ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "entity emits event"@en ;
+    skos:definition ""@en .
+
+# Properties concerning structured type members
+
+:hasMember rdf:type owl:ObjectProperty ;
+    rdfs:range :Member ;
+    owl:inverseOf :isMemberOf ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "has member"@en ;
+    skos:definition ""@en .
+
+:isMemberOf rdf:type owl:ObjectProperty ;
+    rdfs:domain :Member ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "is member"@en ;
+    skos:definition ""@en .
+
+:hasIdentityMember rdf:type owl:ObjectProperty ;
+    rdf:type owl:FunctionalProperty ;
+    rdfs:subPropertyOf :hasMember ;
+    rdfs:domain :Entity ;
+    rdfs:range :IdentityMember ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "has identity member"@en ;
+    skos:definition ""@en .
+
+:hasByValueMember rdf:type owl:ObjectProperty ;
+    rdfs:subPropertyOf :hasMember ;
+    rdfs:domain [
+        owl:unionOf ( :Entity :EntityGroup :Event :Structure :StructureGroup )
+        ] ;
+    rdfs:range :ByValueMember ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "has by-value identifier"@en ;
+    skos:definition ""@en .
+
+:hasByReferenceMember rdf:type owl:ObjectProperty ;
+    rdfs:subPropertyOf :hasMember ;
+    rdfs:domain [
+        owl:unionOf ( :Entity :EntityGroup )
+        ] ;
+    rdfs:range :ByReferenceMember ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "has by-reference member"@en ;
+    skos:definition ""@en .
+
+:targetClassifier rdf:type owl:ObjectProperty ;
+    rdfs:domain :Member ;
+    rdfs:range [
+        owl:unionOf ( :Classifier :Unknown )
+        ] ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "target classifier"@en ;
+    skos:definition "The type of the member."@en .
+
+:sourceCardinality rdf:type owl:ObjectProperty ;
+    rdfs:domain :ByReferenceMember ;
+    rdfs:range  :Cardinality ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "source classifier cardinality"@en ;
+    skos:definition "The cardinality of this classifier when referenced from the target."@en .
+
+:targetCardinality rdf:type owl:ObjectProperty  ;
+    rdfs:domain [
+        owl:unionOf ( :ByValueMember :ByReferenceMember )
+        ] ;
+    rdfs:range  :Cardinality ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "target classifier cardinality"@en ;
+    skos:definition "The cardinality of the target classifier for this member."@en .
+
+# Datatype Properties
+
+:minOccurs rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Cardinality ;
+    rdfs:range  xsd:nonNegativeInteger ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "minimum occurences"@en ;
+    skos:definition "Identifies the minimum occurence of a member the default is zero."@en .
+
+:maxOccurs rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Cardinality ;
+    rdfs:range  xsd:nonNegativeInteger ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "maximum occurences"@en ;
+    skos:definition "Identifies the maximum occurence of a member; the default is unbounded."@en .
+
+:hasValue rdf:type owl:DatatypeProperty ;
+    rdfs:subPropertyOf rdf:value ;
+    rdfs:domain :Variant ;
+    rdfs:range  xsd:nonNegativeInteger ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "has value"@en ;
+    skos:definition "Relates an enumeration variant to a numeric value."@en .
+
+# Annotation Properties
+
+:defaultVariant rdf:type owl:AnnotationProperty ;
+    rdfs:domain :Enumeration ;
+    rdfs:range  xsd:NMTOKEN ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "default variant URI"@en ;
+    skos:definition "Denotes, if present, the default variant of an enumeration."@en .
+
+:versionString rdf:type rdfs:Datatype ;
+    owl:onDatatype xsd:string ;
+    owl:withRestrictions (
+        [ xsd:pattern "(0|[1-9][0-9]*)(\.0|[1-9][0-9]*){,2}" ]
+    ) ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "A semvar-like version string."@en .
+
+:deprecatedSince rdf:type owl:AnnotationProperty ;
+    rdfs:range :versionString ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "deprecate since version"@en ;
+    skos:definition "The specific version at which this model element was deprecated."@en .
+
+:introducedIn rdf:type owl:AnnotationProperty ;
+    rdfs:range  :versionString ;
+    rdfs:isDefinedBy <https://sdml.io/sdml-owl.ttl#> ;
+    skos:prefLabel "introduced in version"@en ;
+    skos:definition "The specific version this model element was introduced."@en .

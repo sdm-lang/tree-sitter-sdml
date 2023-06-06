@@ -19,13 +19,12 @@
 
 * Introduction
 
-The Simple Domain Modeling Language is a small data-oriented language for constructing, documenting, and reasoning about
-a conceptual domain model. For a background on domain modeling see appendix [[app:domain-modeling]]. At it's core SDML
-comprises an /abstract model/ whose structure and semantics are described by an [[https://www.w3.org/OWL/][OWL]]
-([[https://www.w3.org/RDF/][RDF]]) ontology, and a /surface syntax/ for editing and sharing concrete models. This document
-covers both the OWL and SDML representations and the correspondence between them, however the primary focus of the
-documentation is the surface syntax as most users will be interacting with it alone. Figure [[fig:model-overview]] shows
-the relationship between these high-level components.
+The Simple Domain Modeling Language ([[https://sdml.io/][home]] | [[https://github.com/johnstonskj/tree-sitter-sdml][Github]]) is a small data-oriented language for constructing, documenting, and
+reasoning about a conceptual domain model. For a background on domain modeling see appendix [[app:domain-modeling]]. At it's
+core SDML comprises an /abstract model/ whose structure and semantics are described by an [[https://www.w3.org/OWL/][OWL]] ([[https://www.w3.org/RDF/][RDF]]) ontology, and a
+/surface syntax/ for editing and sharing concrete models. This document covers both the OWL and SDML representations and
+the correspondence between them, however the primary focus of the documentation is the surface syntax as most users will
+be interacting with it alone. Figure [[fig:model-overview]] shows the relationship between these high-level components.
 
 #+NAME: fig:model-overview
 #+BEGIN_SRC dot :file sdml-overview.png :exports results
@@ -48,13 +47,12 @@ digraph G {
 }
 #+END_SRC
 
-The language uses some ideas from [[http://www.uml.org/][UML]] which is often used in the construction of such models
-today. However, the goal is to keep the language as small as possible, taking away some options where they don't make
-sense or where their use may distract from the major purpose of the model. The model also takes some of the language
-from Domain-Driven Design[fn:1], namely the separation of entities (/an object defined not by its attributes, but its
-identity/) from value objects (/an immutable object that contains attributes but has no conceptual identity/), simply
-termed structures in SDML. This model does not include the following as first-class concepts: /aggregates/, /repositories/,
-/factories/, or /services/.
+The language uses some ideas from [[http://www.uml.org/][UML]] which is often used in the construction of such models today. However, the goal is
+to keep the language as small as possible, taking away some options where they don't make sense or where their use may
+distract from the major purpose of the model. The model also takes some of the language from Domain-Driven Design[fn:1],
+namely the separation of entities (/an object defined not by its attributes, but its identity/) from value objects (/an
+immutable object that contains attributes but has no conceptual identity/), simply termed structures in SDML. This model
+does not include the following as first-class concepts: /aggregates/, /repositories/, /factories/, or /services/.
 
 #+CAPTION: Model Overview
 #+RESULTS: fig:model-overview
@@ -791,37 +789,33 @@ end
 *** Disjoint Unions
 
 A disjoint, or discriminated, union is a mechanism to allow for a selection of disjoint types to be treated as a single
-type.
+type. As such the /elements/ of the union are simply type names and do not allow annotations. Note also that the keyword
+=of= and not =is= starts a union body.
 
 #+NAME: lst:grammar-union-def
 #+BEGIN_SRC ebnf
-UnionBody       = "is", Annotation*, UnionVariant+, "end"
+UnionBody       = "is", Annotation*, IdentifierReference+, "end"
 UnionDef        = "union", Identifier, UnionBody?
 #+END_SRC
 
 #+NAME: lst:sdml-ex-empty-union
 #+CAPTION: Empty Union
 #+BEGIN_SRC sdml :exports code :noeval
-module example is
+module example of
   union VehicleClass
 end
 #+END_SRC
 
 The union ~VehicleClass~ is valid but incomplete.
 
-#+NAME: lst:grammar-union-variant
-#+BEGIN_SRC ebnf
-UnionVariant    = Identifier, TypeExpression, AnnotationOnlyBody?
-#+END_SRC
-
 #+NAME: lst:sdml-ex-union
 #+CAPTION: Union With Variants
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
-  union VehicleClass is
-    Car -> Car
-    Van -> Van
-    Truck -> Truck
+  union VehicleClass of
+    Car
+    Van
+    Truck
   end
 end
 #+END_SRC
@@ -831,7 +825,12 @@ end
 
 Why RDF? ...
 
-Figure [[fig:owl-ontology]] is an overview of the OWL Ontology, 
+- [[https://www.w3.org/TR/owl2-overview/][OWL 2 Web Ontology Language Document Overview (Second Edition)]]
+- [[https://www.cs.vu.nl/~guus/public/owl-restrictions/][OWL restrictions]]
+- [[https://cambridgesemantics.com/blog/semantic-university/learn-owl-rdfs/owl-references-humans/][OWL References for Humans]]
+  
+
+Figure [[fig:owl-ontology]] is an overview of the OWL Ontology.
 
 #+NAME: fig:owl-ontology
 #+BEGIN_SRC dot :file owl-ontology.png :exports results
@@ -852,7 +851,6 @@ digraph G {
   Structure [shape=ellipse];
   Union [shape=ellipse];
   EnumVariant [shape=ellipse];
-  UnionVariant [shape=ellipse];
   Datatype [shape=ellipse;label="rdfs:Datatype"];
 
   Module -> Classifier [label="hasDefinition";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
@@ -888,7 +886,7 @@ digraph G {
   Cardinality -> integer [label="owl:minCardinality";dir=both;arrowtail=diamond;arrowhead=open];
 
   EnumVariant -> integer [label="hasValue";dir=both;arrowtail=diamond;arrowhead=open];
-  UnionVariant -> Classifier [label="targetClassifier";dir=both;arrowtail=odiamond;arrowhead=open];
+  Union -> Classifier [label="element";dir=both;arrowtail=odiamond;arrowhead=open;headlabel="+"];
 }
 #+END_SRC
 
@@ -903,186 +901,138 @@ For a higher resolution version, [[file:owl-ontology.png][click here]].
 2. Filled diamonds correspond to composite associations, or strong ownership.
 3. Open diamonds correspond to aggregate associations, or weak ownership.
 
+** SDML Ontology
+
+Listing [[lst:owl-ontology]] is the ontology header that describes the Ontology itself. This shows the use of annotation
+properties from the Dublin Core [[https://www.dublincore.org/specifications/dublin-core/dcmi-terms/][DCMI Terms]] and the W3C Simple Knowledge Organization System ([[https://www.w3.org/TR/skos-reference/][SKOS]]). These are used
+throughout the Ontology definition
+
+
+#+NAME: lst:owl-ontology
+#+CAPTION: OWL: Ontology Header
+#+BEGIN_SRC ttl
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@base <https://sdml.io/sdml-owl.ttl#> .
+
+<https://sdml.io/sdml-owl.ttl#>
+    rdf:type owl:Ontology ;
+    skos:prefLabel "Simple Domain Modeling Language"@en ;
+    skos:altLabel "SDML"@en ;
+    dc:hasVersion "0.1.8" ;
+    dc:creator "Simon Johnston <johntonskj@gmail.com>" ;
+    dc:license <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/LICENSE> ;
+    rdf:seeAlso <https://sdml.io/> .
+#+END_SRC
+
 ** Classes
 
-#+NAME: lst:owl-module
-#+CAPTION: OWL: Top-Level Module
-#+BEGIN_SRC ttl
-:Module rdf:type owl:Class ;
-    skos:prefLabel "Module"@en .
-#+END_SRC
+#+NAME: tbl:owl-classes
+#+CAPTION: OWL: Classes
+| Name               | Sub-Class Of               | Disjoint With                                 |
+|--------------------+----------------------------+-----------------------------------------------|
+| =:Module=            | None.                      |                                               |
+| =:Classifier=        | None.                      |                                               |
+| =:Datatype= ﻿^1            | =:Classifier=, =rdfs:Datatype= | =:Enumeration= , =:Structure= , =:Union= , =:Unknown= |
+| =:Entity=            | =:Structure=                 | =:Event=                                        |
+| =:Enumeration=       | =:Classifier=                | =:Datatype=, =:Structure=, =:Union=, =:Unknown=       |
+| =:Event=             | =:Structure=                 | =:Entity=                                       |
+| =:Structure=         | =:Classifier=                | =:Datatype=, =:Enumeration=, =:Union=, =:Unknown=     |
+| =:Union=             | =:Classifier=                | =:Datatype=, =:Enumeration=, =:Structure=, =:Unknown= |
+| =:Unknown=           | =:Classifier=                | =:Datatype=, =:Enumeration=, =:Structure=, =:Union=   |
+| =:Group=             | None.                      |                                               |
+| =:EntityGroup=       | =:Group=                     | =:StructureGroup=                               |
+| =:StructureGroup=    | =:Group=                     | =:EntityGroup=                                  |
+| =:Member=            | None.                      |                                               |
+| =:IdentityMember=    | =:Member=                    | =:ByValueMember=, =:ByReferenceMember=            |
+| =:ByValueMember=     | =:Member=                    | =:IdentityMember=, =:ByReferenceMember=           |
+| =:ByReferenceMember= | =:Member=                    | =:IdentityMember=, =:ByValueMember=               |
+| =:Cardinality=       |                            |                                               |
+| =:Variant=           |                            |                                               |
 
+Notes:
 
-#+NAME: lst:owl-classifiers
-#+CAPTION: OWL: Classifiers, or Types
-#+BEGIN_SRC ttl
-:Classifier rdf:type owl:Class
-    skos:prefLabel "Classifier"@en ;
-    skos:altLabel "Type"@en .
-
-:Structure rdf:type owl:Class ;
-    rdfs:subClassOf :Classifier ;
-    skos:prefLabel "Structure"@en ;
-    skos:altLabel "Struct"@en ;
-    skos:altLabel "Record"@en .
-    
-:Entity rdf:type owl:Class ;
-    rdfs:subClassOf :Structure ;
-    skos:prefLabel "Entity"@en ;
-    skos:altLabel "Independent Entity" .
-    
-:Event rdf:type owl:Class ;
-    rdfs:subClassOf :Structure ;
-    skos:prefLabel "Event"@en ;
-    skos:altLabel "Entity Event"@en .
-    
-:Enumeration rdf:type owl:Class ;
-    rdfs:subClassOf :Classifier .
-    
-:Datatype rdf:type rdfs:Datatype ;
-    rdfs:subClassOf :Classifier ;
-    skos:prefLabel "Datatype"@en ;
-    skos:altLabel "Data Type"@en .
-    
-:Unknown rdf:type owl:Class ;
-    skos:prefLabel "Unknown" ;
-    skos:altLabel "Unknown Type"@en .
-#+END_SRC
-
-
-#+NAME: lst:owl-classifier-parts
-#+CAPTION: OWL: Classifier Related Classes
-#+BEGIN_SRC ttl
-:Group rdf:type owl:Class ;
-    skos:prefLabel "Member Group"@en .
-
-:Member rdf:type owl:Class ;
-    skos:prefLabel "Member"@en .
-
-:Cardinality rdf:type owl:Class .
-
-:Variant rdf:type owl:Class .
-#+END_SRC
-
+1. The class =:Datatype= has rdf type =rdfs:Datatype=, all others have type =owl:Class=.
+   
 ** Object Properties
 
-#+NAME: lst:owl-module-object-properties
-#+CAPTION: OWL: Module Object Properties
-#+BEGIN_SRC ttl
-:hasDefinition rdf:type owl:ObjectProperty ;
-    rdfs:domain :Module ;
-    rdfs:Range  :Classifier ;
-    owl:inverseOf :isDefinedBy ;
-    skos:prefLabel "module has definition"@en .
+#+NAME: tbl:owl-object-properties
+#+CAPTION: OWL: Object Properties
+| Name                     | Domain                                                         | Range                     | Inverse Of     |
+|--------------------------+----------------------------------------------------------------+---------------------------+----------------|
+| =:hasDefinition=           | =:Module=                                                        | =:Classifier=               | =:isDefinedBy=   |
+| =:isDefinedBy=             | =:Classifier=                                                    | =:Module=                   | =:hasDefinition= |
+| =:entityHasGroup=          | =rdfs:Entity=                                                    | =:EntityGroup=              |                |
+| =:structureHasGroup=       | =rdfs:Structure=                                                 | =:StructureGroup=           |                |
+| =:hasVariant=              | =:Enumeration=                                                   | =:Variant=                  | =:isVariantOf=   |
+| =:isVariantOf=             | =:Variant=                                                       | =:Enumeration=              | =:hasVariant=    |
+| =:hasElementType=          | =:Union=                                                         | =:Classifier=               |                |
+| =:targetClassifier=        | =:Member=                                                        | =:Classifier=               |                |
+| =:baseDatatype=            | =:Datatype=                                                      | =:Datatype= ∪ =rdfs:Datatype= |                |
+| =:eventSource=             | =:Event=                                                         | =:Entity=                   | =:emitsEvent=    |
+| =:emitsEvent=              | =:Entity=                                                        | =:Event=                    | =:eventSource=   |
+| =:hasMember=               | =:Member=                                                        | N/A                       | =:hasMember=     |
+| =:isMemberOf=              | N/A                                                            | =:Member=                   | =:isMemberOf=    |
+| =:hasIdentityMember= ﻿^1,2  | =:Entity=                                                        | =:IdentityMember=           |                |
+| =:hasByValueMember= ﻿^2     | =:Entity= ∪ =:EntityGroup= ∪ =:Event= ∪ =:Structure= ∪ =:StructureGroup= | =:ByValueMember=            |                |
+| =:hasByReferenceMember= ﻿^2 | =:Entity= ∪ =:EntityGroup=                                         | =:ByReferenceMember=        |                |
+| =:targetClassifier=        | =:Member=                                                        | =:Classifier= ∪ =:Unknown=    |                |
+| =:sourceCardinality=       | =:ByReferenceMember=                                             | =:Cardinality=              |                |
+| =:targetCardinality=       | =:ByReferenceMember=                                             | =:Cardinality=              |                |
 
-:isDefinedBy  rdf:type owl:ObjectProperty ;
-    rdfs:isSubPropertyOf rfs:isDefineBy ;
-    rdfs:domain :Classifier ;
-    rdfs:Range  :Module ;
-    skos:prefLabel "defined by module" .
-#+END_SRC
-
-Properties concerning structured types.
-
-#+NAME: lst:owl-classifier-object-properties
-#+CAPTION: OWL: Classifier Object Properties
-#+BEGIN_SRC ttl
-:hasGroup rdf:type owl:ObjectProperty ;
-    rdfs:Structure ;
-    rdfs:range :Group .
-    
-:hasVariant rdf:type owl:ObjectProperty ;
-    rdfs:Domain :Enumeration ;
-    rdfs:Range  :Variant ;
-    owl:inverseOf :isVariantOf.
-    
-:isVariantOf rdf:type owl:ObjectProperty ;
-    rdfs:Domain :Variant ;
-    rdfs:Range  :Enumeration ;
-   
-:sourceCardinality rdf:type owl:ObjectProperty ;
-    rdfs:Domain :Member ;
-    rdfs:Range  :Cardinality .
-    
-:targetCardinality rdf:type owl:ObjectProperty  ;
-    rdfs:Domain :Member ;
-    rdfs:Range  :Cardinality .
-    
-:targetClassifier rdf:type owl:ObjectProperty ;
-    rdfs:Domain :Member ;
-    rdfs:Range  :Classifier .
-    
-:baseDatatype rdf:type owl:ObjectProperty ;
-    rdfs:subPropertyOf owl:onDatatype ;
-    rdfs:Domain :Datatype ;
-    rdfs:Range  :Datatype .
-    
-:eventSource rdf:type owl:ObjectProperty ;
-    rdfs:Domain :Event ;
-    rdfs:Range  :Entity ;
-    owl:inverseOf :emitsEvent .
-    
-:emitsEvent rdf:type owl:ObjectProperty ;
-    rdfs:Domain :Entity ;
-    rdfs:Range  :Event .
-#+END_SRC
-
-Properties concerning structured type members
-
-#+NAME: lst:owl-classifier-member-properties
-#+CAPTION: OWL: Classifier Member Properties
-#+BEGIN_SRC ttl
-:hasMember rdf:type owl:ObjectProperty ;
-    rdfs:Range :Member ;
-    owl:inverseOf :isMemberOf .
-
-:isMemberOf rdf:type owl:ObjectProperty ;
-    rdfs:Domain :Member .
-
-:hasIdentifyingMember rdf:type owl:ObjectProperty ;
-    rdf:type owl:FunctionalProperty ;
-    rdfs:subPropertyOf :hasMember ;
-    rdfs:Domain :Entity .
-    
-:hasCompositeMember rdf:type owl:ObjectProperty ;
-    rdfs:subPropertyOf :hasMember ;
-    rdfs:Domain owl:UnionOf ( :Structure :Group ) .
-    
-:hasReferenceMember rdf:type owl:ObjectProperty ;
-    rdfs:subPropertyOf :hasMember ;
-    rdfs:Domain owl:UnionOf ( :Entity :Group ) .
-
-:targetClassifier rdf:type owl:ObjectProperty ;
-    rdfs:Domain :Member ;
-    rdfs:Range owl:UnionOf ( :Classifier :Unknown ) .
-#+END_SRC
-
-
-#+NAME: lst:owl-cardinality-object-properties
-#+CAPTION: OWL: Cardinality Object Properties
-#+BEGIN_SRC ttl
-:sourceCardinality rdf:type owl:ObjectProperty ;
-    rdfs:Domain :Member ;
-    rdfs:Range  :Cardinality .
-    
-:targetCardinality rdf:type owl:ObjectProperty  ;
-    rdfs:Domain :Member ;
-    rdfs:Range  :Cardinality .
-#+END_SRC
-
-- Groups not yet modeled.
-- Cardinality not yet modeled.
+Notes:
+1. This also has the rdf type =owl:FunctionalProperty=.
+2. These are also sub-properties of =:hasMember=.
 
 ** Datatype Properties
 
-#+NAME: lst:owl-variant-value
-#+CAPTION: OWL: Variant Value Property
+#+NAME: tbl:owl-datatype-properties
+#+CAPTION: OWL: Datatype Properties
+| Name       | Type                                         | Domain       | Range                    |
+|------------+----------------------------------------------+--------------+--------------------------|
+| =:maxOccurs= | a =owl:DatatypeProperty=                       | =:Cardinality= | =xsd:nonNegativeInteger=   |
+| =:minOccurs= | a =owl:DatatypeProperty=                       | =:Cardinality= | =xsd:nonNegativeInteger=   |
+| =:hasValue=  | a =owl:DatatypeProperty=, subtype of =rdf:value= | =:Variant=     | =xsd:nonNegativeInteger= |
+
+** Annotation Properties
+
+#+NAME: tbl:owl-annotation-properties
+#+CAPTION: OWL: Annotation Properties
+| Name             | Type                     | Domain       | Range            |
+|------------------+--------------------------+--------------+------------------|
+| =:defaultVariant=  | a =owl:AnnotationProperty= | =:Enumeration= | =xsd:NMTOKEN=      |
+| =:deprecatedSince= | a =owl:AnnotationProperty= | N/A          | =:versionString= |
+| =:introducedIn= | a =owl:AnnotationProperty= | N/A          | =:versionString= |
+
 #+BEGIN_SRC ttl
-:hasValue rdf:type owl:DatatypeProperty ;
-    rdfs:Domain :Variant ;
-    rdfs:Range  :xsd:nonNegativeInteger ;
-    skos:prefLabel "has value"@en.
+:versionString rdf:type rdfs:Datatype ;
+    owl:onDatatype xsd:string ;
+    owl:withRestrictions (
+        [ xsd:pattern "(0|[1-9][0-9]*)(\.0|[1-9][0-9]*){,2}" ]
+    ) .
 #+END_SRC
+
+Common Annotations
+
+#+NAME: tbl:common-annotations
+#+CAPTION: Commonly Used Annotation Properties
+| Name             | Usage                                                                                          | Domain       | Range          |
+|------------------+------------------------------------------------------------------------------------------------+--------------+----------------|
+| =skos:prefLabel=   | The preferred lexical label/name of the model element.                                         | N/A          | =rdf:langString= |
+| =skos:altLabel=    | An alternative lexical label/name for the model element.                                       | N/A          | =rdf:langString= |
+| =skos:hiddenLabel= | A lexical label/name for the element where it may be searchable but not commonly displayed.    | N/A          | =rdf:langString= |
+| =skos:definition=  | A complete explanation of the intended meaning of the model element.                           | N/A          | =rdf:langString= |
+| =skos:historyNote= | Describes significant changes to the meaning or the form of the model element.                 | N/A          | =rdf:langString= |
+| =dc:creator=       | An entity primarily responsible for making the model element.                                  | N/A          | =xsd:string=     |
+| =dc:contributor=   | An entity responsible for making contributions to the model element.                           | N/A          | =xsd:string=     |
+| =dc:license=       | A legal document giving official permission to do something with the model element.            | =:Module=      | =xsd:AnyURI=     |
+| =dc:conformsTo=    | An established standard to which the described  model element conforms.                        | N/A          | =xsd:AnyURI=     |
+| =rdfs:seeAlso=     | Used to indicate a resource that might provide additional information about the model element. | N/A          | =xsd:AnyURI=     |
+| =:deprecatedSince= | The specific version at which this model element was deprecated.                               | N/A          | =:versionString= |
+| =:introducedIn=    | The specific version this model element was introduced.                                        | N/A          | =:versionString= |
+| =:defaultVariant=  | Denotes, if present, the default variant of an enumeration.                                    | =:EnumVariant= | =xsd:NMTOKEN=    |
 
 
 * Walk-Through Example
@@ -1968,6 +1918,7 @@ end
 
 #+BEGIN_SRC ttl
 :name rdf:type rdfs:Datatype, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
     owl:onDatatype xsd:string .
 #+END_SRC
 
@@ -1984,6 +1935,7 @@ end
 
 #+BEGIN_SRC ttl
 :name rdf:type rdfs:Datatype, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
     owl:onDatatype xsd:string ;
     owl:withRestrictions (
         [ xsd:minLength "5"^^xsd:nonNegativeInteger ]
@@ -2002,7 +1954,8 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Person rdf:type sdml:Entity, owl:NamedIndividual .
+:Person rdf:type sdml:Entity, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example .
 #+END_SRC
 
 *Example Entity with Identity:*
@@ -2017,6 +1970,7 @@ end
 
 #+BEGIN_SRC ttl
 :Person rdf:type sdml:Entity, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
     :hasIdentifyingMember [
         rdfs:label "id" ;
         :targetClassifier :Person ;
@@ -2029,6 +1983,7 @@ end
     :targetClassifier :Person .
 
 :Person rdf:type sdml:Entity, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
     :hasIdentifyingMember :Person_id .
 #+END_SRC
 
@@ -2052,6 +2007,7 @@ end
 
 #+BEGIN_SRC ttl
 :Person rdf:type sdml:Entity, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
     :hasReferenceMember [
         rdfs:label "contact" ;
         :targetClassifier :Person ;
@@ -2085,19 +2041,6 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Person rdf:type sdml:Entity, owl:NamedIndividual ;
-    :hasReferenceMember [
-        rdfs:label "contact" ;
-        :targetClassifier :Person ;
-        :sourceCardinality [
-            owl:minCardinality 0 ;
-        ] ;
-        :targetCardinality [
-            owl:minCardinality 0 ;
-            owl:maxCardinality 2 ;
-        ] ;
-        dc::description "Emergency contact person"
-    ] .
 #+END_SRC
 
 ** Enumeration Definition
@@ -2111,7 +2054,8 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:DistanceUnit rdf:type sdml:Enumeration, owl:NamedIndividual .
+:DistanceUnit rdf:type sdml:Enumeration, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example .
 #+END_SRC
 
 *Example Enumeration with Variants:*
@@ -2127,6 +2071,7 @@ end
 
 #+BEGIN_SRC ttl
 :DistanceUnit rdf:type sdml:Enumeration, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
     :hasVariant [
         rdfs:label "Meter" ;
         :hasValue 1 
@@ -2149,6 +2094,7 @@ end
 
 #+BEGIN_SRC ttl
 :PersonNameChanged rdf:type sdml:Event, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
     sdml:eventSource :Person .
 #+END_SRC
 
@@ -2166,6 +2112,7 @@ end
 
 #+BEGIN_SRC ttl
 :PersonNameChanged rdf:type sdml:Event, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
     sdml:eventSource :Person ;
     :hasMember [
         rdfs:Label "personId" ;
@@ -2193,7 +2140,7 @@ end
 
 #+BEGIN_SRC ttl
 :Length rdf:type sdml:Structure, owl:NamedIndividual ;
-    rdfs:isDefinedBy :module .
+    rdfs:isDefinedBy :example .
 #+END_SRC
 
 *Example Structure with Annotation:*
@@ -2208,6 +2155,7 @@ end
 
 #+BEGIN_SRC ttl
 :Length rdf:type sdml:Structure, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
     skos:prefLabel "Length"@en .
 #+END_SRC
 
@@ -2226,6 +2174,7 @@ end
 
 #+BEGIN_SRC ttl
 :Length rdf:type sdml:Structure, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
     skos:prefLabel "Length"@en .
     :hasMember [
         rdfs:label "value" ;
@@ -2253,6 +2202,66 @@ module example is
     end
   end
 end
+#+END_SRC
+
+** Union Definition
+
+*Example Union Structure:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  union Vehicle
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Vehicle rdf:type sdml:Union, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example .
+#+END_SRC
+
+*Example Union with Types:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  union Vehicle of
+    Car
+    Truck
+    Boat
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Vehicle rdf:type sdml:Union, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example .
+    sdml:hasElementType :Car ;
+    sdml:hasElementType :Truck ;
+    sdml:hasElementType :Boat .
+#+END_SRC
+
+*Example Union with Annotation:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  union Vehicle is
+
+    @skos:prefLabel = "Vehicle"@en
+
+    Car
+    Truck
+    Boat
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Vehicle rdf:type sdml:Union, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example .
+    skos:prefLabel "Vehicle"@en .
+    sdml:hasElementType :Car ;
+    sdml:hasElementType :Truck ;
+    sdml:hasElementType :Boat .
+:Length rdf:type sdml:Union, owl:NamedIndividual ;
 #+END_SRC
 
 

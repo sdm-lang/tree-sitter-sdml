@@ -849,7 +849,7 @@
           "named": true
         },
         {
-          "type": "union_variant",
+          "type": "identifier_reference",
           "named": true
         }
       ]
@@ -875,42 +875,6 @@
         "types": [
           {
             "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "union_variant",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "annotation_only_body",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "target": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "type_reference",
             "named": true
           }
         ]
@@ -1084,6 +1048,10 @@
   },
   {
     "type": "module",
+    "named": false
+  },
+  {
+    "type": "of",
     "named": false
   },
   {

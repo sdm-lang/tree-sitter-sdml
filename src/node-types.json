@@ -839,7 +839,32 @@
   {
     "type": "type_variant",
     "named": true,
-    "fields": {},
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "annotation_only_body",
+            "named": true
+          }
+        ]
+      },
+      "rename": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "as",
+            "named": false
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": false,
       "required": true,
@@ -995,6 +1020,10 @@
   },
   {
     "type": "]",
+    "named": false
+  },
+  {
+    "type": "as",
     "named": false
   },
   {

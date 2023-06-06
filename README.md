@@ -50,6 +50,14 @@ end
 
 # Changes
 
+**Version: 0.1.11**
+
+* Added a rename to type variants
+
+**Version: 0.1.10**
+
+* Cleaned up queries.
+
 **Version: 0.1.9**
 
 * Simplified the disjoint `union` type.

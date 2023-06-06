@@ -96,6 +96,9 @@ name: (identifier) @type.definition)
 (type_variant
  (identifier_reference) @type)
 
+(type_variant
+ rename: (identifier) @type)
+
 (cardinality_range
  ".." @operator)
 

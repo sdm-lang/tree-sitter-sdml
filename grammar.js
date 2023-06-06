@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.10
+// Version:    0.1.11
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -334,7 +334,24 @@ module.exports = grammar({
             keyword('end')
         ),
 
-        type_variant: $ => $.identifier_reference,
+        type_variant: $ => seq(
+            $.identifier_reference,
+            optional(
+                field(
+                    'rename',
+                    seq(
+                        "as",
+                        $.identifier,
+                    )
+                )
+            ),
+            optional(
+                field(
+                    'body',
+                    $.annotation_only_body
+                )
+            )
+         ),
 
         // -----------------------------------------------------------------------
         // Members

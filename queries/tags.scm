@@ -61,6 +61,8 @@
 
 (type_variant (identifier_reference) @name) @reference.class
 
+(type_variant rename: (identifier) @name) @reference.class
+
 ;; ---------------------------------------------------------------------------
 ;; Annotations
 ;; ---------------------------------------------------------------------------

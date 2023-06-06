@@ -42,7 +42,7 @@ LineComment     = ";", ( -( "\r" | "\n" ) )*
 Lisp conventions for single, double, and triple comment characters are useful but in no way enforced.
 
 #+NAME: lst:sdml-ex-comment-conventions
-#+CAPTION: Comments
+#+CAPTION: Comment Conventions
 #+BEGIN_SRC sdml :exports code :noeval
 ;;; File-level comment
 ;; Comment at-point

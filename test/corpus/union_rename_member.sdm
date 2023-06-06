@@ -1,0 +1,29 @@
+===========================
+Union, With Renamed Variant
+===========================
+
+module campaign is
+
+  union VehicleClass of
+    Car
+    Boat as WaterCar
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (type_def
+      (union_def
+        name: (identifier)
+        body: (union_body
+          (type_variant
+            (identifier_reference
+              (identifier)))
+          (type_variant
+            (identifier_reference
+              (identifier))
+            rename: (identifier)))))))

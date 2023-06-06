@@ -93,21 +93,21 @@ name: (identifier) @type.definition)
  name: (identifier) @constant
  "=" @operator)
 
-(union_body
- (type_variant
-  (identifier_reference) @type))
+(type_variant
+ (identifier_reference) @type)
 
-(cardinality_expression
- (cardinality_range
-   ".." @operator))
+(cardinality_range
+ ".." @operator)
 
 ;; ---------------------------------------------------------------------------
 ;; Values
 ;; ---------------------------------------------------------------------------
 
 (string
- (quoted_string) @string
- language: (language_tag)? @property)
+ (quoted_string) @string)
+
+(string
+ language: (language_tag) @property)
 
 (iri_reference) @string.special
 

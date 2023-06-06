@@ -35,6 +35,12 @@ module campaign is
     ref target {0..1} -> {0..} Target
   end
 
+  union foo of
+    Bar
+    Baz
+  end
+
+
   entity Target
 
 end

@@ -16,7 +16,7 @@
  name: (qualified_identifier) @name) @reference.class
 
 ;; ---------------------------------------------------------------------------
-;; Types and Members
+;; Types
 ;; ---------------------------------------------------------------------------
 
 (data_type_def
@@ -43,6 +43,10 @@
 (union_def
  name: (identifier) @name) @definition.class
 
+;; ---------------------------------------------------------------------------
+;; Members
+;; ---------------------------------------------------------------------------
+
 (identity_member
  target: (type_reference (identifier_reference) @name)) @reference.class
 
@@ -52,8 +56,10 @@
 (member_by_reference
  target: (type_reference (identifier_reference) @name)) @reference.class
 
-(union_body
- (type_variant (identifier_reference) @name)) @reference.class
+(enum_variant
+ name: (identifier) @definition.constant)
+
+(type_variant (identifier_reference) @name) @reference.class
 
 ;; ---------------------------------------------------------------------------
 ;; Annotations
@@ -78,6 +84,3 @@
 
 (member_by_reference
  name: (identifier) @name) @definition.field
-
-(enum_variant
- name: (identifier) @name) @constant

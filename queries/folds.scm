@@ -6,10 +6,11 @@
  (structure_def)
  (union_def)
  ;; ----------------
+ (annotation_only_body)
  (entity_body)
  (entity_group)
  (enum_body)
  (structure_body)
  (structure_group)
- (annotation_only_body)
+ (union_body)
  ] @fold

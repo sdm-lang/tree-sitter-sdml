@@ -9,6 +9,7 @@
 #+HTML_HEAD: <style>div#list-of-listings > h2 { border-top: 0px; }</style>
 #+HTML_HEAD: <style>img { max-width: 800px; height: auto; }</style>
 #+HTML_HEAD: <style>div.figure { text-align: center; }</style>
+#+HTML_HEAD: <style>div.figure p { text-align: center; }</style>
 #+HTML_HEAD: <style>p,li,dd { text-align: justify; }</style>
 #+OPTIONS: toc:3
 

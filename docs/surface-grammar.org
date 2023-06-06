@@ -56,7 +56,9 @@ UnionDef            = "union", Identifier, UnionBody?
 
 UnionBody           = "of", Annotation*, TypeVariant*, "end"
 
-TypeVariant         = IdentifierReference
+TypeVariant         = IdentifierReference TypeVariantRename? AnnotationOnlyBody?
+
+TypeVariantRename   = "as" Identifier
 
 IdentityMember      =
     "identity", Identifier, TypeExpression, AnnotationOnlyBody?

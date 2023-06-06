@@ -793,7 +793,9 @@ The union ~VehicleClass~ in [[lst:sdml-ex-empty-union]] is valid but incomplete.
 
 #+NAME: lst:grammar-type-variant
 #+BEGIN_SRC ebnf
-TypeVariant     = IdentifierReference
+TypeVariant     = IdentifierReference TypeVariantRename? AnnotationOnlyBody?
+
+TypeVariantRename = "as" Identifier
 #+END_SRC
 
 #+NAME: lst:sdml-ex-union

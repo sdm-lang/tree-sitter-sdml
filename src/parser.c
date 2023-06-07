@@ -742,23 +742,23 @@ static const TSFieldMapSlice ts_field_map_slices[PRODUCTION_ID_COUNT] = {
   [10] = {.index = 16, .length = 1},
   [11] = {.index = 17, .length = 3},
   [12] = {.index = 20, .length = 3},
-  [13] = {.index = 23, .length = 1},
-  [14] = {.index = 24, .length = 2},
-  [15] = {.index = 26, .length = 1},
-  [16] = {.index = 27, .length = 2},
-  [17] = {.index = 29, .length = 1},
-  [18] = {.index = 30, .length = 4},
-  [19] = {.index = 34, .length = 2},
-  [20] = {.index = 36, .length = 3},
-  [21] = {.index = 39, .length = 2},
-  [22] = {.index = 41, .length = 4},
-  [23] = {.index = 45, .length = 3},
-  [24] = {.index = 48, .length = 2},
-  [25] = {.index = 50, .length = 3},
-  [26] = {.index = 53, .length = 5},
-  [27] = {.index = 58, .length = 3},
-  [28] = {.index = 61, .length = 1},
-  [29] = {.index = 62, .length = 1},
+  [13] = {.index = 23, .length = 2},
+  [14] = {.index = 25, .length = 2},
+  [15] = {.index = 27, .length = 1},
+  [16] = {.index = 28, .length = 2},
+  [17] = {.index = 30, .length = 1},
+  [18] = {.index = 31, .length = 4},
+  [19] = {.index = 35, .length = 3},
+  [20] = {.index = 38, .length = 3},
+  [21] = {.index = 41, .length = 2},
+  [22] = {.index = 43, .length = 4},
+  [23] = {.index = 47, .length = 3},
+  [24] = {.index = 50, .length = 2},
+  [25] = {.index = 52, .length = 4},
+  [26] = {.index = 56, .length = 5},
+  [27] = {.index = 61, .length = 3},
+  [28] = {.index = 64, .length = 1},
+  [29] = {.index = 65, .length = 1},
 };
 
 static const TSFieldMapEntry ts_field_map_entries[] = {
@@ -799,60 +799,63 @@ static const TSFieldMapEntry ts_field_map_entries[] = {
     {field_target_cardinality, 1, .inherited = true},
   [23] =
     {field_body, 1},
-  [24] =
+    {field_name, 0},
+  [25] =
     {field_name, 1},
     {field_target, 2, .inherited = true},
-  [26] =
-    {field_identity, 2},
   [27] =
+    {field_identity, 2},
+  [28] =
     {field_name, 0},
     {field_value, 2},
-  [29] =
-    {field_target, 1},
   [30] =
+    {field_target, 1},
+  [31] =
     {field_body, 2},
     {field_name, 0},
     {field_target, 1, .inherited = true},
     {field_target_cardinality, 1, .inherited = true},
-  [34] =
+  [35] =
+    {field_name, 0},
     {field_rename, 1},
     {field_rename, 2},
-  [36] =
+  [38] =
     {field_body, 3},
     {field_name, 1},
     {field_target, 2, .inherited = true},
-  [39] =
+  [41] =
     {field_target, 0, .inherited = true},
     {field_target_cardinality, 0, .inherited = true},
-  [41] =
+  [43] =
     {field_name, 1},
     {field_source_cardinality, 2, .inherited = true},
     {field_target, 2, .inherited = true},
     {field_target_cardinality, 2, .inherited = true},
-  [45] =
+  [47] =
     {field_body, 3},
     {field_name, 0},
     {field_value, 2},
-  [48] =
+  [50] =
     {field_target, 2},
     {field_target_cardinality, 1},
-  [50] =
+  [52] =
     {field_body, 3},
+    {field_name, 0},
     {field_rename, 1},
     {field_rename, 2},
-  [53] =
+  [56] =
     {field_body, 3},
     {field_name, 1},
     {field_source_cardinality, 2, .inherited = true},
     {field_target, 2, .inherited = true},
     {field_target_cardinality, 2, .inherited = true},
-  [58] =
+  [61] =
     {field_source_cardinality, 0},
     {field_target, 1, .inherited = true},
     {field_target_cardinality, 1, .inherited = true},
-  [61] =
+  [64] =
     {field_min, 1},
-  [62] =
+  [65] =
     {field_max, 1},
 };
 
@@ -4793,8 +4796,8 @@ static const TSParseActionEntry ts_parse_actions[] = {
   [356] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_type_reference, 1),
   [358] = {.entry = {.count = 1, .reusable = true}}, SHIFT(74),
   [360] = {.entry = {.count = 1, .reusable = true}}, SHIFT(158),
-  [362] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_type_variant, 1),
-  [364] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_type_variant, 1),
+  [362] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_type_variant, 1, .production_id = 2),
+  [364] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_type_variant, 1, .production_id = 2),
   [366] = {.entry = {.count = 1, .reusable = false}}, SHIFT(148),
   [368] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym__type_expression_from_to, 2, .production_id = 27),
   [370] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym__type_expression_from_to, 2, .production_id = 27),

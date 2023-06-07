@@ -52,12 +52,13 @@ end
 
 **Version: 0.1.12**
 
-* Fixed highlight issue for annotations with identifier reference values
+* Fixed highlight issue for annotations with `IdentifierReference` values
+* Added field for `TypeVariant` name
 
 **Version: 0.1.11**
 
-* Added a rename to type variants
-* Fixed annotation and language-tag conflict
+* Added a rename to optional value to `TypeVariant`
+* Fixed `annotation` and `language_tag` grammar rule conflict
 
 **Version: 0.1.10**
 
@@ -65,11 +66,11 @@ end
 
 **Version: 0.1.9**
 
-* Simplified the disjoint `union` type.
+* Simplified the disjoint `UnionDef` type.
 
 **Version: 0.1.8**
 
-* Added a disjoint `union` type.
+* Added a disjoint `UnionDef` type.
 
 **Version: 0.1.7**
 

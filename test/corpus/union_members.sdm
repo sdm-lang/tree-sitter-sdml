@@ -21,8 +21,8 @@ end
         name: (identifier)
         body: (union_body
           (type_variant
-            (identifier_reference
+            name: (identifier_reference
               (identifier)))
           (type_variant
-            (identifier_reference
+            name: (identifier_reference
               (identifier))))))))

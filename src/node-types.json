@@ -850,6 +850,16 @@
           }
         ]
       },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          }
+        ]
+      },
       "rename": {
         "multiple": true,
         "required": false,
@@ -864,16 +874,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier_reference",
-          "named": true
-        }
-      ]
     }
   },
   {

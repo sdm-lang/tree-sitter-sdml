@@ -2,7 +2,7 @@ module rentals is
 
   import [ cids:VehicleIdentificationNumber cids:Uuid ]
   import [ xsd:date xsd:string ]
- 
+
   entity Class
 
   entity Vehicle is

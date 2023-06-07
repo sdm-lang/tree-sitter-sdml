@@ -332,7 +332,7 @@ module.exports = grammar({
         ),
 
         type_variant: $ => seq(
-            $.identifier_reference,
+            field('name', $.identifier_reference),
             optional(
                 field(
                     'rename',

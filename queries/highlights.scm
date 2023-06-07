@@ -45,6 +45,9 @@
  name: (identifier_reference) @property
  "="? @operator)
 
+(annotation
+ value: (value (identifier_reference) @type))
+
 ;; ---------------------------------------------------------------------------
 ;; Types
 ;; ---------------------------------------------------------------------------

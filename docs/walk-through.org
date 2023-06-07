@@ -211,12 +211,8 @@ sdml draw --diagram erd \
 module rentals is
 
   entity Customer is
-    @skos:prefLabel = ""
-    @skos:altLabel = ""
-
-;;    @sdml:hasVersioningStyle = "Immutable"
-;;    @skos:pref:Label ""
-;;    @sdml:hasVersionIdType = 1
+    @sdml:hasVersioningStyle = "Immutable"
+    @sdml:hasVersionIdType = VersionId
 
     identity id -> cids:Uuid
 

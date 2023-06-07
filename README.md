@@ -50,6 +50,10 @@ end
 
 # Changes
 
+**Version: 0.1.12**
+
+* Fixed highlight issue for annotations with identifier reference values
+
 **Version: 0.1.11**
 
 * Added a rename to type variants

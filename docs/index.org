@@ -10,6 +10,8 @@
 
 #+BEGIN_SRC emacs-lisp :exports none
 (require 'ob-dot) ;; builtin
+(require 'lua-mode)
+(require 'ob-lua)
 (require 'ob-sdml)
 (require 'ebnf-mode)
 #+END_SRC

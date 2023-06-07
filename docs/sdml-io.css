@@ -55,6 +55,11 @@ div#list-of-listings > h2 {
     border-top: 0px;
 }
 
+div#footnotes h2.footnotes {
+    border-top: 0px;
+    display: block;
+}
+
 div.footdef sup {
     display: inline-block;
 }

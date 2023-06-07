@@ -412,7 +412,7 @@ as well.
 tree-sitter plugin, but don't install yet, as shown on the nvim-treesitter page (using [[https://github.com/junegunn/vim-plug][vim-plug]]):
 
 #+NAME: lst:vim-ts-plugin
-#+BEGIN_SRC vimrc-mode :noeval
+#+BEGIN_SRC vimrc :noeval
 call plug#begin()
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 call plug#end()
@@ -457,7 +457,7 @@ require'nvim-treesitter.configs'.setup {
 To allow tree-sitter to do folding based on =folds.scm=, add the following to =init.vim=.
 
 #+NAME: lst:vim-ts-folding
-#+BEGIN_SRC vimrc-mode :noeval
+#+BEGIN_SRC vimrc :noeval
 set foldmethod=expr
 set foldexpr=nvim_treesitter#foldexpr()
 #+END_SRC
@@ -483,7 +483,7 @@ parser_config.sdml = {
 Additionally, try the  [[https://github.com/nvim-treesitter/nvim-treesitter-context][nvim-treesitter-context]] and [[https://github.com/nvim-treesitter/nvim-treesitter-refactor][nvim-treesitter-refactor]] plugins based on tree-sitter.
 
 #+NAME: lst:vim-ts-extras
-#+BEGIN_SRC vimrc-mode :noeval
+#+BEGIN_SRC vimrc :noeval
 call plug#begin()
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -522,8 +522,10 @@ require'nvim-treesitter.configs'.setup {
 
 ** VSCode
 
-Try here: https://github.com/georgewfraser/vscode-tree-sitter
-https://github.com/EvgeniyPeshkov/syntax-highlighter
+Try here:
+
+- https://github.com/georgewfraser/vscode-tree-sitter
+- https://github.com/EvgeniyPeshkov/syntax-highlighter
 
 # ----- Footnotes
 

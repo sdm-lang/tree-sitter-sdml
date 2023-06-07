@@ -5,7 +5,7 @@ Annotation, Multiple Decimals
 module Campaign is
 
   @dc:some = [ 101.0 102.201 0.1 ]
-  
+
 end
 
 ---

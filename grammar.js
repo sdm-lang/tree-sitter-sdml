@@ -109,7 +109,7 @@ module.exports = grammar({
         annotation: $ => seq(
             token('@'),
             field('name', $.identifier_reference),
-           operator('='),
+            operator('='),
             field('value', $.value)
         ),
 
@@ -163,11 +163,8 @@ module.exports = grammar({
             )
         ),
 
-        language_tag: $ => token(
-            seq(
-                token.immediate('@'),
-                /[a-z]{2,3}(-[A-Z]{3})?(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?/
-            )
+        language_tag: $ => token.immediate(
+            prec(1, /@[a-z]{2,3}(-[A-Z]{3})?(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?/)
         ),
 
         // From <https://github.com/BonaBeavis/tree-sitter-turtle/blob/main/grammar.js>

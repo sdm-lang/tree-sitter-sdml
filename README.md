@@ -53,6 +53,7 @@ end
 **Version: 0.1.11**
 
 * Added a rename to type variants
+* Fixed annotation and language-tag conflict
 
 **Version: 0.1.10**
 
@@ -70,6 +71,7 @@ end
 
 * Made field name `sourceCardinality` into `source_cardinality`.
 * Made field name `targetCardinality` into `target_cardinality`.
+* Added versioning annotations
 
 **Version: 0.1.6**
 

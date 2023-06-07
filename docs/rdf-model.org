@@ -261,12 +261,15 @@ All annotation properties have an RDF type of =owl:AnnotationProperty=.
 
 #+NAME: tbl:owl-annotation-properties
 #+CAPTION: OWL: Annotation Properties
-| Name             | Domain       | Range          |
-|------------------+--------------+----------------|
-| =:rootEntity=      | =:Module=      | =:Entity=        |
-| =:defaultVariant=  | =:Enumeration= | =xsd:NMTOKEN=    |
-| =:deprecatedSince= | N/A          | =:versionString= |
-| =:introducedIn=    | N/A          | =:versionString= |
+| Name             | Domain       | Range                  |
+|------------------+--------------+------------------------|
+| =:rootEntity=      | =:Module=      | =:Entity=                |
+| =:defaultVariant=  | =:Enumeration= | =xsd:NMTOKEN=            |
+| =:deprecatedSince= | N/A          | =:versionString=         |
+| =:introducedIn=    | N/A          | =:versionString=         |
+| =:flatten=         | =:Member=      | =Boolean=                |
+| =:hasVersioningStyle= | =:Entity=      | =VersioningStyle=        |
+| =:hasVersionIdType= | =:Entity=      | =:Datatype= ∪ =:Structure= |
 
 The properties =:deprecatedSince= and =:introducedIn= both refer to a range type =:versionString=, this type is a string that
 conforms to the [[https://semver.org/][semver]] form of /major.minor.path/ where each is an integer. 
@@ -278,6 +281,29 @@ conforms to the [[https://semver.org/][semver]] form of /major.minor.path/ where
         [ xsd:pattern "(0|[1-9][0-9]*)(\.0|[1-9][0-9]*){,2}" ]
     ) .
 #+END_SRC
+
+The property =:hasVersioningStyle=, if present, denotes an entity as versioned and what form of versioning is to be applies.
+The values for this property are:
+
+- Immutable :: The user does not get to control the versioning, every mutation of the entity results in a new version
+  and that version is therefore immutable and so version identifiers are maximally stable.
+- Snapshot :: The user creates a new version explicitly with a specific operation. This implies that there are mutations
+  of a specific version possible and so the version identifier is not necessarily stable.
+- Mutable :: In this case the user has complete control over the versioning by mutation of the entity. In general this
+  implies that there is some member of the entity that holds the version identifier. This results in an explicitly
+  unstable identifier.
+
+#+BEGIN_SRC ttl
+:VersioningStyle rdf:type rdfs:DataRange ;
+    owl:oneOf (
+        "Immutable"^^xsd:string
+        "Snapshot"^^xsd:string
+        "Mutable"^^xsd:string
+    ) .
+#+END_SRC
+
+The corresponding property =:hasVersionIdType= references the type used to represent a specific version. The default for this
+is =xsd:string=.
 
 ** <<sec:common-annotations>>Commonly Used Annotations
 

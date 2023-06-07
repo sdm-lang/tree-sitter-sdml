@@ -491,7 +491,7 @@
         "Denotes, if present, the default variant of an enumeration."@en .
 
 # -------------------------------------------------------------------
-# Properties ❱ Annotation ❱ Versioning
+# Properties ❱ Annotation ❱ Model Versioning
 # -------------------------------------------------------------------
 
 :versionString rdf:type rdfs:Datatype ;
@@ -516,3 +516,33 @@
     rdfs:isDefinedBy : ;
     skos:prefLabel "introduced in version"@en ;
     skos:definition "The specific version this model element was introduced."@en .
+
+# -------------------------------------------------------------------
+# Properties ❱ Annotation ❱ Entity Versioning
+# -------------------------------------------------------------------
+
+:hasVersioningStyle rdf:type owl:AnnotationProperty ;
+    rdfs:domain :Entity ;
+    rdfs:range :VersioningStyle ;
+    rdfs:isDefinedBy : ;
+    skos:prefLabel "has versioning style"@en ;
+    skos:definition
+        "Denotes that this is a versioned entity, using the applied style."@en .
+
+:hasVersionIdType rdf:type owl:AnnotationProperty ;
+    rdfs:domain :Entity ;
+    rdfs:range  [
+        owl:unionOf ( :Datatype :Structure )
+        ] ;
+    rdfs:isDefinedBy : ;
+    skos:prefLabel "has versioning identifier type"@en ;
+    skos:definition
+        "Denotes the type of the version identifier."@en .
+
+:VersioningStyle rdf:type rdfs:DataRange ;
+    owl:oneOf (
+        "Immutable"^^xsd:string
+        "Snapshot"^^xsd:string
+        "Mutable"^^xsd:string
+        ) ;
+    skos:prefLabel "Versioning Style"@en .

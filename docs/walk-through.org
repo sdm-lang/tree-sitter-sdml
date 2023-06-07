@@ -204,3 +204,27 @@ sdml draw --diagram erd \
 #+RESULTS: lst:example-fourth-pass-erd
 [[./rentals-erd-4.svg]]
 
+
+#+NAME: lst:example-fourth-pass
+#+CAPTION: Rentals Non-Entity Detail
+#+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-concept-4.svg :exports both :noweb yes
+module rentals is
+
+  entity Customer is
+    @skos:prefLabel = ""
+    @skos:altLabel = ""
+
+;;    @sdml:hasVersioningStyle = "Immutable"
+;;    @skos:pref:Label ""
+;;    @sdml:hasVersionIdType = 1
+
+    identity id -> cids:Uuid
+
+    contactAddress -> {1} Address
+    driverLicense -> {0..1} LicenseInformation
+  end
+
+  ;; ...
+
+end
+#+END_SRC

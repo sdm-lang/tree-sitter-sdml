@@ -22,7 +22,7 @@ the namespace URI will be used to retrieve the corresponding resource or a local
 | =owl=       | <http://www.w3.org/2002/07/owl#>              |
 | =rdf=       | <http://www.w3.org/1999/02/22-rdf-syntax-ns#> |
 | =rdfs=      | <http://www.w3.org/2000/01/rdf-schema#>       |
-| *=sdml=*    | *<https://github.com/johnstonskj/sdml/>*      |
+| *=sdml=*    | *<https://sdml.io/sdml-owl.ttl#>*               |
 | =sioc=      | <http://rdfs.org/sioc/ns#>                    |
 | =skos=      | <http://www.w3.org/2004/02/skos/core#>        |
 | =vcard=     | <http://www.w3.org/2001/vcard-rdf/3.0#>       |
@@ -30,17 +30,3 @@ the namespace URI will be used to retrieve the corresponding resource or a local
 | =void=      | <http://rdfs.org/ns/void#>                    |
 | =xml=       | <http://www.w3.org/XML/1998/namespace>        |
 | =xsd=       | <http://www.w3.org/2001/XMLSchema#>           |
-
-** Recommended Usage
-
-*** Resource Identification
-
-xml:base
-
-*** Labels and Descriptions
-
-skos, rdfs, dcterms
-
-*** Data Type Restrictions
-
-xsd

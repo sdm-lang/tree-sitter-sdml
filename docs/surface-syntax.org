@@ -51,7 +51,7 @@ Lisp conventions for single, double, and triple comment characters are useful bu
 
 ** Identifiers
 
-An identifier is a string of characters corresponding to the [[https://unicode.org/reports/tr44/#GC_Values_Table][Unicode General Category]] *Lu* (an uppercase letter) or *Ll* (a
+An identifier is a string of characters corresponding to the Unicode General Category[fn:ucgc] *Lu* (an uppercase letter) or *Ll* (a
 lowercase letter) or the Unicode Low Line (underscore, "_", =U+005F=) character. Specifically an identifer *must* start with
 and *must* end with a letter such that the low line character may only appear /within/ the identifier. The following is a
 brief BNF description of the identifier syntax.
@@ -290,7 +290,7 @@ a string contribute to equality tests, so that ="abc"@en= is not equal to ="abc"
 
 An *IRI Reference value* in SDML is a value IRI value, either absolute or relative, between a Less-Than Sign ("<", =U+003C=)
 character and a Greater-Than Sign (">", =U+003E=) character. IRI references are more permissive in the SDML grammar than
-the Turtle[fn:3] language.
+the Turtle[fn:iri] language.
 
 #+NAME: lst:grammar-iri-reference
 #+BEGIN_SRC ebnf
@@ -628,10 +628,6 @@ module example is
 end
 #+END_SRC
 
-# ----- Footnotes
-
-[fn:3] [[https://www.w3.org/TR/turtle/#sec-iri-references][RDF 1.1 Turtle]], 6.3 IRI References
-
 *** Entities
 
 #+NAME: lst:grammar-entity-def
@@ -810,3 +806,7 @@ module example is
 end
 #+END_SRC
 
+# ----- Footnotes
+
+[fn:ucgc] [[https://unicode.org/reports/tr44/#GC_Values_Table][Unicode General Category]], Unicode.org
+[fn:iri] [[https://www.w3.org/TR/turtle/#sec-iri-references][RDF 1.1 Turtle]], 6.3 IRI References

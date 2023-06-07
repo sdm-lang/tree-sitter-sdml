@@ -11,7 +11,7 @@ Whitespace present in the surface syntax has *no* effect on the corresponding RD
 
 ** Comments
 
-Comments present in the surface syntax are *not* translated into the corresponding RDF.;
+Comments present in the surface syntax are *not* translated into the corresponding RDF.
 
 ** Identifiers
 
@@ -80,13 +80,13 @@ The generated RDF consists of separate statements for each value in the list.
 :thing skos:altLabel "maybe" .
 #+END_SRC
 
-For clarity and brevity this is usually written in Turtle as an object list (Turtle [[https://www.w3.org/TR/turtle/#object-lists][2.3 Object Lists]]):
+For clarity and brevity this is usually written in Turtle as an object list[fn:ttl-ol]:
 
 #+BEGIN_SRC ttl
 :thing skos:altLabel "yes", "no", "maybe" .
 #+END_SRC
 
-Currently there is no mapping from the surface syntax to list values, that is an RDF Collection (Turtle [[https://www.w3.org/TR/turtle/#collections][2.8 Collections]])
+Currently there is no mapping from the surface syntax to list values, that is an RDF Collection[fn:ttl-cs]
 which constructs a list using the =rdf:first= and =rdf:rest= predicates. This would result in the following RDF:
 
 #+BEGIN_SRC ttl
@@ -523,3 +523,7 @@ end
 :Length rdf:type sdml:Union, owl:NamedIndividual ;
 #+END_SRC
 
+# ----- Footnotes
+
+[fn:ttl-ol] RDF 1.1 Turtle -- Terse RDF Triple Language, §[[https://www.w3.org/TR/turtle/#object-lists][2.3 Object Lists]], W3C
+[fn:ttl-cs] RDF 1.1 Turtle -- Terse RDF Triple Language, §[[https://www.w3.org/TR/turtle/#object-lists][2.8 Collections]], W3C

@@ -1,0 +1,72 @@
+/* Navigation */
+
+div#table-of-contents li {
+    text-align: left;
+}
+
+/* Main Body Text */
+
+p, li, dd {
+    text-align: justify;
+}
+
+/* Headings */
+h2 {
+    border-top: 1px solid;
+}
+
+/* Figures/Images */
+
+img {
+    max-width: 800px;
+    height: auto;
+}
+
+div.figure {
+    text-align: center;
+}
+
+div.figure p {
+    text-align: center;
+}
+
+/* Admonitions */
+
+div.NOTE {
+    margin: 1em;
+    padding-left: 1em;
+    border-left: 0.4em solid;
+    border-color: darkblue;
+}
+
+div.NOTE > p::before {
+    color: darkblue;
+    font-weight: bold;
+    content: 'ⓘ ';
+}
+
+/* TOC */
+
+div#list-of-tables > h2 {
+    border-top: 0px;
+}
+
+div#list-of-listings > h2 {
+    border-top: 0px;
+}
+
+div.footdef sup {
+    display: inline-block;
+}
+
+div.footpara {
+    padding: 0px;
+    margin-left: 1em;
+    display:  inline-block;
+}
+
+p.footpara {
+    margin-bottom: 0.4em;
+    padding-top: 0px;
+    padding-left: 0px;
+}

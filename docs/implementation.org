@@ -99,8 +99,14 @@ make build
  
 ** Command-Line Tool
 
-- Source at [[https://github.com/johnstonskj/rust-sdml][Github]]
-- Published to [[https://crates.io/crates/sdml][crates.io]]
+Install is simple using the =cargo= command. If you do not have cargo installed you can follow the standard /rustup/
+directions[fn:cargo] or use the Homebrew[fn:brew] or equivalent package manager.
+
+#+BEGIN_EXAMPLE
+cargo install sdml
+#+END_EXAMPLE
+
+Once installed the option =--help= or the command =help= will guide you through the commands available.
 
 #+BEGIN_EXAMPLE
 $ sdml --help
@@ -203,7 +209,8 @@ sdml highlight --output-format html-standalone rentals
 
 *** Draw Diagrams
 
-To draw a high-level Concepts diagram, use the diagram specifier =concepts=.
+To draw a high-level Concepts diagram, use the diagram specifier =concepts=. To generate an image file you need to install
+Graphviz[fn:gviz].
 
 #+BEGIN_EXAMPLE
 sdml draw --diagram concepts \
@@ -211,7 +218,8 @@ sdml draw --diagram concepts \
           --base-path . rentals
 #+END_EXAMPLE
 
-For more detail an Entity-Relationship diagram can be generated with the diagram specifier =entity-relationship=.
+For more detail an Entity-Relationship diagram can be generated with the diagram specifier =entity-relationship=. To
+generate an image file you need to install Graphviz[fn:gviz].
 
 #+BEGIN_EXAMPLE
 sdml draw --diagram entity-relationship \
@@ -219,7 +227,8 @@ sdml draw --diagram entity-relationship \
           --base-path . rentals
 #+END_EXAMPLE
 
-For the mose detail a UML Class diagram can be generated with the diagram specifier =uml-class=.
+For the mose detail a UML Class diagram can be generated with the diagram specifier =uml-class=. To generate an image file
+you need to install PlantUML[fn:puml].
 
 #+BEGIN_EXAMPLE
 sdml draw --diagram uml-class \
@@ -229,9 +238,9 @@ sdml draw --diagram uml-class \
 
 *** Module Resolution
 
-The resolver uses the environment variable =SDML_PATH=, ...
-
-For example, the command =sdml highlight rentals= will look for the following files:
+A particular module =rentals= is resolved by looking for the module name first with the ".sdm" and then the ".sdml"
+extension. If neither of these exist the same pair will be checked within a directory named =rentals=. So in total the
+following four file paths are checked.
 
 #+BEGIN_EXAMPLE
 {prefix}rentals.sdm
@@ -239,19 +248,37 @@ For example, the command =sdml highlight rentals= will look for the following fi
 {prefix}rentals/rentals.sdm
 {prefix}rentals/rentals.sdml
 #+END_EXAMPLE
-  
-- =sdml highlight --base-path ./examples rentals=
+
+The purpose of the variable ={prefix}= is to allow the resolver to use an environment variable, =SDML_PATH=, to find and
+load module files. Each path within the variable is used as a prefix in turn. The command line option =base-path= allows
+you to prepend a value to the =SDML_PATH= list for just this command. In the following example:
+
+#+BEGIN_EXAMPLE
+SDML_PATH=lib/sdml sdml highlight --base-path ./examples rentals
+#+END_EXAMPLE
+
+The list of file paths to check are:
+
+#+BEGIN_EXAMPLE
+lib/sdml/rentals.sdm
+lib/sdml/rentals.sdml
+lib/sdml/rentals/rentals.sdm
+lib/sdml/rentals/rentals.sdml
+./examples/rentals.sdm
+./examples/rentals.sdml
+./examples/rentals/rentals.sdm
+./examples/rentals/rentals.sdml
+#+END_EXAMPLE
+
+This same resolution mechanism is used for all imported values, in the following example each module =skos=, =other=, and
+=more=. With one exception, the module =skos= is known to the sdml command and it uses an internal representation.
 
 #+BEGIN_SRC sdml :exports code :noeval
 module subDomain is
 
   import skos:prefLabel
-
   import other:Something
-
-  import otherSubDomain
-
-  import somethingElse
+  import more
 
 end
 #+END_SRC
@@ -340,7 +367,8 @@ This is marked as a warning by Flycheck and provided with the necessary message.
 *** Org-Babel
 
 Org-Babel support provides the ability to call the SDML [[https://github.com/johnstonskj/rust-sdml][command-line tool]] to produce diagrams and more. For example, the
-following source block calls the CLI to draw a concept diagram for the enclosed module.
+following source block calls the CLI to draw a concept diagram for the enclosed module. It is worth noting that this
+documentation has been generated, including all source highlighting and diagrams, from an Org-mode document with Babel.
 
 #+BEGIN_EXAMPLE
 #+NAME: lst:rentals-example
@@ -496,3 +524,10 @@ require'nvim-treesitter.configs'.setup {
 
 Try here: https://github.com/georgewfraser/vscode-tree-sitter
 https://github.com/EvgeniyPeshkov/syntax-highlighter
+
+# ----- Footnotes
+
+[fn:cargo] [[https://doc.rust-lang.org/cargo/getting-started/installation.html][Installing Cargo]] from the Cargo book
+[fn:brew] The [[https://brew.sh/][Homebrew]] package manager
+[fn:gviz] [[https://graphviz.org/download/][Graphviz]] open source graph visualization software
+[fn:puml] [[https://plantuml.com/][PlantUML]] open-source UML diagram generator

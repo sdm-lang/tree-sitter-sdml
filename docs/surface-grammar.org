@@ -3,7 +3,7 @@
 
 * <<app:syntax>>Appendix: Complete Surface Syntax Grammar
 
-The grammar of the surface syntax is presented in Extended Backus–Naur form (EBNF). The addition of a character literal
+The grammar of the surface syntax is presented in Extended Backus–Naur form (EBNF)[fn:ebnf]. The addition of a character literal
 range operation =..= reduces the number of single character alternatives for clarity. There are also a set of pre-defined
 terminals such as =ASCII_DIGIT=, =ASCII_HEX_DIGIT=, =UC_LETTER_UPPER=, and =UC_LETTER_LOWER= used to simplify character ranges.
 
@@ -158,3 +158,6 @@ Whitespace          =
     | "\u{feff}"
 #+END_SRC
 
+# ----- Footnotes
+
+[fn:ebnf] [[https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form][Extended Backus-Naur Form (EBNF)]], Wikipedia

@@ -4,9 +4,9 @@
 
 * Introduction
 
-The Simple Domain Modeling Language ([[https://sdml.io/][home]] | [[https://github.com/johnstonskj/tree-sitter-sdml][Github]]) is a small data-oriented language for constructing, documenting, and
+The Simple Domain Modeling Language[fn:sdml] is a small data-oriented language for constructing, documenting, and
 reasoning about a conceptual domain model. For a background on domain modeling see appendix [[app:domain-modeling]]. At it's
-core SDML comprises an /abstract model/ whose structure and semantics are described by an [[https://www.w3.org/OWL/][OWL]] ([[https://www.w3.org/RDF/][RDF]]) ontology, and a
+core SDML comprises an /abstract model/ whose structure and semantics are described by an OWL[fn:owl]/RDF[fn:rdf] ontology, and a
 /surface syntax/ for editing and sharing concrete models. This document covers both the OWL and SDML representations and
 the correspondence between them, however the primary focus of the documentation is the surface syntax as most users will
 be interacting with it alone. Figure [[fig:model-overview]] shows the relationship between these high-level components.
@@ -32,9 +32,9 @@ digraph G {
 }
 #+END_SRC
 
-The language uses some ideas from [[http://www.uml.org/][UML]] which is often used in the construction of such models today. However, the goal is
+The language uses some ideas from UML[fn:uml] which is often used in the construction of such models today. However, the goal is
 to keep the language as small as possible, taking away some options where they don't make sense or where their use may
-distract from the major purpose of the model. The model also takes some of the language from Domain-Driven Design[fn:1],
+distract from the major purpose of the model. The model also takes some of the language from Domain-Driven Design[fn:ddd],
 namely the separation of entities (/an object defined not by its attributes, but its identity/) from value objects (/an
 immutable object that contains attributes but has no conceptual identity/), simply termed structures in SDML. This model
 does not include the following as first-class concepts: /aggregates/, /repositories/, /factories/, or /services/.
@@ -43,13 +43,16 @@ does not include the following as first-class concepts: /aggregates/, /repositor
 #+RESULTS: fig:model-overview
 [[file:sdml-overview.png]]
 
+#+BEGIN_NOTE
 One element that is not included in figure [[fig:model-overview]], as it is primarily an implementation decision, is
-that the reference implementation for SDML is provided as a [[https://tree-sitter.github.io/tree-sitter/][Tree-Sitter]]
-package. While generated tree-sitter parsers are not intended to be fast, or to be part of a compilation processes they
-do provide a multitude of language bindings, and a concrete syntax tree allowing easy development of the relatively
-simple tools required for SDML usage.
+that the reference implementation for SDML is provided as a Tree-Sitter[fn:ts] package. While generated tree-sitter
+parsers are not intended to be fast, or to be part of a compilation processes they do provide a multitude of language
+bindings, and a concrete syntax tree allowing easy development of the relatively simple tools required for SDML usage.
+#+END_NOTE
 
-Figure [[fig:model-transforms]] demonstrates another key element of a /Model-Driven Development/[fn:2] style, the transformation
+** Role in Development
+
+Figure [[fig:model-transforms]] demonstrates another key element of a /Model-Driven Development/[fn:mdd] style, the transformation
 between models and between models and other development artifacts.
 
 #+NAME: fig:model-transforms
@@ -79,6 +82,11 @@ digraph G {
 
 # ----- Footnotes
 
-[fn:1] [[https://en.wikipedia.org/wiki/Domain-driven_design][Domain-Driven Design]], Wikipedia
-[fn:2] [[https://en.wikipedia.org/wiki/Model-driven_engineering][Model-Driven Development]], Wikipedia
+[fn:sdml] Home at [[https://sdml.io/][sdmi.io]], source at [[https://github.com/johnstonskj/tree-sitter-sdml][github.com]]
+[fn:owl] [[https://www.w3.org/OWL/][Web Ontology Language (OWL)]], W3C
+[fn:uml] [[http://www.uml.org/][The Unified Modeling Language (UML)]], OMG
+[fn:rdf] [[https://www.w3.org/RDF/][Resource Description Framework (RDF)]], W3C
+[fn:ddd] [[https://en.wikipedia.org/wiki/Domain-driven_design][Domain-Driven Design]], Wikipedia
+[fn:mdd] [[https://en.wikipedia.org/wiki/Model-driven_engineering][Model-Driven Development]], Wikipedia
+[fn:ts]  Home at [[https://tree-sitter.github.io/tree-sitter/][Tree Sitter]], source at ...
 

@@ -62,6 +62,7 @@ div#footnotes h2.footnotes {
 
 div.footdef sup {
     display: inline-block;
+    width: 2em;
 }
 
 div.footpara {

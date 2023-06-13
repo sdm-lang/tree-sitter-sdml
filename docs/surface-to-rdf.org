@@ -331,7 +331,7 @@ end
 #+BEGIN_SRC ttl
 :DistanceUnit rdf:type sdml:Enumeration, owl:NamedIndividual ;
     rdfs:isDefinedBy :example ;
-    :hasVariant [
+    :hasValueVariant [
         rdf:type sdml:EnumerationVariant ;
         rdfs:label "Meter" ;
         rdf:value 1 
@@ -371,8 +371,8 @@ end
 
 :DistanceUnit rdf:type sdml:Enumeration, owl:NamedIndividual ;
     rdfs:isDefinedBy :example ;
-    :hasVariant :Meter ;
-    :hasVariant :Foot.
+    :hasValueVariant :Meter ;
+    :hasValueVariant :Foot.
 #+END_SRC
 
 ** Event Definition
@@ -499,7 +499,7 @@ end
 
 ** Union Definition
 
-*Example Union Structure:*
+*Example Empty Union:*
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
@@ -527,9 +527,9 @@ end
 #+BEGIN_SRC ttl
 :Vehicle rdf:type sdml:Union, owl:NamedIndividual ;
     rdfs:isDefinedBy :example .
-    sdml:hasElementType :Car ;
-    sdml:hasElementType :Truck ;
-    sdml:hasElementType :Boat .
+    sdml:hasTypeVariant :Car ;
+    sdml:hasTypeVariant :Truck ;
+    sdml:hasTypeVariant :Boat .
 #+END_SRC
 
 *Example Union with Annotation:*
@@ -551,10 +551,32 @@ end
 :Vehicle rdf:type sdml:Union, owl:NamedIndividual ;
     rdfs:isDefinedBy :example .
     skos:prefLabel "Vehicle"@en .
-    sdml:hasElementType :Car ;
-    sdml:hasElementType :Truck ;
-    sdml:hasElementType :Boat .
-:Length rdf:type sdml:Union, owl:NamedIndividual ;
+    sdml:hasTypeVariant :Car ;
+    sdml:hasTypeVariant :Truck ;
+    sdml:hasTypeVariant :Boat .
+#+END_SRC
+
+*Example Union with Rename:*
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  union Vehicle is
+    Car
+    Truck
+    Boat as WaterCar
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Vehicle rdf:type sdml:Union, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example .
+    sdml:hasTypeVariant :Car ;
+    sdml:hasTypeVariant :Truck ;
+    sdml:hasTypeVariant [
+        skos:prefLabel "WaterCar" ;
+        owl:equivalentClass :Boat
+    ] .
 #+END_SRC
 
 # ----- Footnotes

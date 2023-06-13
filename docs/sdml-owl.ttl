@@ -340,35 +340,43 @@
 # Properties ❱ Object ❱ Variants
 # -------------------------------------------------------------------
 
-:hasVariant rdf:type owl:ObjectProperty ;
-    owl:inverseOf :isVariantOf ;
+:hasValueVariant rdf:type owl:ObjectProperty ;
+    owl:inverseOf :isValueVariantOf ;
     rdfs:domain :Enumeration ;
     rdfs:range :Variant ;
     rdfs:isDefinedBy : ;
-    skos:prefLabel "has variant"@en ;
+    skos:prefLabel "has value variant"@en ;
     skos:definition
-        "Relates an enumeration to an owned variant."@en .
+        "Relates an enumeration to an owned value variant."@en .
 
-:isVariantOf rdf:type owl:ObjectProperty ;
-    owl:inverseOf :hasVariant ;
+:isValueVariantOf rdf:type owl:ObjectProperty ;
+    owl:inverseOf :hasValueVariant ;
     rdfs:domain :Variant ;
     rdfs:range :Enumeration ;
     rdfs:isDefinedBy : ;
-    skos:prefLabel "is variant of"@en ;
+    skos:prefLabel "is value variant of"@en ;
     skos:definition
-        "Relates a variant to it's owning enumeration."@en .
+        "Relates a value variant to it's owning enumeration."@en .
 
 # -------------------------------------------------------------------
 # Properties ❱ Object ❱ Unions
 # -------------------------------------------------------------------
 
-:hasVariantType rdf:type owl:ObjectProperty ;
+:hasTypeVariant rdf:type owl:ObjectProperty ;
     rdfs:domain :Union ;
     rdfs:range :Classifier ;
     rdfs:isDefinedBy : ;
     skos:prefLabel "has element type"@en ;
     skos:definition
-        "Relates a union to an variant type."@en .
+        "Relates a union to an owned type variant."@en .
+
+:isTypeVariantOf rdf:type owl:ObjectProperty ;
+    owl:inverseOf :hasTypeVariant ;
+    rdfs:range :Union ;
+    rdfs:isDefinedBy : ;
+    skos:prefLabel "is type variant of"@en ;
+    skos:definition
+        "Relates a type variant to it's owning union."@en .
 
 # -------------------------------------------------------------------
 # Properties ❱ Object ❱ Members

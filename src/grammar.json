@@ -170,7 +170,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PATTERN",
-        "value": "[\\p{Lu}\\p{Ll}]+(_[\\p{Lu}\\p{Ll}]+)*"
+        "value": "[\\p{Lu}\\p{Ll}][\\p{Lu}\\p{Ll}\\p{Nd}]*(_[\\p{Lu}\\p{Ll}\\p{Nd}]+)*"
       }
     },
     "qualified_identifier": {

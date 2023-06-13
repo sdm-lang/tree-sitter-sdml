@@ -141,9 +141,11 @@ ValueConstructor    = IdentifierReference, "(", SimpleValue, ")"
 ListOfValues        =
     "[", ( SimpleValue | ValueConstructor | IdentifierReference )+, "]"
 
-IdentifierWord      = ( UC_LETTER_UPPER | UC_LETTER_LOWER )+
+IdentifierInitial   = UC_LETTER_UPPER | UC_LETTER_LOWER
 
-Identifier          = IdentifierWord, ( "_", IdentifierWord )*
+IdentifierChar      = IdentifierInitial | UC_NUMBER_DECIMAL
+
+Identifier          = IdentifierInitial, IdentifierChar*, ( "_", IdentifierChar+ )*
 
 QualifiedIdentifier = Identifier, ":", Identifier
 

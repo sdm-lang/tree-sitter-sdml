@@ -332,13 +332,47 @@ end
 :DistanceUnit rdf:type sdml:Enumeration, owl:NamedIndividual ;
     rdfs:isDefinedBy :example ;
     :hasVariant [
+        rdf:type sdml:EnumerationVariant ;
         rdfs:label "Meter" ;
-        :hasValue 1 
+        rdf:value 1 
     ] ,
     [
+        rdf:type sdml:EnumerationVariant ;
         rdfs:label "Foot" ;
-        :hasValue 2
+        rdf:value 2
     ] .
+#+END_SRC
+
+*Example Enumeration with Named Variants:*
+
+Alternatively if the enumeration sets the SDML property =variantTransform= to the value "named" it will alter the
+transformation (from the default "anonymous") to RDF such that all variants become named individuals within the
+enclosing module.
+
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+  enum DistanceUnit is
+    @sdml:variantTransform = "named"
+  
+    Meter = 1
+    Foot = 2
+  end
+end
+#+END_SRC
+
+#+BEGIN_SRC ttl
+:Meter rdf:type sdml:EnumerationVariant, owl:NamedIndividual ;
+    rdfs:label "Meter" ;
+    rdf:value 1 .
+
+:Foot rdf:type sdml:EnumerationVariant, owl:NamedIndividual ;
+    rdfs:label "Foot" ;
+    rdf:value 2 .
+
+:DistanceUnit rdf:type sdml:Enumeration, owl:NamedIndividual ;
+    rdfs:isDefinedBy :example ;
+    :hasVariant :Meter ;
+    :hasVariant :Foot.
 #+END_SRC
 
 ** Event Definition

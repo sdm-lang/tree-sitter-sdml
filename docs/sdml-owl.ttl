@@ -37,6 +37,24 @@
     skos:definition
         "A first-class named individual of a model element type."@en.
 
+:name rdf:type owl:DatatypeProperty ;
+    rdfs:domain :ModelElement ;
+    rdfs:range :Name ;
+    rdfs:isDefinedBy : ;
+    skos:prefLabel "name"@en ;
+    skos:definition
+        "The scope-unique name of a model element."@en.
+
+
+:Name rdf:type rdfs:Datatype ;
+    owl:onDatatype xsd:string ;
+    owl:withRestrictions (
+        [
+            xsd:pattern "[\p{Lu}\p{Ll}][\p{Lu}\p{Ll}\p{Nd}]*(_[\p{Lu}\p{Ll}\p{Nd}]+)*"
+        ]
+    ) ;
+    rdfs:isDefinedBy : ;
+    skos:prefLabel "A name, or identifier, for a model element."@en .
 
 # -------------------------------------------------------------------
 # Classes ❱ Module
@@ -390,7 +408,7 @@
     rdfs:subPropertyOf :hasMember ;
     rdfs:domain [
         owl:unionOf ( :Entity :EntityGroup :Event :Structure :StructureGroup )
-        ] ;
+    ] ;
     rdfs:range :ByValueMember ;
     rdfs:isDefinedBy : ;
     skos:prefLabel "has by-value identifier"@en ;
@@ -400,7 +418,7 @@
     rdfs:subPropertyOf :hasMember ;
     rdfs:domain [
         owl:unionOf ( :Entity :EntityGroup )
-        ] ;
+    ] ;
     rdfs:range :ByReferenceMember ;
     rdfs:isDefinedBy : ;
     skos:prefLabel "has by-reference member"@en ;
@@ -410,7 +428,7 @@
     rdfs:domain :Member ;
     rdfs:range [
         owl:unionOf ( :Classifier :Unknown )
-        ] ;
+    ] ;
     rdfs:isDefinedBy : ;
     skos:prefLabel "target classifier"@en ;
     skos:definition "The type of the member."@en .
@@ -426,7 +444,7 @@
 :targetCardinality rdf:type owl:ObjectProperty  ;
     rdfs:domain [
         owl:unionOf ( :ByValueMember :ByReferenceMember )
-        ] ;
+    ] ;
     rdfs:range  :Cardinality ;
     rdfs:isDefinedBy : ;
     skos:prefLabel "target classifier cardinality"@en ;
@@ -482,9 +500,20 @@
 # Properties ❱ Annotation ❱ Variants
 # -------------------------------------------------------------------
 
+:variantTransform rdf:type owl:AnnotationProperty ;
+    rdfs:domain :EnumerationVariant ;
+    rdfs:range owl:oneOf (
+        "anonymous"^^xsd:string
+        "named"^^xsd:string
+    ) ;
+    rdfs:isDefinedBy : ;
+    skos:prefLabel "transformation form"@en ;
+    skos:definition
+        "Specified the form to use when transforming to RDF."@en .
+
 :defaultVariant rdf:type owl:AnnotationProperty ;
     rdfs:domain :Enumeration ;
-    rdfs:range xsd:NMTOKEN ;
+    rdfs:range xsd:anyURI ;
     rdfs:isDefinedBy : ;
     skos:prefLabel "default variant URI"@en ;
     skos:definition
@@ -502,7 +531,7 @@
     rdfs:isDefinedBy : ;
     skos:prefLabel "A semvar-like version string."@en .
 
-:deprecatedSince rdf:type owl:AnnotationProperty ;
+:deprecatedSince rdf:type owl:DatatypeProperty owl:AnnotationProperty ;
     rdfs:domain :ModelElement ;
     rdfs:range :versionString ;
     rdfs:isDefinedBy : ;
@@ -510,7 +539,7 @@
     skos:definition
         "The specific version at which this model element was deprecated."@en .
 
-:introducedIn rdf:type owl:AnnotationProperty ;
+:introducedIn rdf:type owl:DatatypeProperty owl:AnnotationProperty ;
     rdfs:domain :ModelElement ;
     rdfs:range :versionString ;
     rdfs:isDefinedBy : ;
@@ -533,7 +562,7 @@
     rdfs:domain :Entity ;
     rdfs:range  [
         owl:unionOf ( :Datatype :Structure )
-        ] ;
+    ] ;
     rdfs:isDefinedBy : ;
     skos:prefLabel "has versioning identifier type"@en ;
     skos:definition
@@ -541,8 +570,8 @@
 
 :VersioningStyle rdf:type rdfs:DataRange ;
     owl:oneOf (
-        "Immutable"^^xsd:string
+        "Immutable"
         "Snapshot"^^xsd:string
         "Mutable"^^xsd:string
-        ) ;
+    ) ;
     skos:prefLabel "Versioning Style"@en .

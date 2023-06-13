@@ -1,7 +1,7 @@
 # tree-sitter-sdml
 
 A [tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for the Simple Domain Modeling Language (SDML).
-For more information on the language, see the [documentation](https://simonkjohnston.life/tree-sitter-sdml/).
+For more information on the language, see the [documentation](https://sdml.io/).
 
 # Example
 
@@ -49,6 +49,11 @@ end
 ```
 
 # Changes
+
+**Version: 0.1.13**
+
+* Expanded grammar for `Identifier` to allow decimal digits in any position *after* the first.
+* Clarified the grammar for `TypeVariant`.
 
 **Version: 0.1.12**
 

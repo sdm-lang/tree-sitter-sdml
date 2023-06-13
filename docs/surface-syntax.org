@@ -51,16 +51,18 @@ Lisp conventions for single, double, and triple comment characters are useful bu
 
 ** Identifiers
 
-An identifier is a string of characters corresponding to the Unicode General Category[fn:ucgc] *Lu* (an uppercase letter) or *Ll* (a
-lowercase letter) or the Unicode Low Line (underscore, "_", =U+005F=) character. Specifically an identifer *must* start with
-and *must* end with a letter such that the low line character may only appear /within/ the identifier. The following is a
-brief BNF description of the identifier syntax.
+An identifier is a string of characters corresponding to the Unicode General Category[fn:ucgc] *Lu* (an uppercase letter),
+*Ll* (a lowercase letter), *Nd* (decimal digit), or the Unicode Low Line (underscore, "_", =U+005F=) character. Specifically
+an identifer *must* start with and *must* begin and end with a letter such that the low line character may only appear
+/within/ the identifier. The following is the BNF description of the identifier syntax.
 
 #+NAME: lst:grammar-identifier
 #+BEGIN_SRC ebnf
-Identifier      = IdentifierWord, ( "_", IdentifierWord )*
+Identifier        = IdentifierInitial, IdentifierChar*, ( "_", IdentifierChar+ )*
 
-IdentifierWord  = ( UC_LETTER_UPPER | UC_LETTER_LOWER )+
+IdentifierChar    = IdentifierInitial | UC_NUMBER_DECIMAL
+
+IdentifierInitial = UC_LETTER_UPPER | UC_LETTER_LOWER
 #+END_SRC
     
 Naming Conventions:
@@ -396,14 +398,17 @@ From [[https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide][OWL 2 Web Ontolog
 Annotations are an extension mechanism that interacts directly with the underlying RDF representation of the subject
 model element. While these may look like Java /annotations/, Python /decorators/, or Rust /attributes/ it is more powerful in
 that it can express arbitrary statements about the model element. An SDML annotation starts with the symbol "@" and then
-has an identifier that resolves to an OWL annotation property, and a value for the corresponding property range.
+has an identifier that resolves to an OWL annotation property (see section [[sec:define-rdf]] for the detailed rules), and a
+value for the corresponding property range.
 
 #+NAME: lst:grammar-annotation
 #+BEGIN_SRC ebnf
 Annotation      = "@", IdentiferReference, "=", Value
 #+END_SRC
 
-The following example demonstrates an annotation attached to a module.
+*Example:*
+
+The following example demonstrates a common annotation attached to a module.
 
 #+NAME: lst:sdml-ex-annotation-property
 #+CAPTION: Annotation Property
@@ -414,6 +419,8 @@ module example is
   @xml:base = <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org>
 end
 #+END_SRC
+
+*Example:*
 
 #+NAME: lst:sdml-ex-annotation-property-list
 #+CAPTION: Annotation Property List
@@ -428,6 +435,8 @@ module example is
   ]
 end
 #+END_SRC
+
+*Example:*
 
 #+NAME: lst:sdml-ex-annotated-module
 #+CAPTION: Annotated Module
@@ -452,6 +461,59 @@ should be a triple:
 
 =a rdf:type owl:AnnotationProperty=
 #+END_QUOTE
+
+*** <<sec:define-rdf>> Defining RDF Classes and Properties
+
+In general only properties that have an RDF type of =owl:AnnotationProperty=, or are sub-properties of such a property,
+may appear as annotations. This maintains the assertion that they are annotations of their subject and allows the use of
+a range of pre-defined annotation properties from RDF, RDF Schema, OWL, and the Dublin Core Metadata Initiative
+(DCMI)[fn:dcmi].
+
+For example the annotation property =rdfs:comment= is defined in the following manner allowing it's use on any resource
+and with a value that may be any literal.
+
+#+NAME: lst:rdfs-comment
+#+CAPTION: The definition of rdfs:comment
+#+BEGIN_SRC ttl
+rdfs:comment rdf:type rdf:Property, owl:AnnotationProperty ;
+	rdfs:isDefinedBy <http://www.w3.org/2000/01/rdf-schema#> ;
+	rdfs:label "comment" ;
+	rdfs:comment "A description of the subject resource." ;
+	rdfs:domain rdfs:Resource ;
+	rdfs:range rdfs:Literal .
+#+END_SRC
+
+To allow the standard library to define SDML equivalents of such properties it is necessary to provide a mechanism to
+use non-annotation properties such as =rdf:type=, =rdfs:domain=, and =rdfs:range= as demonstrated in the example above. To
+allow this, if a model element has the property =rdf:type= then the transformation from that element to RDF *does not* use
+any of the transformations described here but an explicit mapping from *only* the provided properties.
+
+Rewriting the RDF from listing [[lst:rdfs-comment]] into SDML results in the definition in listing [[lst:sdml-rdfs-comment]].
+
+#+NAME: lst:sdml-rdfs-comment
+#+CAPTION: The SDML definition of rdfs:comment
+#+BEGIN_SRC sdml :noeval
+module rdfs is
+  structure comment is
+    @rdf:type = [ rdf:Property owl:AnnotationProperty ]
+    @isDefinedBy = <http://www.w3.org/2000/01/rdf-schema#>
+    @label = "comment"
+    @comment = "A description of the subject resource."
+    @domain = Resource
+    @range = Literal
+  end
+end
+#+END_SRC
+
+The following are commonly used RDF and OWL definition properties.
+
+- =rdf:type= --
+- =rdfs:domain= and =rdfs:range= --
+- =rdfs:subClassOf= and =rdfs:subPropertyOf= --
+- =owl:equivalentClass= and =owl:equivalentProperty= --
+- =owl:inverseOf= --
+- =owl:disjointWith= --
+- =owl:FunctionalProperty=, =owl:InverseFunctionalProperty=, =owl:SymmetricProperty= and =owl:TransitiveProperty= --
 
 ** Structured Types
 
@@ -552,6 +614,8 @@ type, a table in data modeling, or a class in object modeling.
 StructureDef    = "structure", Identifier, StructureBody?
 #+END_SRC
 
+*Example*:
+
 As only the keyword ~structure~ and the identifier are required, the listing [[lst:sdml-ex-empty-structure]] is therefore a
 valid model.
 
@@ -573,6 +637,8 @@ structure, between ~is~ and ~end~, makes it complete even if it has no actual me
 StructureBody   = "is", Annotation*, ( MemberByValue | StructureGroup )*, "end"
 #+END_SRC
 
+*Example*:
+
 #+NAME: lst:sdml-ex-annotated-structure
 #+CAPTION: Annotated Structure
 #+BEGIN_SRC sdml :exports code :noeval
@@ -582,6 +648,8 @@ module example is
   end
 end
 #+END_SRC
+
+*Example*:
 
 Listing [[lst:sdml-ex-structure-members]] adds the members ~value~ and ~unit~ and their corresponding types.
 
@@ -604,6 +672,8 @@ In listing [[lst:sdml-ex-structure-groups]] we see a more complex structure with
 #+BEGIN_SRC ebnf
 StructureGroup  = "group", Annotation*, MemberByValue*, "end"
 #+END_SRC
+
+*Example*:
 
 #+NAME: lst:sdml-ex-structure-groups
 #+CAPTION: Structure Members and Groups
@@ -644,6 +714,8 @@ EntityBody      =
 EntityGroup     = "group", Annotation*, ( MemberByValue | MemberByReference )*
 #+END_SRC
 
+*Example*:
+
 #+NAME: lst:sdml-ex-empty-entity
 #+CAPTION: Empty Entity
 #+BEGIN_SRC sdml :exports code :noeval
@@ -653,6 +725,8 @@ end
 #+END_SRC
 
 The entity ~Person~ in listing [[lst:sdml-ex-empty-entity]] is /valid/ but /incomplete/.
+
+*Example*:
 
 #+NAME: lst:sdml-ex-entity-identifying-member
 #+CAPTION: Entity with Identifying Member
@@ -685,6 +759,10 @@ end
 
 *** <<sec:entity-events>>Entity Events
 
+Entity Events, or simply Events, model notifications generated by an entity most often representing a state change in the entity.
+As such a ~source~ reference denotes the entity which generates this event. Any expansion of the event structure *must* include the
+identifiers of the source entity.
+
 #+NAME: lst:grammar-event-def
 #+BEGIN_SRC ebnf
 EventDef        =
@@ -693,8 +771,7 @@ EventDef        =
     StructureBody?
 #+END_SRC
 
-The event ~source~ reference is the entity which generates this event. In this case each event structure has the
-identifiers of the source entity included.
+*Example*:
 
 #+NAME: lst:sdml-ex-empty-event
 #+CAPTION: Empty Event
@@ -718,6 +795,10 @@ end
 
 As we have seen before, the event ~PersonNameChanged~ in listing [[lst:sdml-ex-empty-event]] is valid but incomplete.
 
+*Example*:
+
+The following is a valid /and/ complete event definition with two structure members.
+
 #+NAME: lst:sdml-ex-event
 #+CAPTION: Event
 #+BEGIN_SRC sdml :exports code :noeval
@@ -731,12 +812,16 @@ end
 
 *** Enumerations
 
+Note also that the keyword =of= and not =is= starts an enumeration body.
+
 #+NAME: lst:grammar-enum-def
 #+BEGIN_SRC ebnf
 EnumDef         = "enum", Identifier, EnumBody?
 
 EnumBody        = "of", Annotation*, EnumVariant*, "end"
 #+END_SRC
+
+*Example*:
 
 #+NAME: lst:sdml-ex-empty-enum
 #+CAPTION: Empty Enum
@@ -746,12 +831,17 @@ module example is
 end
 #+END_SRC
 
-The enumeration ~DistanceUnit~ in [[lst:sdml-ex-empty-enum]] is valid but incomplete.
+The enumeration ~DistanceUnit~ in [[lst:sdml-ex-empty-enum]] is valid but incomplete. Completion of the enumeration requires
+the addition of a body with enumeration variants.
 
 #+NAME: lst:grammar-enum-variant
 #+BEGIN_SRC ebnf
 EnumVariant     = Identifier, "=", Unsigned, AnnotationOnlyBody?
 #+END_SRC
+
+*Example*:
+
+The following demonstrates a valie /and/ complete enumeration.
 
 #+NAME: lst:sdml-ex-enum
 #+CAPTION: Enum With Variants
@@ -767,8 +857,8 @@ end
 *** Disjoint Unions
 
 A disjoint, or discriminated, union is a mechanism to allow for a selection of disjoint types to be treated as a single
-type. As such the /elements/ of the union are simply type names and do not allow annotations. Note also that the keyword
-=of= and not =is= starts a union body.
+type. As such the /variants/ of the union are simply type references, although they do allow annotations. Note also that
+the keyword =of= and not =is= starts a union body.
 
 #+NAME: lst:grammar-union-def
 #+BEGIN_SRC ebnf
@@ -776,6 +866,8 @@ UnionDef        = "union", Identifier, UnionBody?
 
 UnionBody       = "of", Annotation*, TypeVariant*, "end"
 #+END_SRC
+
+*Example*:
 
 #+NAME: lst:sdml-ex-empty-union
 #+CAPTION: Empty Union
@@ -785,7 +877,8 @@ module example of
 end
 #+END_SRC
 
-The union ~VehicleClass~ in [[lst:sdml-ex-empty-union]] is valid but incomplete.
+The union ~VehicleClass~ in [[lst:sdml-ex-empty-union]] is valid but incomplete. Completion of the union requires the addition
+of a body with type variants.
 
 #+NAME: lst:grammar-type-variant
 #+BEGIN_SRC ebnf
@@ -794,19 +887,24 @@ TypeVariant     = IdentifierReference TypeVariantRename? AnnotationOnlyBody?
 TypeVariantRename = "as" Identifier
 #+END_SRC
 
+*Example*:
+
+The following is a valid /and/ complete example with three type variants and one that is renamed from =Van= to =LittleTruck=.
+
 #+NAME: lst:sdml-ex-union
 #+CAPTION: Union With Variants
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
   union VehicleClass of
     Car
-    Van
     Truck
+    Van as LittleTruck
   end
 end
 #+END_SRC
 
 # ----- Footnotes
 
+[fn:dcmi] [[https://www.dublincore.org/][DublinCore]] 
 [fn:ucgc] [[https://unicode.org/reports/tr44/#GC_Values_Table][Unicode General Category]], Unicode.org
 [fn:iri] [[https://www.w3.org/TR/turtle/#sec-iri-references][RDF 1.1 Turtle]], 6.3 IRI References

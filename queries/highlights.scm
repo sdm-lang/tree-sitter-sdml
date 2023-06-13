@@ -129,6 +129,12 @@ name: (identifier) @type.definition)
 (value_constructor
  name: (identifier_reference)) @function.call
 
+(value
+ (identifier_reference) @type)
+
+(list_of_values
+ (identifier_reference) @type)
+
 ;; ---------------------------------------------------------------------------
 ;; Punctuation
 ;; ---------------------------------------------------------------------------

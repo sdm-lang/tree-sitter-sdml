@@ -1,0 +1,26 @@
+#+LANGUAGE: en
+#+STARTUP: overview hidestars inlineimages entitiespretty
+
+* Appendix: Standard Library
+
+The following are standard modules that are included with the command-line tool.
+
+#+NAME: tbl:std-library
+#+CAPTION: Standards Library Modules
+| Name         | Corresponding URI                             | Comment     |
+|--------------+-----------------------------------------------+-------------|
+| =dc=           | <http://purl.org/dc/elements/1.1/>            | Complete    |
+| =dcam=         | <http://purl.org/dc/dcam/>                    | Complete    |
+| =dcterms=      | <http://purl.org/dc/terms/>                   | Complete    |
+| =dcmi_type=    | <http://purl.org/dc/dcmitype/>                | Complete    |
+| =owl=          | <http://www.w3.org/2002/07/owl#>              | In Progress |
+| =rdf=          | <http://www.w3.org/1999/02/22-rdf-syntax-ns#> | Complete    |
+| =rdfs=         | <http://www.w3.org/2000/01/rdf-schema#>       | Complete    |
+| *=sdml=*       | *<https://sdml.io/sdml-owl.ttl#>*               | In Progress |
+| *=sdml_types=* | *<https://sdml.io/sdml-types.ttl#>*             | Complete    |
+| =skos=         | <http://www.w3.org/2004/02/skos/core#>        | Complete    |
+| =xml=          | <http://www.w3.org/XML/1998/namespace>        | In Progress |
+| =xsd=          | <http://www.w3.org/2001/XMLSchema#>           | In Progress |
+
+
+

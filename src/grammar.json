@@ -1209,21 +1209,28 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "FIELD",
-              "name": "rename",
-              "content": {
-                "type": "SEQ",
-                "members": [
-                  {
-                    "type": "STRING",
-                    "value": "as"
-                  },
-                  {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "TOKEN",
+                  "content": {
+                    "type": "PREC",
+                    "value": 2,
+                    "content": {
+                      "type": "STRING",
+                      "value": "as"
+                    }
+                  }
+                },
+                {
+                  "type": "FIELD",
+                  "name": "rename",
+                  "content": {
                     "type": "SYMBOL",
                     "name": "identifier"
                   }
-                ]
-              }
+                }
+              ]
             },
             {
               "type": "BLANK"

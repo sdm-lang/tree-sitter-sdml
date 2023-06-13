@@ -32,11 +32,11 @@
 
 #+INCLUDE: "./surface-grammar.org" :minlevel 1
 
+#+INCLUDE: "./std-library.org" :minlevel 1
+
 #+INCLUDE: "./surface-to-rdf.org" :minlevel 1
 
 #+INCLUDE: "./data-modeling.org" :minlevel 1
-
-#+INCLUDE: "./uri-prefixes.org" :minlevel 1
 
 * Appendix: License
 

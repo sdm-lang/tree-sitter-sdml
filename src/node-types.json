@@ -861,13 +861,9 @@
         ]
       },
       "rename": {
-        "multiple": true,
+        "multiple": false,
         "required": false,
         "types": [
-          {
-            "type": "as",
-            "named": false
-          },
           {
             "type": "identifier",
             "named": true

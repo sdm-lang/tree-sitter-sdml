@@ -334,10 +334,10 @@ module.exports = grammar({
         type_variant: $ => seq(
             field('name', $.identifier_reference),
             optional(
-                field(
-                    'rename',
-                    seq(
-                        "as",
+                seq(
+                    keyword('as'),
+                    field(
+                        'rename',
                         $.identifier,
                     )
                 )

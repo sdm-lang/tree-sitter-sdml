@@ -748,17 +748,17 @@ static const TSFieldMapSlice ts_field_map_slices[PRODUCTION_ID_COUNT] = {
   [16] = {.index = 28, .length = 2},
   [17] = {.index = 30, .length = 1},
   [18] = {.index = 31, .length = 4},
-  [19] = {.index = 35, .length = 3},
-  [20] = {.index = 38, .length = 3},
-  [21] = {.index = 41, .length = 2},
-  [22] = {.index = 43, .length = 4},
-  [23] = {.index = 47, .length = 3},
-  [24] = {.index = 50, .length = 2},
-  [25] = {.index = 52, .length = 4},
-  [26] = {.index = 56, .length = 5},
-  [27] = {.index = 61, .length = 3},
-  [28] = {.index = 64, .length = 1},
-  [29] = {.index = 65, .length = 1},
+  [19] = {.index = 35, .length = 2},
+  [20] = {.index = 37, .length = 3},
+  [21] = {.index = 40, .length = 2},
+  [22] = {.index = 42, .length = 4},
+  [23] = {.index = 46, .length = 3},
+  [24] = {.index = 49, .length = 2},
+  [25] = {.index = 51, .length = 3},
+  [26] = {.index = 54, .length = 5},
+  [27] = {.index = 59, .length = 3},
+  [28] = {.index = 62, .length = 1},
+  [29] = {.index = 63, .length = 1},
 };
 
 static const TSFieldMapEntry ts_field_map_entries[] = {
@@ -817,45 +817,43 @@ static const TSFieldMapEntry ts_field_map_entries[] = {
     {field_target_cardinality, 1, .inherited = true},
   [35] =
     {field_name, 0},
-    {field_rename, 1},
     {field_rename, 2},
-  [38] =
+  [37] =
     {field_body, 3},
     {field_name, 1},
     {field_target, 2, .inherited = true},
-  [41] =
+  [40] =
     {field_target, 0, .inherited = true},
     {field_target_cardinality, 0, .inherited = true},
-  [43] =
+  [42] =
     {field_name, 1},
     {field_source_cardinality, 2, .inherited = true},
     {field_target, 2, .inherited = true},
     {field_target_cardinality, 2, .inherited = true},
-  [47] =
+  [46] =
     {field_body, 3},
     {field_name, 0},
     {field_value, 2},
-  [50] =
+  [49] =
     {field_target, 2},
     {field_target_cardinality, 1},
-  [52] =
+  [51] =
     {field_body, 3},
     {field_name, 0},
-    {field_rename, 1},
     {field_rename, 2},
-  [56] =
+  [54] =
     {field_body, 3},
     {field_name, 1},
     {field_source_cardinality, 2, .inherited = true},
     {field_target, 2, .inherited = true},
     {field_target_cardinality, 2, .inherited = true},
-  [61] =
+  [59] =
     {field_source_cardinality, 0},
     {field_target, 1, .inherited = true},
     {field_target_cardinality, 1, .inherited = true},
-  [64] =
+  [62] =
     {field_min, 1},
-  [65] =
+  [63] =
     {field_max, 1},
 };
 
@@ -2249,12 +2247,11 @@ static const uint16_t ts_small_parse_table[] = {
   [0] = 3,
     ACTIONS(3), 1,
       sym_line_comment,
-    ACTIONS(7), 4,
+    ACTIONS(7), 3,
       sym_identifier,
       sym_decimal,
       sym_integer,
-      anon_sym_as,
-    ACTIONS(9), 21,
+    ACTIONS(9), 22,
       anon_sym_is,
       anon_sym_end,
       anon_sym_import,
@@ -2274,6 +2271,7 @@ static const uint16_t ts_small_parse_table[] = {
       anon_sym_event,
       anon_sym_structure,
       anon_sym_union,
+      anon_sym_as,
       anon_sym_identity,
       anon_sym_ref,
   [33] = 4,
@@ -2281,12 +2279,11 @@ static const uint16_t ts_small_parse_table[] = {
       sym_line_comment,
     ACTIONS(15), 1,
       anon_sym_COLON,
-    ACTIONS(11), 4,
+    ACTIONS(11), 3,
       sym_identifier,
       sym_decimal,
       sym_integer,
-      anon_sym_as,
-    ACTIONS(13), 20,
+    ACTIONS(13), 21,
       anon_sym_is,
       anon_sym_end,
       anon_sym_RBRACK,
@@ -2305,17 +2302,17 @@ static const uint16_t ts_small_parse_table[] = {
       anon_sym_event,
       anon_sym_structure,
       anon_sym_union,
+      anon_sym_as,
       anon_sym_identity,
       anon_sym_ref,
   [68] = 3,
     ACTIONS(3), 1,
       sym_line_comment,
-    ACTIONS(11), 4,
+    ACTIONS(11), 3,
       sym_identifier,
       sym_decimal,
       sym_integer,
-      anon_sym_as,
-    ACTIONS(13), 20,
+    ACTIONS(13), 21,
       anon_sym_is,
       anon_sym_end,
       anon_sym_RBRACK,
@@ -2334,6 +2331,7 @@ static const uint16_t ts_small_parse_table[] = {
       anon_sym_event,
       anon_sym_structure,
       anon_sym_union,
+      anon_sym_as,
       anon_sym_identity,
       anon_sym_ref,
   [100] = 4,
@@ -4798,7 +4796,7 @@ static const TSParseActionEntry ts_parse_actions[] = {
   [360] = {.entry = {.count = 1, .reusable = true}}, SHIFT(158),
   [362] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_type_variant, 1, .production_id = 2),
   [364] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_type_variant, 1, .production_id = 2),
-  [366] = {.entry = {.count = 1, .reusable = false}}, SHIFT(148),
+  [366] = {.entry = {.count = 1, .reusable = true}}, SHIFT(148),
   [368] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym__type_expression_from_to, 2, .production_id = 27),
   [370] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym__type_expression_from_to, 2, .production_id = 27),
   [372] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_entity_group, 2),

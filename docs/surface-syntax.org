@@ -907,4 +907,4 @@ end
 
 [fn:dcmi] [[https://www.dublincore.org/specifications/dublin-core/dcmi-terms/][DublinCoreDCMI Metadata Terms]], DublinCore
 [fn:ucgc] [[https://unicode.org/reports/tr44/#GC_Values_Table][Unicode General Category]], Unicode.org
-[fn:iri] [[https://www.w3.org/TR/turtle/#sec-iri-references][RDF 1.1 Turtle]], 6.3 IRI References
+[fn:iri] RDF 1.1 Turtle – Terse RDF Triple Language, §[[https://www.w3.org/TR/turtle/#sec-iri-references][6.3 IRI References]], W3C

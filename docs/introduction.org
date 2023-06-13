@@ -88,5 +88,5 @@ digraph G {
 [fn:rdf] [[https://www.w3.org/RDF/][Resource Description Framework (RDF)]], W3C
 [fn:ddd] [[https://en.wikipedia.org/wiki/Domain-driven_design][Domain-Driven Design]], Wikipedia
 [fn:mdd] [[https://en.wikipedia.org/wiki/Model-driven_engineering][Model-Driven Development]], Wikipedia
-[fn:ts]  Home at [[https://tree-sitter.github.io/tree-sitter/][Tree Sitter]], source at ...
+[fn:ts]  Home at [[https://tree-sitter.github.io/tree-sitter/][Tree Sitter]], source at [[https://github.com/tree-sitter/tree-sitter][github.com]]
 

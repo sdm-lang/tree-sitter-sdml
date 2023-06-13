@@ -9,9 +9,9 @@ reasoning about a conceptual domain model. For a background on domain modeling s
 core SDML comprises an /abstract model/ whose structure and semantics are described by an OWL[fn:owl]/RDF[fn:rdf] ontology, and a
 /surface syntax/ for editing and sharing concrete models. This document covers both the OWL and SDML representations and
 the correspondence between them, however the primary focus of the documentation is the surface syntax as most users will
-be interacting with it alone. Figure [[fig:model-overview]] shows the relationship between these high-level components.
+be interacting with it alone. Figure [[fig:sdml-overview]] shows the relationship between these high-level components.
 
-#+NAME: fig:model-overview
+#+NAME: fig:sdml-overview
 #+BEGIN_SRC dot :file sdml-overview.png :exports results
 digraph G {
   bgcolor="transparent";
@@ -26,9 +26,8 @@ digraph G {
   abstract -> rdf [label="semantics"];  
   abstract -> sdml [label="syntax"];
 
-  concrete [shape=ellipse; style=dotted; label="Concrete\nModel"];
-  rdf -> concrete [arrowtail=open; dir=back; style=dotted; label="conforms-to"];
-  sdml -> concrete [arrowtail=open; dir=back; style=dotted; label="expressed-in"];
+  concrete [shape=note; label="My Domain\nModel"];
+  sdml -> concrete [arrowtail=open; dir=back; label="expressed-in"];
 }
 #+END_SRC
 
@@ -40,11 +39,11 @@ immutable object that contains attributes but has no conceptual identity/), simp
 does not include the following as first-class concepts: /aggregates/, /repositories/, /factories/, or /services/.
 
 #+CAPTION: Model Overview
-#+RESULTS: fig:model-overview
+#+RESULTS: fig:sdml-overview
 [[file:sdml-overview.png]]
 
 #+BEGIN_NOTE
-One element that is not included in figure [[fig:model-overview]], as it is primarily an implementation decision, is
+One element that is not included in figure [[fig:sdml-overview]], as it is primarily an implementation decision, is
 that the reference implementation for SDML is provided as a Tree-Sitter[fn:ts] package. While generated tree-sitter
 parsers are not intended to be fast, or to be part of a compilation processes they do provide a multitude of language
 bindings, and a concrete syntax tree allowing easy development of the relatively simple tools required for SDML usage.
@@ -56,7 +55,7 @@ Figure [[fig:model-transforms]] demonstrates another key element of a /Model-Dri
 between models and between models and other development artifacts.
 
 #+NAME: fig:model-transforms
-#+BEGIN_SRC dot :file sdml-transforms.png :exports results
+#+BEGIN_SRC dot :file model-transforms.png :exports results
 digraph G {
   bgcolor="transparent";
   rankdir="LR";
@@ -66,19 +65,72 @@ digraph G {
   abstract [shape=ellipse; label="Abstract\nModel"];
 
   transform [shape=ellipse; label="Transformation"];
-  transform -> abstract [label="source"];
+  abstract -> transform [label="source"];
 
-  tsq [shape=ellipse; label="Tree-Sitter\nQueries"];
-  transform -> tsq [label="using"];
+  tsq [shape=note; label="Tree-Sitter\nQueries"];
+  tsq -> transform [label="selections"];
 
-  other [shape=ellipse; label="Artifact\nModel"];
+  other [shape=ellipse; label="Concrete\nModel"; style=dotted;];
   transform -> other [label="target"];
 }
 #+END_SRC
 
 #+CAPTION: Model Transformations
 #+RESULTS: fig:model-transforms
-[[file:sdml-overview.png]]
+[[file:model-transforms.png]]
+
+*Example:*
+
+In the following example 
+
+#+NAME: fig:example-transform
+#+BEGIN_SRC dot :file example-transform.png :exports results
+digraph G {
+  bgcolor="transparent";
+  rankdir="TD";
+  node [fontsize=10];
+  edge [fontsize=9; fontcolor=darkgrey];
+
+  domain [shape=ellipse; label="Domain Model"];
+
+  docs [shape=note; label="Documentation"];
+  domain -> docs [label="transformer"];
+
+  service [shape=ellipse; label="Service Definition"; style=dotted;];
+  domain -> service [label="transformer"];
+
+  smithy [shape=component; label="Smithy"];
+  service -> smithy [label="transformer"];
+  
+  oas [shape=component; label="OpenAPI Spec"];
+  smithy -> oas [label="transformer"];
+
+  stubs [shape=component; label="Service Stubs"];
+  smithy -> stubs [label="transformer"];
+
+  client [shape=component; label="Client Library"];
+  smithy -> client [label="transformer"];
+
+  data [shape=ellipse; label="Data Definition"; style=dotted;];
+  domain -> data [label="transformer"];
+
+  dbsql [shape=component; label="SQL DDL"]; 
+  data -> dbsql [label="transformer"];
+
+  dbjson [shape=component; label="JSON Schema"];
+  data -> dbjson [label="transformer"];
+  
+  message [shape=ellipse; label="Message Definition"; style=dotted;];
+  domain -> message [label="transformer"];
+
+  thrift [shape=ellipse; label="Apache Thrift"];
+  message -> thrift [label="transformer"];
+}
+#+END_SRC
+
+#+CAPTION: Example Model Transformations
+#+RESULTS: fig:example-transform
+[[file:example-transform.png]]
 
 # ----- Footnotes
 

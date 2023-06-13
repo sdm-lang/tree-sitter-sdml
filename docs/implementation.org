@@ -4,6 +4,10 @@
 
 * Implementation and Tools
 
+Figure [[fig:model-transforms]] gave a high-level overview of transformations, this section will expand not only on
+transforms but also the other capabilities of the tooling for SDML. As such the much expanded figure
+[[fig:implementation-overview]] shows the 
+
 #+NAME: fig:implementation-overview
 #+BEGIN_SRC dot :file implementation-overview.png :exports results
 digraph G {
@@ -11,7 +15,6 @@ digraph G {
     rankdir="TB";
     fontname="Helvetica,Arial,sans-serif";
     node [fontname="Helvetica,Arial,sans-serif"; fontsize=10];
-    edge [fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="dimgrey"; labelfontcolor="blue"; labeldistance=2.0];
 
     subgraph cluster_0 {
         label = "Core Library";
@@ -27,7 +30,7 @@ digraph G {
         parser -> wasm;
     }
 
-    treesit [shape=rect; label="Tree-Sitter\nC Library"];
+    treesit [shape=component; label="Tree-Sitter\nC Library"; color="dimgrey"; fontcolor="dimgrey";];
     treesit -> grammar;
 
     subgraph cluster_1 {
@@ -41,10 +44,10 @@ digraph G {
         parser -> emode;
     }
 
-    ets [shape=rect; label="Emacs\nTree-Sitter"];
-    ets_hl [shape=rect; label="Tree-Sitter\nHighlighter"];
-    ets_indent [shape=rect; label="Tree-Sitter\nIndenter"];
-    ets_fold [shape=rect; label="Tree-Sitter\nFolder"];
+    ets [shape=component; label="Emacs\nTree-Sitter"; color="dimgrey"; fontcolor="dimgrey";];
+    ets_hl [shape=component; label="Tree-Sitter\nHighlighter"; color="dimgrey"; fontcolor="dimgrey";];
+    ets_indent [shape=component; label="Tree-Sitter\nIndenter"; color="dimgrey"; fontcolor="dimgrey";];
+    ets_fold [shape=component; label="Tree-Sitter\nFolder"; color="dimgrey"; fontcolor="dimgrey";];
 
     treesit -> ets;
     ets -> ets_hl;

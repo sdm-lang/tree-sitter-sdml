@@ -1,0 +1,12 @@
+=======================
+Module, empty with base
+=======================
+
+module Campaign base <https://example.org/v/Campaign#> is end
+
+---
+
+(module
+  name: (identifier)
+  base: (iri_reference)
+  body: (module_body))

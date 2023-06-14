@@ -1,0 +1,50 @@
+=============
+Simple Types
+=============
+
+module example is
+
+  structure SimpleTypes is
+    a -> string
+    b -> double
+    c -> decimal
+    d -> integer
+    e -> boolean
+    f -> iri
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (type_def
+      (structure_def
+        name: (identifier)
+        body: (structure_body
+          (member_by_value
+            name: (identifier)
+            target: (type_reference
+              (builtin_simple_type)))
+          (member_by_value
+            name: (identifier)
+            target: (type_reference
+              (builtin_simple_type)))
+          (member_by_value
+            name: (identifier)
+            target: (type_reference
+              (builtin_simple_type)))
+          (member_by_value
+            name: (identifier)
+            target: (type_reference
+              (builtin_simple_type)))
+          (member_by_value
+            name: (identifier)
+            target: (type_reference
+              (builtin_simple_type)))
+          (member_by_value
+            name: (identifier)
+            target: (type_reference
+              (builtin_simple_type))))))))

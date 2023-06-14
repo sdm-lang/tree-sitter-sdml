@@ -1,0 +1,21 @@
+===========================
+Data Type, From Simple Type
+===========================
+
+module example is
+
+  datatype nameString <- string
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (type_def
+      (data_type_def
+        name: (identifier)
+        base: (data_type_base
+          (builtin_simple_type))))))
+

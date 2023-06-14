@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.13
+// Version:    0.1.14
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -148,6 +148,15 @@ module.exports = grammar({
             ')'
         ),
 
+        builtin_simple_type: $ => choice(
+            keyword('string'),
+            keyword('double'),
+            keyword('decimal'),
+            keyword('integer'),
+            keyword('boolean'),
+            keyword('iri'),
+        ),
+
         simple_value: $ => choice(
             $.string,
             $.double,
@@ -230,8 +239,13 @@ module.exports = grammar({
             keyword('datatype'),
             field('name', $.identifier),
             operator('<-'),
-            field('base', $.identifier_reference),
+            field('base', $.data_type_base),
             optional(field('body', $.annotation_only_body))
+        ),
+
+        data_type_base: $ => choice(
+            $.identifier_reference,
+            $.builtin_simple_type
         ),
 
         annotation_only_body: $ => seq(
@@ -408,7 +422,8 @@ module.exports = grammar({
 
         type_reference: $ => choice(
             $.unknown_type,
-            $.identifier_reference
+            $.identifier_reference,
+            $.builtin_simple_type
         ),
 
         unknown_type: $ => keyword('unknown'),

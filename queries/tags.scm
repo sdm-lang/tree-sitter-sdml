@@ -23,7 +23,7 @@
  name: (identifier) @name) @definition.class
 
 (data_type_def
- base: (identifier_reference) @name) @reference.class
+ base: (data_type_base (identifier_reference) @name)) @reference.class
 
 (entity_def
  name: (identifier) @name) @definition.class

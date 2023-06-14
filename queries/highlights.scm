@@ -27,6 +27,7 @@
  "structure"
  "union"
  (unknown_type)
+ (builtin_simple_type)
  ] @keyword
 
 (module name: (identifier) @module.definition)
@@ -56,7 +57,7 @@
 (data_type_def
  name: (identifier) @type.definition
  "<-" @operator
- base: (identifier_reference) @type)
+ base: (data_type_base (identifier_reference) @type))
 
 (entity_def
 name: (identifier) @type.definition)

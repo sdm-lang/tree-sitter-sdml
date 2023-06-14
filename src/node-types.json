@@ -46,6 +46,11 @@
     "fields": {}
   },
   {
+    "type": "builtin_simple_type",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "cardinality_expression",
     "named": true,
     "fields": {
@@ -88,6 +93,25 @@
     }
   },
   {
+    "type": "data_type_base",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "builtin_simple_type",
+          "named": true
+        },
+        {
+          "type": "identifier_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "data_type_def",
     "named": true,
     "fields": {
@@ -96,7 +120,7 @@
         "required": true,
         "types": [
           {
-            "type": "identifier_reference",
+            "type": "data_type_base",
             "named": true
           }
         ]
@@ -836,6 +860,10 @@
       "required": true,
       "types": [
         {
+          "type": "builtin_simple_type",
+          "named": true
+        },
+        {
           "type": "identifier_reference",
           "named": true
         },
@@ -1037,12 +1065,24 @@
     "named": false
   },
   {
+    "type": "boolean",
+    "named": false
+  },
+  {
     "type": "datatype",
     "named": false
   },
   {
     "type": "decimal",
     "named": true
+  },
+  {
+    "type": "decimal",
+    "named": false
+  },
+  {
+    "type": "double",
+    "named": false
   },
   {
     "type": "double",
@@ -1086,7 +1126,15 @@
   },
   {
     "type": "integer",
+    "named": false
+  },
+  {
+    "type": "integer",
     "named": true
+  },
+  {
+    "type": "iri",
+    "named": false
   },
   {
     "type": "is",
@@ -1118,6 +1166,10 @@
   },
   {
     "type": "source",
+    "named": false
+  },
+  {
+    "type": "string",
     "named": false
   },
   {

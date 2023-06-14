@@ -368,6 +368,77 @@
         }
       ]
     },
+    "builtin_simple_type": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "string"
+            }
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "double"
+            }
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "decimal"
+            }
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "integer"
+            }
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "boolean"
+            }
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "iri"
+            }
+          }
+        }
+      ]
+    },
     "simple_value": {
       "type": "CHOICE",
       "members": [
@@ -619,7 +690,7 @@
           "name": "base",
           "content": {
             "type": "SYMBOL",
-            "name": "identifier_reference"
+            "name": "data_type_base"
           }
         },
         {
@@ -637,6 +708,19 @@
               "type": "BLANK"
             }
           ]
+        }
+      ]
+    },
+    "data_type_base": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "identifier_reference"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "builtin_simple_type"
         }
       ]
     },
@@ -1507,6 +1591,10 @@
         {
           "type": "SYMBOL",
           "name": "identifier_reference"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "builtin_simple_type"
         }
       ]
     },

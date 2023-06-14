@@ -1,0 +1,35 @@
+============================
+Data Type, With Restrictions
+============================
+
+module example is
+
+  datatype nameString <- xsd:string is
+    @xsd:maxLength = 10
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (type_def
+      (data_type_def
+        name: (identifier)
+        base: (data_type_base
+          (identifier_reference
+            (qualified_identifier
+              module: (identifier)
+              member: (identifier))))
+        body: (annotation_only_body
+          (annotation
+            name: (identifier_reference
+              (qualified_identifier
+                module: (identifier)
+                member: (identifier)))
+            value: (value
+              (simple_value
+                (integer)))))))))
+

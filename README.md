@@ -50,6 +50,12 @@ end
 
 # Changes
 
+**Version: 0.1.14**
+
+* Added new rule named `builtin_simple_type` (choice of `string`, `double`, `decimal`, ``integer`, `boolean`, and `iri`):
+  * replaced `identifier_reference` with new rule `data_type_base` for `data_type_def`,
+  * added to the `type_reference` choice used for the member `target` field.
+  
 **Version: 0.1.13**
 
 * Added explicit `base` grammar for module rather than using `xml:base` as an attribute.

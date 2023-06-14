@@ -5,7 +5,7 @@ Data Type, Empty
 module campaign is
 
   datatype nameString <- xsd:string
-  
+
 end
 
 ---
@@ -16,8 +16,9 @@ end
     (type_def
       (data_type_def
         name: (identifier)
-        base: (identifier_reference
-           (qualified_identifier
-             module: (identifier)
-             member: (identifier)))))))
+        base: (data_type_base
+          (identifier_reference
+            (qualified_identifier
+              module: (identifier)
+              member: (identifier))))))))
 

@@ -566,6 +566,16 @@
     "type": "module",
     "named": true,
     "fields": {
+      "base": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "iri_reference",
+            "named": true
+          }
+        ]
+      },
       "body": {
         "multiple": false,
         "required": true,
@@ -1020,6 +1030,10 @@
   },
   {
     "type": "as",
+    "named": false
+  },
+  {
+    "type": "base",
     "named": false
   },
   {

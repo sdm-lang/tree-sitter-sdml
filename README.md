@@ -52,6 +52,7 @@ end
 
 **Version: 0.1.13**
 
+* Added explicit `base` grammar for module rather than using `xml:base` as an attribute.
 * Expanded grammar for `Identifier` to allow decimal digits in any position *after* the first.
 * Clarified the grammar for `TypeVariant`.
 

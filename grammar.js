@@ -49,6 +49,15 @@ module.exports = grammar({
         module: $ => seq(
             keyword('module'),
             field('name', $.identifier),
+            optional(
+                seq(
+                    keyword('base'),
+                    field(
+                        'base',
+                        $.iri_reference,
+                    )
+                )
+            ),
             field('body', $.module_body)
         ),
 

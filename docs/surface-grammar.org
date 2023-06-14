@@ -8,7 +8,9 @@ range operation =..= reduces the number of single character alternatives for cla
 terminals such as =ASCII_DIGIT=, =ASCII_HEX_DIGIT=, =UC_LETTER_UPPER=, and =UC_LETTER_LOWER= used to simplify character ranges.
 
 #+BEGIN_SRC ebnf
-Module              = "module", Identifier, ModuleBody
+Module              = "module", Identifier, ModuleBase?, ModuleBody
+
+ModuleBase          = "base", IriReference
 
 ModuleBody          = "is", ImportStatement*, Annotation*, TypeDef*, "end"
 

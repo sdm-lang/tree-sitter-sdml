@@ -1,7 +1,7 @@
-#+LANGUAGE: en
+>#+LANGUAGE: en
 #+STARTUP: overview hidestars inlineimages entitiespretty
 
-* Surface Syntax
+* <<sec:surface-syntax>>Surface Syntax
 
 This section describes the SDML surface syntax, a syntax intended to look and feel like a programming language but with
 extensibility provided by it's underlying RDF and OWL foundation. The goal of the following syntax is to allow for rapid
@@ -59,10 +59,8 @@ an identifer *must* start with and *must* begin and end with a letter such that 
 #+NAME: lst:grammar-identifier
 #+BEGIN_SRC ebnf
 Identifier        = IdentifierInitial, IdentifierChar*, ( "_", IdentifierChar+ )*
-
-IdentifierChar    = IdentifierInitial | UC_NUMBER_DECIMAL
-
 IdentifierInitial = UC_LETTER_UPPER | UC_LETTER_LOWER
+IdentifierChar    = IdentifierInitial | UC_NUMBER_DECIMAL
 #+END_SRC
     
 Naming Conventions:
@@ -104,8 +102,9 @@ resource is one with an empty model.
 
 #+NAME: lst:grammar-module
 #+BEGIN_SRC ebnf
+Module          = "module", Identifier, ModuleBase?, ModuleBody
+ModuleBase      = "base", IriReference
 ModuleBody      = "is", ImportStatement*, Annotation*, TypeDef*, "end"
-Module          = "module", Identifier, ModuleBody
 #+END_SRC
 
 An empty module (listing [[lst:sdml-ex-empty-module]]), specifically a module with an empty /body/ which is the content
@@ -117,15 +116,35 @@ between the keywords *=is=* and *=end=*.
 module example is end
 #+END_SRC
 
+*** The base Specifier
+
+The keyword =base= provides the base IRI for the module and corresponding RDF schema or OWL ontology. This corresponds to
+the use of the =xml:base= attribute in RDF/XML and the =@base= directive in Turtle and SPARQL[fn:sparql]. This IRI is used
+as a prefix for defined type names so that each type has a unique IRI. The example in listing
+[[lst:sdml-ex-empty-module-base]] demonstrates the assigned IRI identifier for the structure type named ~Thing~.
+
+#+NAME: lst:sdml-ex-empty-module-base
+#+CAPTION: Empty Module with Base
+#+BEGIN_SRC sdml :exports code :noeval
+module example base <https://example.org/rdf/example#> is
+
+  structure Thing
+  ;; IRI: https://example.org/rdf/example#Thing
+
+end
+#+END_SRC
+
+*** Importing Modules and Members
+
 To import types from other modules you add one or more import statements to the module body. Each statement may
 reference one or more module names or the qualified name of a type within a module.
 
 #+NAME: lst:grammar-import-statement
 #+BEGIN_SRC ebnf
+ImportStatement = "import", ( Import | "[", Import+, "]" )
+Import          = MemberImport | ModuleImport
 MemberImport    = QualifiedIdentifier
 ModuleImport    = Identifer
-Import          = MemberImport | ModuleImport
-ImportStatement = "import", ( Import | "[", Import+, "]" )
 #+END_SRC
 
 
@@ -177,12 +196,12 @@ Value           =
     | ListOfValues
 #+END_SRC
 
-The inclusion if an identifier reference allows for annotations whose value is another model element.
+The inclusion of an identifier reference as a value allows for annotations whose value is another model element.
 
 *** Simple Values
 
-The core data types supported by SDML are Boolean, Integer, Decimal, Double, String, (Language-Tagged String), and IRI
-References. Values corresponding to these types are termed /simple values/.
+The core data types supported by SDML are ~boolean~, ~integer~, ~decimal~, ~double~, ~string~, (Language-Tagged String), and ~iri~
+for IRI References. Values corresponding to these types are termed /simple values/.
 
 #+NAME: lst:grammar-simple-value
 #+BEGIN_SRC ebnf
@@ -208,13 +227,9 @@ An *Integer* value in SDML is a string of ASCII decimal digits, without leading 
 #+NAME: lst:grammar-integer
 #+BEGIN_SRC ebnf
 Integer         = NumericSign?, Unsigned
-
 Unsigned        = Zero | NonZero, ( ASCII_DIGIT )*
-
 NumericSign     = "+" | "-"
-
 Zero            = "0"
-
 NonZero         = "1".."9"
 #+END_SRC
 
@@ -234,7 +249,6 @@ in IEEE 754-2008).
 #+NAME: lst:grammar-double
 #+BEGIN_SRC ebnf
 Double          = Decimal, ExponentChar, NumericSign?, Integer
-
 ExponentChar    = "e" | "E"
 #+END_SRC
 
@@ -246,18 +260,12 @@ a maximum of 6 such digits. In addition,the following single-character escape ch
 #+NAME: lst:grammar-string
 #+BEGIN_SRC ebnf
 String          = QuotedString, LanguageTag?
-
 QuotedString    = "\"", ( -NotAllowed | CharacterEscape | UnicodeEscape )*, "\""
-
 NotAllowed      = "\"" | "\\" | "\u{00}".."\u{08}" | "\u{0B}".."\u{1F}" | "\u{7F}"
-
 CharacterEscape = "\\", ( "\"" | "\\" | "\/" | "a" | "b"
                           "e" | "f" | "n" | "r" | "t" | "v" )
-
 UnicodeEscape   = "\\u{", HexPair, ( HexPair ( HexPair )? )?, "}"
-
 HexPair         = ASCII_HEX_DIGIT, ASCII_HEX_DIGIT
-
 LanguageTag     =
     "@", ASCII_LETTER_LOWER, ASCII_LETTER_LOWER, ASCII_LETTER_LOWER?
         ( "-", ASCII_LETTER_UPPER, ASCII_LETTER_UPPER, ASCII_LETTER_UPPER )?
@@ -327,8 +335,15 @@ Here we assert that the value =1= is an unsigned rather than the default signed 
 #+NAME: lst:sdml-ex-type-constructor
 #+CAPTION: Value Constructor Example
 #+BEGIN_SRC sdml :exports code :noeval
-xsd:unsigned(1)
+module example is
+  import ex
+
+  @ex:thing = xsd:unsigned(1)
+end
 #+END_SRC
+
+You can ignore the syntax of ~@ex:thing~ which is an annotation, see section [[sec:annotations]], used to ensure the syntax is
+complete for all examples.
 
 *** Value Lists
 
@@ -346,7 +361,11 @@ ListOfValues    =
 #+NAME: lst:sdml-ex-value-lists
 #+CAPTION: Value List Example
 #+BEGIN_SRC sdml :exports code :noeval
-[ "yes" "no" "maybe" ]
+module example is
+  import ex
+
+  @ex:thing = [ "yes" "no" "maybe" ]
+end
 #+END_SRC
 
 *** Defining Data Types
@@ -356,7 +375,10 @@ A datatype definition introduces a new simple data type by /restriction/ of some
 #+NAME: lst:grammar-data-type-def
 #+BEGIN_SRC ebnf
 DataTypeDef     =
-    "datatype", Identifier, "<-", IdentifierReference, AnnotationOnlyBody?
+    "datatype", Identifier, "<-", DataTypeBase, AnnotationOnlyBody?
+DataTypeBase    = BuiltinSimpleType | IdentifierReference
+BuiltinSimpleType   = 
+    "string" | "double" | "decimal" | "integer" | "boolean" | "iri"
 #+END_SRC
 
 Listing [[lst:sdml-ex-datatype]] shows the /type restriction/ operator, =<-=, defining a new type named ~name~ as a restriction on
@@ -365,7 +387,11 @@ the existing XML Schema data type ~xsd:string~.
 #+NAME: lst:sdml-ex-datatype
 #+CAPTION: New Datatype
 #+BEGIN_SRC sdml :exports code :noeval
-datatype Name <- xsd:string
+module example is
+  import ex
+
+  datatype Name <- string
+end
 #+END_SRC
 
 While such a type is useful for conveying semantic meaning with types it doesn't provide any actual restriction on the
@@ -376,13 +402,17 @@ is a string whose length is between 5 and 25 characters only.
 #+NAME: lst:sdml-ex-restricted-datatype
 #+CAPTION: New Datatype with Restrictions
 #+BEGIN_SRC sdml :exports code :noeval
-datatype Name <- xsd:string is
-  @xsd:minLength = 5
-  @xsd:maxLength = 25
+module example is
+  import ex
+
+  datatype Name <- string is
+    @xsd:minLength = 5
+    @xsd:maxLength = 25
+  end
 end
 #+END_SRC
 
-From [[https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide][OWL 2 Web Ontology Language Quick Reference Guide (Second Edition)]]:
+From OWL 2 Web Ontology Language Quick Reference Guide[fn:owlqr]:
 
 #+NAME: tbl:owl-facets
 #+CAPTION: OWL Built-in Datatype Facets
@@ -393,7 +423,26 @@ From [[https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide][OWL 2 Web Ontolog
 | =xsd:pattern=                                                            | =xsd:string= literal as a regular expression | Strings, IRIs              | Restricts the value space to literals that match the regular expression                    |
 | =rdf:langRange=                                                          | =xsd:string= literal as a regular expression | =rdf:PlainLiteral=           | Restricts the value space to literals with language tags that match the regular expression |
 
-** Annotations
+*** The Built-in Simple Types
+
+In the preceding sections we introduced the set of built-in simple types: string, double, decimal, integer, boolean, and
+iri. These are keywords in SDML and have specific rules applied when parsing. Each keyword is translated into a
+qualified identifier where the module name is the reserved name =sdml=. This set of standard library types have an
+underlying RDFOWL equivalence relationship to a subset of the XML Schema datatypes, all shown in table
+[[tbl:builtin-simple-types]].
+
+#+NAME: tbl:builtin-simple-types
+#+CAPTION: Built-in Simple Type Mapping
+| Type Keyword | Qualified Identifier | Equivalent XML Schema Datatype |
+|--------------+----------------------+--------------------------------|
+| ~string~       | ~sdml:string~          | ~xsd:string~                     |
+| ~double~       | ~sdml:double~          | ~xsd:double~                     |
+| ~decimal~      | ~sdml:decimal~         | ~xsd:decimal~                    |
+| ~integer~      | ~sdml:integer~         | ~xsd:integer~                    |
+| ~boolean~      | ~sdml:boolean~         | ~xsd:boolean~                    |
+| ~iri~          | ~sdml:iri~             | ~xsd:anyURI~                     |
+
+** <<sec:annotations>>Annotations
 
 Annotations are an extension mechanism that interacts directly with the underlying RDF representation of the subject
 model element. While these may look like Java /annotations/, Python /decorators/, or Rust /attributes/ it is more powerful in
@@ -414,9 +463,9 @@ The following example demonstrates a common annotation attached to a module.
 #+CAPTION: Annotation Property
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
-  import xml
+  import skos
 
-  @xml:base = <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org>
+  @skos:note = "This is an example annotation"
 end
 #+END_SRC
 
@@ -443,10 +492,9 @@ end
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
 
-  import [ xml skos ]
+  import [ dc skos ]
 
-  @xml:base = <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/docs/sdml.org>
-
+  @dc:description = "This is an example module, with two annotations"
   @skos:prefLabel = "Example Module"@en
 
 end
@@ -488,11 +536,11 @@ use non-annotation properties such as =rdf:type=, =rdfs:domain=, and =rdfs:range
 allow this, if a model element has the property =rdf:type= then the transformation from that element to RDF *does not* use
 any of the transformations described here but an explicit mapping from *only* the provided properties.
 
-Rewriting the RDF from listing [[lst:rdfs-comment]] into SDML results in the definition in listing [[lst:sdml-rdfs-comment]].
+Rewriting the RDF from listing [[lst:rdfs-comment]] into SDML results in the definition in listing [[lst:rdfs-comment-in-sdml]].
 
-#+NAME: lst:sdml-rdfs-comment
+#+NAME: lst:rdfs-comment-in-sdml
 #+CAPTION: The SDML definition of rdfs:comment
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :exports code :noeval
 module rdfs is
   structure comment is
     @rdf:type = [ rdf:Property owl:AnnotationProperty ]
@@ -553,10 +601,8 @@ Structured type members fall into the following categories.
 #+BEGIN_SRC ebnf
 IdentityMember      =
     "identity", Identifier, TypeExpression, AnnotationOnlyBody?
-
 MemberByValue       =
     Identifier, TypeExpressionTo, AnnotationOnlyBody?
-
 MemberByReference   =
     "ref", Identifier, TypeExpressionFromTo,AnnotationOnlyBody?
 #+END_SRC
@@ -579,13 +625,9 @@ target type to be replaced with the keyword ~unknown~. This marks the member, an
 #+NAME: lst:grammar-type-expressions
 #+BEGIN_SRC ebnf
 TypeExpression          = "->" TypeReference
-
 TypeExpressionTo        = "->" Cardinality? TypeReference
-
 TypeExpressionFromto    = Cardinality? TypeExpressionTo
-
-TypeReference           = IdentifierReference | UnknownType
-
+TypeReference           = UnknownType | IdentifierReference | BuiltinSimpleType
 UnknownType             = "unknown"
 #+END_SRC
 
@@ -600,7 +642,6 @@ specified.
 #+NAME: lst:grammar-cardinality
 #+BEGIN_SRC ebnf
 CardinalityExpression   = "{", Unsigned, CardinalityRange?, "}"
-
 CardinalityRange        = "..", Unsigned?
 #+END_SRC
 
@@ -703,14 +744,12 @@ end
 #+NAME: lst:grammar-entity-def
 #+BEGIN_SRC ebnf
 EntityDef       = "entity", Identifier, EntityBody?
-
 EntityBody      =
     "is",
     Annotation*,
     IdentityMember,
     ( MemberByValue | MemberByReference | EntityGroup )*,
     "end"
-
 EntityGroup     = "group", Annotation*, ( MemberByValue | MemberByReference )*
 #+END_SRC
 
@@ -812,12 +851,13 @@ end
 
 *** Enumerations
 
-Note also that the keyword =of= and not =is= starts an enumeration body.
+An enumeration is a numeric type that expressly names the values it may take. This is a restricted form of the =enum= type
+found in most languages as not only *must* all names be unique but all names *must* specify a value *and* all values *must* also
+be unique. Note also that the keyword =of= and not =is= starts an enumeration body.
 
 #+NAME: lst:grammar-enum-def
 #+BEGIN_SRC ebnf
 EnumDef         = "enum", Identifier, EnumBody?
-
 EnumBody        = "of", Annotation*, EnumVariant*, "end"
 #+END_SRC
 
@@ -841,7 +881,7 @@ EnumVariant     = Identifier, "=", Unsigned, AnnotationOnlyBody?
 
 *Example*:
 
-The following demonstrates a valie /and/ complete enumeration.
+The following demonstrates a valid /and/ complete enumeration.
 
 #+NAME: lst:sdml-ex-enum
 #+CAPTION: Enum With Variants
@@ -863,7 +903,6 @@ the keyword =of= and not =is= starts a union body.
 #+NAME: lst:grammar-union-def
 #+BEGIN_SRC ebnf
 UnionDef        = "union", Identifier, UnionBody?
-
 UnionBody       = "of", Annotation*, TypeVariant*, "end"
 #+END_SRC
 
@@ -882,9 +921,8 @@ of a body with type variants.
 
 #+NAME: lst:grammar-type-variant
 #+BEGIN_SRC ebnf
-TypeVariant     = IdentifierReference TypeVariantRename? AnnotationOnlyBody?
-
-TypeVariantRename = "as" Identifier
+TypeVariant         = IdentifierReference TypeVariantRename? AnnotationOnlyBody?
+TypeVariantRename   = "as" Identifier
 #+END_SRC
 
 *Example*:
@@ -908,3 +946,6 @@ end
 [fn:dcmi] [[https://www.dublincore.org/specifications/dublin-core/dcmi-terms/][DublinCoreDCMI Metadata Terms]], DublinCore
 [fn:ucgc] [[https://unicode.org/reports/tr44/#GC_Values_Table][Unicode General Category]], Unicode.org
 [fn:iri] RDF 1.1 Turtle – Terse RDF Triple Language, §[[https://www.w3.org/TR/turtle/#sec-iri-references][6.3 IRI References]], W3C
+[fn:sparql] [[https://www.w3.org/TR/sparql11-overview/][SPARQL 1.1 Overview]], W3C
+[fn:owlqr] [[https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide][OWL 2 Web Ontology Language Quick Reference Guide
+(Second Edition)]], W3C

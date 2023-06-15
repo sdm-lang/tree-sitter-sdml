@@ -27,20 +27,15 @@ module example is
 end
 #+END_SRC
 
-The module within has the IRI identifier =https://example.com/v/example/example=.
-
-However, if the module overrides the retrieved location using =xml:base=, as follows:
+The module within has the IRI identifier =https://example.com/v/example/example=. However, if the module overrides the
+retrieved location using the ~base~ specifier, as follows:
 
 #+BEGIN_SRC sdml :exports code :noeval
-module example is
-  import xml:base
-  @xml:base = <https://example.org/langs/Example#>
+module example base <https://example.org/langs/Example#> is
 end
 #+END_SRC
 
-The module within this resource now has the IRI identifier =https://example.org/langs/Example#example=.
-
-The remainder of this section will use example modules with =xml:base= to make identifier IRIs more easily understood.
+The module named =example= within this resource now has the absolute IRI identifier =https://example.org/langs/Example#example=.
 
 ** Values
 
@@ -51,14 +46,14 @@ values and lists with an additional non-literal form the value constructor.
 
 #+NAME: tbl:value-literals
 #+CAPTION: Summary of Value Literals
-| SDML Type     | Underlying Type | Value Space                                                   | Lexical Space  |
-|---------------+-----------------+---------------------------------------------------------------+----------------|
-| =boolean=       | =xsd:boolean=     | The values =true= and =false=.                                    | =true= and =false= |
-| =decimal=       | =xsd:decimal=     | A 128-bit representation of a fixed-precision decimal number. | [[https://www.w3.org/TR/xmlschema-2/#decimal][XML Schema]]     |
-| =double=        | =xsd:double=      | An IEEE double-precision 64-bit floating point type.          | [[https://www.w3.org/TR/xmlschema-2/#double][XML Schema]]     |
-| =integer=       | =xsd:integer=     | A signed 64-bit integer.                                      |                |
-| =iri_reference= | =xsd:AnyURI=      | Represents a Uniform Resource Identifier Reference (URI).     | [[https://www.w3.org/TR/xmlschema-2/#anyURI][XML Schema]]     |
-| =string=        | =rdf:langString= | A string value with optional language-tag.                    | [[https://www.w3.org/TR/rdf11-concepts/#section-Graph-Literal][RDF]]            |
+| SDML Type | Underlying Type | Value Space                                                   | Lexical Space  |
+|-----------+-----------------+---------------------------------------------------------------+----------------|
+| =boolean=   | =xsd:boolean=     | The values =true= and =false=.                                    | =true= and =false= |
+| =decimal=   | =xsd:decimal=     | A 128-bit representation of a fixed-precision decimal number. | [[https://www.w3.org/TR/xmlschema-2/#decimal][XML Schema]]     |
+| =double=    | =xsd:double=      | An IEEE double-precision 64-bit floating point type.          | [[https://www.w3.org/TR/xmlschema-2/#double][XML Schema]]     |
+| =integer= | =xsd:integer=     | A signed 64-bit integer.                                      |                |
+| =iri=       | =xsd:AnyURI=      | Represents a Uniform Resource Identifier Reference (URI).     | [[https://www.w3.org/TR/xmlschema-2/#anyURI][XML Schema]]     |
+| =string=    | =rdf:langString=  | A string value with optional language-tag.                    | [[https://www.w3.org/TR/rdf11-concepts/#section-Graph-Literal][RDF]]            |
 
 *** List Literals
 
@@ -104,7 +99,7 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:thing sdml:defaultVariant "0"^^xsd:nonNegativeInteger .
+:example sdml:defaultVariant "0"^^xsd:nonNegativeInteger .
 #+END_SRC
 
 ** Modules
@@ -126,9 +121,7 @@ module example is end
 *Example with Explicit Base:*
 
 #+BEGIN_SRC sdml :exports code :noeval
-module example is
-  import xml:base
-  @xml:base = <https://example.org/langs/Example#>
+module example base <https://example.org/langs/Example#> is
 end
 #+END_SRC
 

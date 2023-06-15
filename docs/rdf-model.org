@@ -1,7 +1,7 @@
 #+LANGUAGE: en
 #+STARTUP: overview hidestars inlineimages entitiespretty
 
-* RDF Abstract Model
+* <<sec:rdf-semantic-model>> RDF Semantic Model
 
 The W3C's [[https://www.w3.org/RDF/][Resource Description Framework]] (RDF) is a mature standard for the open development of vocabularies and
 knowledge representation. Key characteristics are that it has a fundamentally simple model, it is designed with an /open
@@ -17,8 +17,24 @@ Object    = Subject | Literal
 Named     = Uri
 #+END_SRC
 
-An example might be as follows where the subject of these 4 statements is some resource I have named =mytruck=. It's not
-much but it's a start.
+In the following example, expressed in Turtle, there is a single /statement/ whose /subject/ is the value =:mytruck=, with a predicate =rdf:type=, and
+object =v:Truck=. Expressed in English this reads as /There exists a thing named =:mytruck= whose type is =Truck= (from the
+=v= namespace)/.
+
+#+BEGIN_SRC ttl
+:mytruck rdf:type v:Truck .
+#+END_SRC
+
+As the values above don't look like URIs the Turtle processor uses namespace mappings from prefix (before the ":") to
+URI to expand the values above into the following statement.
+
+#+BEGIN_SRC ttl
+<https://example.org/p/simon#mytruck>
+    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
+    <https://example.org/v#Truck> .
+#+END_SRC
+
+A more complete example adds a number of statements about the common subject =:mytruck=.
 
 #+BEGIN_SRC ttl
 :mytruck rdf:type v:Truck .
@@ -27,7 +43,7 @@ much but it's a start.
 :mytruck v:yearModel "2009"^^xsd:int .
 #+END_SRC
 
-I then consider adding the VIN to my statements above, in the following manner.
+I then consider adding the VIN[fn:vin] to my statements above, in the following manner.
 
 #+BEGIN_SRC ttl
 :mytruck v:hasVin "2G1FP22G522155049" .
@@ -105,7 +121,7 @@ digraph G {
   Structure [shape=ellipse];
   Union [shape=ellipse];
   EnumVariant [shape=ellipse];
-  Datatype [shape=ellipse;label="rdfs:Datatype"];
+  Datatype [shape=ellipse];
   integer [shape=rectangle;style=filled;color=lightgrey;label="xsd:nonNegativeInteger"];
 
   Module -> ModelElement [label="rdfs:subClassOf";arrowhead=empty];
@@ -114,7 +130,7 @@ digraph G {
   Classifier -> ModelElement [label="rdfs:subClassOf";arrowhead=empty];
 
   Datatype -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
-  Datatype -> Datatype [label="baseDatatype";dir=both;arrowtail=odiamond;arrowhead=open];
+  Datatype -> Datatype [label="baseDatatype";style=dashed;arrowhead=empty];
 
   Enumeration -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
   Enumeration -> EnumVariant [label="hasVariant";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
@@ -182,6 +198,10 @@ properties from the Dublin Core [[https://www.dublincore.org/specifications/dubl
     dc:license <https://github.com/johnstonskj/tree-sitter-sdml/blob/main/LICENSE> ;
     rdf:seeAlso <https://sdml.io/> .
 #+END_SRC
+
+** Datatypes
+
+The built-in datatypes supported by SDML are covered in section [[sec:surface-syntax]], specifically in table [[tbl:builtin-simple-types]].
 
 ** Classes
 
@@ -325,7 +345,10 @@ annotating a model.
 | =dc:license=       | A legal document giving official permission to do something with the model element.            | =:Module=      | =xsd:AnyURI=     |
 | =dc:conformsTo=    | An established standard to which the described  model element conforms.                        | N/A          | =xsd:AnyURI=     |
 | =rdfs:seeAlso=     | Used to indicate a resource that might provide additional information about the model element. | N/A          | =xsd:AnyURI=     |
-| =:deprecatedSince= | The specific version at which this model element was deprecated.                               | N/A          | =:versionString= |
-| =:introducedIn=    | The specific version this model element was introduced.                                        | N/A          | =:versionString= |
+| =:deprecatedSince= | The specific version in which this model element was marked as deprecated.                     | N/A          | =:versionString= |
+| =:introducedIn=    | The specific version this model element first appeared.                                        | N/A          | =:versionString= |
 | =:defaultVariant=  | Denotes, if present, the default variant of an enumeration.                                    | =:EnumVariant= | =xsd:NMTOKEN=    |
 
+# ----- Footnotes:
+
+[fn:vin] [[https://en.wikipedia.org/wiki/Vehicle_identification_number][Vehicle identification number]], Wikipedia

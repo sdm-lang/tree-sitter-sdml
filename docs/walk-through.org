@@ -205,22 +205,91 @@ sdml draw --diagram erd \
 [[./rentals-erd-4.svg]]
 
 
-#+NAME: lst:example-fourth-pass
-#+CAPTION: Rentals Non-Entity Detail
-#+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-concept-4.svg :exports both :noweb yes
-module rentals is
 
-  entity Customer is
-    @sdml:hasVersioningStyle = "Immutable"
-    @sdml:hasVersionIdType = VersionId
+#+NAME: lst:example-fifth-pass
+#+CAPTION: Rentals Structural Detail
+#+BEGIN_SRC sdml :cmdline draw --diagram uml-class :file ./rentals-uml-5.svg :exports both :noweb yes
+module rentals base <https://example.org/v/rentals> is
 
-    identity id -> cids:Uuid
+  import [ dc skos ]
 
-    contactAddress -> {1} Address
-    driverLicense -> {0..1} LicenseInformation
+  ;; This is actually a US VIN
+  import cids:VehicleIdentificationNumber
+
+  @dc:version = 2
+
+  datatype UniqueId <- xsd:string is
+    @xsd:pattern = "[A-Za-z0-9_-]{22}"
   end
 
-  ;; ...
+  union RentalClass of
+    Compact
+    UtilityVehicle
+    Luxury
+  end
+
+  enum CustomerLevel of
+    Basic = 1
+    Silver = 2
+    Gold = 3
+  end
+
+  entity Vehicle is
+    @skos:prefLabel = "Vehicle"@en
+
+    identity vin -> VehicleIdentificationNumber
+
+    information -> VehicleInformation
+    ref rentalClass -> {1} Class
+  end
+
+  structure VehicleInformation is
+    make -> xsd:string
+    model -> xsd:string
+    year -> xsd:integer is
+      @xsd:minValue = 2000
+      @xsd:maxValue = 3000
+    end
+  end
+
+  entity Location
+
+  entity Customer is
+    identity id -> UniqueId
+  end
+
+  entity Booking is
+    @sdml:versioningStyle = "Immutable"
+    @sdml:versionIdType = VersionId
+
+    identity bookingCode -> unknown
+
+    ref customer -> {1} Customer
+
+    group
+      @skos:prefLabel = "Rental Period"@en
+      pickup_date -> xsd:date
+      ref pickup_location -> Location
+      dropoff_date -> xsd:date
+      ref dropoff_location -> Location
+    end
+
+    group
+      @skos:prefLabel = "Requested"@en
+      ref bookingClass -> {1} Class
+      ref vehicle -> {0..1} Vehicle
+    end
+  end
+
+  event VehicleAssigned source Booking is
+    vehicle -> VehicleIdentificationNumber
+  end
 
 end
 #+END_SRC
+
+#+NAME: fig:example-fifth-pass
+#+CAPTION: Rentals Structural Detail
+#+RESULTS: lst:example-fifth-pass
+[[./rentals-uml-5.svg]]
+

@@ -28,7 +28,9 @@ TypeDef             =
     DataTypeDef | EntityDef | EnumDef | EventDef | StructureDef | UnionDef
 
 DataTypeDef         =
-    "datatype", Identifier, "<-", IdentifierReference, AnnotationOnlyBody?
+    "datatype", Identifier, "<-", DataTypeBase, AnnotationOnlyBody?
+
+DataTypeBase        = IdentifierReference | BuiltinSimpleType
 
 EntityDef           = "entity", Identifier, EntityBody?
 
@@ -77,7 +79,7 @@ TypeExpressionTo    = "->" Cardinality? TypeReference
 
 TypeExpressionFromto = Cardinality? TypeExpressionTo
 
-TypeReference       = IdentifierReference | UnknownType
+TypeReference       =  UnknownType | IdentifierReference | BuiltinSimpleType
 
 UnknownType         = "unknown"
 
@@ -87,6 +89,9 @@ CardinalityRange    = "..", Unsigned?
 
 Value               =
     SimpleValue | ValueConstructor | IdentifierReference | ListOfValues
+
+BuiltinSimpleType   = 
+    "string" | "double" | "decimal" | "integer" | "boolean" | "iri"
 
 SimpleValue         =
     String | Double | Decimal | Integer | Boolean | IriReference

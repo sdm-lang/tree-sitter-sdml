@@ -826,7 +826,7 @@ With the expansion of the ~source~ entity the event definition above is logicall
 module example is
   structure PersonNameChanged is
     id -> PersonId is
-      sdml:identifies Person
+      @sdml:identifies = Person
     end
   end
 end
@@ -911,7 +911,7 @@ UnionBody       = "of", Annotation*, TypeVariant*, "end"
 #+NAME: lst:sdml-ex-empty-union
 #+CAPTION: Empty Union
 #+BEGIN_SRC sdml :exports code :noeval
-module example of
+module example is
   union VehicleClass
 end
 #+END_SRC

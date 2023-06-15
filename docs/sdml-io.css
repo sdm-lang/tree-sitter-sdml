@@ -13,7 +13,13 @@ p, li, dd {
 /* Headings */
 h2 {
     border-top: 1px solid;
+    page-break-before: always;
 }
+
+div.content div:nth-of-type(3) h2 {
+    page-break-before: avoid;
+}
+
 
 /* Figures/Images */
 
@@ -48,14 +54,17 @@ div.NOTE > p::before {
 /* TOC */
 
 div#list-of-tables > h2 {
+    page-break-before: avoid;
     border-top: 0px;
 }
 
 div#list-of-listings > h2 {
+    page-break-before: avoid;
     border-top: 0px;
 }
 
 div#footnotes h2.footnotes {
+    page-break-before: avoid;
     border-top: 0px;
     display: block;
 }

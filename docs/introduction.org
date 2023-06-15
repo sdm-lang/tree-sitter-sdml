@@ -16,12 +16,13 @@ them. However, the primary focus of the documentation is the surface syntax as m
 alone.
 
 #+NAME: fig:sdml-overview
-#+BEGIN_SRC dot :file sdml-overview.png :exports results
+#+BEGIN_SRC dot :file sdml-overview.svg :exports results
 digraph G {
   bgcolor="transparent";
   rankdir="LR";
-  node [fontsize=10];
-  edge [fontsize=9; fontcolor=darkgrey];
+  fontname="Helvetica,Arial,sans-serif";
+  node [fontname="Helvetica,Arial,sans-serif"; fontsize=10; width=1.0; height=0.6];
+  edge [fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="darkgrey"];
 
   instance [shape="note"; label="My Domain\nModel"];
   sdml [shape="ellipse"; label="Surface\nSyntax"];  
@@ -36,7 +37,7 @@ digraph G {
 
 #+CAPTION: Model Overview
 #+RESULTS: fig:sdml-overview
-[[file:sdml-overview.png]]
+[[file:sdml-overview.svg]]
 
 The language uses some ideas from UML[fn:uml] which is often used in the construction of such models today. However, the goal is
 to keep the language as small as possible, taking away some options where they don't make sense or where their use may
@@ -45,93 +46,177 @@ namely the separation of entities (/an object defined not by its attributes, but
 immutable object that contains attributes but has no conceptual identity/), simply termed structures in SDML. This model
 does not include the following as first-class concepts: /aggregates/, /repositories/, /factories/, or /services/.
 
-#+BEGIN_NOTE
-One element that is not included in figure [[fig:sdml-overview]], as it is primarily an implementation decision, is
-that the reference implementation for SDML is provided as a Tree-Sitter[fn:ts] package. While generated tree-sitter
-parsers are not intended to be fast, or to be part of a compilation processes they do provide a multitude of language
-bindings, and a concrete syntax tree allowing easy development of the relatively simple tools required for SDML usage.
-#+END_NOTE
+** <<sec:sdml-role>> Role in Development
 
-** Role in Development
+The software development process may be described as the management of abstraction; requirements are an abstraction
+representing actual needs of some group of individuals, a whiteboard drawing may be an (informal) abstraction of a
+system design, a UML model may be a formal abstraction of system or component dependencies, and so forth. We can
+stratify these levels of abstraction as shown in figure [[fig:artifact-layering]] although almost any such stratification
+will crash headlong into any number of detractors.
 
-Figure [[fig:model-transforms]] demonstrates another key element of a /Model-Driven Development/[fn:mdd] style, the transformation
-between models and between models and other development artifacts.
+#+NAME: fig:artifact-layering
+#+BEGIN_SRC dot :file artifact-layering.svg :exports results
+digraph G {
+  bgcolor="transparent";
+  rankdir="TD";
+  fontname="Helvetica,Arial,sans-serif";
+  node [shape="rect"; width=1.5; fontname="Helvetica,Arial,sans-serif"; fontsize=10];
+  edge [fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="darkgrey"];
+  
+  subgraph cluster_0 {
+    color="grey";
+    fontcolor="grey";
+    fontsize=10;
+    style="dashed";
+    label="Abstract Models";
+    margin=12.0;
+
+    concept  [label="Conceptual Models\n(e.g. concept maps)"];
+    logical  [label="Logical Models\n(e.g. UML)"];
+    
+    concept -> logical [arrowhead="open"; xlabel="  transform  "; labeldistance="2.5"];
+    logical -> concept [arrowhead="open"; xlabel="  abstract  "; labeldistance="2.5"];
+  }
+ 
+  subgraph cluster_1 {
+    color="grey";
+    fontcolor="grey";
+    fontsize=10;
+    style="dashed";
+    label="Concrete Models";
+    margin=12.0;
+    
+    physical [label="Physical Models\n(e.g. profiled UML)"];  
+    develop  [label="Development Artifacts\n(e.g. source, config)"];
+    logical -> physical [arrowhead="open"];
+    physical -> logical [arrowhead="open"];
+    
+    physical -> develop [arrowhead="open"; xlabel="  transform  "];
+    develop -> physical [arrowhead="open"; xlabel="  abstract  "];
+  }
+  
+  subgraph cluster_2 {
+    color="grey";
+    fontcolor="grey";
+    fontsize=10;
+    style="dashed";
+    label="Artifacts";
+    margin=12.0;
+    
+    deploy   [label="Deployment Artifacts\n(e.g. executables)"];
+    
+    develop -> deploy [arrowhead="open"];
+    deploy -> develop [arrowhead="open"];
+   }
+   
+}
+#+END_SRC
+
+#+CAPTION: Artifact Layers in Software Development
+#+RESULTS: fig:artifact-layering
+[[file:artifact-layering.svg]]
+
+While this figure groups these levels into three groups, /abstract models/, /concrete models/, and /artifacts/ this is again
+somewhat arbitrary given that even the executable deployment artifacts are an abstraction concerning how the operating
+system and CPU will layout and execute our application.
+
+Figure [[fig:model-transforms]] demonstrates the key element of a /Model-Driven Development/[fn:mdd] style, namely the
+transformation between models and between models and other development artifacts. In this case we use the terms
+introduced above where we transform from a /more/ abstract model to a /more/ concrete model or directly to other artifacts.
+The transformation also has to have a set of rules that define the selection and projection of elements from the source
+model.
 
 #+NAME: fig:model-transforms
-#+BEGIN_SRC dot :file model-transforms.png :exports results
+#+BEGIN_SRC dot :file model-transforms.svg :exports results
 digraph G {
   bgcolor="transparent";
   rankdir="LR";
-  node [fontsize=10];
-  edge [fontsize=9; fontcolor=darkgrey];
+  fontname="Helvetica,Arial,sans-serif";
+  node [fontname="Helvetica,Arial,sans-serif"; fontsize=10; width=1.0; height=0.6];
+  edge [fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="darkgrey"];
 
-  semantics [shape="ellipse"; label="Semantic\nModel"];
+  semantics [shape="ellipse"; label="Abstract\nModel"];
   transform [shape="cds"; margin="0.2,0.2"; label="Transformation"];
-  tsq [shape="ellipse"; label="Tree-Sitter\nQueries"];
-  other [shape="ellipse"; style="dashed"; label="Implementation\nModel(s)"];
+  tsq [shape="ellipse"; label="Rules"];
+  other [shape="ellipse"; style="dashed"; label="Concrete\nModel(s)"];
 
   semantics -> transform [label="source"];
-  tsq -> transform [label="selections"];
-  transform -> other [label="target"];
+  tsq -> transform [label="select/project"];
+  transform -> other [label="generate"];
+  other -> semantics [label="abstraction"];
 }
 #+END_SRC
 
 #+CAPTION: Model Transformations
 #+RESULTS: fig:model-transforms
-[[file:model-transforms.png]]
+[[file:model-transforms.svg]]
 
 *Example:*
 
-In the following example 
+In the following example we show a tree of transformations from a domain model through three intermediate models to
+various artifacts such as SQL, code, and Thrift[fn:thrift]. 
 
 #+NAME: fig:example-transform
-#+BEGIN_SRC dot :file example-transform.png :exports results
+#+BEGIN_SRC dot :file example-transform.svg :exports results
 digraph G {
   bgcolor="transparent";
   rankdir="TD";
-  node [fontsize=10];
-  edge [fontsize=9; fontcolor=darkgrey];
+  fontname="Helvetica,Arial,sans-serif";
+  node [fontname="Helvetica,Arial,sans-serif"; fontsize=10; width=1.0; height=0.6];
+  edge [fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="darkgrey"];
 
-  domain [shape=ellipse; label="Domain Model"];
+  domain [shape=ellipse; label="Domain\nModel"];
 
   docs [shape=note; label="Documentation"];
-  domain -> docs [label="transformer"];
+  domain -> docs [label="transform"];
 
-  service [shape=ellipse; label="Service Definition"; style=dotted;];
-  domain -> service [label="transformer"];
+  service [shape=ellipse; label="Service\nDefinition"; style=dotted;];
+  domain -> service [label="transform"];
 
   smithy [shape=component; label="Smithy"];
-  service -> smithy [label="transformer"];
+  service -> smithy [label="transform"];
   
-  oas [shape=component; label="OpenAPI Spec"];
-  smithy -> oas [label="transformer"];
+  oas [shape=component; label="OpenAPI Spec\n(YAML)"];
+  smithy -> oas [label="transform"];
 
-  stubs [shape=component; label="Service Stubs"];
-  smithy -> stubs [label="transformer"];
+  stubs [shape=component; label="Service Stubs\n(code)"];
+  smithy -> stubs [label="transform"];
 
-  client [shape=component; label="Client Library"];
-  smithy -> client [label="transformer"];
+  client [shape=component; label="Client Library\n(code)"];
+  smithy -> client [label="transform"];
 
-  data [shape=ellipse; label="Data Definition"; style=dotted;];
-  domain -> data [label="transformer"];
+  data [shape=ellipse; label="Data\nDefinition"; style=dotted;];
+  domain -> data [label="transform"];
 
   dbsql [shape=component; label="SQL DDL"]; 
-  data -> dbsql [label="transformer"];
+  data -> dbsql [label="transform"];
 
   dbjson [shape=component; label="JSON Schema"];
-  data -> dbjson [label="transformer"];
+  data -> dbjson [label="transform"];
   
-  message [shape=ellipse; label="Message Definition"; style=dotted;];
-  domain -> message [label="transformer"];
+  message [shape=ellipse; label="Message\nDefinition"; style=dotted;];
+  domain -> message [label="transform"];
 
-  thrift [shape=ellipse; label="Apache Thrift"];
-  message -> thrift [label="transformer"];
+  thrift [shape=ellipse; label="Apache Thrift\n(IDL)"];
+  message -> thrift [label="transform"];
 }
 #+END_SRC
 
 #+CAPTION: Example Model Transformations
 #+RESULTS: fig:example-transform
-[[file:example-transform.png]]
+[[file:example-transform.svg]]
+
+** Goals
+
+The purpose of SDML is to be the source of truth concerning the enterprise's domain, and the root of the tree shown in
+figure [[fig:example-transform]]. It needs to provide an abstraction that is expressive enough to model the structure of
+entities that define the domain, while providing enough detail to be useful in transforming to the next level of more
+concrete models and artifacts.
+
+SDML has two key tenets that help in this goal:
+
+1. Provide the ability to capture correct, but /incomplete/ models to allow fast capture of key information first.
+2. Provide an extension mechanism that goes beyond marker values and allows semantic extension when necessary.
 
 # ----- Footnotes
 
@@ -147,5 +232,4 @@ digraph G {
 
 [fn:mdd] [[https://en.wikipedia.org/wiki/Model-driven_engineering][Model-Driven Development]], Wikipedia
 
-[fn:ts]  Home at [[https://tree-sitter.github.io/tree-sitter/][Tree Sitter]], source at [[https://github.com/tree-sitter/tree-sitter][github.com]]
-
+[fn:thrift] [[https://thrift.apache.org/docs/idl][Thrift interface description language]], Apache Software Foundation

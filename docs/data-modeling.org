@@ -29,8 +29,8 @@ For now we will use the following classification to partition the major purpose 
   representing processes of an enterprise, so that the current business processes may be analyzed, improved, and
   automated.
 
-A common framework for defining the /level/ (usually of abstraction) inherent to a model are the three /perspectives/
-introduced by ANSI in 1975.
+A common framework for defining the /level/ of abstraction inherent to a model are the three /perspectives/
+introduced by ANSI in 1975 (introduced in section [[sec:sdml-role]].
 
 - *Conceptual*: In the field of computer science a conceptual model aims to express the meaning of terms and concepts used
   by domain experts to discuss the problem, and to find the correct relationships between different concepts. The
@@ -46,12 +46,12 @@ introduced by ANSI in 1975.
   
 With these two classifications we can construct a simple grammar for the qualification of the term /model/:
 
-#+BEGIN_SRC bnf
-<perspective>      ::= "conceptual" | "logical" | "physical"
+#+BEGIN_SRC ebnf
+Perspective    = "conceptual" | "logical" | "physical"
 
-<scope>            ::= "data" | "behavior" | "process"
+Scope          = "data" | "behavior" | "process"
 
-<model-reference>  ::= perspective scope "model"
+ModelReference = Perspective, Scope "model"
 #+END_SRC
 
 ** Modeling Language/Notation

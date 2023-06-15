@@ -102,12 +102,15 @@ classes actually referenced by other model elements. For more information on OWL
 Document Overview (Second Edition)]] and [[https://cambridgesemantics.com/blog/semantic-university/learn-owl-rdfs/owl-references-humans/][OWL References for Humans]].
 
 #+NAME: fig:owl-ontology
-#+BEGIN_SRC dot :file owl-ontology.png :exports results
+#+BEGIN_SRC dot :file owl-ontology.svg :exports results
 digraph G {
   bgcolor="transparent";
   rankdir="LR";
   node [fontsize=10];
   edge [fontsize=9; fontcolor=darkgrey];
+  fontname="Helvetica,Arial,sans-serif";
+  node [fontname="Helvetica,Arial,sans-serif"; fontsize=10; width=1.0; height=0.6];
+  edge [fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="darkgrey"];
 
   ModelElement [shape=ellipse;color=grey;fontcolor=grey];
   Module [shape=ellipse;penwidth=2.0;color=blue;fontcolor=blue];
@@ -165,10 +168,10 @@ digraph G {
 
 #+CAPTION: OWL Ontology
 #+RESULTS: fig:owl-ontology
-[[file:owl-ontology.png]]
+[[file:owl-ontology.svg]]
 
 Figure [[fig:owl-ontology]] uses some notation elements from UML, although not a UML diagram itself. 
-For a higher resolution version, [[file:owl-ontology.png][click here]].
+For a higher resolution version, [[file:owl-ontology.svg][click here]].
 
 1. Open triangular arrow heads correspond to the RDF Schema =subClassOf= relationship.
 2. Filled diamonds correspond to composite associations, or strong ownership.

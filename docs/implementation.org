@@ -5,11 +5,18 @@
 * Implementation and Tools
 
 Figure [[fig:model-transforms]] gave a high-level overview of transformations, this section will expand not only on
-transforms but also the other capabilities of the tooling for SDML. As such the much expanded figure
+transforms but also the other capabilities of the tooling for SDML.
+
+One element that is not included in figure [[fig:sdml-overview]], as it is primarily an implementation decision, is that the
+reference implementation for SDML is provided as a Tree-Sitter[fn:ts] package. While generated tree-sitter parsers are
+not intended to be fast, or to be part of a compilation processes they do provide a multitude of language bindings, and
+a concrete syntax tree allowing easy development of the relatively simple tools required for SDML usage.
+
+As such the much expanded figure
 [[fig:implementation-overview]] shows the 
 
 #+NAME: fig:implementation-overview
-#+BEGIN_SRC dot :file implementation-overview.png :exports results
+#+BEGIN_SRC dot :file implementation-overview.svg :exports results
 digraph G {
     bgcolor="transparent";
     rankdir="TB";
@@ -75,7 +82,7 @@ digraph G {
  
 #+CAPTION: Implementation Overview
 #+RESULTS: fig:implementation-overview
-[[file:implementation-overview.png]]
+[[file:implementation-overview.svg]]
 
 ** Core Library
 
@@ -99,7 +106,7 @@ make build
 
 - Node binding, published to [[https://www.npmjs.com/package/tree-sitter-sdml][npm.js]]
 - Rust binding, published to [[https://crates.io/crates/tree-sitter-sdml][crates.io]]
- 
+  
 ** Command-Line Tool
 
 Install is simple using the =cargo= command. If you do not have cargo installed you can follow the standard /rustup/
@@ -532,6 +539,7 @@ Try here:
 
 # ----- Footnotes
 
+[fn:ts]  Home at [[https://tree-sitter.github.io/tree-sitter/][Tree Sitter]], source at [[https://github.com/tree-sitter/tree-sitter][github.com]]
 [fn:cargo] [[https://doc.rust-lang.org/cargo/getting-started/installation.html][Installing Cargo]] from the Cargo book
 [fn:brew] The [[https://brew.sh/][Homebrew]] package manager
 [fn:gviz] [[https://graphviz.org/download/][Graphviz]] open source graph visualization software

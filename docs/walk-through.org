@@ -4,9 +4,12 @@
 * Walk-Through Example
 
 The following section walks through the process of model creation and iterative elaboration to add detail as domain
-experts provide more information. In our example we will build a domain model for a vehicle rental company. So, as you
-might imagine we can start the model with some pretty obvious entities, but with no detail beyond their names. Listing
-[[lst:example-first-pass]] is this first-pass domain model.
+experts provide more information. In our example we will build a domain model for a vehicle rental company.
+
+** Starting with Core Entities
+
+So, as you might imagine we can start the model with some pretty obvious entities, but with no detail beyond their
+names. Listing [[lst:example-first-pass]] is this first-pass domain model.
 
 #+NAME: lst:example-first-pass
 #+CAPTION: Rentals Concepts (First Pass)
@@ -39,6 +42,8 @@ sdml draw --diagram concepts \
 #+CAPTION: Rentals Concepts (First Pass)
 #+RESULTS: lst:example-first-pass
 [[file:./rentals-concept-1.svg]]
+
+** Adding Relationships
 
 Figure [[lst:example-second-pass]] is the second-pass at our model, adding relationships from the ~Booking~ entity to the
 ~Customer~, ~Location~, and  ~Vehicle~ entities. Adding a body to the ~Booking~ entity, between =is= … =end=, requires the entity
@@ -76,6 +81,8 @@ Re-running the =sdml= tool on listing [[lst:example-second-pass]] will result in
 #+CAPTION: Rentals Basic Relationships
 #+RESULTS: lst:example-second-pass
 [[file:./rentals-concept-2.svg]]
+
+** Adding our first Properties
 
 In the next edit of our rentals model we see some additions:
 
@@ -123,6 +130,8 @@ As usual we generate the concept diagram in figure [[fig:example-third-pass]] fr
 #+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-concept-3.svg :exports results :noweb yes
 <<lst:example-third-pass>>
 #+END_SRC
+
+** More detail, and a new diagram
 
 #+CAPTION: Rentals More Detail
 #+RESULTS: fig:example-third-pass
@@ -204,7 +213,7 @@ sdml draw --diagram erd \
 #+RESULTS: lst:example-fourth-pass-erd
 [[./rentals-erd-4.svg]]
 
-
+** More detail, and yet another diagram
 
 #+NAME: lst:example-fifth-pass
 #+CAPTION: Rentals Structural Detail

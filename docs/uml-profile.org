@@ -1,0 +1,163 @@
+#+LANGUAGE: en
+#+STARTUP: overview hidestars inlineimages entitiespretty
+
+* Appendix: UML Profile for SDML
+
+This section is non-normative.
+
+Based upon the [[https://www.omg.org/spec/UML/2.5.1/About-UML][Unified Modeling Language 2.5.1]].
+
+** Profile Elements
+
+
+#+NAME: fig:uml-profile-package
+#+BEGIN_SRC plantuml :file uml-profile-package.svg
+hide circle
+hide members
+
+package "UML 2.5" as uml #white {
+}
+
+package sdml <<profile>> {
+  class module <<stereotype>> {}
+  class datatype <<stereotype>> {}
+  class event <<stereotype>> {}
+}
+
+sdml ..> uml: <<references>>
+#+END_SRC
+
+#+CAPTION: Profile Package
+#+RESULTS: fig:uml-profile-package
+[[file:uml-profile-package.svg]]
+
+
+#+NAME: fig:uml-profile-applied
+#+BEGIN_SRC plantuml :file uml-profile-applied.svg
+hide circle
+hide members
+
+package rentals {
+}
+package sdml <<profile>> {
+}
+rentals .> sdml: <<apply>>
+#+END_SRC
+
+#+CAPTION: Applying the Profile
+#+RESULTS: fig:uml-profile-applied
+[[file:uml-profile-applied.svg]]
+
+*** Module
+
+#+NAME: fig:uml-profile-module
+#+BEGIN_SRC plantuml :file uml-profile-module.svg
+hide circle
+hide members
+
+class Package <<Metaclass>> #white {}
+class module <<stereotype>> {}
+module -> Package: <<extension>>
+#+END_SRC
+
+#+CAPTION: Module Stereotype
+#+RESULTS: fig:uml-profile-module
+[[file:uml-profile-module.svg]]
+
+*** Datatype
+
+The profile element =«datatype»= is a specialization of the UML =PrimitiveType= (10.2.3.2) classifier.
+
+#+NAME: fig:uml-profile-datatype
+#+BEGIN_SRC plantuml :file uml-profile-datatype.svg
+hide circle
+hide members
+
+class PrimitiveType <<Metaclass>> #white {}
+class datatype <<stereotype>> {}
+datatype --> PrimitiveType: <<extension>>
+datatype -u-> datatype: > restricts
+#+END_SRC
+
+#+CAPTION: Datatype Stereotype
+#+RESULTS: fig:uml-profile-datatype
+[[file:uml-profile-datatype.svg]]
+
+*** Entity
+
+
+#+NAME: fig:uml-profile-entity
+#+BEGIN_SRC plantuml :file uml-profile-entity.svg
+hide circle
+hide members
+
+class Class <<Metaclass>> #white {}
+class entity <<stereotype>> {}
+entity -> Class: <<extension>>
+
+class Property <<Metaclass>> #white {}
+class identity <<stereotype>> {}
+identity -> Property: <<extension>>
+
+note "**context** identity **inv**:\nself.type.oclIsTypeOf(entity)\n**and** self.class.oclIsTypeOf(entity)" as idtynote
+identity .. idtynote
+
+note "**context** identity **inv**:\nself.lowerValue = 1\n**and** self.upperValue == 1" as cardnote
+identity .. cardnote
+
+note "**context** entity **inv**:\nself.ownedAttribute\n     .collect(e | e.oclIsTypeOf(identity))\n     .size() == 1" as idnote
+entity .. idnote
+
+class ref <<stereotype>> {}
+Property <- ref: <<extension>>
+
+note "**context** ref **inv**:\n**not** self.type.oclIsTypeOf(entity)\n**and** self.class.oclIsTypeOf(entity)" as refnote
+ref .. refnote
+#+END_SRC
+
+#+CAPTION: Entity Stereotype
+#+RESULTS: fig:uml-profile-entity
+[[file:uml-profile-entity.svg]]
+
+*** Event
+
+The standard =signal= (10.3.3.1)
+
+#+NAME: fig:uml-profile-event
+#+BEGIN_SRC plantuml :file uml-profile-event.svg
+hide circle
+hide members
+
+class entity <<stereotype>> {}
+
+class Signal <<Metaclass>> #white {}
+class event <<stereotype>> {}
+event -> Signal: <<extension>>
+
+class Dependency <<Metaclass>> #white {}
+class source <<stereotype>> {}
+source -r-> Dependency: <<extension>>
+
+source -d-> "+eventSource\n{subsets supplier}" entity
+source -u-> "+event\n{subsets client}" event
+
+note "**context** entity **inv**:\nself.ownedAttribute\n     .collect(e | e.oclIsTypeOf(identitysource))\n     .size() == 1" as clientnote
+clientnote .. event
+#+END_SRC
+
+#+CAPTION: Event Stereotype
+#+RESULTS: fig:uml-profile-event
+[[file:uml-profile-event.svg]]
+
+*** Enumeration
+
+The standard =Enumeration= classifier is used to model enum definitions.
+The standard =EnumerationLiteral= instance is used to model value variants.
+
+*** Structure
+
+
+
+*** Union
+
+ Generalization Sets (9.7)

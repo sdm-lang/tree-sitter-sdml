@@ -36,7 +36,7 @@
 
 #+INCLUDE: "./surface-to-rdf.org" :minlevel 1
 
-#+INCLUDE: "./data-modeling.org" :minlevel 1
+#+INCLUDE: "./uml-profile.org" :minlevel 1
 
 * Appendix: License
 

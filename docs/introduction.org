@@ -5,9 +5,9 @@
 * Introduction
 
 The Simple Domain Modeling Language[fn:sdml] is a small data-oriented language for constructing, documenting, and
-reasoning about a conceptual domain model. For a background on domain modeling see appendix [[app:domain-modeling]]. At it's
-core SDML comprises 1. an /Semantic Model/ whose structure and semantics are described by an OWL[fn:owl]/RDF[fn:rdf]
-ontology (see section [[sec:rdf-semantic-model]] for more details), and 2. a /surface syntax/ for editing and sharing model
+reasoning about a conceptual domain model. For a background on domain modeling see section [[sec:domain-modeling]]. At it's
+core SDML comprises *1.* an /Semantic Model/ whose structure and semantics are described in RDF[fn:rdf] by an OWL[fn:owl]
+ontology (see section [[sec:rdf-semantic-model]] for more details), and *2.* a /surface syntax/ for editing and sharing model
 artifacts (see section [[sec:surface-syntax]] for more details). Figure [[fig:sdml-overview]] shows the relationship between
 these high-level components.
 
@@ -46,7 +46,105 @@ namely the separation of entities (/an object defined not by its attributes, but
 immutable object that contains attributes but has no conceptual identity/), simply termed structures in SDML. This model
 does not include the following as first-class concepts: /aggregates/, /repositories/, /factories/, or /services/.
 
-** <<sec:sdml-role>> Role in Development
+
+** <<sec:domain-modeling>> Domain Modeling
+
+There is often confusion around the use of the term /Domain Model/ especially in regard to terms such as /Data Model/, /Class
+Model/, /Schema/ and more. This short appendix is an attempt to clarify the terminology and how the relevant modeling
+efforts are undertaken. This is not intended as an exhaustive review of modelling approaches, standards, or technologies
+and neither does it make any judgement as to the usefulness of any approach or technology.
+
+*** Model Terminology
+
+A model is an informative representation of an object, person or system. The term originally denoted the plans of a
+building in late 16th-century English, and derived via French and Italian ultimately from Latin modulus, a measure. As
+is common in software development the term model is overloaded and it's use can lead to confusion as people have
+different expectations and assumptions regarding what kind of model is being discussed. To this end we introduce some
+terminology here that, if simply used as model qualifiers, helps to disambiguate the purpose of any particular model.
+
+For now we will use the following classification to partition the major purpose of different model instances.
+
+- *Data*: A data model in software engineering is a representation of concepts and the relationships, constraints, rules,
+  and operations to specify data semantics for a chosen domain of discourse. Typically it specifies relations between
+  kinds of things, but may also include relations with individual things. It can provide sharable, stable, and organized
+  structure of information requirements or knowledge for the domain context.
+- *Behavior*: Behavioral languages are designed to describe the observable behavior of complex systems consisting of
+  components that execute concurrently. These languages focus on the description of key concepts such as: concurrency,
+  nondeterminism, synchronization, and communication.
+- *Process*: [Business] process modeling (BPM) in business process management and systems engineering is the activity of
+  representing processes of an enterprise, so that the current business processes may be analyzed, improved, and
+  automated.
+
+A common framework for defining the /level/ of abstraction inherent to a model are the three /perspectives/
+introduced by ANSI in 1975 (introduced in section [[sec:sdml-role]].
+
+- *Conceptual*: In the field of computer science a conceptual model aims to express the meaning of terms and concepts used
+  by domain experts to discuss the problem, and to find the correct relationships between different concepts. The
+  conceptual model attempts to clarify the meaning of various, usually ambiguous terms, and ensure that confusion caused
+  by different interpretations of the terms and concepts cannot occur.
+- *Logical*: A logical data model or logical schema is a data model of a specific problem domain expressed independently
+  of a particular database management product or storage technology (physical data model) but in terms of data
+  structures such as relational tables and columns, object-oriented classes, or XML tags. This is as opposed to a
+  conceptual data model, which describes the semantics of an organization without reference to technology.
+- *Physical*: A physical data model (or database design) is a representation of a data design as implemented, or intended
+  to be implemented, in a database management system. In the lifecycle of a project it typically derives from a logical
+  data model, though it may be reverse-engineered from a given database implementation.
+  
+With these two classifications we can construct a simple grammar for the qualification of the term /model/:
+
+#+BEGIN_SRC ebnf
+Perspective    = "conceptual" | "logical" | "physical"
+
+Scope          = "data" | "behavior" | "process"
+
+ModelReference = Perspective, Scope "model"
+#+END_SRC
+
+*** Modeling Language/Notation
+
+There have been a number of modeling techniques, notations, and languages over the years. The following table describes
+those in common use today. It is worth noting that after OMG standardization there are common meta-model underpinnings
+for UML and BPMN.
+
+|            | *Data*                            | *Behavior*                     | *Process*          |
+| *Conceptual* | UML^1, Concept Map, Semantic Net | UML^2, Flowchart              | UML^3, BPMN, EPC^4 |
+| *Logical*    | UML^1, EXPRESS, IDEF1X, IE^5      | UML^2                         | BPMN             |
+| *Physical*   | UML^1, …                         | UML^6, Statecharts, Petri net |                  |
+
+1. Class and Component diagrams.
+2. Sequence, State, and Activity diagrams.
+3. Use Case and Activity diagrams.
+4. Event-driven Process Chains.
+5. Information Engineering (IE) introduced the commonly used /crows-foot/ notation.
+6. Action Semantics and action languages.
+
+UML has a built-in extension mechanism with /stereotypes/ and /profiles/ and data modeling concerns are often introduced
+with specific extensions such as stereotypes for different key types.
+
+*** Domain-Driven Design
+
+Domain-driven design (DDD) is a software design approach focusing on modeling software to match a domain according to
+input from that domain's experts. Under domain-driven design, the structure and language of software code (class names,
+class methods, class variables) should match the business domain.
+
+Within this approach the /domain/ model is usually a conceptual or logical data model that describes the key entities
+that comprise the domain. The representation of this model can be any of the languages described above although UML is
+the common. The discipline of domain modeling is unique in it's focus on deriving data/information models directly from
+the business and stresses the involvement of domain experts from the business in the development of models. Additionally
+the literature describes specific kinds of model entities and their unique semantics, /Entities/, /Value Objects/, /Events/,
+and /Aggregates/, etc. which help focus conversations on key modeling concepts such as identity, lifecycle, and ownership.
+
+Thus, a *Domain Model* is a /conceptual/ (UML or Ontology) or /logical/ (UML) /data model/ developed according to a specific
+methodology (DDD) and employing a specific meta-language (UML Profile).
+
+Some of the defined kinds, /Repository/, /Factory/, and /Service/ are lower-level concerns and the lack of a clear separation
+between different levels of abstraction is one criticism of the method. Additionally terms such as Entity as defined by
+DDD is not entirely compatible with the use in pre-existing methods such as E/R modeling.
+
+However, the method's focus on the business and it's vocabulary as the basis for models is valuable in an effort such as
+the Universal API where the model will represent our business model in different presentations.
+
+** <<sec:sdml-role>> Domain Modeling's Role in Development
 
 The software development process may be described as the management of abstraction; requirements are an abstraction
 representing actual needs of some group of individuals, a whiteboard drawing may be an (informal) abstraction of a
@@ -217,6 +315,17 @@ SDML has two key tenets that help in this goal:
 
 1. Provide the ability to capture correct, but /incomplete/ models to allow fast capture of key information first.
 2. Provide an extension mechanism that goes beyond marker values and allows semantic extension when necessary.
+
+Additionally, by focusing first on a text-based syntax we provide a resource representation that fits well into most
+software processes, it can be version controlled, it's diff-friendly, you can use code-reviews and pull-requests to
+build governance processes. While this document /does not/ preclude alternative representations, including visual ones,
+the surface syntax is the canonical authoring form.
+
+** Non-Goals
+
+1. Versioning
+2. Object Modeling
+3. Standardization
 
 # ----- Footnotes
 

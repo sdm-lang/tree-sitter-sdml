@@ -1,27 +1,32 @@
 #+LANGUAGE: en
 #+STARTUP: overview hidestars inlineimages entitiespretty
 
-* Appendix: UML Profile for SDML
+* <<app:uml-profile>>Appendix: UML Profile for SDML
 
 This section is non-normative.
 
 Based upon the [[https://www.omg.org/spec/UML/2.5.1/About-UML][Unified Modeling Language 2.5.1]].
 
-** Profile Elements
+** The Profile
 
 
 #+NAME: fig:uml-profile-package
 #+BEGIN_SRC plantuml :file uml-profile-package.svg
+skinparam backgroundColor transparent
 hide circle
 hide members
 
-package "UML 2.5" as uml #white {
+package "UML 2.5" as uml <<Metamodel>> #white {
 }
 
 package sdml <<profile>> {
   class module <<stereotype>> {}
   class datatype <<stereotype>> {}
+  class entity <<stereotype>> {}
   class event <<stereotype>> {}
+  class source <<stereotype>> {}
+  class identity <<stereotype>> {}
+  class ref <<stereotype>> {}
 }
 
 sdml ..> uml: <<references>>
@@ -31,9 +36,11 @@ sdml ..> uml: <<references>>
 #+RESULTS: fig:uml-profile-package
 [[file:uml-profile-package.svg]]
 
+*** Example Usage
 
-#+NAME: fig:uml-profile-applied
-#+BEGIN_SRC plantuml :file uml-profile-applied.svg
+#+NAME: fig:uml-ex-profile-applied
+#+BEGIN_SRC plantuml :file uml-ex-profile-applied.svg
+skinparam backgroundColor transparent
 hide circle
 hide members
 
@@ -45,13 +52,14 @@ rentals .> sdml: <<apply>>
 #+END_SRC
 
 #+CAPTION: Applying the Profile
-#+RESULTS: fig:uml-profile-applied
-[[file:uml-profile-applied.svg]]
+#+RESULTS: fig:uml-ex-profile-applied
+[[file:uml-ex-profile-applied.svg]]
 
-*** Module
+** Modules
 
 #+NAME: fig:uml-profile-module
 #+BEGIN_SRC plantuml :file uml-profile-module.svg
+skinparam backgroundColor transparent
 hide circle
 hide members
 
@@ -64,69 +72,182 @@ module -> Package: <<extension>>
 #+RESULTS: fig:uml-profile-module
 [[file:uml-profile-module.svg]]
 
-*** Datatype
+*** Example Usage
+
+#+BEGIN_SRC sdml :exports code :noeval
+module rentals is
+end
+#+END_SRC
+
+#+NAME: fig:uml-ex-module
+#+BEGIN_SRC plantuml :file uml-ex-module.svg
+skinparam backgroundColor transparent
+hide circle
+hide members
+
+package rentals-model <<sdml>> {
+  package rentals <<module>> {
+  }
+}
+#+END_SRC
+
+#+CAPTION: A Module Example
+#+RESULTS: fig:uml-ex-module
+[[file:uml-ex-module.svg]]
+
+** Datatypes
 
 The profile element =«datatype»= is a specialization of the UML =PrimitiveType= (10.2.3.2) classifier.
 
 #+NAME: fig:uml-profile-datatype
 #+BEGIN_SRC plantuml :file uml-profile-datatype.svg
+skinparam backgroundColor transparent
 hide circle
 hide members
 
 class PrimitiveType <<Metaclass>> #white {}
 class datatype <<stereotype>> {}
-datatype --> PrimitiveType: <<extension>>
-datatype -u-> datatype: > restricts
+datatype -r-> PrimitiveType: <<extension>>
+
+note "**context** datatype **inv**:\nself.generalization\n     .forAll(e | e.general.oclIsTypeOf(datatype))" as gendatatype
+datatype .. gendatatype
 #+END_SRC
 
 #+CAPTION: Datatype Stereotype
 #+RESULTS: fig:uml-profile-datatype
 [[file:uml-profile-datatype.svg]]
 
-*** Entity
+*** Example Usage
 
+#+BEGIN_SRC sdml :exports code :noeval
+module rentals is
+  datatype VehicleIdNumber <- string
+end
+#+END_SRC
 
-#+NAME: fig:uml-profile-entity
-#+BEGIN_SRC plantuml :file uml-profile-entity.svg
+#+NAME: fig:uml-ex-datatype
+#+BEGIN_SRC plantuml :file uml-ex-datatype.svg
+skinparam backgroundColor transparent
 hide circle
 hide members
 
+package rentals <<module>> {
+    class sdml::string <<datatype>> {}
+    class VehicleIdNumber <<datatype>> {}
+    VehicleIdNumber -u-|> sdml::string
+}
+#+END_SRC
+
+#+CAPTION: A Datatype Example
+#+RESULTS: fig:uml-ex-datatype
+[[file:uml-ex-datatype.svg]]
+
+** Entities
+
+#+NAME: fig:uml-profile-entity
+#+BEGIN_SRC plantuml :file uml-profile-entity.svg
+skinparam backgroundColor transparent
+hide circle
+hide members
+
+class identity <<stereotype>> {}
 class Class <<Metaclass>> #white {}
 class entity <<stereotype>> {}
-entity -> Class: <<extension>>
+entity -u-> "+identityMember\n{subsets ownedAttribute}" identity
+entity -r-> Class: <<extension>>
 
-class Property <<Metaclass>> #white {}
-class identity <<stereotype>> {}
-identity -> Property: <<extension>>
-
-note "**context** identity **inv**:\nself.type.oclIsTypeOf(entity)\n**and** self.class.oclIsTypeOf(entity)" as idtynote
-identity .. idtynote
-
-note "**context** identity **inv**:\nself.lowerValue = 1\n**and** self.upperValue == 1" as cardnote
-identity .. cardnote
-
-note "**context** entity **inv**:\nself.ownedAttribute\n     .collect(e | e.oclIsTypeOf(identity))\n     .size() == 1" as idnote
-entity .. idnote
-
-class ref <<stereotype>> {}
-Property <- ref: <<extension>>
-
-note "**context** ref **inv**:\n**not** self.type.oclIsTypeOf(entity)\n**and** self.class.oclIsTypeOf(entity)" as refnote
-ref .. refnote
+note "**context** entity **inv**:\nself.identityMember\n     .collect(e | e.oclIsTypeOf(identity))\n     .size() == 1" as idnote
+entity .l. idnote
 #+END_SRC
 
 #+CAPTION: Entity Stereotype
 #+RESULTS: fig:uml-profile-entity
 [[file:uml-profile-entity.svg]]
 
-*** Event
 
-The standard =signal= (10.3.3.1)
+#+NAME: fig:uml-profile-entity-members
+#+BEGIN_SRC plantuml :file uml-profile-entity-members.svg
+skinparam backgroundColor transparent
+hide circle
+hide members
+
+class entity <<stereotype>> {}
+class Property <<Metaclass>> #white {}
+class identity <<stereotype>> {}
+identity -> Property: <<extension>>
+identity --u-> "+owningEntity\n{renames class}" entity
+
+note "**context** identity **inv**:\nself.type.oclIsTypeOf(entity)" as idtynote
+identity .. idtynote
+
+note "**context** identity **inv**:\nself.lowerValue = 1\n**and** self.upperValue == 1" as cardnote
+identity .. cardnote
+
+class ref <<stereotype>> {}
+Property <- ref: <<extension>>
+ref --u-> "+owningEntity\n{renames class}" entity
+
+note "**context** ref **inv**:\n**not** self.type.oclIsTypeOf(entity)" as refnote
+ref .. refnote
+#+END_SRC
+
+#+CAPTION: Entity Member Stereotypes
+#+RESULTS: fig:uml-profile-entity-members
+[[file:uml-profile-entity-members.svg]]
+
+For details on by-value members and groups see section [[sec:uml-structures]] below.
+
+*** Example Usage
+
+#+BEGIN_SRC sdml :exports code :noeval
+module rentals is
+  import uuid
+
+  datatype VehicleIdNumber <- string
+
+  entity Vehicle is
+    identity vin -> VehicleIdNumber
+  end
+
+  entity Booking is
+    identity id -> uuid::Uuid
+    ref vehicle {0..1} -> {0..1} Vehicle
+  end
+
+end
+#+END_SRC
+
+#+NAME: fig:uml-ex-entity
+#+BEGIN_SRC plantuml :file uml-ex-entity.svg
+skinparam backgroundColor transparent
+hide circle
+hide empty members
+
+package rentals <<module>> {
+    class VehicleIdNumber <<datatype>> {}
+    class Vehicle <<entity>> {
+        <<identity>> +vin: VehicleIdNumber
+    }
+    class Booking <<entity>> {
+        <<identity>> +id: uuid::Uuid
+    }
+    Booking "0..1" o--r-> "\n0..1" Vehicle: <<ref>>
+}
+#+END_SRC
+
+#+CAPTION: An Entity Example
+#+RESULTS: fig:uml-ex-entity
+[[file:uml-ex-entity.svg]]
+
+** Events
+
+The standard =Signal= (10.3.3.1) and =Dependency=
 
 #+NAME: fig:uml-profile-event
 #+BEGIN_SRC plantuml :file uml-profile-event.svg
+skinparam backgroundColor transparent
 hide circle
-hide members
+hide empty members
 
 class entity <<stereotype>> {}
 
@@ -141,23 +262,145 @@ source -r-> Dependency: <<extension>>
 source -d-> "+eventSource\n{subsets supplier}" entity
 source -u-> "+event\n{subsets client}" event
 
-note "**context** entity **inv**:\nself.ownedAttribute\n     .collect(e | e.oclIsTypeOf(identitysource))\n     .size() == 1" as clientnote
-clientnote .. event
+note "**context** entity **inv**:\nself.ownedAttribute\n     .collect(e | e.oclIsTypeOf(source))\n     .size() == 1" as clientnote
+clientnote .r. event
 #+END_SRC
 
 #+CAPTION: Event Stereotype
 #+RESULTS: fig:uml-profile-event
 [[file:uml-profile-event.svg]]
 
-*** Enumeration
+For details on by-value members and groups see section [[sec:uml-structures]] below.
+
+*** Example Usage
+
+#+BEGIN_SRC sdml :exports code :noeval
+module rentals is
+  import uuid
+
+  entity Booking is
+    identity id -> uuid::Uuid
+  end
+
+  event VehicleAssigned source Booking
+
+end
+#+END_SRC
+
+#+NAME: fig:uml-ex-event
+#+BEGIN_SRC plantuml :file uml-ex-event.svg
+skinparam backgroundColor transparent
+hide circle
+hide empty members
+
+package rentals <<module>> {
+    class VehicleAssigned <<event>> {}
+    class Booking <<entity>> {
+        <<identity>> +id: Uuid
+    }
+    VehicleAssigned .r.> Booking: <<source>>
+}
+#+END_SRC
+
+#+CAPTION: Example Event
+#+RESULTS: fig:uml-ex-event
+[[file:uml-ex-event.svg]]
+
+** Enumerations
 
 The standard =Enumeration= classifier is used to model enum definitions.
 The standard =EnumerationLiteral= instance is used to model value variants.
 
-*** Structure
+**Example Usage:**
+
+TBD
+
+** <<sec:uml-structures>>Structures
+
+TBD
+
+*** Example Usage
+
+TBD
+
+** Unions
+
+Generalization Sets (9.7)
+
+#+NAME: fig:uml-profile-union
+#+BEGIN_SRC plantuml :file uml-profile-union.svg
+skinparam backgroundColor transparent
+hide circle
+hide empty members
+
+class Class <<Metaclass>>
+class GeneralizationSet <<Metaclass>>
+Class --l-> "+powertypeExtent\n*" GeneralizationSet
+class Generalization <<Metaclass>>
+GeneralizationSet --l-> "+generalization\n*" Generalization
+
+class union <<stereotype>>
+union -u-> Class: <<extension>>
+
+class typeVariant <<stereotype>>
+typeVariant -u->  Generalization: <<extension>>
+note "**context** typeVariant **inv**:self.general.oclIsTypeOf(union)\n" as n2
+typeVariant .. n2
+
+note "**context** union **inv**:\nself.member.size() == 0\nself.powertypeExtent.size() <= 1 \n**and** self.powertypeExtent.forAll(e | e.generalization.forAll(e | e.oclIsTypeOf(typeVariant)))" as n1
+union .. n1
+
+note "**context** union **inv**:\nself.powertypeExtent.forAll(e | e.isCovering == true **and** e.isDisjoint == true)" as n3
+union .. n3
+#+END_SRC
+
+#+CAPTION: Union and typeVariant Stereotypes
+#+RESULTS: fig:uml-profile-union
+[[file:uml-profile-union.svg]]
+
+*** Example Usage
 
 
+#+BEGIN_SRC sdml :exports code :noeval
+module rentals is
+  import uuid
 
-*** Union
+  structure Car
+  structure Van
+  structure Truck
 
- Generalization Sets (9.7)
+  union RentalClass of
+    Car
+    Van
+    Truck
+  end
+
+end
+#+END_SRC
+
+#+NAME: fig:uml-ex-union
+#+BEGIN_SRC plantuml :file uml-ex-union.svg
+skinparam backgroundColor transparent
+hide circle
+hide empty members
+
+package rentals <<module>> {
+
+    class Car
+    class Van
+    class Truck
+    class RentalClass <<union>>
+
+    class "{complete,disjoint}" as gs1 <<GeneralizationSet>>
+
+    Car -u-|> gs1
+    Van -u-|> gs1
+    Truck -u-|> gs1
+    gs1 -u-|> RentalClass
+}
+#+END_SRC
+
+#+CAPTION: Example Union
+#+RESULTS: fig:uml-ex-union
+[[file:uml-ex-union.svg]]
+

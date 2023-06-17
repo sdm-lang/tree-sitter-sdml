@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-06-16 Fri 16:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="author" content="Simon Johnston" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgea3a3d8">1. Appendix: UML Profile for SDML</a>
+<ul>
+<li><a href="#org9140a94">1.1. The Profile</a>
+<ul>
+<li><a href="#orge1ad170">1.1.1. Example Usage</a></li>
+</ul>
+</li>
+<li><a href="#orgb311bd1">1.2. Modules</a>
+<ul>
+<li><a href="#orgcd2ad11">1.2.1. Example Usage</a></li>
+</ul>
+</li>
+<li><a href="#org0d7b10a">1.3. Datatypes</a>
+<ul>
+<li><a href="#orgc8696f8">1.3.1. Example Usage</a></li>
+</ul>
+</li>
+<li><a href="#org5634c3f">1.4. Entities</a>
+<ul>
+<li><a href="#org1325ac4">1.4.1. Example Usage</a></li>
+</ul>
+</li>
+<li><a href="#orgd63e8b2">1.5. Events</a>
+<ul>
+<li><a href="#org5860704">1.5.1. Example Usage</a></li>
+</ul>
+</li>
+<li><a href="#org4a213e6">1.6. Enumerations</a></li>
+<li><a href="#org9ff1c27">1.7. Structures</a>
+<ul>
+<li><a href="#org3145eb6">1.7.1. Example Usage</a></li>
+</ul>
+</li>
+<li><a href="#orgba9d50e">1.8. Unions</a>
+<ul>
+<li><a href="#orgd8aa69c">1.8.1. Example Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgea3a3d8" class="outline-2">
+<h2 id="orgea3a3d8"><span class="section-number-2">1.</span> <a id="org2f02763"></a>Appendix: UML Profile for SDML</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+This section is non-normative.
+</p>
+
+<p>
+Based upon the <a href="https://www.omg.org/spec/UML/2.5.1/About-UML">Unified Modeling Language 2.5.1</a>.
+</p>
+</div>
+
+<div id="outline-container-org9140a94" class="outline-3">
+<h3 id="org9140a94"><span class="section-number-3">1.1.</span> The Profile</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<div id="orgc517835" class="figure">
+<p><img src="uml-profile-package.svg" alt="uml-profile-package.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Profile Package</p>
+</div>
+</div>
+
+<div id="outline-container-orge1ad170" class="outline-4">
+<h4 id="orge1ad170"><span class="section-number-4">1.1.1.</span> Example Usage</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+<div id="orgfa99327" class="figure">
+<p><img src="uml-ex-profile-applied.svg" alt="uml-ex-profile-applied.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Applying the Profile</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb311bd1" class="outline-3">
+<h3 id="orgb311bd1"><span class="section-number-3">1.2.</span> Modules</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<div id="org94036cf" class="figure">
+<p><img src="uml-profile-module.svg" alt="uml-profile-module.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 3: </span>Module Stereotype</p>
+</div>
+</div>
+
+<div id="outline-container-orgcd2ad11" class="outline-4">
+<h4 id="orgcd2ad11"><span class="section-number-4">1.2.1.</span> Example Usage</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<div class="org-src-container">
+<pre class="src src-sdml"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+
+<div id="org4ffdc6b" class="figure">
+<p><img src="uml-ex-module.svg" alt="uml-ex-module.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 4: </span>A Module Example</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0d7b10a" class="outline-3">
+<h3 id="org0d7b10a"><span class="section-number-3">1.3.</span> Datatypes</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+The profile element <code>«datatype»</code> is a specialization of the UML <code>PrimitiveType</code> (10.2.3.2) classifier.
+</p>
+
+
+<div id="org06c7eed" class="figure">
+<p><img src="uml-profile-datatype.svg" alt="uml-profile-datatype.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 5: </span>Datatype Stereotype</p>
+</div>
+</div>
+
+<div id="outline-container-orgc8696f8" class="outline-4">
+<h4 id="orgc8696f8"><span class="section-number-4">1.3.1.</span> Example Usage</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<div class="org-src-container">
+<pre class="src src-sdml"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">datatype</span> <span style="color: #268bd2;">VehicleIdNumber</span> <span style="color: #859900;">&lt;-</span> <span style="color: #859900;">string</span>
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+
+<div id="org52bac94" class="figure">
+<p><img src="uml-ex-datatype.svg" alt="uml-ex-datatype.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 6: </span>A Datatype Example</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5634c3f" class="outline-3">
+<h3 id="org5634c3f"><span class="section-number-3">1.4.</span> Entities</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<div id="org906d6ec" class="figure">
+<p><img src="uml-profile-entity.svg" alt="uml-profile-entity.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 7: </span>Entity Stereotype</p>
+</div>
+
+
+
+<div id="org634e56f" class="figure">
+<p><img src="uml-profile-entity-members.svg" alt="uml-profile-entity-members.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 8: </span>Entity Member Stereotypes</p>
+</div>
+
+<p>
+For details on by-value members and groups see section <a href="#org4e0f149">1.7</a> below.
+</p>
+</div>
+
+<div id="outline-container-org1325ac4" class="outline-4">
+<h4 id="org1325ac4"><span class="section-number-4">1.4.1.</span> Example Usage</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<div class="org-src-container">
+<pre class="src src-sdml"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">import</span> <span style="color: #268bd2;">uuid</span>
+
+  <span style="color: #859900;">datatype</span> <span style="color: #268bd2;">VehicleIdNumber</span> <span style="color: #859900;">&lt;-</span> <span style="color: #859900;">string</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Vehicle</span> <span style="color: #859900;">is</span>
+    <span style="color: #859900;">identity</span> <span style="color: #6c71c4;">vin</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">VehicleIdNumber</span>
+  <span style="color: #859900;">end</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Booking</span> <span style="color: #859900;">is</span>
+    <span style="color: #859900;">identity</span> <span style="color: #6c71c4;">id</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">uuid::Uuid</span>
+    <span style="color: #859900;">ref</span> <span style="color: #6c71c4;">vehicle</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">0</span><span style="color: #859900;">..</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #859900;">-&gt;</span> <span style="color: #657b83; background-color: #fdf6e3;">{</span><span style="color: #268bd2;">0</span><span style="color: #859900;">..</span><span style="color: #268bd2;">1</span><span style="color: #657b83; background-color: #fdf6e3;">}</span> <span style="color: #268bd2;">Vehicle</span>
+  <span style="color: #859900;">end</span>
+
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+
+<div id="org799f0b0" class="figure">
+<p><img src="uml-ex-entity.svg" alt="uml-ex-entity.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 9: </span>An Entity Example</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd63e8b2" class="outline-3">
+<h3 id="orgd63e8b2"><span class="section-number-3">1.5.</span> Events</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+The standard <code>Signal</code> (10.3.3.1) and <code>Dependency</code>
+</p>
+
+
+<div id="orge7fa24a" class="figure">
+<p><img src="uml-profile-event.svg" alt="uml-profile-event.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 10: </span>Event Stereotype</p>
+</div>
+
+<p>
+For details on by-value members and groups see section <a href="#org4e0f149">1.7</a> below.
+</p>
+</div>
+
+<div id="outline-container-org5860704" class="outline-4">
+<h4 id="org5860704"><span class="section-number-4">1.5.1.</span> Example Usage</h4>
+<div class="outline-text-4" id="text-1-5-1">
+<div class="org-src-container">
+<pre class="src src-sdml"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">import</span> <span style="color: #268bd2;">uuid</span>
+
+  <span style="color: #859900;">entity</span> <span style="color: #268bd2;">Booking</span> <span style="color: #859900;">is</span>
+    <span style="color: #859900;">identity</span> <span style="color: #6c71c4;">id</span> <span style="color: #859900;">-&gt;</span> <span style="color: #268bd2;">uuid::Uuid</span>
+  <span style="color: #859900;">end</span>
+
+  <span style="color: #859900;">event</span> <span style="color: #268bd2;">VehicleAssigned</span> <span style="color: #859900;">source</span> <span style="color: #268bd2;">Booking</span>
+
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+
+<div id="org0f5f197" class="figure">
+<p><img src="uml-ex-event.svg" alt="uml-ex-event.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 11: </span>Example Event</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4a213e6" class="outline-3">
+<h3 id="org4a213e6"><span class="section-number-3">1.6.</span> Enumerations</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+The standard <code>Enumeration</code> classifier is used to model enum definitions.
+The standard <code>EnumerationLiteral</code> instance is used to model value variants.
+</p>
+
+<p>
+<b><b>Example Usage:</b></b>
+</p>
+
+<p>
+TBD
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9ff1c27" class="outline-3">
+<h3 id="org9ff1c27"><span class="section-number-3">1.7.</span> <a id="org4e0f149"></a>Structures</h3>
+<div class="outline-text-3" id="text-1-7">
+<p>
+TBD
+</p>
+</div>
+
+<div id="outline-container-org3145eb6" class="outline-4">
+<h4 id="org3145eb6"><span class="section-number-4">1.7.1.</span> Example Usage</h4>
+<div class="outline-text-4" id="text-1-7-1">
+<p>
+TBD
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgba9d50e" class="outline-3">
+<h3 id="orgba9d50e"><span class="section-number-3">1.8.</span> Unions</h3>
+<div class="outline-text-3" id="text-1-8">
+<p>
+Generalization Sets (9.7)
+</p>
+
+
+<div id="orgfb59bcb" class="figure">
+<p><img src="uml-profile-union.svg" alt="uml-profile-union.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 12: </span>Union and typeVariant Stereotypes</p>
+</div>
+</div>
+
+<div id="outline-container-orgd8aa69c" class="outline-4">
+<h4 id="orgd8aa69c"><span class="section-number-4">1.8.1.</span> Example Usage</h4>
+<div class="outline-text-4" id="text-1-8-1">
+<div class="org-src-container">
+<pre class="src src-sdml"><span style="color: #859900;">module</span> <span style="color: #268bd2;">rentals</span> <span style="color: #859900;">is</span>
+  <span style="color: #859900;">import</span> <span style="color: #268bd2;">uuid</span>
+
+  <span style="color: #859900;">structure</span> <span style="color: #268bd2;">Car</span>
+  <span style="color: #859900;">structure</span> <span style="color: #268bd2;">Van</span>
+  <span style="color: #859900;">structure</span> <span style="color: #268bd2;">Truck</span>
+
+  <span style="color: #859900;">union</span> <span style="color: #268bd2;">RentalClass</span> <span style="color: #859900;">of</span>
+    <span style="color: #268bd2;">Car</span>
+    <span style="color: #268bd2;">Van</span>
+    <span style="color: #268bd2;">Truck</span>
+  <span style="color: #859900;">end</span>
+
+<span style="color: #859900;">end</span>
+</pre>
+</div>
+
+
+<div id="org4180932" class="figure">
+<p><img src="uml-ex-union.svg" alt="uml-ex-union.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 13: </span>Example Union</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Simon Johnston</p>
+<p class="date">Created: 2023-06-16 Fri 16:57</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

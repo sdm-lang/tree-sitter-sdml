@@ -237,8 +237,9 @@ sdml draw --diagram entity-relationship \
           --base-path . rentals
 #+END_EXAMPLE
 
-For the mose detail a UML Class diagram can be generated with the diagram specifier =uml-class=. To generate an image file
-you need to install PlantUML[fn:puml].
+For the mose detail a UML Class diagram can be generated with the diagram specifier =uml-class=. The generated diagram
+applies the profile outlined in appendix [[app:uml-profile]]. To generate an image file you need to install
+PlantUML[fn:puml].
 
 #+BEGIN_EXAMPLE
 sdml draw --diagram uml-class \

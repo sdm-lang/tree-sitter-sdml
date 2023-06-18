@@ -19,6 +19,8 @@ hide members
 package "UML 2.5" as uml <<Metamodel>> #white {
 }
 
+class Package <<Metaclass>>
+
 package sdml <<profile>> {
   class module <<stereotype>> {}
   class datatype <<stereotype>> {}
@@ -28,7 +30,7 @@ package sdml <<profile>> {
   class identity <<stereotype>> {}
   class ref <<stereotype>> {}
 }
-
+sdml --> model <<extension>>
 sdml ..> uml: <<references>>
 #+END_SRC
 

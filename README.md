@@ -52,15 +52,49 @@ end
 
 **Version: 0.1.14**
 
-* Added new rule named `builtin_simple_type` (choice of `string`, `double`, `decimal`, ``integer`, `boolean`, and `iri`):
+* Added new rule named `builtin_simple_type` (choice of `string`, `double`, `decimal`, `integer`, `boolean`, and `iri`):
   * replaced `identifier_reference` with new rule `data_type_base` for `data_type_def`,
   * added to the `type_reference` choice used for the member `target` field.
   
+Allows both:
+
+``` sdml
+module example is
+
+  datatype mystring <- string
+  
+  structure Person is
+    name -> string
+    age -> integer
+  end
+end
+```
+
+Where the keywords `string` and `integer` will be expanded into the qualified identifiers `sdml:string` and
+`sdml:integer` respectively.
+
 **Version: 0.1.13**
 
 * Added explicit `base` grammar for module rather than using `xml:base` as an attribute.
 * Expanded grammar for `Identifier` to allow decimal digits in any position *after* the first.
 * Clarified the grammar for `TypeVariant`.
+
+Introduces:
+
+```sdml
+module example base <https://example.org/v/example> is
+end
+```
+
+Which replaces the annotation form:
+
+```sdml
+module example is
+  import xml
+  
+  @xml:base = <https://example.org/v/example>
+end
+```
 
 **Version: 0.1.12**
 
@@ -71,6 +105,20 @@ end
 
 * Added a rename to optional value to `TypeVariant`
 * Fixed `annotation` and `language_tag` grammar rule conflict
+
+Introduces:
+
+```sdml
+module example is
+
+  union Example is
+    Variant1
+    Variant1 as Alternative
+  end
+end
+```
+
+This allows the use of the same type as a variant more than once if the new identifier is unique within the same `union`.
 
 **Version: 0.1.10**
 

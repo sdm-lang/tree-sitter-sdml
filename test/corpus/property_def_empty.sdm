@@ -1,0 +1,22 @@
+==========================
+Property Definition, Empty
+==========================
+
+module ddict is
+  property accountId -> account:AccountId
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (type_def
+      (property_def
+        name: (identifier)
+        target: (type_reference
+          (identifier_reference
+            (qualified_identifier
+              module: (identifier)
+              member: (identifier))))))))
+

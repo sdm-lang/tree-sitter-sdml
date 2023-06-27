@@ -1,0 +1,23 @@
+=============================
+Property Referenced as Member
+=============================
+
+module ddict is
+  structure Account is
+    accountId as default
+  end
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (type_def
+      (structure_def
+        name: (identifier)
+        body: (structure_body
+          (member_by_value
+            name: (identifier)
+            (property_member
+              role: (identifier))))))))

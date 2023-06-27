@@ -217,7 +217,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "annotation",
@@ -240,7 +240,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "annotation",
@@ -396,7 +396,7 @@
       },
       "target": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "type_reference",
@@ -404,6 +404,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "property_member",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -504,7 +514,7 @@
       },
       "target": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "type_reference",
@@ -522,6 +532,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "property_member",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -550,7 +570,7 @@
       },
       "target": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "type_reference",
@@ -568,6 +588,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "property_member",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -655,6 +685,113 @@
         "types": [
           {
             "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "property_body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "annotation",
+          "named": true
+        },
+        {
+          "type": "property_role",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "property_def",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "property_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_reference",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "property_member",
+    "named": true,
+    "fields": {
+      "role": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "property_role",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "annotation_only_body",
+            "named": true
+          }
+        ]
+      },
+      "role": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "target_cardinality": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "cardinality_expression",
             "named": true
           }
         ]
@@ -803,7 +940,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "annotation",
@@ -838,6 +975,10 @@
         },
         {
           "type": "event_def",
+          "named": true
+        },
+        {
+          "type": "property_def",
           "named": true
         },
         {
@@ -916,7 +1057,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "annotation",
@@ -1082,11 +1223,11 @@
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "end",
@@ -1126,11 +1267,11 @@
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "iri",
@@ -1154,6 +1295,10 @@
   },
   {
     "type": "of",
+    "named": false
+  },
+  {
+    "type": "property",
     "named": false
   },
   {

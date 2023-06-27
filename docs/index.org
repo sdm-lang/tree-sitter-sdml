@@ -30,12 +30,16 @@
 
 # ----- Appendices -----
 
+# This is simply the BNF, with any relevant introduction.
 #+INCLUDE: "./surface-grammar.org" :minlevel 1
 
+# A List of modules and top-level definitions only.
 #+INCLUDE: "./std-library.org" :minlevel 1
 
+# A detailed mapping
 #+INCLUDE: "./surface-to-rdf.org" :minlevel 1
 
+# Non-normative reference used by tooling
 #+INCLUDE: "./uml-profile.org" :minlevel 1
 
 * Appendix: License

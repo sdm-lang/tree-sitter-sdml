@@ -233,6 +233,7 @@ module.exports = grammar({
             $.event_def,
             $.structure_def,
             $.union_def,
+            $.property_def,
         ),
 
         data_type_def: $ => seq(
@@ -263,7 +264,7 @@ module.exports = grammar({
         entity_group: $ => seq(
             keyword('group'),
             repeat($.annotation),
-            repeat(
+            repeat1(
                 choice(
                     $.member_by_value,
                     $.member_by_reference
@@ -295,7 +296,7 @@ module.exports = grammar({
         enum_body: $ => seq(
             keyword('of'),
             repeat($.annotation),
-            repeat($.enum_variant),
+            repeat1($.enum_variant),
             keyword('end')
         ),
 
@@ -323,7 +324,7 @@ module.exports = grammar({
         structure_group: $ => seq(
             keyword('group'),
             repeat($.annotation),
-            repeat(
+            repeat1(
                 $.member_by_value
             ),
             keyword('end')
@@ -350,7 +351,7 @@ module.exports = grammar({
         union_body: $ => seq(
             keyword('of'),
             repeat($.annotation),
-            repeat($.type_variant),
+            repeat1($.type_variant),
             keyword('end')
         ),
 
@@ -371,33 +372,78 @@ module.exports = grammar({
                     $.annotation_only_body
                 )
             )
-         ),
+        ),
+
+        property_def: $ => seq(
+            keyword('property'),
+            field('name', $.identifier),
+            $._type_expression,
+            optional(field('body', $.property_body))
+        ),
+
+        property_body: $ => seq(
+            keyword('is'),
+            repeat($.annotation),
+            repeat1($.property_role),
+            keyword('end')
+        ),
+
+        property_role: $ => seq(
+            field('role', $.identifier),
+            optional(
+                seq(
+                    operator('='),
+                    field('target_cardinality', $.cardinality_expression)
+                )
+            ),
+            optional(field('body', $.annotation_only_body))
+        ),
 
         // -----------------------------------------------------------------------
         // Members
         // -----------------------------------------------------------------------
 
+        property_member: $ => seq(
+            keyword('as'),
+            field('role', $.identifier),
+        ),
+
         // Default cardinality: !{1..1} -> !{1..1}
         identity_member: $ => seq(
             keyword('identity'),
             field('name', $.identifier),
-            $._type_expression,
-            optional(field('body', $.annotation_only_body))
+            choice(
+                $.property_member,
+                seq(
+                    $._type_expression,
+                    optional(field('body', $.annotation_only_body))
+                )
+            )
         ),
 
         // Default cardinality: !{1..1} -> {1..}
         member_by_value: $ => seq(
             field('name', $.identifier),
-            $._type_expression_to,
-            optional(field('body', $.annotation_only_body))
+            choice(
+                $.property_member,
+                seq(
+                    $._type_expression_to,
+                    optional(field('body', $.annotation_only_body))
+                )
+            )
         ),
 
         // Default cardinality: {0..} -> {0..}
         member_by_reference: $ => seq(
             keyword('ref'),
             field('name', $.identifier),
-            $._type_expression_from_to,
-            optional(field('body', $.annotation_only_body))
+            choice(
+                $.property_member,
+                seq(
+                    $._type_expression_from_to,
+                    optional(field('body', $.annotation_only_body))
+                )
+            )
         ),
 
         _type_expression: $ => seq(

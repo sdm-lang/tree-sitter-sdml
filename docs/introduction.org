@@ -121,6 +121,18 @@ for UML and BPMN.
 UML has a built-in extension mechanism with /stereotypes/ and /profiles/ and data modeling concerns are often introduced
 with specific extensions such as stereotypes for different key types.
 
+*** Modeling Themes
+
+(*TODO*: Complete this section)
+
+Commonality
+
+Variability
+
+- *Inheritence* :: ...
+- Interface and Implementation :: ...
+- 
+
 *** Domain-Driven Design
 
 Domain-driven design (DDD) is a software design approach focusing on modeling software to match a domain according to
@@ -139,10 +151,11 @@ methodology (DDD) and employing a specific meta-language (UML Profile).
 
 Some of the defined kinds, /Repository/, /Factory/, and /Service/ are lower-level concerns and the lack of a clear separation
 between different levels of abstraction is one criticism of the method. Additionally terms such as Entity as defined by
-DDD is not entirely compatible with the use in pre-existing methods such as E/R modeling.
+DDD are not entirely compatible with the use in pre-existing methods such as E/R modeling.
 
 However, the method's focus on the business and it's vocabulary as the basis for models is valuable in an effort such as
 the Universal API where the model will represent our business model in different presentations.
+
 
 ** <<sec:sdml-role>> Domain Modeling's Role in Development
 
@@ -201,7 +214,7 @@ digraph G {
     label="Artifacts";
     margin=12.0;
     
-    deploy   [label="Deployment Artifacts\n(e.g. executables)"];
+    deploy   [shape="component"; label="Deployment Artifacts\n(e.g. executables)"];
     
     develop -> deploy [arrowhead="open"];
     deploy -> develop [arrowhead="open"];
@@ -263,39 +276,39 @@ digraph G {
   node [fontname="Helvetica,Arial,sans-serif"; fontsize=10; width=1.0; height=0.6];
   edge [fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="darkgrey"];
 
-  domain [shape=ellipse; label="Domain\nModel"];
+  domain [shape="ellipse"; label="Domain\nModel"];
 
-  docs [shape=note; label="Documentation"];
+  docs [shape="note"; label="Documentation"];
   domain -> docs [label="transform"];
 
-  service [shape=ellipse; label="Service\nDefinition"; style=dotted;];
+  service [shape="ellipse"; label="Service\nDefinition"; style=dotted;];
   domain -> service [label="transform"];
 
-  smithy [shape=component; label="Smithy"];
+  smithy [shape="component"; label="Smithy"];
   service -> smithy [label="transform"];
   
-  oas [shape=component; label="OpenAPI Spec\n(YAML)"];
+  oas [shape="component"; label="OpenAPI Spec\n(YAML)"];
   smithy -> oas [label="transform"];
 
-  stubs [shape=component; label="Service Stubs\n(code)"];
+  stubs [shape="component"; label="Service Stubs\n(code)"];
   smithy -> stubs [label="transform"];
 
-  client [shape=component; label="Client Library\n(code)"];
+  client [shape="component"; label="Client Library\n(code)"];
   smithy -> client [label="transform"];
 
-  data [shape=ellipse; label="Data\nDefinition"; style=dotted;];
+  data [shape="ellipse"; label="Data\nDefinition"; style=dotted;];
   domain -> data [label="transform"];
 
-  dbsql [shape=component; label="SQL DDL"]; 
+  dbsql [shape="component"; label="SQL DDL"]; 
   data -> dbsql [label="transform"];
 
-  dbjson [shape=component; label="JSON Schema"];
+  dbjson [shape="component"; label="JSON Schema"];
   data -> dbjson [label="transform"];
   
-  message [shape=ellipse; label="Message\nDefinition"; style=dotted;];
+  message [shape="ellipse"; label="Message\nDefinition"; style=dotted;];
   domain -> message [label="transform"];
 
-  thrift [shape=ellipse; label="Apache Thrift\n(IDL)"];
+  thrift [shape="ellipse"; label="Apache Thrift\n(IDL)"];
   message -> thrift [label="transform"];
 }
 #+END_SRC
@@ -321,11 +334,18 @@ software processes, it can be version controlled, it's diff-friendly, you can us
 build governance processes. While this document /does not/ preclude alternative representations, including visual ones,
 the surface syntax is the canonical authoring form.
 
+(*TODO*: Add data dictionary discussion)
+
+(*TODO*: Add vocabulary discussion)
+
 ** Non-Goals
+
+(*TODO*: Complete this list)
 
 1. Versioning
 2. Object Modeling
-3. Standardization
+3. Behavior Modeling
+4. Standardization
 
 # ----- Footnotes
 

@@ -63,6 +63,9 @@
 
 (type_variant rename: (identifier) @name) @reference.class
 
+(property_def
+ target: (type_reference) @name) @reference.class
+
 ;; ---------------------------------------------------------------------------
 ;; Annotations
 ;; ---------------------------------------------------------------------------
@@ -85,4 +88,7 @@
  name: (identifier) @name) @definition.field
 
 (member_by_reference
+ name: (identifier) @name) @definition.field
+
+(property_def
  name: (identifier) @name) @definition.field

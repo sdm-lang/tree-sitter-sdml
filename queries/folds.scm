@@ -13,4 +13,5 @@
  (structure_body)
  (structure_group)
  (union_body)
+ (property_body)
  ] @fold

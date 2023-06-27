@@ -941,6 +941,8 @@ module example is
 end
 #+END_SRC
 
+(*TODO*: Discuss role of unions in modeling variability)
+
 # ----- Footnotes
 
 [fn:dcmi] [[https://www.dublincore.org/specifications/dublin-core/dcmi-terms/][DublinCoreDCMI Metadata Terms]], DublinCore

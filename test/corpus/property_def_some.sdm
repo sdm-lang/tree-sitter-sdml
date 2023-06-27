@@ -1,0 +1,47 @@
+===============================
+Property Definition, With Roles
+===============================
+
+module ddict is
+  property accountId -> account:AccountId is
+    identifier is
+      @skos:definition = "a"@en
+    end
+    default = {1..1}
+  end
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (type_def
+      (property_def
+        name: (identifier)
+        target: (type_reference
+          (identifier_reference
+            (qualified_identifier
+              module: (identifier)
+              member: (identifier))))
+        body: (property_body
+          (property_role
+            role: (identifier)
+            body: (annotation_only_body
+              (annotation
+                name: (identifier_reference
+                  (qualified_identifier
+                    module: (identifier)
+                    member: (identifier)))
+                value: (value
+                  (simple_value
+                    (string
+                      (quoted_string)
+                      language: (language_tag)))))))
+          (property_role
+            role: (identifier)
+            target_cardinality: (cardinality_expression
+              min: (unsigned)
+              (cardinality_range
+                max: (unsigned)))))))))
+

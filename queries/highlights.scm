@@ -22,6 +22,7 @@
  "is"
  "module"
  "of"
+ "property"
  "ref"
  "source"
  "structure"
@@ -75,6 +76,10 @@ name: (identifier) @type.definition)
 (union_def
  name: (identifier) @type.definition)
 
+(property_def
+ name: (identifier) @variable.field
+ target: (type_reference) @type)
+
 ;; ---------------------------------------------------------------------------
 ;; Members
 ;; ---------------------------------------------------------------------------
@@ -106,6 +111,12 @@ name: (identifier) @type.definition)
 
 (cardinality_range
  ".." @operator)
+
+(property_role
+ role: (_) @variable)
+
+(property_role
+ ("=" @operator))
 
 ;; ---------------------------------------------------------------------------
 ;; Values

@@ -50,6 +50,34 @@ end
 
 # Changes
 
+**Version: 0.1.15**
+
+* Added new structure to the grammar to allow data-dictionary style reusable property definitions.
+
+``` sdml
+module ddict is
+  import account
+  
+  property accountId -> account:AccountId is
+    @skos:prefLabel = "accountId"@en
+    @skos:altLabel = "account_id"@en
+    
+    identifier is
+      @skos:definition = "Used as ..."@en
+    end
+    
+    default = {1..1}
+  end
+  
+  structure Account is
+    accountId as default
+    name -> string
+  end
+
+end
+
+```
+
 **Version: 0.1.14**
 
 * Added new rule named `builtin_simple_type` (choice of `string`, `double`, `decimal`, `integer`, `boolean`, and `iri`):

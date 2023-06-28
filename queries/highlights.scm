@@ -76,10 +76,6 @@ name: (identifier) @type.definition)
 (union_def
  name: (identifier) @type.definition)
 
-(property_def
- name: (identifier) @variable.field
- target: (type_reference) @type)
-
 ;; ---------------------------------------------------------------------------
 ;; Members
 ;; ---------------------------------------------------------------------------
@@ -112,11 +108,13 @@ name: (identifier) @type.definition)
 (cardinality_range
  ".." @operator)
 
-(property_role
- role: (_) @variable)
+(property_def
+ name: (identifier) @variable.field)
 
 (property_role
- ("=" @operator))
+ name: (identifier) @variable.field
+ "->" @operator
+ target: (type_reference) @type)
 
 ;; ---------------------------------------------------------------------------
 ;; Values

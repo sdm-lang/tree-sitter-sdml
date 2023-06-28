@@ -104,7 +104,7 @@ resource is one with an empty model.
 #+BEGIN_SRC ebnf
 Module          = "module", Identifier, ModuleBase?, ModuleBody
 ModuleBase      = "base", IriReference
-ModuleBody      = "is", ImportStatement*, Annotation*, TypeDef*, "end"
+ModuleBody      = "is", ImportStatement*, Annotation*, ( TypeDef | PropertyDef )*, "end"
 #+END_SRC
 
 An empty module (listing [[lst:sdml-ex-empty-module]]), specifically a module with an empty /body/ which is the content
@@ -155,7 +155,9 @@ making it's members /visible/ in the qualified form =xsd:*=.
 #+CAPTION: Importing Module
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   import xsd
+
 end
 #+END_SRC
 
@@ -166,7 +168,9 @@ the module =xsd= making it visible.
 #+CAPTION: Importing Member
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   import xsd:integer
+
 end
 #+END_SRC
 
@@ -179,7 +183,9 @@ no separator character between members of the list.
 #+CAPTION: Importing a List
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   import [ dc:title dc:author ]
+
 end
 #+END_SRC
 
@@ -282,9 +288,9 @@ string literal supports multiline forms.
 #+CAPTION: String Escape Characters
 | Escape Character | Character Name (Common Name)          | Unicode Equivalent |
 |------------------+---------------------------------------+--------------------|
-| =\\=               | Reverse Solidus (Backslash)           | =\u{005C}=           |
-| =\/=               | Solidus (Forward Slash)               | =\u{002F}=           |
 | =\"=               | Quotation Mark                        | =\u{0022}=           |
+| =\/=               | Solidus (Forward Slash)               | =\u{002F}=           |
+| =\\=               | Reverse Solidus (Backslash)           | =\u{005C}=           |
 | =\a=               | Bell                                  | =\u{0007}=           |
 | =\b=               | Backspace                             | =\u{0008}=           |
 | =\e=               | Escape                                | =\u{001B}=           |
@@ -336,9 +342,11 @@ Here we assert that the value =1= is an unsigned rather than the default signed 
 #+CAPTION: Value Constructor Example
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   import ex
 
   @ex:thing = xsd:unsigned(1)
+
 end
 #+END_SRC
 
@@ -362,9 +370,11 @@ ListOfValues    =
 #+CAPTION: Value List Example
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   import ex
 
   @ex:thing = [ "yes" "no" "maybe" ]
+
 end
 #+END_SRC
 
@@ -388,9 +398,11 @@ the existing XML Schema data type ~xsd:string~.
 #+CAPTION: New Datatype
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   import ex
 
   datatype Name <- string
+
 end
 #+END_SRC
 
@@ -403,12 +415,14 @@ is a string whose length is between 5 and 25 characters only.
 #+CAPTION: New Datatype with Restrictions
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   import ex
 
   datatype Name <- string is
     @xsd:minLength = 5
     @xsd:maxLength = 25
   end
+
 end
 #+END_SRC
 
@@ -428,19 +442,19 @@ From OWL 2 Web Ontology Language Quick Reference Guide[fn:owlqr]:
 In the preceding sections we introduced the set of built-in simple types: string, double, decimal, integer, boolean, and
 iri. These are keywords in SDML and have specific rules applied when parsing. Each keyword is translated into a
 qualified identifier where the module name is the reserved name =sdml=. This set of standard library types have an
-underlying RDFOWL equivalence relationship to a subset of the XML Schema datatypes, all shown in table
+underlying RDF/OWL equivalence relationship to a subset of the XML Schema datatypes, all shown in table
 [[tbl:builtin-simple-types]].
 
 #+NAME: tbl:builtin-simple-types
 #+CAPTION: Built-in Simple Type Mapping
 | Type Keyword | Qualified Identifier | Equivalent XML Schema Datatype |
 |--------------+----------------------+--------------------------------|
-| ~string~       | ~sdml:string~          | ~xsd:string~                     |
-| ~double~       | ~sdml:double~          | ~xsd:double~                     |
-| ~decimal~      | ~sdml:decimal~         | ~xsd:decimal~                    |
-| ~integer~      | ~sdml:integer~         | ~xsd:integer~                    |
 | ~boolean~      | ~sdml:boolean~         | ~xsd:boolean~                    |
+| ~decimal~      | ~sdml:decimal~         | ~xsd:decimal~                    |
+| ~double~       | ~sdml:double~          | ~xsd:double~                     |
+| ~integer~      | ~sdml:integer~         | ~xsd:integer~                    |
 | ~iri~          | ~sdml:iri~             | ~xsd:anyURI~                     |
+| ~string~       | ~sdml:string~          | ~xsd:string~ or ~rdf:langString~   |
 
 ** <<sec:annotations>>Annotations
 
@@ -463,9 +477,11 @@ The following example demonstrates a common annotation attached to a module.
 #+CAPTION: Annotation Property
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   import skos
 
   @skos:note = "This is an example annotation"
+
 end
 #+END_SRC
 
@@ -475,6 +491,7 @@ end
 #+CAPTION: Annotation Property List
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   import skos
 
   @skos:prefLabel = [
@@ -482,6 +499,7 @@ module example is
     "exemple"@fr
     "例子"@zh-CH
   ]
+
 end
 #+END_SRC
 
@@ -542,6 +560,9 @@ Rewriting the RDF from listing [[lst:rdfs-comment]] into SDML results in the def
 #+CAPTION: The SDML definition of rdfs:comment
 #+BEGIN_SRC sdml :exports code :noeval
 module rdfs is
+
+  ;; a lot of things elided.
+
   structure comment is
     @rdf:type = [ rdf:Property owl:AnnotationProperty ]
     @isDefinedBy = <http://www.w3.org/2000/01/rdf-schema#>
@@ -550,6 +571,7 @@ module rdfs is
     @domain = Resource
     @range = Literal
   end
+
 end
 #+END_SRC
 
@@ -562,6 +584,57 @@ The following are commonly used RDF and OWL definition properties.
 - =owl:inverseOf= --
 - =owl:disjointWith= --
 - =owl:FunctionalProperty=, =owl:InverseFunctionalProperty=, =owl:SymmetricProperty= and =owl:TransitiveProperty= --
+
+** Property Definitions
+
+SDML provides for a data dictionary, or element-first, style of model capture where key properties of the domain are
+defined and annotated in a stand-alone form. These are often key identifiers and other shared properties 
+
+#+NAME: lst:grammar-property-def
+#+BEGIN_SRC ebnf
+PropertyDef         = "property", Identifier, PropertyBody?
+PropertyBody        = "is", Annotation*, PropertyRole, "end"
+#+END_SRC
+
+*Example*:
+
+#+NAME: lst:sdml-ex-empty-property
+#+CAPTION: Empty Property
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  property account_id
+
+end
+#+END_SRC
+
+The property ~account_id~ in [[lst:sdml-ex-empty-property]] is valid but incomplete. Completion of the property requires the
+addition of a body with roles defined.
+
+#+NAME: lst:grammar-property-role
+#+BEGIN_SRC ebnf
+PropertyRole        =
+    Identifier, ( "ref", Cardinality )?, TypeExpressionTo, AnnotationOnlyBody?
+#+END_SRC
+
+*Example*:
+
+The following is a valid /and/ complete example.
+
+#+NAME: lst:sdml-ex-property-role
+#+CAPTION: Property with Roles
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  property accountId is
+    identifier -> {1} account:AccountId is
+      @skos:definition = "a"@en
+    end
+    reference ref {1} -> {1} account:AccountId
+  end
+
+end
+#+END_SRC
 
 ** Structured Types
 
@@ -599,12 +672,13 @@ Structured type members fall into the following categories.
 
 #+NAME: lst:grammar-members
 #+BEGIN_SRC ebnf
+PropertyMember      = "as", Identifier
 IdentityMember      =
-    "identity", Identifier, TypeExpression, AnnotationOnlyBody?
+    "identity", Identifier, ( PropertyMember | ( TypeExpressionTo, AnnotationOnlyBody? ) )
 MemberByValue       =
-    Identifier, TypeExpressionTo, AnnotationOnlyBody?
+    Identifier, ( PropertyMember | ( TypeExpressionTo, AnnotationOnlyBody? ) )
 MemberByReference   =
-    "ref", Identifier, TypeExpressionFromTo,AnnotationOnlyBody?
+    "ref", Identifier, ( PropertyMember | ( TypeExpressionFromTo, AnnotationOnlyBody? ) )
 #+END_SRC
 
 For identity, by-value, and by-reference members the general syntax uses the /type reference/ operator, /name/ ~->~ /type/, with
@@ -645,6 +719,21 @@ CardinalityExpression   = "{", Unsigned, CardinalityRange?, "}"
 CardinalityRange        = "..", Unsigned?
 #+END_SRC
 
+*Example*:
+
+#+NAME: lst:sdml-ex-members
+#+CAPTION: Members in a Structure
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  structure Account is
+    accountId as default
+    name -> string
+  end
+
+end
+#+END_SRC
+
 *** Structures
 
 A structure is a product type that is composed of named and typed members. A structure is therefore akin to a record
@@ -664,7 +753,9 @@ valid model.
 #+CAPTION: Empty Structure
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   structure Length
+
 end
 #+END_SRC
 
@@ -684,9 +775,11 @@ StructureBody   = "is", Annotation*, ( MemberByValue | StructureGroup )*, "end"
 #+CAPTION: Annotated Structure
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   structure Length is
     @skos:prefLabel = "Length"@en
   end
+
 end
 #+END_SRC
 
@@ -698,12 +791,14 @@ Listing [[lst:sdml-ex-structure-members]] adds the members ~value~ and ~unit~ an
 #+CAPTION: Structure Members
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   structure Length is
     @skos:prefLabel = "Length"@en
 
     value -> Decimal
     unit -> DistanceUnit
   end
+
 end
 #+END_SRC
 
@@ -722,6 +817,7 @@ StructureGroup  = "group", Annotation*, MemberByValue*, "end"
 module example is
 
   structure Account is
+  
     @skos:prefLabel = "Customer Account"@en
 
     group
@@ -734,6 +830,7 @@ module example is
       @skos:prefLabel = "Customer Information"
       ref customer -> {1..1} Customer
     end
+  
   end
 
 end
@@ -759,7 +856,9 @@ EntityGroup     = "group", Annotation*, ( MemberByValue | MemberByReference )*
 #+CAPTION: Empty Entity
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   entity Person
+
 end
 #+END_SRC
 
@@ -771,9 +870,11 @@ The entity ~Person~ in listing [[lst:sdml-ex-empty-entity]] is /valid/ but /inco
 #+CAPTION: Entity with Identifying Member
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   entity Person is
     identity id -> PersonId
   end
+
 end
 #+END_SRC
 
@@ -786,12 +887,15 @@ type, =PersonId= is instead.
 #+CAPTION: Entity with Reference Member
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   entity Person is
+  
     identity id -> PersonId
 
     ref contact {0..} -> {0..2} Person is
       @dc:description = "Emergency contact person"
     end
+  
   end
 end
 #+END_SRC
@@ -816,7 +920,9 @@ EventDef        =
 #+CAPTION: Empty Event
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   event PersonNameChanged source Person
+
 end
 #+END_SRC
 
@@ -824,11 +930,13 @@ With the expansion of the ~source~ entity the event definition above is logicall
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   structure PersonNameChanged is
     id -> PersonId is
       @sdml:identifies = Person
     end
   end
+
 end
 #+END_SRC
 
@@ -842,10 +950,12 @@ The following is a valid /and/ complete event definition with two structure memb
 #+CAPTION: Event
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   event PersonNameChanged source Person is
     fromValue -> Name
     toValue -> Name
   end
+
 end
 #+END_SRC
 
@@ -867,7 +977,9 @@ EnumBody        = "of", Annotation*, EnumVariant*, "end"
 #+CAPTION: Empty Enum
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   enum DistanceUnit
+
 end
 #+END_SRC
 
@@ -887,10 +999,12 @@ The following demonstrates a valid /and/ complete enumeration.
 #+CAPTION: Enum With Variants
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   enum DistanceUnit of
     Meter = 1
     Foot = 2
   end
+
 end
 #+END_SRC
 
@@ -912,7 +1026,9 @@ UnionBody       = "of", Annotation*, TypeVariant*, "end"
 #+CAPTION: Empty Union
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   union VehicleClass
+
 end
 #+END_SRC
 
@@ -933,15 +1049,79 @@ The following is a valid /and/ complete example with three type variants and one
 #+CAPTION: Union With Variants
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   union VehicleClass of
     Car
     Truck
     Van as LittleTruck
   end
+
 end
 #+END_SRC
 
-(*TODO*: Discuss role of unions in modeling variability)
+** Common Questions
+
+*** Why are Enumerations and Unions distinct?
+
+*** When to use Property Definitions
+
+#+CAPTION: Union Type Definition
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  import [ skos xsd ]
+
+  datatype AccountId <- xsd:long
+
+  datatype ExternalAccountId <- uri
+
+  structure ChildAccountId is
+    parent -> AccountId
+    child -> AccountId
+  end
+
+  union AllAccountIds of
+    AccountId,
+    ExternalAccountId,
+    ChildAccountId
+  end
+
+end
+#+END_SRC
+
+#+CAPTION: Union Type As Property
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  import [ skos xsd ]
+
+  property account_id is
+  
+    internal -> {1} xsd:long is
+      @skos:definition = "This is our internal representation."@en
+    end
+  
+    external -> {1} url is
+      @skos:definition = "This is our external representation for customers."@en
+    end
+  
+    child -> {2} xsd:long
+  end
+
+  entity Account is
+
+    identity account_id as internal
+
+  end
+
+end
+#+END_SRC
+
+*** How to model Variability
+
+Discuss role of unions in modeling variability
+
+
 
 # ----- Footnotes
 

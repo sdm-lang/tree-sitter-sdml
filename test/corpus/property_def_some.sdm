@@ -3,45 +3,51 @@ Property Definition, With Roles
 ===============================
 
 module ddict is
-  property accountId -> account:AccountId is
-    identifier is
+  property accountId is
+    identifier -> {1} account:AccountId is
       @skos:definition = "a"@en
     end
-    default = {1..1}
+    reference ref {1} -> {1} account:AccountId
   end
 end
 
 ---
 
 (module
-  name: (identifier)
-  body: (module_body
+  (identifier)
+  (module_body
     (type_def
       (property_def
-        name: (identifier)
-        target: (type_reference
-          (identifier_reference
-            (qualified_identifier
-              module: (identifier)
-              member: (identifier))))
-        body: (property_body
+        (identifier)
+        (property_body
           (property_role
-            role: (identifier)
-            body: (annotation_only_body
+            (identifier)
+            (cardinality_expression
+              (unsigned))
+            (type_reference
+              (identifier_reference
+                (qualified_identifier
+                  (identifier)
+                  (identifier))))
+            (annotation_only_body
               (annotation
-                name: (identifier_reference
+                (identifier_reference
                   (qualified_identifier
-                    module: (identifier)
-                    member: (identifier)))
-                value: (value
+                    (identifier)
+                    (identifier)))
+                (value
                   (simple_value
                     (string
                       (quoted_string)
-                      language: (language_tag)))))))
+                      (language_tag)))))))
           (property_role
-            role: (identifier)
-            target_cardinality: (cardinality_expression
-              min: (unsigned)
-              (cardinality_range
-                max: (unsigned)))))))))
-
+            (identifier)
+            (cardinality_expression
+              (unsigned))
+            (cardinality_expression
+              (unsigned))
+            (type_reference
+              (identifier_reference
+                (qualified_identifier
+                  (identifier)
+                  (identifier))))))))))

@@ -50,6 +50,33 @@ end
 
 # Changes
 
+**Version: 0.1.16**
+
+* Adjusted property grammar.
+
+``` sdml
+module ddict is
+  import account
+  
+  property accountId is
+    @skos:prefLabel = "accountId"@en
+    @skos:altLabel = "account_id"@en
+    
+    identifier -> {1} account:AccountId is
+      @skos:definition = "Used as an identifier for account-scoped things"@en
+    end
+    
+    reference ref {1} -> {1} account:AccountId
+  end
+  
+  structure Account is
+    accountId as identifier
+    name -> string
+  end
+
+end
+```
+
 **Version: 0.1.15**
 
 * Added new structure to the grammar to allow data-dictionary style reusable property definitions.

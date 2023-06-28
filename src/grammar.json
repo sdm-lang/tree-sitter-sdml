@@ -1398,10 +1398,6 @@
           }
         },
         {
-          "type": "SYMBOL",
-          "name": "_type_expression"
-        },
-        {
           "type": "CHOICE",
           "members": [
             {
@@ -1465,7 +1461,7 @@
       "members": [
         {
           "type": "FIELD",
-          "name": "role",
+          "name": "name",
           "content": {
             "type": "SYMBOL",
             "name": "identifier"
@@ -1481,16 +1477,16 @@
                   "type": "TOKEN",
                   "content": {
                     "type": "PREC",
-                    "value": 1,
+                    "value": 2,
                     "content": {
                       "type": "STRING",
-                      "value": "="
+                      "value": "ref"
                     }
                   }
                 },
                 {
                   "type": "FIELD",
-                  "name": "target_cardinality",
+                  "name": "source_cardinality",
                   "content": {
                     "type": "SYMBOL",
                     "name": "cardinality_expression"
@@ -1502,6 +1498,10 @@
               "type": "BLANK"
             }
           ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_type_expression_to"
         },
         {
           "type": "CHOICE",

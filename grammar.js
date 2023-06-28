@@ -377,7 +377,6 @@ module.exports = grammar({
         property_def: $ => seq(
             keyword('property'),
             field('name', $.identifier),
-            $._type_expression,
             optional(field('body', $.property_body))
         ),
 
@@ -389,13 +388,14 @@ module.exports = grammar({
         ),
 
         property_role: $ => seq(
-            field('role', $.identifier),
+            field('name', $.identifier),
             optional(
                 seq(
-                    operator('='),
-                    field('target_cardinality', $.cardinality_expression)
+                    keyword('ref'),
+                    field('source_cardinality', $.cardinality_expression)
                 )
             ),
+            $._type_expression_to,
             optional(field('body', $.annotation_only_body))
         ),
 

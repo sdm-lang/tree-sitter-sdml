@@ -63,7 +63,11 @@ Given the following list literal:
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
+  import skos
+
   @skos:altLabel = [ "yes" "no" "maybe" ]
+
 end
 #+END_SRC
 
@@ -94,7 +98,11 @@ A value constructor allows for the precise specification of a datatype for a lit
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
+  import sdml
+
   @sdml:defaultVariant = xsd:nonNegativeInteger(0)
+
 end
 #+END_SRC
 
@@ -142,7 +150,9 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   import xml
+
 end
 #+END_SRC
 
@@ -164,7 +174,9 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   datatype name <- xsd:string
+
 end
 #+END_SRC
 
@@ -178,10 +190,12 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   datatype name <- xsd:string is
     @xsd:minLength = 5
     @xsd:maxLength = 25
   end
+
 end
 #+END_SRC
 
@@ -195,13 +209,19 @@ end
     ) .
 #+END_SRC
 
+** Property Definition
+
+TBD
+
 ** Entity Definition
 
 *Example Empty Entity:*
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   entity Person
+
 end
 #+END_SRC
 
@@ -214,9 +234,11 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   entity Person is
     identity id -> PersonId
   end
+
 end
 #+END_SRC
 
@@ -247,6 +269,7 @@ TBD
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   entity Person is
     identity id -> PersonId
 
@@ -254,6 +277,7 @@ module example is
       @dc:description = "Emergency contact person"
     end
   end
+
 end
 #+END_SRC
 
@@ -280,6 +304,7 @@ TBD
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   entity Person is
     identity id -> PersonId
 
@@ -289,6 +314,7 @@ module example is
       alt_name -> xsd:string
     end
   end
+
 end
 #+END_SRC
 
@@ -301,7 +327,9 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   enum DistanceUnit
+
 end
 #+END_SRC
 
@@ -314,10 +342,12 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   enum DistanceUnit is
     Meter = 1
     Foot = 2
   end
+
 end
 #+END_SRC
 
@@ -344,12 +374,16 @@ enclosing module.
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
+  import sdml
+
   enum DistanceUnit is
     @sdml:variantTransform = "named"
   
     Meter = 1
     Foot = 2
   end
+
 end
 #+END_SRC
 
@@ -374,7 +408,9 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   event PersonNameChanged source Person
+
 end
 #+END_SRC
 
@@ -388,11 +424,13 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   event PersonNameChanged source Person is
     ;; identifier members will be copied from Person 
     fromValue -> Name
     toValue -> Name
   end
+
 end
 #+END_SRC
 
@@ -420,7 +458,9 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   structure Length
+
 end
 #+END_SRC
 
@@ -433,9 +473,11 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   structure Length is
     @skos:prefLabel = "Length"@en
   end
+
 end
 #+END_SRC
 
@@ -449,12 +491,14 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   structure Length is
     @skos:prefLabel = "Length"@en
 
     value -> Decimal
     unit -> DistanceUnit
   end
+
 end
 #+END_SRC
 
@@ -476,17 +520,23 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   structure Account is
+  
     @skos:prefLabel = "Customer Account"@en
+  
     group
       @skos:prefLabel = "Metadata"@en
       created -> xsd:dateTime
     end
+  
     group
       @skos:prefLabel = "Customer Information"@en
       ref customer -> {1..1} Customer
     end
+  
   end
+
 end
 #+END_SRC
 
@@ -496,7 +546,9 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   union Vehicle
+
 end
 #+END_SRC
 
@@ -509,11 +561,13 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
+
   union Vehicle of
     Car
     Truck
     Boat
   end
+
 end
 #+END_SRC
 
@@ -529,7 +583,8 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
-  union Vehicle is
+
+  union Vehicle of
 
     @skos:prefLabel = "Vehicle"@en
 
@@ -537,6 +592,7 @@ module example is
     Truck
     Boat
   end
+
 end
 #+END_SRC
 
@@ -553,11 +609,13 @@ end
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
-  union Vehicle is
+
+  union Vehicle of
     Car
     Truck
     Boat as WaterCar
   end
+
 end
 #+END_SRC
 

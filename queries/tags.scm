@@ -63,7 +63,7 @@
 
 (type_variant rename: (identifier) @name) @reference.class
 
-(property_def
+(property_role
  target: (type_reference) @name) @reference.class
 
 ;; ---------------------------------------------------------------------------

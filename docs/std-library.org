@@ -11,8 +11,8 @@ The following are standard modules that are included with the command-line tool.
 |--------------+-----------------------------------------------+-------------|
 | =dc=           | <http://purl.org/dc/elements/1.1/>            | Complete    |
 | =dcam=         | <http://purl.org/dc/dcam/>                    | Complete    |
-| =dcterms=      | <http://purl.org/dc/terms/>                   | Complete    |
 | =dcmi_type=    | <http://purl.org/dc/dcmitype/>                | Complete    |
+| =dcterms=      | <http://purl.org/dc/terms/>                   | Complete    |
 | =owl=          | <http://www.w3.org/2002/07/owl#>              | In Progress |
 | =rdf=          | <http://www.w3.org/1999/02/22-rdf-syntax-ns#> | Complete    |
 | =rdfs=         | <http://www.w3.org/2000/01/rdf-schema#>       | Complete    |

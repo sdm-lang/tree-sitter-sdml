@@ -94,7 +94,9 @@
 <!-- deploy -->
 <g id="node5" class="node">
 <title>deploy</title>
-<polygon fill="none" stroke="black" points="272,-128 164,-128 164,-92 272,-92 272,-128"/>
+<polygon fill="none" stroke="black" points="272,-128 164,-128 164,-124 160,-124 160,-120 164,-120 164,-100 160,-100 160,-96 164,-96 164,-92 272,-92 272,-128"/>
+<polyline fill="none" stroke="black" points="164,-124 168,-124 168,-120 164,-120"/>
+<polyline fill="none" stroke="black" points="164,-100 168,-100 168,-96 164,-96"/>
 <text text-anchor="middle" x="218" y="-111.75" font-family="Helvetica,Arial,sans-serif" font-size="10.00">Deployment Artifacts</text>
 <text text-anchor="middle" x="218" y="-100.5" font-family="Helvetica,Arial,sans-serif" font-size="10.00">(e.g. executables)</text>
 </g>

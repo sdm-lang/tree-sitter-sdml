@@ -19,26 +19,28 @@ hide members
 package "UML 2.5" as uml <<Metamodel>> #white {
 }
 
-class Package <<Metaclass>>
+class Model <<Metaclass>> #white {}
 
 package sdml <<profile>> {
   class module <<stereotype>> {}
   class datatype <<stereotype>> {}
   class entity <<stereotype>> {}
   class event <<stereotype>> {}
+  class property <<stereotype>> {}
+  class role <<stereotype>> {}
   class source <<stereotype>> {}
   class identity <<stereotype>> {}
   class ref <<stereotype>> {}
 }
-sdml --> model <<extension>>
-sdml ..> uml: <<references>>
+sdml --> Model: <<extension>>;
+sdml ..> uml: <<references>>;
 #+END_SRC
 
 #+CAPTION: Profile Package
 #+RESULTS: fig:uml-profile-package
 [[file:uml-profile-package.svg]]
 
-*** Example Usage
+*Example:*
 
 #+NAME: fig:uml-ex-profile-applied
 #+BEGIN_SRC plantuml :file uml-ex-profile-applied.svg
@@ -74,7 +76,7 @@ module -> Package: <<extension>>
 #+RESULTS: fig:uml-profile-module
 [[file:uml-profile-module.svg]]
 
-*** Example Usage
+*Example:*
 
 #+BEGIN_SRC sdml :exports code :noeval
 module rentals is
@@ -119,11 +121,13 @@ datatype .. gendatatype
 #+RESULTS: fig:uml-profile-datatype
 [[file:uml-profile-datatype.svg]]
 
-*** Example Usage
+*Example:*
 
 #+BEGIN_SRC sdml :exports code :noeval
 module rentals is
+
   datatype VehicleIdNumber <- string
+
 end
 #+END_SRC
 
@@ -199,10 +203,11 @@ ref .. refnote
 
 For details on by-value members and groups see section [[sec:uml-structures]] below.
 
-*** Example Usage
+*Example:*
 
 #+BEGIN_SRC sdml :exports code :noeval
 module rentals is
+
   import uuid
 
   datatype VehicleIdNumber <- string
@@ -274,10 +279,11 @@ clientnote .r. event
 
 For details on by-value members and groups see section [[sec:uml-structures]] below.
 
-*** Example Usage
+*Example:*
 
 #+BEGIN_SRC sdml :exports code :noeval
 module rentals is
+
   import uuid
 
   entity Booking is
@@ -313,7 +319,7 @@ package rentals <<module>> {
 The standard =Enumeration= classifier is used to model enum definitions.
 The standard =EnumerationLiteral= instance is used to model value variants.
 
-**Example Usage:**
+**Example:**
 
 TBD
 
@@ -321,7 +327,7 @@ TBD
 
 TBD
 
-*** Example Usage
+*Example:*
 
 TBD
 
@@ -360,11 +366,11 @@ union .. n3
 #+RESULTS: fig:uml-profile-union
 [[file:uml-profile-union.svg]]
 
-*** Example Usage
-
+*Example:*
 
 #+BEGIN_SRC sdml :exports code :noeval
 module rentals is
+
   import uuid
 
   structure Car
@@ -406,3 +412,6 @@ package rentals <<module>> {
 #+RESULTS: fig:uml-ex-union
 [[file:uml-ex-union.svg]]
 
+** Properties
+
+TBD

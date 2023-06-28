@@ -12,7 +12,7 @@ Module              = "module", Identifier, ModuleBase?, ModuleBody
 
 ModuleBase          = "base", IriReference
 
-ModuleBody          = "is", ImportStatement*, Annotation*, TypeDef*, "end"
+ModuleBody          = "is", ImportStatement*, Annotation*, ( TypeDef | PropertyDef )*, "end"
 
 MemberImport        = QualifiedIdentifier
 
@@ -60,30 +60,39 @@ UnionDef            = "union", Identifier, UnionBody?
 
 UnionBody           = "of", Annotation*, TypeVariant*, "end"
 
-TypeVariant         = IdentifierReference TypeVariantRename? AnnotationOnlyBody?
+TypeVariant         = IdentifierReference, TypeVariantRename?, AnnotationOnlyBody?
 
 TypeVariantRename   = "as" Identifier
 
+PropertyDef         = "property", Identifier, PropertyBody?
+
+PropertyBody        = "is", Annotation*, PropertyRole, "end"
+
+PropertyRole        =
+    Identifier, ( "ref", Cardinality )?, TypeExpressionTo, AnnotationOnlyBody?
+
+PropertyMember      = "as", Identifier
+
 IdentityMember      =
-    "identity", Identifier, TypeExpression, AnnotationOnlyBody?
+    "identity", Identifier, ( PropertyMember | ( TypeExpressionTo, AnnotationOnlyBody? ) )
 
 MemberByValue       =
-    Identifier, TypeExpressionTo, AnnotationOnlyBody?
+    Identifier, ( PropertyMember | ( TypeExpressionTo, AnnotationOnlyBody? ) )
 
 MemberByReference   =
-    "ref", Identifier, TypeExpressionFromTo,AnnotationOnlyBody?
+    "ref", Identifier, ( PropertyMember | ( TypeExpressionFromTo, AnnotationOnlyBody? ) )
 
 TypeExpression      = "->" TypeReference
 
-TypeExpressionTo    = "->" Cardinality? TypeReference
+TypeExpressionTo    = "->" Cardinality?, TypeReference
 
-TypeExpressionFromto = Cardinality? TypeExpressionTo
+TypeExpressionFromto = Cardinality?, TypeExpressionTo
 
 TypeReference       =  UnknownType | IdentifierReference | BuiltinSimpleType
 
 UnknownType         = "unknown"
 
-CardinalityExpression = "{", Unsigned, CardinalityRange?, "}"
+Cardinality         = "{", Unsigned, CardinalityRange?, "}"
 
 CardinalityRange    = "..", Unsigned?
 

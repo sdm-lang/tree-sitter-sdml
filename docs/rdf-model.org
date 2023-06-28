@@ -123,6 +123,7 @@ digraph G {
   Member [shape=ellipse;color=grey;fontcolor=grey];
   Structure [shape=ellipse];
   Union [shape=ellipse];
+  Property [shape=ellipse];
   EnumVariant [shape=ellipse];
   Datatype [shape=ellipse];
   integer [shape=rectangle;style=filled;color=lightgrey;label="xsd:nonNegativeInteger"];
@@ -150,6 +151,9 @@ digraph G {
   
   Union -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
   Union -> Classifier [label="variantType";dir=both;arrowtail=odiamond;arrowhead=open;headlabel="+"];
+
+  Property -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
+  Property -> Member [label="role";arrowhead=empty];
 
   Group -> ModelElement [label="rdfs:subClassOf";arrowhead=empty];
   Group -> Member [label="hasMember";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
@@ -214,24 +218,27 @@ All classes have an RDF type of =owl:Class=.
 #+CAPTION: OWL: Classes
 | Name               | Sub-Class Of               | Disjoint With                                 |
 |--------------------+----------------------------+-----------------------------------------------|
-| =:ModelElement=      | None.                      |                                               |
-| =:Module=            | =:ModelElement=              |                                               |
+| =:ByReferenceMember= | =:Member=                    | =:IdentityMember=, =:ByValueMember=               |
+| =:ByValueMember=     | =:Member=                    | =:IdentityMember=, =:ByReferenceMember=           |
+| =:Cardinality=       | None.                      |                                               |
 | =:Classifier=        | =:ModelElement=              |                                               |
 | =:Datatype=          | =:Classifier=, =rdfs:Datatype= | =:Enumeration= , =:Structure= , =:Union= , =:Unknown= |
 | =:Entity=            | =:Structure=                 | =:Event=                                        |
+| =:EntityGroup=       | =:Group=                     | =:StructureGroup=                               |
 | =:Enumeration=       | =:Classifier=                | =:Datatype=, =:Structure=, =:Union=, =:Unknown=       |
 | =:Event=             | =:Structure=                 | =:Entity=                                       |
+| =:Group=             | =:ModelElement=              |                                               |
+| =:IdentityMember=    | =:Member=                    | =:ByValueMember=, =:ByReferenceMember=            |
+| =:Member=            | =:ModelElement=              |                                               |
+| =:ModelElement=      | None.                      |                                               |
+| =:Module=            | =:ModelElement=              |                                               |
+| =:Property=          | =:Classifier=                | =:Datatype=, =:Enumeration=, =:Structure=, =:Unknown= |
+| =:RefRole=           | =:Role=                      |                                               |
+| =:Role=              | None.                      |                                               |
 | =:Structure=         | =:Classifier=                | =:Datatype=, =:Enumeration=, =:Union=, =:Unknown=     |
+| =:StructureGroup=    | =:Group=                     | =:EntityGroup=                                  |
 | =:Union=             | =:Classifier=                | =:Datatype=, =:Enumeration=, =:Structure=, =:Unknown= |
 | =:Unknown=           | =:Classifier=                | =:Datatype=, =:Enumeration=, =:Structure=, =:Union=   |
-| =:Group=             | =:ModelElement=              |                                               |
-| =:EntityGroup=       | =:Group=                     | =:StructureGroup=                               |
-| =:StructureGroup=    | =:Group=                     | =:EntityGroup=                                  |
-| =:Member=            | =:ModelElement=              |                                               |
-| =:IdentityMember=    | =:Member=                    | =:ByValueMember=, =:ByReferenceMember=            |
-| =:ByValueMember=     | =:Member=                    | =:IdentityMember=, =:ByReferenceMember=           |
-| =:ByReferenceMember= | =:Member=                    | =:IdentityMember=, =:ByValueMember=               |
-| =:Cardinality=       | None.                      |                                               |
 | =:Variant=           | None.                      |                                               |
 
 ** Object Properties
@@ -240,27 +247,28 @@ All object properties have an RDF type of =owl:ObjectProperty=.
 
 #+NAME: tbl:owl-object-properties
 #+CAPTION: OWL: Object Properties
-| Name                     | Domain                                                         | Range                     | Inverse Of     |
-|--------------------------+----------------------------------------------------------------+---------------------------+----------------|
-| =:hasDefinition=           | =:Module=                                                        | =:Classifier=               | =:isDefinedBy=   |
-| =:isDefinedBy=             | =:Classifier=                                                    | =:Module=                   | =:hasDefinition= |
-| =:entityHasGroup=          | =rdfs:Entity=                                                    | =:EntityGroup=              |                |
-| =:structureHasGroup=       | =rdfs:Structure=                                                 | =:StructureGroup=           |                |
-| =:hasVariant=              | =:Enumeration=                                                   | =:Variant=                  | =:isVariantOf=   |
-| =:isVariantOf=             | =:Variant=                                                       | =:Enumeration=              | =:hasVariant=    |
-| =:hasElementType=          | =:Union=                                                         | =:Classifier=               |                |
-| =:targetClassifier=        | =:Member=                                                        | =:Classifier=               |                |
-| =:baseDatatype=            | =:Datatype=                                                      | =:Datatype= ∪ =rdfs:Datatype= |                |
-| =:eventSource=             | =:Event=                                                         | =:Entity=                   | =:emitsEvent=    |
-| =:emitsEvent=              | =:Entity=                                                        | =:Event=                    | =:eventSource=   |
-| =:hasMember=               | =:Member=                                                        | N/A                       | =:hasMember=     |
-| =:isMemberOf=              | N/A                                                            | =:Member=                   | =:isMemberOf=    |
-| =:hasIdentityMember= ﻿^1,2  | =:Entity=                                                        | =:IdentityMember=           |                |
-| =:hasByValueMember= ﻿^2     | =:Entity= ∪ =:EntityGroup= ∪ =:Event= ∪ =:Structure= ∪ =:StructureGroup= | =:ByValueMember=            |                |
-| =:hasByReferenceMember= ﻿^2 | =:Entity= ∪ =:EntityGroup=                                         | =:ByReferenceMember=        |                |
-| =:targetClassifier=        | =:Member=                                                        | =:Classifier= ∪ =:Unknown=    |                |
-| =:sourceCardinality=       | =:ByReferenceMember=                                             | =:Cardinality=              |                |
-| =:targetCardinality=       | =:ByReferenceMember=                                             | =:Cardinality=              |                |
+| Domain                                                         | Name                     | Range                                       | Inverse Of       |
+|----------------------------------------------------------------+--------------------------+---------------------------------------------+------------------|
+| =:ByReferenceMember= ∪ =:RefRole=                                  | =:sourceCardinality=       | =:Cardinality=                                |                  |
+| =:ByReferenceMember= ∪ =:Role=                                     | =:targetCardinality=       | =:Cardinality=                                |                  |
+| =:Classifier=                                                    | =:isDefinedBy=             | =:Module=                                     | =:hasDefinition=   |
+| =:Classifier=                                                    | =:isTypeVariantOf=         | =:Union=                                      | =:hasTypeVariant=  |
+| =:Datatype=                                                      | =:baseDatatype=            | =:Datatype= ∪ =rdfs:Datatype=                   |                  |
+| =:Entity=                                                        | =:entityHasGroup=          | =:EntityGroup=                                |                  |
+| =:Entity=                                                        | =:emitsEvent=              | =:Event=                                      | =:eventSource=     |
+| =:Entity=                                                        | =:hasIdentityMember= ﻿^1,2  | =:IdentityMember=                             |                  |
+| =:Entity= ∪ =:EntityGroup=                                         | =:hasByReferenceMember= ﻿^2 | =:ByReferenceMember=                          |                  |
+| =:Entity= ∪ =:EntityGroup= ∪ =:Event= ∪ =:Structure= ∪ =:StructureGroup= | =:hasByValueMember= ﻿^2     | =:ByValueMember=                              |                  |
+| =:Enumeration=                                                   | =:hasVariant=              | =:Variant=                                    | =:isVariantOf=     |
+| =:Event=                                                         | =:eventSource=             | =:Entity=                                     | =:emitsEvent=      |
+| =:Member=                                                        | =:targetClassifier=        | =:Classifier=                                 |                  |
+| =:Member=                                                        | =:isMemberOf=              | =:Structure= ∪ =:EntityGroup= ∪ =:StructureGroup= | =:hasMember=       |
+| =:Member=                                                        | =:targetClassifier=        | =:Classifier= ∪ =:Unknown=                      |                  |
+| =:Module=                                                        | =:hasDefinition=           | =:Classifier=                                 | =:isDefinedBy=     |
+| =:Structure=                                                     | =:structureHasGroup=       | =:StructureGroup=                             |                  |
+| =:Structure= ∪ =:EntityGroup= ∪ =:StructureGroup=                    | =:hasMember=               | =:Member=                                     | =:isMemberOf=      |
+| =:Union=                                                         | =:hasTypeVariant=          | =:Classifier=                                 | =:isTypeVariantOf= |
+| =:Variant=                                                       | =:isVariantOf=             | =:Enumeration=                                | =:hasVariant=      |
 
 Notes:
 1. This also has the rdf type =owl:FunctionalProperty=.
@@ -274,9 +282,9 @@ All datatype properties have an RDF type of =owl:DatatypeProperty=.
 #+CAPTION: OWL: Datatype Properties
 | Name       | Sub Property Of | Domain       | Range                  |
 |------------+-----------------+--------------+------------------------|
+| =:hasValue=  | =rdf:value=       | =:Variant=     | =xsd:nonNegativeInteger= |
 | =:maxOccurs= |                 | =:Cardinality= | =xsd:nonNegativeInteger= |
 | =:minOccurs= |                 | =:Cardinality= | =xsd:nonNegativeInteger= |
-| =:hasValue=  | =rdf:value=       | =:Variant=     | =xsd:nonNegativeInteger= |
 
 ** Annotation Properties
 
@@ -284,15 +292,15 @@ All annotation properties have an RDF type of =owl:AnnotationProperty=.
 
 #+NAME: tbl:owl-annotation-properties
 #+CAPTION: OWL: Annotation Properties
-| Name             | Domain       | Range                  |
-|------------------+--------------+------------------------|
-| =:rootEntity=      | =:Module=      | =:Entity=                |
-| =:defaultVariant=  | =:Enumeration= | =xsd:NMTOKEN=            |
-| =:deprecatedSince= | N/A          | =:versionString=         |
-| =:introducedIn=    | N/A          | =:versionString=         |
-| =:flatten=         | =:Member=      | =Boolean=                |
+| Name                | Domain       | Range                  |
+|---------------------+--------------+------------------------|
+| =:defaultVariant=     | =:Enumeration= | =xsd:NMTOKEN=            |
+| =:deprecatedSince=    | N/A          | =:versionString=         |
+| =:flatten=            | =:Member=      | =Boolean=                |
+| =:hasVersionIdType=   | =:Entity=      | =:Datatype= ∪ =:Structure= |
 | =:hasVersioningStyle= | =:Entity=      | =VersioningStyle=        |
-| =:hasVersionIdType= | =:Entity=      | =:Datatype= ∪ =:Structure= |
+| =:introducedIn=       | N/A          | =:versionString=         |
+| =:rootEntity=         | =:Module=      | =:Entity=                |
 
 The properties =:deprecatedSince= and =:introducedIn= both refer to a range type =:versionString=, this type is a string that
 conforms to the [[https://semver.org/][semver]] form of /major.minor.path/ where each is an integer. 
@@ -338,19 +346,19 @@ annotating a model.
 #+CAPTION: Commonly Used Annotation Properties
 | Name             | Usage                                                                                          | Domain       | Range          |
 |------------------+------------------------------------------------------------------------------------------------+--------------+----------------|
-| =skos:prefLabel=   | The preferred lexical label/name of the model element.                                         | N/A          | =rdf:langString= |
-| =skos:altLabel=    | An alternative lexical label/name for the model element.                                       | N/A          | =rdf:langString= |
-| =skos:hiddenLabel= | A lexical label/name for the element where it may be searchable but not commonly displayed.    | N/A          | =rdf:langString= |
-| =skos:definition=  | A complete explanation of the intended meaning of the model element.                           | N/A          | =rdf:langString= |
-| =skos:historyNote= | Describes significant changes to the meaning or the form of the model element.                 | N/A          | =rdf:langString= |
-| =dc:creator=       | An entity primarily responsible for making the model element.                                  | N/A          | =xsd:string=     |
-| =dc:contributor=   | An entity responsible for making contributions to the model element.                           | N/A          | =xsd:string=     |
-| =dc:license=       | A legal document giving official permission to do something with the model element.            | =:Module=      | =xsd:AnyURI=     |
-| =dc:conformsTo=    | An established standard to which the described  model element conforms.                        | N/A          | =xsd:AnyURI=     |
-| =rdfs:seeAlso=     | Used to indicate a resource that might provide additional information about the model element. | N/A          | =xsd:AnyURI=     |
+| =:defaultVariant=  | Denotes, if present, the default variant of an enumeration.                                    | =:EnumVariant= | =xsd:NMTOKEN=    |
 | =:deprecatedSince= | The specific version in which this model element was marked as deprecated.                     | N/A          | =:versionString= |
 | =:introducedIn=    | The specific version this model element first appeared.                                        | N/A          | =:versionString= |
-| =:defaultVariant=  | Denotes, if present, the default variant of an enumeration.                                    | =:EnumVariant= | =xsd:NMTOKEN=    |
+| =dc:conformsTo=    | An established standard to which the described  model element conforms.                        | N/A          | =xsd:AnyURI=     |
+| =dc:contributor=   | An entity responsible for making contributions to the model element.                           | N/A          | =xsd:string=     |
+| =dc:creator=       | An entity primarily responsible for making the model element.                                  | N/A          | =xsd:string=     |
+| =dc:license=       | A legal document giving official permission to do something with the model element.            | =:Module=      | =xsd:AnyURI=     |
+| =rdfs:seeAlso=     | Used to indicate a resource that might provide additional information about the model element. | N/A          | =xsd:AnyURI=     |
+| =skos:altLabel=    | An alternative lexical label/name for the model element.                                       | N/A          | =rdf:langString= |
+| =skos:definition=  | A complete explanation of the intended meaning of the model element.                           | N/A          | =rdf:langString= |
+| =skos:hiddenLabel= | A lexical label/name for the element where it may be searchable but not commonly displayed.    | N/A          | =rdf:langString= |
+| =skos:historyNote= | Describes significant changes to the meaning or the form of the model element.                 | N/A          | =rdf:langString= |
+| =skos:prefLabel=   | The preferred lexical label/name of the model element.                                         | N/A          | =rdf:langString= |
 
 # ----- Footnotes:
 

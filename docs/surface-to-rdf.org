@@ -168,7 +168,7 @@ end
 #+END_SRC
 
 ** Annotations
-** Data Type Definition
+** Data Type Definitions
 
 *Example:*
 
@@ -209,11 +209,7 @@ end
     ) .
 #+END_SRC
 
-** Property Definition
-
-TBD
-
-** Entity Definition
+** Entity Definitions
 
 *Example Empty Entity:*
 
@@ -321,7 +317,7 @@ end
 #+BEGIN_SRC ttl
 #+END_SRC
 
-** Enumeration Definition
+** Enumeration Definitions
 
 *Example Empty Enumeration:*
 
@@ -402,7 +398,7 @@ end
     :hasValueVariant :Foot.
 #+END_SRC
 
-** Event Definition
+** Event Definitions
 
 *Example Empty Event:*
 
@@ -452,7 +448,7 @@ end
     ] .
 #+END_SRC
 
-** Structure Definition
+** Structure Definitions
 
 *Example Empty Structure:*
 
@@ -540,7 +536,7 @@ module example is
 end
 #+END_SRC
 
-** Union Definition
+** Union Definitions
 
 *Example Empty Union:*
 
@@ -629,6 +625,11 @@ end
         owl:equivalentClass :Boat
     ] .
 #+END_SRC
+
+** Property Definitions
+
+TBD
+
 
 # ----- Footnotes
 

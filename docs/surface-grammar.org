@@ -32,6 +32,8 @@ DataTypeDef         =
 
 DataTypeBase        = IdentifierReference | BuiltinSimpleType
 
+AnnotationOnlyBody  = "is", Annotation+, "end"
+
 EntityDef           = "entity", Identifier, EntityBody?
 
 EntityBody          =
@@ -39,11 +41,11 @@ EntityBody          =
     Annotation*, IdentityMember, ( MemberByValue | MemberByReference | EntityGroup )*,
     "end"
 
-EntityGroup         = "group", Annotation*, ( MemberByValue | MemberByReference )*
+EntityGroup         = "group", Annotation*, ( MemberByValue | MemberByReference )+, "end"
 
 EnumDef             = "enum", Identifier, EnumBody?
 
-EnumBody            = "of", Annotation*, EnumVariant*, "end"
+EnumBody            = "of", Annotation*, EnumVariant+, "end"
 
 EnumVariant         = Identifier, "=", Unsigned, AnnotationOnlyBody?
 
@@ -54,11 +56,11 @@ StructureDef        = "structure", Identifier, StructureBody?
 
 StructureBody       = "is", Annotation*, ( MemberByValue | StructureGroup )*, "end"
 
-StructureGroup      = "group", Annotation*, MemberByValue*, "end"
+StructureGroup      = "group", Annotation*, MemberByValue+, "end"
 
 UnionDef            = "union", Identifier, UnionBody?
 
-UnionBody           = "of", Annotation*, TypeVariant*, "end"
+UnionBody           = "of", Annotation*, TypeVariant+, "end"
 
 TypeVariant         = IdentifierReference, TypeVariantRename?, AnnotationOnlyBody?
 
@@ -66,7 +68,7 @@ TypeVariantRename   = "as" Identifier
 
 PropertyDef         = "property", Identifier, PropertyBody?
 
-PropertyBody        = "is", Annotation*, PropertyRole, "end"
+PropertyBody        = "is", Annotation*, PropertyRole+, "end"
 
 PropertyRole        =
     Identifier, ( "ref", Cardinality )?, TypeExpressionTo, AnnotationOnlyBody?

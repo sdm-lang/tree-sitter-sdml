@@ -99,7 +99,15 @@ package rentals-model <<sdml>> {
 #+RESULTS: fig:uml-ex-module
 [[file:uml-ex-module.svg]]
 
-** Datatypes
+** Imports
+
+TBD
+
+** Annotations
+
+TBD
+
+** Data Type Definitions
 
 The profile element =«datatype»= is a specialization of the UML =PrimitiveType= (10.2.3.2) classifier.
 
@@ -148,7 +156,7 @@ package rentals <<module>> {
 #+RESULTS: fig:uml-ex-datatype
 [[file:uml-ex-datatype.svg]]
 
-** Entities
+** Entity Definitions
 
 #+NAME: fig:uml-profile-entity
 #+BEGIN_SRC plantuml :file uml-profile-entity.svg
@@ -246,7 +254,16 @@ package rentals <<module>> {
 #+RESULTS: fig:uml-ex-entity
 [[file:uml-ex-entity.svg]]
 
-** Events
+** Enumeration Definitions
+
+The standard =Enumeration= classifier is used to model enum definitions.
+The standard =EnumerationLiteral= instance is used to model value variants.
+
+**Example:**
+
+TBD
+
+** Event Definitions
 
 The standard =Signal= (10.3.3.1) and =Dependency=
 
@@ -314,16 +331,7 @@ package rentals <<module>> {
 #+RESULTS: fig:uml-ex-event
 [[file:uml-ex-event.svg]]
 
-** Enumerations
-
-The standard =Enumeration= classifier is used to model enum definitions.
-The standard =EnumerationLiteral= instance is used to model value variants.
-
-**Example:**
-
-TBD
-
-** <<sec:uml-structures>>Structures
+** <<sec:uml-structures>>Structure Definitions
 
 TBD
 
@@ -331,7 +339,7 @@ TBD
 
 TBD
 
-** Unions
+** Union Definitions
 
 Generalization Sets (9.7)
 
@@ -412,6 +420,6 @@ package rentals <<module>> {
 #+RESULTS: fig:uml-ex-union
 [[file:uml-ex-union.svg]]
 
-** Properties
+** Property Definitions
 
 TBD

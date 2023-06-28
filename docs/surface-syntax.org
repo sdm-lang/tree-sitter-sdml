@@ -585,57 +585,6 @@ The following are commonly used RDF and OWL definition properties.
 - =owl:disjointWith= --
 - =owl:FunctionalProperty=, =owl:InverseFunctionalProperty=, =owl:SymmetricProperty= and =owl:TransitiveProperty= --
 
-** Property Definitions
-
-SDML provides for a data dictionary, or element-first, style of model capture where key properties of the domain are
-defined and annotated in a stand-alone form. These are often key identifiers and other shared properties 
-
-#+NAME: lst:grammar-property-def
-#+BEGIN_SRC ebnf
-PropertyDef         = "property", Identifier, PropertyBody?
-PropertyBody        = "is", Annotation*, PropertyRole, "end"
-#+END_SRC
-
-*Example*:
-
-#+NAME: lst:sdml-ex-empty-property
-#+CAPTION: Empty Property
-#+BEGIN_SRC sdml :exports code :noeval
-module example is
-
-  property account_id
-
-end
-#+END_SRC
-
-The property ~account_id~ in [[lst:sdml-ex-empty-property]] is valid but incomplete. Completion of the property requires the
-addition of a body with roles defined.
-
-#+NAME: lst:grammar-property-role
-#+BEGIN_SRC ebnf
-PropertyRole        =
-    Identifier, ( "ref", Cardinality )?, TypeExpressionTo, AnnotationOnlyBody?
-#+END_SRC
-
-*Example*:
-
-The following is a valid /and/ complete example.
-
-#+NAME: lst:sdml-ex-property-role
-#+CAPTION: Property with Roles
-#+BEGIN_SRC sdml :exports code :noeval
-module example is
-
-  property accountId is
-    identifier -> {1} account:AccountId is
-      @skos:definition = "a"@en
-    end
-    reference ref {1} -> {1} account:AccountId
-  end
-
-end
-#+END_SRC
-
 ** Structured Types
 
 Structured types fall into two primary categories, /Product/ types and /Sum/ types. Product types have named and typed
@@ -1054,6 +1003,59 @@ module example is
     Car
     Truck
     Van as LittleTruck
+  end
+
+end
+#+END_SRC
+** Property Definitions
+
+SDML provides for a data dictionary, or element-first, style of model capture where key properties of the domain are
+defined and annotated in a stand-alone form. These are often key identifiers and other shared properties 
+
+#+NAME: lst:grammar-property-def
+#+BEGIN_SRC ebnf
+PropertyDef         = "property", Identifier, PropertyBody?
+PropertyBody        = "is", Annotation*, PropertyRole, "end"
+#+END_SRC
+
+*Example*:
+
+#+NAME: lst:sdml-ex-empty-property
+#+CAPTION: Empty Property
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  property account_id
+
+end
+#+END_SRC
+
+The property ~account_id~ in [[lst:sdml-ex-empty-property]] is valid but incomplete. Completion of the property requires the
+addition of a body with roles defined.
+
+#+NAME: lst:grammar-property-role
+#+BEGIN_SRC ebnf
+PropertyRole        =
+    Identifier, ( "ref", Cardinality )?, TypeExpressionTo, AnnotationOnlyBody?
+#+END_SRC
+
+*Example*:
+
+The following is a valid /and/ complete example.
+
+#+NAME: lst:sdml-ex-property-role
+#+CAPTION: Property with Roles
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  property accountId is
+  
+    identifier -> {1} account:AccountId is
+      @skos:definition = "a"@en
+    end
+  
+    reference ref {1} -> {1} account:AccountId
+  
   end
 
 end

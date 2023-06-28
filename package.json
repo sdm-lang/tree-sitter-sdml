@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-sdml",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Tree-Sitter grammar for Simple Domain Modeling Language",
   "main": "bindings/node",
   "keywords": [

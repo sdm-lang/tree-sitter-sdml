@@ -1,0 +1,71 @@
+module properties is
+; <- keyword
+;      ^ module.definition
+;                 ^ keyword
+
+  import [ account skos ]
+  ; <- keyword
+  ;      ^ punctuation.bracket
+  ;        ^ module
+  ;                ^ module
+  ;                     ^ punctuation.bracket
+
+  property accountId is
+  ; <- keyword
+  ;        ^ variable.field
+  ;                  ^ keyword
+
+    identifier -> {1} account:AccountId is
+    ; <- variable.field
+    ;          ^ operator
+    ;             ^ punctuation.bracket
+    ;              ^ number
+    ;               ^ punctuation.bracket
+    ;                 ^ type
+    ;                                   ^ keyword
+
+      @skos:definition = "a"@en
+      ; <- property
+      ;^ property
+      ;                ^ operator
+      ;                  ^ string
+      ;                     ^ property
+
+    end
+    ; <- keyword
+
+    reference ref {1} -> {1} account:AccountId
+    ; <- variable.field
+    ;         ^ keyword
+    ;             ^ punctuation.bracket
+    ;              ^ number
+    ;               ^ punctuation.bracket
+    ;                 ^ operator
+    ;                    ^ punctuation.bracket
+    ;                     ^ number
+    ;                      ^ punctuation.bracket
+    ;                        ^ type
+
+  end
+  ; <- keyword
+
+  structure Account is
+  ; <- keyword
+  ;         ^ type.definition
+  ;                 ^ keyword
+
+    accountId as identitifer
+    ; <- variable.field
+    ;         ^ keyword
+    ;            ^ variable.field
+
+    name -> string
+    ; <- variable.field
+    ;    ^ operator
+    ;       ^ keyword
+
+  end
+  ; <- keyword
+
+end
+; <- keyword

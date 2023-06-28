@@ -50,6 +50,10 @@ end
 
 # Changes
 
+**Version: 0.1.17**
+
+* Fixed highlighting for properties.
+
 **Version: 0.1.16**
 
 * Adjusted property grammar.

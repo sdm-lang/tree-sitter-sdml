@@ -5,7 +5,7 @@
 (line_comment) @comment
 
 ;; ---------------------------------------------------------------------------
-;; Module
+;; Keywords
 ;; ---------------------------------------------------------------------------
 
 [
@@ -31,7 +31,15 @@
  (builtin_simple_type)
  ] @keyword
 
+;; ---------------------------------------------------------------------------
+;; Module & Imports
+;; ---------------------------------------------------------------------------
+
 (module name: (identifier) @module.definition)
+
+(import_statement
+ "[" @punctuation.bracket
+ "]" @punctuation.bracket)
 
 (member_import
  name: (qualified_identifier) @type)
@@ -80,20 +88,29 @@ name: (identifier) @type.definition)
 ;; Members
 ;; ---------------------------------------------------------------------------
 
+(property_member
+ role: (identifier) @variable.field)
+
 (identity_member
- name: (identifier) @variable.field
+ name: (identifier) @variable.field)
+
+(identity_member
  "->" @operator
- target: (_) @type)
+ target: (type_reference) @type)
 
 (member_by_value
- name: (identifier) @variable.field
+ name: (identifier) @variable.field)
+
+(member_by_value
  "->" @operator
- target: (_) @type)
+ target: (type_reference) @type)
 
 (member_by_reference
- name: (identifier) @variable.field
+ name: (identifier) @variable.field)
+
+(member_by_reference
  "->" @operator
- target: (_) @type)
+ target: (type_reference) @type)
 
 (enum_variant
  name: (identifier) @constant
@@ -105,8 +122,11 @@ name: (identifier) @type.definition)
 (type_variant
  rename: (identifier) @type)
 
-(cardinality_range
- ".." @operator)
+(cardinality_expression
+ "{" @punctuation.bracket
+ "}" @punctuation.bracket)
+
+(cardinality_range ".." @operator)
 
 (property_def
  name: (identifier) @variable.field)
@@ -138,7 +158,9 @@ name: (identifier) @type.definition)
 (boolean) @constant.builtin
 
 (value_constructor
- name: (identifier_reference)) @function.call
+ name: (identifier_reference) @function.call
+ "(" @punctuation.bracket
+ ")" @punctuation.bracket)
 
 (value
  (identifier_reference) @type)
@@ -146,16 +168,9 @@ name: (identifier) @type.definition)
 (list_of_values
  (identifier_reference) @type)
 
-;; ---------------------------------------------------------------------------
-;; Punctuation
-;; ---------------------------------------------------------------------------
-
-"(" @punctuation.bracket
-")" @punctuation.bracket
-"[" @punctuation.bracket
-"]" @punctuation.bracket
-"{" @punctuation.bracket
-"}" @punctuation.bracket
+(list_of_values
+ "[" @punctuation.bracket
+ "]" @punctuation.bracket)
 
 ;; ---------------------------------------------------------------------------
 ;; Errors

@@ -53,6 +53,7 @@ end
 **Version: 0.1.16**
 
 * Adjusted property grammar.
+* Started on property documentation.
 
 ``` sdml
 module ddict is

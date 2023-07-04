@@ -59,25 +59,26 @@ end
                (annotation
                  (constraint
                   (formal_constraint
-                    (constraint_statement
+                    (constraint_sentence
                       (quantified_sentence
                         (universal
                           (quantifier_binding
                             (reserved_self))
-                          (constraint_statement
-                            (simple_statement
-                              (atomic_sentence
-                                (term
-                                  (name_path
-                                    (name
-                                      (identifier))))
-                                (term
-                                  (name_path
-                                    (name
-                                      (reserved_self))
-                                    (identifier)))
-                                (term
-                                  (predicate_value
-                                    (simple_value
-                                      (string
-                                        (quoted_string)))))))))))))))))))))
+                          (quantified_body
+                            (constraint_sentence
+                              (simple_sentence
+                                (atomic_sentence
+                                  (term
+                                    (name_path
+                                      (name
+                                        (identifier))))
+                                  (term
+                                    (name_path
+                                      (name
+                                        (reserved_self))
+                                      (identifier)))
+                                  (term
+                                    (predicate_value
+                                      (simple_value
+                                        (string
+                                          (quoted_string))))))))))))))))))))))

@@ -4,22 +4,33 @@
 * <<sec:rdf-semantic-model>> RDF Semantic Model
 
 The W3C's [[https://www.w3.org/RDF/][Resource Description Framework]] (RDF) is a mature standard for the open development of vocabularies and
-knowledge representation. Key characteristics are that it has a fundamentally simple model, it is designed with an /open
-world/ assumption, and because of this it is inherently composable. RDF's core can be summarized with the following
+knowledge representation. Key characteristics are that it has a fundamentally simple model, was designed with an /Open
+World Assumption/ (OWA), and because of this it is inherently composable. RDF's core can be summarized with the following
 grammar, noting that at it's core it comprises a set of statements about things.
 
 #+BEGIN_SRC ebnf
-Graph     = Statement*
-Statement = Subject Predicate Object
+Graph     = GraphId, Statement*
+GraphId   = Uri
+Statement = Subject, Predicate, Object
 Subject   = Named | Anonymous
 Predicate = Named
 Object    = Subject | Literal
 Named     = Uri
 #+END_SRC
 
-In the following example, expressed in Turtle, there is a single /statement/ whose /subject/ is the value =:mytruck=, with a predicate =rdf:type=, and
-object =v:Truck=. Expressed in English this reads as /There exists a thing named =:mytruck= whose type is =Truck= (from the
-=v= namespace)/.
+#+BEGIN_NOTE
+The /Closed/ or /Open World Assumption/ of a given model or other representation determines how it copes with, or even
+acknowledges new information beyond it's initial scope. For example, a database schema is a fixed structure determined
+by defining some scope which necessitates the ignoring of information outside the schema. Similarly, when object
+modeling in software development we start by defining a scope in the same manner. While both database schema and object
+models can change over time they may become unstable if new facts contradict the existing structure. RDF on the other
+hand was designed for the web and as such assumes that you cannot /know what is known/ about anything as there are other
+datasets out there somewhere which may contain new information.
+#+END_NOTE
+
+In the following example, expressed in the RDF Turtle syntax, there is a single /statement/ whose /subject/ is the value
+=:mytruck=, with a predicate =rdf:type=, and object =v:Truck=. Expressed in English this reads as /There exists a thing named
+=:mytruck= whose type is =Truck= (from the =v= namespace)/. 
 
 #+BEGIN_SRC ttl
 :mytruck rdf:type v:Truck .
@@ -33,6 +44,14 @@ URI to expand the values above into the following statement.
     <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
     <https://example.org/v#Truck> .
 #+END_SRC
+
+#+BEGIN_NOTE
+RDF, in a similar manner to SDML, defines an /abstract syntax/ that captures the structure and semantics of RDF. This
+abstract syntax is then described in a set of concrete syntax specifications, or representations, including JSON,
+JSON-LD (JSON for Linked Data), NT (N-Tripes), N3 (Notation3), RDFa (RDF annotations in HTML), TriG (graph-oriented
+representation), Turtle (Terse RDF Triple Language), and XML. We use Turtle only in this document as it tends to be the
+easier to read.
+#+END_NOTE
 
 A more complete example adds a number of statements about the common subject =:mytruck=.
 
@@ -180,6 +199,29 @@ For a higher resolution version, [[file:owl-ontology.svg][click here]].
 1. Open triangular arrow heads correspond to the RDF Schema =subClassOf= relationship.
 2. Filled diamonds correspond to composite associations, or strong ownership.
 3. Open diamonds correspond to aggregate associations, or weak ownership.
+
+** What is an Ontology?
+
+The term /ontology/ was adopted from philosophy in around 1980 to describe logical theories developed to support work in
+artificial intelligence – for instance logical theories capturing the knowledge of the world of a robot. Since then the
+term has come to be widely used in information-driven science, journalism, industry, defense, intelligence, and
+government to describe computer artifacts created to support data retrieval, integration, reasoning and an expanding
+range of further goals.
+
+An ontology is at its core a collection of general /terms/ organized into a taxonomic /hierarchy/ and associated with /formal
+definitions/ and /axioms/. A simple example of how an ontology is used occurs where we have a number of heterogeneous data
+sources, each using different codes or labels to describe the same entities in reality – for instance proteins or
+weapons – and where we need to unify all the information in these different sources that pertains to each type of
+represented entity. Ontologies address this problem by providing a data source-neutral term for each type of entity
+which is then used to tag corresponding data entries in a consistent way. This enables enhanced retrieval and
+aggregation of the data. It also allows reasoning across aggregated data through appeal to the logical structure of the
+definitions and axioms of the corresponding ontology terms.
+
+Such strategies have proved most successful where multiple ontologies covering different domains of entities are built
+in coordinated fashion to ensure interoperability and avoid overlap and redundancy. One method to achieve such
+coordination involves the application of a hub-and-spokes strategy, resting on a highly general domain-neutral hub,
+together with successive layers of spokes comprising domain ontologies built out of terms defined as specializations of
+terms contained in the hub. A top level ontology is an ontology designed to serve as hub in such an architecture.
 
 ** SDML Ontology
 

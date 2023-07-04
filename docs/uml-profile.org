@@ -3,7 +3,7 @@
 
 * <<app:uml-profile>>Appendix: UML Profile for SDML
 
-This section is non-normative.
+This section describes a *non-normative* UML Profile for SDML that allows the diagrammatic presentation of an SDML model.
 
 Based upon the [[https://www.omg.org/spec/UML/2.5.1/About-UML][Unified Modeling Language 2.5.1]].
 

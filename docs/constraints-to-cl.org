@@ -1,0 +1,18 @@
+#+LANGUAGE: en
+#+STARTUP: overview hidestars inlineimages entitiespretty
+
+* Appendix: Constraints to ISO/IEC Common Logic
+
+This appendix describes the *normative* mapping from SDML/Constraints to the ISO/IEC Common Logic standard. 
+** Modules
+
+*** Imports
+
+*** Domain of Discourse
+
+** Individual Constraints
+
+
+* Appendix: Constraints to RDF
+
+This appendix describes the *non-normative* mapping from SDML/Constraints to the RIF Basic Logic Dialect.

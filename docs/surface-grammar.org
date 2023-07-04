@@ -22,7 +22,15 @@ Import              = MemberImport | ModuleImport
 
 ImportStatement     = "import", ( Import | "[", Import+, "]" )
 
-Annotation          = "@", IdentiferReference, "=", Value
+Annotation          = AnnotationProperty | Constraint
+
+AnnotationProperty  = "@", IdentiferReference, "=", Value
+
+Constraint          = InformalConstraint | FormalConstraint
+
+InformalConstraint  = "=", QuotedString
+
+FormalConstraint    = ?see below?
 
 TypeDef             =
     DataTypeDef | EntityDef | EnumDef | EventDef | StructureDef | UnionDef
@@ -177,6 +185,72 @@ Whitespace          =
     | "\u{2028}" | "\u{2029}" | "\u{202f}" | "\u{205f}" | "\u{3000}"
     | "\u{feff}"
 #+END_SRC
+
+** The Embedded Constraint Language
+
+Given that the /formal/ constraint language component of SDML is likely to be used less frequently *and* the grammar is
+fairly long we have made it a separate section.
+
+#+BEGIN_SRC ebnf
+FormalConstraint    = "is", ConstraintSentence, "end"
+
+ConstraintSentence  =
+     SimpleSentence | BooleanSentence | QuantifiedSentence |
+     "(", ConstraintSentence, ")"
+
+SimpleSentence      = Atomic | Equation
+
+Atomic              = Term, "(", Term*, ")"
+
+Equation            = Term, "=", Term
+
+BooleanSentence     =
+    Negation |
+    ConstraintSentence,
+        ( Conjunction | Disjunction | Implication | Biconditional )
+
+Negation            = ( "not" | "¬" ), ConstraintSentence
+
+Conjunction         = ( "and" | "∧" ), ConstraintSentence
+
+Disjunction         = ( "or" | "∨" ), ConstraintSentence
+
+Implication         = ( "implies" | "⇒" ), ConstraintSentence
+
+Biconditional       = ( "iff" | "⇔" ), ConstraintSentence
+
+QuantifiedSentence  = Universal | Existential
+
+Universal           = ( "forall" | "∀" ), QuantifierBinding*, QuantifiedBody
+
+Existential         = ( "exists" | "∃" ), QuantifierBinding*, QuantifiedBody
+
+QuantifierBinding   = "self" | Identifer, BindingTypeReference?
+
+BindingTypeReference =
+    "->", ( "Self" | IdentifierReference )
+
+QuantifiedBody      = "(", ConstraintSentence, ")"
+
+Term                = NamePath | PredicateValue | FunctionalTerm
+
+NamePath            = Name, ( ".", Name )*
+
+Name                = "self" | "Self" | Identifier
+
+PredicateValue      =
+    SimpleValue | Tautology | Contradiction | ListOfPredicateValues
+
+Tautology           = "⊤"
+
+Contradiction       = "⊥"
+
+ListOfPredicateValues =
+    "[", ( SimpleValue | Tautology | Contradiction )*, "]"
+
+FunctionalTerm      = Term, "(", Term*, ")"
+#+END_SRC
+
 
 # ----- Footnotes
 

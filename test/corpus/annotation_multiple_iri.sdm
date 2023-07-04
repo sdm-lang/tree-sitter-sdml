@@ -8,7 +8,7 @@ module Campaign is
       <https://www.dublincore.org/>
       <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/>
   ]
-  
+
 end
 
 ---
@@ -17,13 +17,14 @@ end
   name: (identifier)
   body: (module_body
     (annotation
-      name: (identifier_reference
-        (qualified_identifier
-          module: (identifier)
-          member: (identifier)))
-      value: (value
-        (list_of_values
-          (simple_value
-            (iri_reference))
-          (simple_value
-            (iri_reference)))))))
+      (annotation_property
+        name: (identifier_reference
+          (qualified_identifier
+            module: (identifier)
+            member: (identifier)))
+        value: (value
+          (list_of_values
+            (simple_value
+              (iri_reference))
+            (simple_value
+              (iri_reference))))))))

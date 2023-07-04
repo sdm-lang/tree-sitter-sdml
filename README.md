@@ -50,6 +50,43 @@ end
 
 # Changes
 
+**Version: 0.1.18**
+
+* Added a constraint assertion construct. This allows for specific constraints to be documented for any model element.
+  * The grammar rule `annotation` has been renamed `annotation_property`
+  * The grammar rule `constraint` has been added.
+  * A new grammar rule named `annotation` is defined as a choice of `annotation_property` or `constraint`.
+  * This allows the use of the old rule to be subsumed by the new definition.
+* Constraints can be written in informal unstructured fashion or an embedded formalism.
+  * The informal representation is simply a string.
+  * The formal representation is a syntax that maps to a subset of [ISO/IEC 24707:2018](https://www.iso.org/standard/66249.html) Common Logic.
+* More documentation added on the RDF mapping and the domain modeling process.
+
+``` sdml
+module example is
+
+    import tag
+
+    structure Thing is
+    
+      inner -> {0..} InnerThing is
+        ;; informal
+        assert same_tags = "All inner tags contain a tag value \"This\"."
+        ;; formal
+        assert same_tags_formal is
+          forall self ( not_empty(self) and contains(self.tags "This") )
+        end
+      end
+      
+    end
+    
+    structure InnerThing is
+      tags -> {0..} tag:Tag
+    end
+    
+end
+```
+
 **Version: 0.1.17**
 
 * Fixed highlighting for properties.

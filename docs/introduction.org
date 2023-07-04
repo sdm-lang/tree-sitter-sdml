@@ -46,7 +46,6 @@ namely the separation of entities (/an object defined not by its attributes, but
 immutable object that contains attributes but has no conceptual identity/), simply termed structures in SDML. This model
 does not include the following as first-class concepts: /aggregates/, /repositories/, /factories/, or /services/.
 
-
 ** <<sec:domain-modeling>> Domain Modeling
 
 There is often confusion around the use of the term /Domain Model/ especially in regard to terms such as /Data Model/, /Class
@@ -156,6 +155,56 @@ DDD are not entirely compatible with the use in pre-existing methods such as E/R
 However, the method's focus on the business and it's vocabulary as the basis for models is valuable in an effort such as
 the Universal API where the model will represent our business model in different presentations.
 
+** Domain-Related Models
+
+Domain modeling is often an isolated activity in that the created model is applied in a singular fashion. However,
+there are other modeling activities that share similar aims, whose subjects intersect, and which are also conceptual or
+logical data models. Two commonly developed artifacts are:
+
+- *Data Catalogs* :: These models describe data in data stores (although they don't have to) and describe tables and
+  similar structures comprised of data elements. The set of data element definitions, commonly referred to as a data
+  dictionary, go beyond simple data typing to include privacy, security, governance, lineage, and provenance
+  classification.
+- *Business Glossaries* :: These models have 
+
+Table [[tbl:domain-related-models]] contains a summary of characteristics of these two artifacts compared to a domain model.
+Note that the column "Open/Closed"captures the /World Assumption/ of typical artifacts/processes/products in each row
+-- see section [[sec:rdf-semantic-model]] for more information. 
+
+#+NAME: tbl:domain-related-models
+#+CAPTION: Domain-Related Model Summary
+|                   | Primary          | Secondary              | Open/Closed |
+|-------------------+------------------+------------------------+-------------|
+| Data Dictionary   | Data Element     | Table, Dataset, Job    | Semi-Closed |
+| Business Glossary | Vocabulary, Term | Relations, Labels      | Closed      |
+| Domain Model      | Entities         | Structures             | Closed      |
+| SDML Domain Model | Entities         | Properties, Structures | Open        |
+
+Given that 
+
+#+NAME: fig:sdml-foundation
+#+BEGIN_SRC dot :file sdml-foundation.svg :exports results
+digraph G {
+  bgcolor="transparent";
+  rankdir="TD";
+  fontname="Helvetica,Arial,sans-serif";
+  node [fontname="Helvetica,Arial,sans-serif"; fontsize=10; width=1.0; height=0.6];
+  edge [fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="darkgrey"];
+
+  sdml [shape="rect"; label="SDML"];
+  catalog [shape="rect"; label="Data\nCatalog"];  
+  glossary [shape="rect"; label="Business\nGlossary"];
+  foundation [shape="rect"; width=3.5; label="Common Foundation (RDF/OWL)"];
+
+  sdml -> foundation [arrowhead="open"];
+  catalog -> foundation [arrowhead="open"];
+  glossary -> foundation [arrowhead="open"];
+}
+#+END_SRC
+
+#+CAPTION: Model Foundations
+#+RESULTS: fig:sdml-foundation
+[[file:sdml-foundation.svg]]
 
 ** <<sec:sdml-role>> Domain Modeling's Role in Development
 

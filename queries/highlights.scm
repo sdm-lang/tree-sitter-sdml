@@ -10,6 +10,7 @@
 
 [
  "as"
+ "assert"
  "base"
  "datatype"
  "end"
@@ -29,6 +30,16 @@
  "union"
  (unknown_type)
  (builtin_simple_type)
+ ;; For constraints
+ "and"
+ "exists"
+ "forall"
+ "iff"
+ "implies"
+ "not"
+ "or"
+ (reserved_self)
+ (reserved_self_type)
  ] @keyword
 
 ;; ---------------------------------------------------------------------------
@@ -48,16 +59,37 @@
  name: (identifier) @module)
 
 ;; ---------------------------------------------------------------------------
-;; Annotations
+;; Annotations and Constraints
 ;; ---------------------------------------------------------------------------
 
-(annotation
+(annotation_property
  "@" @property
  name: (identifier_reference) @property
  "="? @operator)
 
-(annotation
+(annotation_property
  value: (value (identifier_reference) @type))
+
+(constraint
+ name: (identifier) @property)
+
+(informal_constraint
+ "=" @operator
+ (quoted_string) @embedded)
+
+(name_path) @variable
+
+(tautology) @constant.builtin
+
+(contradiction) @constant.builtin
+
+(negation "¬" @operator)
+(conjunction "∧" @operator)
+(disjunction "∨" @operator)
+(implication "⇒" @operator)
+(biconditional "⇔" @operator)
+(universal "∀" @operator)
+(existential "∃" @operator)
 
 ;; ---------------------------------------------------------------------------
 ;; Types

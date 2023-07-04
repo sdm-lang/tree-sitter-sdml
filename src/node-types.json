@@ -2,6 +2,40 @@
   {
     "type": "annotation",
     "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "annotation_property",
+          "named": true
+        },
+        {
+          "type": "constraint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "annotation_only_body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "annotation",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "annotation_property",
+    "named": true,
     "fields": {
       "name": {
         "multiple": false,
@@ -26,7 +60,73 @@
     }
   },
   {
-    "type": "annotation_only_body",
+    "type": "atomic_sentence",
+    "named": true,
+    "fields": {
+      "predicate": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "term",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "term",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "biconditional",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "constraint_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "binding_type_reference",
+    "named": true,
+    "fields": {
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          },
+          {
+            "type": "reserved_self_type",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "boolean",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "boolean_statement",
     "named": true,
     "fields": {},
     "children": {
@@ -34,16 +134,31 @@
       "required": true,
       "types": [
         {
-          "type": "annotation",
+          "type": "biconditional",
+          "named": true
+        },
+        {
+          "type": "conjunction",
+          "named": true
+        },
+        {
+          "type": "constraint_statement",
+          "named": true
+        },
+        {
+          "type": "disjunction",
+          "named": true
+        },
+        {
+          "type": "implication",
+          "named": true
+        },
+        {
+          "type": "negation",
           "named": true
         }
       ]
     }
-  },
-  {
-    "type": "boolean",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "builtin_simple_type",
@@ -90,6 +205,78 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "conjunction",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "constraint_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "constraint",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "formal_constraint",
+            "named": true
+          },
+          {
+            "type": "informal_constraint",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "constraint_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "boolean_statement",
+          "named": true
+        },
+        {
+          "type": "constraint_statement",
+          "named": true
+        },
+        {
+          "type": "quantified_sentence",
+          "named": true
+        },
+        {
+          "type": "simple_statement",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -145,6 +332,21 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "disjunction",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "constraint_statement",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -316,6 +518,21 @@
     }
   },
   {
+    "type": "equation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "term",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "event_def",
     "named": true,
     "fields": {
@@ -349,6 +566,66 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "existential",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "constraint_statement",
+          "named": true
+        },
+        {
+          "type": "quantifier_binding",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "formal_constraint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "constraint_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "functional_term",
+    "named": true,
+    "fields": {
+      "function": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "term",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "term",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -417,6 +694,21 @@
     }
   },
   {
+    "type": "implication",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "constraint_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "import",
     "named": true,
     "fields": {},
@@ -451,9 +743,39 @@
     }
   },
   {
+    "type": "informal_constraint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "quoted_string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "iri_reference",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "list_of_predicate_values",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "simple_value",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "list_of_values",
@@ -692,6 +1014,90 @@
     }
   },
   {
+    "type": "name",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "reserved_self",
+          "named": true
+        },
+        {
+          "type": "reserved_self_type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "name_path",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "negation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "constraint_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "predicate_value",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "contradiction",
+          "named": true
+        },
+        {
+          "type": "list_of_predicate_values",
+          "named": true
+        },
+        {
+          "type": "simple_value",
+          "named": true
+        },
+        {
+          "type": "tautology",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "property_body",
     "named": true,
     "fields": {},
@@ -835,6 +1241,74 @@
     }
   },
   {
+    "type": "quantified_sentence",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "existential",
+          "named": true
+        },
+        {
+          "type": "universal",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "quantifier_binding",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "binding_type_reference",
+          "named": true
+        },
+        {
+          "type": "reserved_self",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "simple_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "atomic_sentence",
+          "named": true
+        },
+        {
+          "type": "equation",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "simple_value",
     "named": true,
     "fields": {},
@@ -958,6 +1432,29 @@
         },
         {
           "type": "member_by_value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "term",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "functional_term",
+          "named": true
+        },
+        {
+          "type": "name_path",
+          "named": true
+        },
+        {
+          "type": "predicate_value",
           "named": true
         }
       ]
@@ -1107,6 +1604,25 @@
     }
   },
   {
+    "type": "universal",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "constraint_statement",
+          "named": true
+        },
+        {
+          "type": "quantifier_binding",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "value",
     "named": true,
     "fields": {},
@@ -1172,6 +1688,10 @@
     "named": false
   },
   {
+    "type": ".",
+    "named": false
+  },
+  {
     "type": "..",
     "named": false
   },
@@ -1208,7 +1728,15 @@
     "named": false
   },
   {
+    "type": "and",
+    "named": false
+  },
+  {
     "type": "as",
+    "named": false
+  },
+  {
+    "type": "assert",
     "named": false
   },
   {
@@ -1220,24 +1748,28 @@
     "named": false
   },
   {
+    "type": "contradiction",
+    "named": true
+  },
+  {
     "type": "datatype",
     "named": false
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "decimal",
-    "named": false
-  },
-  {
-    "type": "double",
     "named": true
   },
   {
     "type": "double",
     "named": false
+  },
+  {
+    "type": "double",
+    "named": true
   },
   {
     "type": "end",
@@ -1256,7 +1788,15 @@
     "named": false
   },
   {
+    "type": "exists",
+    "named": false
+  },
+  {
     "type": "false",
+    "named": false
+  },
+  {
+    "type": "forall",
     "named": false
   },
   {
@@ -1272,16 +1812,24 @@
     "named": false
   },
   {
+    "type": "iff",
+    "named": false
+  },
+  {
+    "type": "implies",
+    "named": false
+  },
+  {
     "type": "import",
     "named": false
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "iri",
@@ -1304,7 +1852,15 @@
     "named": false
   },
   {
+    "type": "not",
+    "named": false
+  },
+  {
     "type": "of",
+    "named": false
+  },
+  {
+    "type": "or",
     "named": false
   },
   {
@@ -1320,6 +1876,14 @@
     "named": false
   },
   {
+    "type": "reserved_self",
+    "named": true
+  },
+  {
+    "type": "reserved_self_type",
+    "named": true
+  },
+  {
     "type": "source",
     "named": false
   },
@@ -1330,6 +1894,10 @@
   {
     "type": "structure",
     "named": false
+  },
+  {
+    "type": "tautology",
+    "named": true
   },
   {
     "type": "true",
@@ -1353,6 +1921,34 @@
   },
   {
     "type": "}",
+    "named": false
+  },
+  {
+    "type": "¬",
+    "named": false
+  },
+  {
+    "type": "⇒",
+    "named": false
+  },
+  {
+    "type": "⇔",
+    "named": false
+  },
+  {
+    "type": "∀",
+    "named": false
+  },
+  {
+    "type": "∃",
+    "named": false
+  },
+  {
+    "type": "∧",
+    "named": false
+  },
+  {
+    "type": "∨",
     "named": false
   }
 ]

@@ -5,7 +5,7 @@ Annotation, Single Decimal
 module Campaign is
 
   @dc:some = 102.201
-  
+
 end
 
 ---
@@ -14,9 +14,10 @@ end
   name: (identifier)
   body: (module_body
     (annotation
-      name: (identifier_reference
-        (qualified_identifier
-          module: (identifier)
-          member: (identifier)))
-          value: (value
-            (simple_value (decimal))))))
+      (annotation_property
+        name: (identifier_reference
+          (qualified_identifier
+            module: (identifier)
+            member: (identifier)))
+        value: (value
+          (simple_value (decimal)))))))

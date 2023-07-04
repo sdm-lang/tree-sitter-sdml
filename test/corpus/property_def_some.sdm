@@ -31,15 +31,16 @@ end
                   (identifier))))
             (annotation_only_body
               (annotation
-                (identifier_reference
-                  (qualified_identifier
-                    (identifier)
-                    (identifier)))
-                (value
-                  (simple_value
-                    (string
-                      (quoted_string)
-                      (language_tag)))))))
+                (annotation_property
+                  (identifier_reference
+                    (qualified_identifier
+                      (identifier)
+                      (identifier)))
+                  (value
+                    (simple_value
+                      (string
+                        (quoted_string)
+                        (language_tag))))))))
           (property_role
             (identifier)
             (cardinality_expression

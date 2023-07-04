@@ -67,12 +67,11 @@
  target: (type_reference) @name) @reference.class
 
 ;; ---------------------------------------------------------------------------
-;; Annotations
+;; Annotations, Constraints, and Values
 ;; ---------------------------------------------------------------------------
 
-(annotation
- name: (identifier_reference) @name
- target: (identifier_reference)? @name) @reference.class
+(annotation_property
+ value: (value (identifier_reference) @name)) @reference.class
 
 (value_constructor
  name: (identifier_reference) @name) @reference.class

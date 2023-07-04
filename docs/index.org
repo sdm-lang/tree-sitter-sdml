@@ -20,6 +20,8 @@
 
 #+INCLUDE: "./surface-syntax.org" :minlevel 1
 
+#+INCLUDE: "./constraints.org" :minlevel 1
+
 #+INCLUDE: "./rdf-model.org" :minlevel 1
 
 #+INCLUDE: "./walk-through.org" :minlevel 1
@@ -31,6 +33,7 @@
 # ----- Appendices -----
 
 # This is simply the BNF, with any relevant introduction.
+ 
 #+INCLUDE: "./surface-grammar.org" :minlevel 1
 
 # A List of modules and top-level definitions only.
@@ -38,6 +41,8 @@
 
 # A detailed mapping
 #+INCLUDE: "./surface-to-rdf.org" :minlevel 1
+
+#+INCLUDE: "./constraints-to-cl.org" :minlevel 1
 
 # Non-normative reference used by tooling
 #+INCLUDE: "./uml-profile.org" :minlevel 1

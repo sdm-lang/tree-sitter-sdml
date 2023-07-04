@@ -1,0 +1,83 @@
+=======================
+Entity, With Constaints
+=======================
+
+module Campaign is
+
+  entity Campaign is
+
+    identity a -> CampaignId
+
+    b -> xsd:string is
+      assert not_null = "self is not null"
+    end
+
+    ref c -> Target is
+      assert is
+        ∀ self (contains(self.tags "foo"))
+      end
+
+    end
+
+  end
+
+end
+
+---
+
+(module
+   (identifier)
+   (module_body
+     (type_def
+       (entity_def
+         (identifier)
+         (entity_body
+           (identity_member
+             (identifier)
+             (type_reference
+               (identifier_reference
+                 (identifier))))
+           (member_by_value
+             (identifier)
+             (type_reference
+               (identifier_reference
+                 (qualified_identifier
+                   (identifier)
+                   (identifier))))
+             (annotation_only_body
+               (annotation
+                 (constraint
+                   (identifier)
+                   (informal_constraint
+                     (quoted_string))))))
+           (member_by_reference
+             (identifier)
+             (type_reference
+               (identifier_reference
+                 (identifier)))
+             (annotation_only_body
+               (annotation
+                 (constraint
+                  (formal_constraint
+                    (constraint_statement
+                      (quantified_sentence
+                        (universal
+                          (quantifier_binding
+                            (reserved_self))
+                          (constraint_statement
+                            (simple_statement
+                              (atomic_sentence
+                                (term
+                                  (name_path
+                                    (name
+                                      (identifier))))
+                                (term
+                                  (name_path
+                                    (name
+                                      (reserved_self))
+                                    (identifier)))
+                                (term
+                                  (predicate_value
+                                    (simple_value
+                                      (string
+                                        (quoted_string)))))))))))))))))))))

@@ -14,12 +14,13 @@ end
   name: (identifier)
   body: (module_body
     (annotation
-      name: (identifier_reference
-        (qualified_identifier
-          module: (identifier)
-          member: (identifier)))
-      value: (value
-        (list_of_values
-          (simple_value (decimal))
-          (simple_value (decimal))
-          (simple_value (decimal)))))))
+      (annotation_property
+        name: (identifier_reference
+          (qualified_identifier
+            module: (identifier)
+            member: (identifier)))
+        value: (value
+          (list_of_values
+            (simple_value (decimal))
+            (simple_value (decimal))
+            (simple_value (decimal))))))))

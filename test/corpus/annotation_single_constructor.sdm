@@ -5,7 +5,7 @@ Annotation, Single Constructor
 module Campaign is
 
   @dc:author = xsd:positiveInteger(1)
-  
+
 end
 
 ---
@@ -14,16 +14,17 @@ end
   name: (identifier)
   body: (module_body
     (annotation
-      name: (identifier_reference
-        (qualified_identifier
-          module: (identifier)
-          member: (identifier)))
-      value: (value
-        (value_constructor
-           name: (identifier_reference
-             (qualified_identifier
-               module: (identifier)
-               member: (identifier)))
-           value: (simple_value
-             (integer)))))))
- 
+      (annotation_property
+        name: (identifier_reference
+          (qualified_identifier
+            module: (identifier)
+            member: (identifier)))
+        value: (value
+          (value_constructor
+             name: (identifier_reference
+               (qualified_identifier
+                 module: (identifier)
+                 member: (identifier)))
+             value: (simple_value
+               (integer))))))))
+

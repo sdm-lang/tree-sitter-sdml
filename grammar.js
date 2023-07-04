@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.17
+// Version:    0.1.18
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -112,15 +112,263 @@ module.exports = grammar({
         ),
 
         // -----------------------------------------------------------------------
-        // Annotations and Values
+        // Annotations and Constraints
         // -----------------------------------------------------------------------
 
-        annotation: $ => seq(
+        annotation: $ => choice(
+            $.annotation_property,
+            $.constraint,
+        ),
+
+        annotation_property: $ => seq(
             token('@'),
             field('name', $.identifier_reference),
             operator('='),
             field('value', $.value)
         ),
+
+        constraint: $ => seq (
+            keyword('assert'),
+            optional(field('name', $.identifier)),
+            field(
+                'body',
+                choice(
+                    $.informal_constraint,
+                    $.formal_constraint,
+                )
+            )
+        ),
+
+        informal_constraint: $ => seq(
+            operator('='),
+            field('value', $.quoted_string),
+        ),
+
+        // -----------------------------------------------------------------------
+        // Formal Constraints
+        // -----------------------------------------------------------------------
+
+        formal_constraint: $ => seq(
+            keyword('is'),
+            field('value', $.constraint_sentence),
+            keyword('end'),
+        ),
+
+        term: $ => choice(
+            $.name_path,
+            $.predicate_value,
+            $.functional_term,
+        ),
+
+        predicate_value: $ => choice(
+            $.simple_value,
+            $.tautology,
+            $.contradiction,
+            $.list_of_predicate_values,
+        ),
+
+        tautology: $ => '⊤',
+
+        contradiction: $ => '⊥',
+
+        list_of_predicate_values: $ => seq(
+            '[',
+            repeat(
+                choice(
+                    $.simple_value,
+                    $.tautology,
+                    $.contradiction
+                )
+            ),
+            ']'
+        ),
+
+        name_path: $ => seq(
+            $.name,
+            repeat(
+                seq(
+                    token.immediate('.'),
+                    $.identifier
+                )
+            )
+        ),
+
+        name: $ => choice(
+            $.reserved_self,
+            $.reserved_self_type,
+            $.identifier,
+        ),
+
+        reserved_self: $ =>  keyword('self'),
+
+        reserved_self_type: $ =>  keyword('Self'),
+
+        functional_term: $ => seq(
+            field('function', $.term),
+            '(',
+            repeat($.term),
+            ')',
+        ),
+
+        constraint_sentence: $ => choice(
+            prec(
+                3,
+                $.simple_sentence
+            ),
+            prec(
+                2,
+                $.boolean_sentence,
+            ),
+            prec(
+                1,
+                $.quantified_sentence,
+            ),
+            seq(
+                '(',
+                $.constraint_sentence,
+                ')',
+            ),
+        ),
+
+        simple_sentence: $ => choice(
+            $.atomic_sentence,
+            $.equation,
+        ),
+
+        atomic_sentence: $ => seq(
+            field('predicate', $.term),
+            '(',
+            repeat($.term),
+            ')',
+        ),
+
+        equation: $ => seq(
+            $.term,
+            operator('='),
+            $.term,
+        ),
+
+        boolean_sentence: $ => choice(
+            $.negation,
+            seq(
+                $.constraint_sentence,
+                choice(
+                    $.conjunction,
+                    $.disjunction,
+                    $.implication,
+                    $.biconditional,
+                )
+            )
+        ),
+
+        negation: $ => prec(
+            5,
+            seq(
+                choice(
+                    keyword('not'),
+                    operator('¬')
+                ),
+                $.constraint_sentence,
+            )
+        ),
+
+        conjunction: $ => prec(
+            4,
+            seq(
+                choice(
+                    keyword('and'),
+                    operator('∧')
+                ),
+                $.constraint_sentence,
+            )
+        ),
+
+        disjunction: $ => prec(
+            3,
+            seq(
+                choice(
+                    keyword('or'),
+                    operator('∨')
+                ),
+                $.constraint_sentence,
+            )
+        ),
+
+        implication: $ => prec(
+            2,
+            seq(
+                choice(
+                    keyword('implies'),
+                    operator('⇒')
+                ),
+                $.constraint_sentence,
+            )
+        ),
+
+        biconditional: $ => prec(
+            1,
+            seq(
+                choice(
+                    keyword('iff'),
+                    operator('⇔')
+                ),
+                $.constraint_sentence,
+            )
+        ),
+
+        quantified_sentence: $ => choice(
+            $.universal,
+            $.existential
+        ),
+
+        universal: $ => seq(
+            choice(
+                keyword('forall'),
+                operator('∀')
+            ),
+            repeat1($.quantifier_binding),
+            $.quantified_body
+        ),
+
+        existential: $ => seq(
+            choice(
+                keyword('exists'),
+                operator('∃')
+            ),
+            repeat1($.quantifier_binding),
+            $.quantified_body
+        ),
+
+        quantifier_binding: $ => choice(
+            $.reserved_self,
+            seq(
+                field('name', $.identifier),
+                optional(
+                    $.binding_type_reference
+                )
+            )
+        ),
+
+        binding_type_reference: $ => seq(
+            operator('->'),
+            field(
+                'target',
+                choice(
+                    $.reserved_self_type,
+                    $.identifier_reference
+                )
+            )
+        ),
+
+        quantified_body: $ => seq(
+            '(',
+            $.constraint_sentence,
+            ')'
+        ),
+
+        // -----------------------------------------------------------------------
+        // Values
+        // -----------------------------------------------------------------------
 
         value: $ => choice(
             $.simple_value,
@@ -324,9 +572,7 @@ module.exports = grammar({
         structure_group: $ => seq(
             keyword('group'),
             repeat($.annotation),
-            repeat1(
-                $.member_by_value
-            ),
+            repeat1($.member_by_value),
             keyword('end')
         ),
 

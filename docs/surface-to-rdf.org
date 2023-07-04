@@ -3,7 +3,7 @@
 
 * Appendix: Surface Syntax to RDF
 
-TBD
+This appendix describes the *normative* mapping from the SDML surface syntax into RDF and OWL.
 
 ** Whitespace
 
@@ -112,46 +112,68 @@ end
 
 ** Modules
 
+Each module is transformed as follows:
+
+1. A ~@base~ declaration is created with the calculated base IRI for the module.
+1. A ~@prefix~ declaration, for the empty prefix, is created with the same value as ~@base~.
+1. Add ~@prefix~ declaration for the known prefixes ~owl~, ~rdf~, and ~sdml~.
+1. Add the following statements with the subject ~:~,
+   1. ~rdf:type~ is ~owl:Ontology~,
+   2. ~rdf:type~ is ~sdml:Module~,
+   3. ~sdml:srcLabel~ is the identifier for the module.
+   
 *Example with Implied Base:*
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example is end
 #+END_SRC
 
-
 #+BEGIN_SRC ttl
-@prefix sdml: <https://api.amazonadvertising.com/domain-model> .
+@base <file:///users/me/sdml/modules/example#> .
+@prefix : <file:///users/me/sdml/modules/example#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sdml: <https://sdml.io/sdml-owl.ttl#> .
 
-:example rdf:type sdml:Module, owl:NamedIndividual .
+: rdf:type owl:Ontology, sdml:Module ;
+    sdml:srcLabel "example" .
 #+END_SRC
 
 *Example with Explicit Base:*
+
+The only difference here is that the ~@base~ and ~@prefix~ for the current module have been set explicitly.
 
 #+BEGIN_SRC sdml :exports code :noeval
 module example base <https://example.org/langs/Example#> is
 end
 #+END_SRC
 
-
 #+BEGIN_SRC ttl
 @base <https://example.org/langs/Example#> .
 @prefix : <https://example.org/langs/Example#> .
-@prefix sdml: <https://api.amazonadvertising.com/domain-model> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sdml: <https://sdml.io/sdml-owl.ttl#> .
 
-:example rdf:type sdml:Module, owl:NamedIndividual .
+: rdf:type owl:Ontology, sdml:Module ;
+    sdml:srcLabel "example" .
 #+END_SRC
 
 ** Imports
 
+Each imported module is transformed as follows:
+
+1. The imported module name is used to calculate an IRI relative to the current base.
+2. Add ~@prefix~ declaration with the imported module name as prefix.
+3. Add an ~owl:imports~ property to the current ontology with the imported module's calculate IRI.
+
+   Any mechanism for the mapping of module names to IRI for off-line resolution is out of scope for this 
 *Example:*
 
 #+BEGIN_SRC sdml :exports code :noeval
-module example is
+module example base <https://example.org/langs/Example#> is
 
-  import xml
+  import other
 
 end
 #+END_SRC
@@ -160,11 +182,14 @@ end
 #+BEGIN_SRC ttl
 @base <https://example.org/langs/Example#> .
 @prefix : <https://example.org/langs/Example#> .
-@prefix sdml: <https://api.amazonadvertising.com/domain-model> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sdml: <https://sdml.io/sdml-owl.ttl#> .
+@prefix other: <https://example.org/langs/other#> .
 
-:example rdf:type sdml:Module, owl:NamedIndividual .
+: rdf:type owl:Ontology, sdml:Module ;
+    owl:imports <https://example.org/langs/other#> ;
+    sdml:srcLabel "example" .
 #+END_SRC
 
 ** Annotations
@@ -175,15 +200,16 @@ end
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
 
-  datatype name <- xsd:string
+  datatype name <- string
 
 end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:name rdf:type rdfs:Datatype, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example ;
-    owl:onDatatype xsd:string .
+:name rdf:type rdfs:Datatype ;
+    owl:onDatatype sdml:string ;
+    sdml:srcLabel "name" ;
+    rdfs:isDefinedBy : .
 #+END_SRC
 
 *Example with Restrictions:*
@@ -200,13 +226,14 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:name rdf:type rdfs:Datatype, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example ;
-    owl:onDatatype xsd:string ;
+:name rdf:type rdfs:Datatype ;
+    owl:onDatatype sdml:string ;
     owl:withRestrictions (
         [ xsd:minLength "5"^^xsd:nonNegativeInteger ]
         [ xsd:maxLength "25"^^xsd:nonNegativeInteger ]
-    ) .
+    ) ;
+    sdml:srcLabel "name" ;
+    rdfs:isDefinedBy : .
 #+END_SRC
 
 ** Entity Definitions
@@ -222,8 +249,9 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Person rdf:type sdml:Entity, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example .
+:Person rdf:type owl:Class, sdml:Entity ;
+    sdml:srcLabel "Person" ;
+    rdfs:isDefinedBy : .
 #+END_SRC
 
 *Example Entity with Identity:*
@@ -239,22 +267,15 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Person rdf:type sdml:Entity, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example ;
-    :hasIdentifyingMember [
-        rdfs:label "id" ;
-        :targetClassifier :Person ;
-    ] .
-#+END_SRC
+:Person rdf:type owl:Class, sdml:Entity ;
+    sdml:srcLabel "Person" ;
+    rdfs:isDefinedBy :example .
 
-#+BEGIN_SRC ttl
-:Person_id rdf:type sdml:Member ;
-    rdfs:label "id" ;
-    :targetClassifier :Person .
-
-:Person rdf:type sdml:Entity, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example ;
-    :hasIdentifyingMember :Person_id .
+:Person__id rdf:type owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :PersonId ;
+    sdml:srcLabel "id" ;
+    rdfs:isDefinedBy : .
 #+END_SRC
 
 *Example Entity with By-Value Member:*
@@ -278,20 +299,30 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Person rdf:type sdml:Entity, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example ;
-    :hasReferenceMember [
-        rdfs:label "contact" ;
-        :targetClassifier :Person ;
-        :sourceCardinality [
-            owl:minCardinality 0 ;
-        ] ;
-        :targetCardinality [
-            owl:minCardinality 0 ;
-            owl:maxCardinality 2 ;
-        ] ;
-        dc::description "Emergency contact person"
-    ] .
+:Person rdf:type owl:Class, sdml:Entity ;
+    sdml:srcLabel "Person" ;
+    rdfs:isDefinedBy : .
+
+:Person__id rdf:type owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :PersonId ;
+    sdml:srcLabel "id" .
+
+:Person__contact rdf:type owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range :PersonId ;
+    owl:minCardinality 0 ;
+    owl:maxCardinality 2 ;
+    owl:inverseOf :Person__contact__inverse ;
+    dc::description "Emergency contact person" ;
+    sdml:srcLabel "contact" .
+
+:Person__contact__inverse rdf:type owl:ObjectProperty ;
+    rdfs:domain :PersonId ;
+    rdfs:range :Person ;
+    owl:minCardinality 0 ;
+    owl:inverseOf :Person__contact ;
+    sdml:srcLabel "contact-inverse" .
 #+END_SRC
 
 *Example Entity with Group:*
@@ -315,6 +346,25 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
+:Person rdf:type owl:Class, sdml:Entity ;
+    sdml:srcLabel "Person" ;
+    rdfs:isDefinedBy : .
+
+_:G01 rdf:type sdml:Group ;
+    skos:prefLabel = "Identification"
+    sdml:inClassifier :Person.
+
+:Person__pref_name rdf:type owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:string ;
+    sdml:srcLabel "pref_name" ;
+    sdml:inGroup _:G01 .
+
+:Person__alt_name rdf:type owl:ObjectProperty ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:string ;
+    sdml:srcLabel "alt_name" ;
+    sdml:inGroup _:G01 .
 #+END_SRC
 
 ** Enumeration Definitions
@@ -330,7 +380,8 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:DistanceUnit rdf:type sdml:Enumeration, owl:NamedIndividual ;
+:DistanceUnit rdf:type owl:Class, sdml:Enumeration ;
+    sdml:srcLabel "DistanceUnit" ;
     rdfs:isDefinedBy :example .
 #+END_SRC
 
@@ -348,18 +399,19 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:DistanceUnit rdf:type sdml:Enumeration, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example ;
+:DistanceUnit rdf:type owl:Class, sdml:Enumeration ;
     :hasValueVariant [
         rdf:type sdml:EnumerationVariant ;
-        rdfs:label "Meter" ;
+        sdml:srcLabel "Meter" ;
         rdf:value 1 
     ] ,
     [
         rdf:type sdml:EnumerationVariant ;
-        rdfs:label "Foot" ;
+        sdml:srcLabel "Foot" ;
         rdf:value 2
     ] .
+    sdml:srcLabel "DistanceUnit" ;
+    rdfs:isDefinedBy :example .
 #+END_SRC
 
 *Example Enumeration with Named Variants:*
@@ -384,18 +436,19 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Meter rdf:type sdml:EnumerationVariant, owl:NamedIndividual ;
-    rdfs:label "Meter" ;
+:Meter rdf:type owl:Class, sdml:EnumerationVariant ;
+    sdml:srcLabel "Meter" ;
     rdf:value 1 .
 
-:Foot rdf:type sdml:EnumerationVariant, owl:NamedIndividual ;
-    rdfs:label "Foot" ;
+:Foot rdf:type owl:Class, sdml:EnumerationVariant ;
+    sdml:srcLabel "Foot" ;
     rdf:value 2 .
 
-:DistanceUnit rdf:type sdml:Enumeration, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example ;
+:DistanceUnit rdf:type owl:Class, sdml:Enumeration ;
     :hasValueVariant :Meter ;
-    :hasValueVariant :Foot.
+    :hasValueVariant :Foot ;
+    sdml:srcLabel "DistanceUnit" ;
+    rdfs:isDefinedBy :example .
 #+END_SRC
 
 ** Event Definitions
@@ -411,9 +464,10 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:PersonNameChanged rdf:type sdml:Event, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example ;
-    sdml:eventSource :Person .
+:PersonNameChanged rdf:type owl:Class, sdml:Event ;
+    sdml:eventSource :Person ;
+    sdml:srcLabel "PersonNameChanged" ;
+    rdfs:isDefinedBy :example.;
 #+END_SRC
 
 *Example Event with Members:*
@@ -431,21 +485,18 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:PersonNameChanged rdf:type sdml:Event, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example ;
+:PersonNameChanged rdf:type owl:Class, sdml:Event ;
     sdml:eventSource :Person ;
     :hasMember [
-        rdfs:Label "personId" ;
-        :targetClassifier :Person
-    ] ,
-    [
-        rdfs:Label "fromValue" ;
+        sdml:srcLabel "fromValue" ;
         :targetClassifier :Name
     ] ,
     [
-        rdfs:Label "toValue" ;
+        sdml:srcLabel "toValue" ;
         :targetClassifier :Name
     ] .
+    sdml:srcLabel "PersonNameChanged" ;
+    rdfs:isDefinedBy :example .
 #+END_SRC
 
 ** Structure Definitions
@@ -461,7 +512,8 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Length rdf:type sdml:Structure, owl:NamedIndividual ;
+:Length rdf:type owl:Class, sdml:Structure ;
+    sdml:srcLabel "Length" ;
     rdfs:isDefinedBy :example .
 #+END_SRC
 
@@ -478,9 +530,10 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Length rdf:type sdml:Structure, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example ;
-    skos:prefLabel "Length"@en .
+:Length rdf:type owl:Class, sdml:Structure ;
+    skos:prefLabel "Length"@en ;
+    sdml:srcLabel "Length" ;
+    rdfs:isDefinedBy :example .
 #+END_SRC
 
 *Example Structure with Members:*
@@ -499,17 +552,18 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Length rdf:type sdml:Structure, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example ;
+:Length rdf:type owl:Class, sdml:Structure ;
     skos:prefLabel "Length"@en .
     :hasMember [
-        rdfs:label "value" ;
+        sdml:srcLabel "value" ;
         :targetClassifier :Decimal ;
     ] ,
     [
-        rdfs:label "unit" ;
+        sdml:srcLabel "unit" ;
         :targetClassifier :DistanceUnit ;
-    ] .
+    ] ;
+    sdml:srcLabel "Length" ;
+    rdfs:isDefinedBy :example .
 #+END_SRC
 
 *Example Structure with Groups:*
@@ -549,8 +603,9 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Vehicle rdf:type sdml:Union, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example .
+:Vehicle rdf:type owl:Class, sdml:Union ;
+    sdml:srcLabel "Vehicle" ;
+    rdfs:isDefinedBy : .
 #+END_SRC
 
 *Example Union with Types:*
@@ -568,11 +623,12 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Vehicle rdf:type sdml:Union, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example .
+:Vehicle rdf:type owl:Class, sdml:Union ;
     sdml:hasTypeVariant :Car ;
     sdml:hasTypeVariant :Truck ;
-    sdml:hasTypeVariant :Boat .
+    sdml:hasTypeVariant :Boat ;
+    sdml:srcLabel "Vehicle" ;
+    rdfs:isDefinedBy : .
 #+END_SRC
 
 *Example Union with Annotation:*
@@ -593,12 +649,13 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Vehicle rdf:type sdml:Union, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example .
-    skos:prefLabel "Vehicle"@en .
+:Vehicle rdf:type owl:Class, sdml:Union ;
+    skos:prefLabel "Vehicle"@en ;
     sdml:hasTypeVariant :Car ;
     sdml:hasTypeVariant :Truck ;
     sdml:hasTypeVariant :Boat .
+    sdml:srcLabel "Vehicle" ;
+    rdfs:isDefinedBy :example .
 #+END_SRC
 
 *Example Union with Rename:*
@@ -616,14 +673,15 @@ end
 #+END_SRC
 
 #+BEGIN_SRC ttl
-:Vehicle rdf:type sdml:Union, owl:NamedIndividual ;
-    rdfs:isDefinedBy :example .
+:Vehicle rdf:type owl:Class, sdml:Union ;
     sdml:hasTypeVariant :Car ;
     sdml:hasTypeVariant :Truck ;
     sdml:hasTypeVariant [
-        skos:prefLabel "WaterCar" ;
+        sdml:srcLabel "WaterCar" ;
         owl:equivalentClass :Boat
-    ] .
+    ] ;
+    sdml:srcLabel "Vehicle" ;
+    rdfs:isDefinedBy :example .
 #+END_SRC
 
 ** Property Definitions

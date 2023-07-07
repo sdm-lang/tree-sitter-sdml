@@ -1227,8 +1227,8 @@ static const TSFieldMapSlice ts_field_map_slices[PRODUCTION_ID_COUNT] = {
   [32] = {.index = 63, .length = 5},
   [33] = {.index = 68, .length = 3},
   [34] = {.index = 71, .length = 1},
-  [35] = {.index = 72, .length = 1},
-  [36] = {.index = 73, .length = 5},
+  [35] = {.index = 72, .length = 5},
+  [36] = {.index = 77, .length = 1},
   [37] = {.index = 78, .length = 2},
 };
 
@@ -1340,16 +1340,16 @@ static const TSFieldMapEntry ts_field_map_entries[] = {
   [71] =
     {field_min, 1},
   [72] =
-    {field_range, 0},
-  [73] =
     {field_body, 4},
     {field_name, 0},
     {field_source_cardinality, 2},
     {field_target, 3, .inherited = true},
     {field_target_cardinality, 3, .inherited = true},
-  [78] =
+  [77] =
     {field_max, 1},
-    {field_range, 0},
+  [78] =
+    {field_min, 1},
+    {field_range, 2},
 };
 
 static const TSSymbol ts_alias_sequences[PRODUCTION_ID_COUNT][MAX_ALIAS_SEQUENCE_LENGTH] = {
@@ -8565,8 +8565,8 @@ static const TSParseActionEntry ts_parse_actions[] = {
   [429] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_quantified_body, 3),
   [431] = {.entry = {.count = 1, .reusable = false}}, SHIFT(234),
   [433] = {.entry = {.count = 1, .reusable = false}}, SHIFT(212),
-  [435] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_cardinality_expression, 4, .production_id = 34),
-  [437] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_cardinality_expression, 4, .production_id = 34),
+  [435] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_cardinality_expression, 4, .production_id = 37),
+  [437] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_cardinality_expression, 4, .production_id = 37),
   [439] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_cardinality_expression, 3, .production_id = 34),
   [441] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_cardinality_expression, 3, .production_id = 34),
   [443] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_data_type_base, 1),
@@ -8714,10 +8714,10 @@ static const TSParseActionEntry ts_parse_actions[] = {
   [741] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_structure_group, 3),
   [743] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_type_variant, 2, .production_id = 17),
   [745] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_type_variant, 2, .production_id = 17),
-  [747] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_property_role, 5, .production_id = 36),
-  [749] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_property_role, 5, .production_id = 36),
+  [747] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_property_role, 5, .production_id = 35),
+  [749] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_property_role, 5, .production_id = 35),
   [751] = {.entry = {.count = 1, .reusable = true}}, SHIFT(260),
-  [753] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_cardinality_range, 1, .production_id = 35),
+  [753] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_cardinality_range, 1),
   [755] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_type_variant, 4, .production_id = 30),
   [757] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_type_variant, 4, .production_id = 30),
   [759] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_enum_variant, 4, .production_id = 28),
@@ -8755,7 +8755,7 @@ static const TSParseActionEntry ts_parse_actions[] = {
   [823] = {.entry = {.count = 1, .reusable = true}}, SHIFT(68),
   [825] = {.entry = {.count = 1, .reusable = true}}, SHIFT(114),
   [827] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_module_body, 2),
-  [829] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_cardinality_range, 2, .production_id = 37),
+  [829] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_cardinality_range, 2, .production_id = 36),
   [831] = {.entry = {.count = 1, .reusable = true}}, SHIFT(98),
   [833] = {.entry = {.count = 1, .reusable = true}}, SHIFT(83),
   [835] = {.entry = {.count = 1, .reusable = true}}, SHIFT(188),

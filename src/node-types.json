@@ -178,17 +178,17 @@
             "named": true
           }
         ]
+      },
+      "range": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "cardinality_range",
+            "named": true
+          }
+        ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "cardinality_range",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -202,16 +202,6 @@
           {
             "type": "unsigned",
             "named": true
-          }
-        ]
-      },
-      "range": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "..",
-            "named": false
           }
         ]
       }

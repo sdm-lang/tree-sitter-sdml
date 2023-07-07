@@ -2672,8 +2672,12 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "cardinality_range"
+              "type": "FIELD",
+              "name": "range",
+              "content": {
+                "type": "SYMBOL",
+                "name": "cardinality_range"
+              }
             },
             {
               "type": "BLANK"
@@ -2690,17 +2694,13 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "FIELD",
-          "name": "range",
+          "type": "TOKEN",
           "content": {
-            "type": "TOKEN",
+            "type": "PREC",
+            "value": 1,
             "content": {
-              "type": "PREC",
-              "value": 1,
-              "content": {
-                "type": "STRING",
-                "value": ".."
-              }
+              "type": "STRING",
+              "value": ".."
             }
           }
         },

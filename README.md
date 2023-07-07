@@ -50,6 +50,10 @@ end
 
 # Changes
 
+**Version: 0.1.19**
+
+* Minor change to add a field name to the '..' range operator.
+
 **Version: 0.1.18**
 
 * Added a constraint assertion construct. This allows for specific constraints to be documented for any model element.

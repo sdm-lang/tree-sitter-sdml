@@ -12,9 +12,9 @@
 #define ALIAS_COUNT 0
 #define TOKEN_COUNT 71
 #define EXTERNAL_TOKEN_COUNT 0
-#define FIELD_COUNT 18
+#define FIELD_COUNT 19
 #define MAX_ALIAS_SEQUENCE_LENGTH 5
-#define PRODUCTION_ID_COUNT 37
+#define PRODUCTION_ID_COUNT 38
 
 enum {
   sym_identifier = 1,
@@ -1159,13 +1159,14 @@ enum {
   field_module = 9,
   field_name = 10,
   field_predicate = 11,
-  field_rename = 12,
-  field_role = 13,
-  field_source = 14,
-  field_source_cardinality = 15,
-  field_target = 16,
-  field_target_cardinality = 17,
-  field_value = 18,
+  field_range = 12,
+  field_rename = 13,
+  field_role = 14,
+  field_source = 15,
+  field_source_cardinality = 16,
+  field_target = 17,
+  field_target_cardinality = 18,
+  field_value = 19,
 };
 
 static const char * const ts_field_names[] = {
@@ -1181,6 +1182,7 @@ static const char * const ts_field_names[] = {
   [field_module] = "module",
   [field_name] = "name",
   [field_predicate] = "predicate",
+  [field_range] = "range",
   [field_rename] = "rename",
   [field_role] = "role",
   [field_source] = "source",
@@ -1225,8 +1227,9 @@ static const TSFieldMapSlice ts_field_map_slices[PRODUCTION_ID_COUNT] = {
   [32] = {.index = 63, .length = 5},
   [33] = {.index = 68, .length = 3},
   [34] = {.index = 71, .length = 1},
-  [35] = {.index = 72, .length = 5},
-  [36] = {.index = 77, .length = 1},
+  [35] = {.index = 72, .length = 1},
+  [36] = {.index = 73, .length = 5},
+  [37] = {.index = 78, .length = 2},
 };
 
 static const TSFieldMapEntry ts_field_map_entries[] = {
@@ -1337,13 +1340,16 @@ static const TSFieldMapEntry ts_field_map_entries[] = {
   [71] =
     {field_min, 1},
   [72] =
+    {field_range, 0},
+  [73] =
     {field_body, 4},
     {field_name, 0},
     {field_source_cardinality, 2},
     {field_target, 3, .inherited = true},
     {field_target_cardinality, 3, .inherited = true},
-  [77] =
+  [78] =
     {field_max, 1},
+    {field_range, 0},
 };
 
 static const TSSymbol ts_alias_sequences[PRODUCTION_ID_COUNT][MAX_ALIAS_SEQUENCE_LENGTH] = {
@@ -8708,10 +8714,10 @@ static const TSParseActionEntry ts_parse_actions[] = {
   [741] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_structure_group, 3),
   [743] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_type_variant, 2, .production_id = 17),
   [745] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_type_variant, 2, .production_id = 17),
-  [747] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_property_role, 5, .production_id = 35),
-  [749] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_property_role, 5, .production_id = 35),
+  [747] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_property_role, 5, .production_id = 36),
+  [749] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_property_role, 5, .production_id = 36),
   [751] = {.entry = {.count = 1, .reusable = true}}, SHIFT(260),
-  [753] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_cardinality_range, 1),
+  [753] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_cardinality_range, 1, .production_id = 35),
   [755] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_type_variant, 4, .production_id = 30),
   [757] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_type_variant, 4, .production_id = 30),
   [759] = {.entry = {.count = 1, .reusable = false}}, REDUCE(sym_enum_variant, 4, .production_id = 28),
@@ -8749,7 +8755,7 @@ static const TSParseActionEntry ts_parse_actions[] = {
   [823] = {.entry = {.count = 1, .reusable = true}}, SHIFT(68),
   [825] = {.entry = {.count = 1, .reusable = true}}, SHIFT(114),
   [827] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_module_body, 2),
-  [829] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_cardinality_range, 2, .production_id = 36),
+  [829] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_cardinality_range, 2, .production_id = 37),
   [831] = {.entry = {.count = 1, .reusable = true}}, SHIFT(98),
   [833] = {.entry = {.count = 1, .reusable = true}}, SHIFT(83),
   [835] = {.entry = {.count = 1, .reusable = true}}, SHIFT(188),

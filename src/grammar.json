@@ -2690,13 +2690,17 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "TOKEN",
+          "type": "FIELD",
+          "name": "range",
           "content": {
-            "type": "PREC",
-            "value": 1,
+            "type": "TOKEN",
             "content": {
-              "type": "STRING",
-              "value": ".."
+              "type": "PREC",
+              "value": 1,
+              "content": {
+                "type": "STRING",
+                "value": ".."
+              }
             }
           }
         },

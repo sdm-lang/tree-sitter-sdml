@@ -26,13 +26,113 @@ module example is
 end
 #+END_SRC
 
+** Formal Constraints
+
 Formal constraints have their own embedded constraint language whose semantics are a subset of ISO Common
 Logic[fn:isocl]. ISO Common Logic is most easily understood as an abstract language that allows for the interchange of
 logical expressions based in first-order predicate logic between systems using standardized representations (Common
 Logic Interchange Format (CLIF), Conceptual Graph Interchange Format (CGIF), and XML notation for Common Logic (XCL)).
-The example in listing [[lst:ex-formal-constraint]] is an expansion of the informal example where we check for the presence
-of the annotation on every top-level definition and then any members of that definition. Note that this example also
-demonstrates the ability to create new predicates as in ~has_pref_label~ which simplifies the body of the constraint.
+
+Listing [[lst:ex-tagged-constraint-1]] is another informal constraint.
+
+#+NAME: lst:ex-tagged-constraint-1
+#+CAPTION: Example Formal Constraint (1 of 3)
+#+BEGIN_SRC sdml :noeval
+module tagged is
+  datatype Tag <- string
+
+  structure Target is
+    tags -> {0..} Tag
+    ;; plus more interesing things...
+  end
+
+  structure Thing is
+    tags -> {0..} Tag
+    inner -> Target is
+      assert tag_subset = "All of target's tags must exist in my tags."
+    end
+  end
+end
+#+END_SRC
+
+Listing [[lst:ex-tagged-constraint-2]] is a formal version of listing [[lst:ex-tagged-constraint-1]] which iterates over the set
+of tags on the type ~Target~ which is the type of the member ~inner~ which is aliased to ~self~ (~self.tags~) within the constraint body.
+For each element in the sequence of tags an existential statement ensures there is an equal tag within the enclosing
+structure's tag collection (~self.container.tags~). 
+
+#+NAME: lst:ex-tagged-constraint-2
+#+CAPTION: Example Formal Constraint (2 of 3)
+#+BEGIN_SRC sdml :noeval
+module tagged is
+  structure Thing is
+    tags -> {0..} Tag
+    inner -> Target is
+      assert tag_subset is
+        ∀ tag ∈ self.tags ( ∃ ptag ∈ self.container.tags ( ptag = tag ) )
+      end
+  end
+end
+#+END_SRC
+
+*** Quantified Statements
+
+*** Constraint Predicates, Relations, and Functions
+
+#+BEGIN_EXAMPLE
+def predicate(Type) -> boolean
+def predicate(value -> Type) -> boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def relation(Type1, Type2) -> boolean
+def relation(value1 -> Type1, value2 -> Type2) -> boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def function(Type, ...) -> RType
+def function(value -> Type, ...) -> RType
+#+END_EXAMPLE
+
+*** Named Paths
+
+This notation is effectively syntactic sugar as it can be systematically transformed into the form above. The
+transformation rules are:
+
+1. The reserved words ~self~ and ~Self~ may only appear as the first element.
+2. The list of names *after* the first are reversed and applied in turn as functions.
+   * ~name.suffix~ becomes ~suffix(name(_))~
+3. The first element will become the first argument to the inner-most function.
+   * ~name.suffix~ becomes ~suffix(name(def))~
+4. If the path ends in an argument list the arguments are added to the corresponding function call.
+   *  ~suffix(name(def)) + ("Rental")~ becomes ~suffix(name(def) "Rental")~
+
+Similarly the quantifier collection ~self.definitions~ becomes ~definitions(self)~.
+
+*** Library Functions
+
+Alternatively, listing [[lst:ex-tagged-constraint-3]] turns each sequence of tags into a set with the library function
+~into_set~ and can then perform a simple subset check with the library function ~is_subset~.
+
+#+NAME: lst:ex-tagged-constraint-3
+#+CAPTION: Example Formal Constraint (3 of 3)
+#+BEGIN_SRC sdml :noeval
+module tagged is
+  structure Thing is
+    tags -> {0..} Tag
+    inner -> Target is
+      assert tag_subset is
+        ∀ self ( is_subset( into_set(self.tags) into_set(self.container.tags)) )
+      end
+  end
+end
+#+END_SRC
+
+*** Constraint Environment
+
+The example in listing [[lst:ex-formal-constraint]] is an expansion of the informal example in listing
+[[lst:ex-informal-constraint]]. Here we check for the presence of the annotation on every top-level definition and then any
+members of that definition. Note that this example also demonstrates the ability to create new predicates as in
+~has_pref_label~ which simplifies the body of the constraint.
 
 #+NAME: lst:ex-formal-constraint
 #+CAPTION: Example Formal Constraint
@@ -41,7 +141,7 @@ module labelled is
 
   assert must_have_preferred_label is
     def has_pref_label(anns -> Bag of Annotation) ≔
-      ∃ a ∈ anns ( name(a) = skos:prefLabel ∧ ¬empty(value(a)) )
+      ∃ a ∈ anns ( a.name = skos:prefLabel ∧ ¬empty(a.value )
   in
     has_pref_label(self.annotations)
     ∧ ∀ d ∈ self.definitions (
@@ -58,65 +158,142 @@ module labelled is
 end
 #+END_SRC
 
-
-This notation is effectively syntactic sugar as it can be systematically transformed into the form above. The
-transformation rules are:
-
-1. The reserved words ~self~ and ~Self~ may only appear as the first element.
-2. The list of names *after* the first are reversed and applied in turn as functions.
-   * ~name.suffix~ becomes ~suffix(name(_))~
-3. The first element will become the first argument to the inner-most function.
-   * ~name.suffix~ becomes ~suffix(name(def))~
-4. If the path ends in an argument list the arguments are added to the corresponding function call.
-   *  ~suffix(name(def)) + ("Rental")~ becomes ~suffix(name(def) "Rental")~
-
-Similarly the quantifier collection ~self.definitions~ becomes ~definitions(self)~.
+Environment & Definitions
 
 ** Constraint Semantics
 
 The embedded constraint language is purely functional and constraint assertions MUST return a single boolean value
 determining correctness.
 
-- Simple Statements :: .
-  - Atomic: ~predicate(term ...)~
-  - Equation: ~lhs = rhs~
-- Boolean Statements :: .
-  - Conjunction: ~lhs and rhs~ /equivalent to/ ~lhs ∧ rhs~
-  - Disjunction:  ~lhs or rhs~ /equivalent to/ ~lhs ∧ rhs~
-  - Exclusive Disjunction:  ~lhs xor rhs~ /equivalent to/ ~lhs ⊻ rhs~
-  - Implication:  ~lhs implies rhs~ /equivalent to/ ~lhs ⇒ rhs~
-  - Biconditional:  ~lhs iff rhs~ /equivalent to/ ~lhs ⇔ rhs~
-- Quantified Statements :: .
-  - Universal over Type: ~forall x -> Type~ /equivalent to/  ~∀ x -> Type~
-  - Universal over Sequence: ~forall e in collection~ /equivalent to/ ~∀ e ∈ collection~
-  - Existential over Type: ~exists x -> Type~ /equivalent to/ ~∃ x -> Type~
-  - Existential over Sequence: ~exists e in collection~ /equivalent to/ ~∃ e ∈ collection~
+*** Simple Statements
+
+Atomic
+
+#+BEGIN_EXAMPLE
+predicate(t1, ..., tn)
+#+END_EXAMPLE
+
+Equation
+
+#+BEGIN_EXAMPLE
+rhs = rhs
+#+END_EXAMPLE
+  
+*** Boolean Statements
+
+Conjunction
+
+#+BEGIN_EXAMPLE
+lhs and rhs
+lhs  ∧  rhs
+#+END_EXAMPLE
+
+Disjunction
+
+#+BEGIN_EXAMPLE
+lhs or rhs
+lhs ∧  rhs
+#+END_EXAMPLE
+
+Exclusive Disjunction
+
+#+BEGIN_EXAMPLE
+lhs xor rhs
+lhs  ⊻  rhs
+#+END_EXAMPLE
+
+Implication
+
+#+BEGIN_EXAMPLE
+lhs implies rhs
+lhs   ==>   rhs
+lhs    ⇒    rhs
+#+END_EXAMPLE
+
+Biconditional
+
+#+BEGIN_EXAMPLE
+lhs iff  rhs
+lhs <==> rhs
+lhs  ⇔   rhs
+#+END_EXAMPLE
     
-** Constraint Predicates, Relations, and Functions
+*** Quantified Statements
 
-■ ~predicate(Type) -> boolean~ or ~predicate(value -> Type) -> boolean~
+Universal over Type
 
-■ ~relation(Type1, Type2) -> boolean~ or ~relation(value1 -> Type1, value2 -> Type2) -> boolean~
+#+BEGIN_EXAMPLE
+forall x -> Type
+     ∀ x -> Type
+#+END_EXAMPLE
 
-■ ~function(Type, ...) -> RType~ or ~function(value -> Type, ...) -> RType~
+Universal over Sequence
 
-Additionally, in the following sections we are sometimes able to define one predicate in terms of existing ones. In this
-case we use the equation operation to denote a function /body/.
+#+BEGIN_EXAMPLE
+forall e in collection
+     ∀ e ∈  collection
+#+END_EXAMPLE
 
-■ ~ne(v1 -> boolean, v2 -> boolean) -> boolean ≔ not(eq(v1, v2))~
+Existential over Type
 
-All types, both builtin and introduced in a module introduce a predicate that acts as an /isa/ check. This automatic
-predicate takes the form of the following example:
+#+BEGIN_EXAMPLE
+exists x -> Type
+     ∃ x -> Type
+#+END_EXAMPLE
 
-■ ~TypeName(unknown) -> boolean~
+Existential over Sequence
 
-*** Collection Types
+#+BEGIN_EXAMPLE
+exists e in collection
+     ∃ e ∈  collection
+#+END_EXAMPLE
+     
+*** Sequence Comprehensions
 
-■ ~predicate(Bag of integer) -> boolean~ or ~predicate(value -> Set of string) -> boolean~
+The structure consists of...
 
-■ ~Collection(Type, v -> unknown) -> boolean ≔ Collection(v) ∧ v.all(e | Type(e))~
+Set-builder notation can be used to describe a set that is defined by a predicate, that is, a logical formula that
+evaluates to true for an element of the set, and false otherwise.[3] In this form, set-builder notation has three parts:
+a variable, a colon or vertical bar separator, and a predicate. Thus there is a variable on the left of the separator,
+and a rule on the right of it. These three parts are contained within braces, as shown below.
 
-■ ~map(Bag of unknown) -> Bag of unknown~
+$$\{ x_1...x_n | \Phi(x_i)\}$$
+
+Predicates may also be combined with the usual negation, conjunction, exclusive, and non-exclusive disjunction
+operations.
+
+- $\{ x_1...x_n | ¬\Phi(x_i)\}$
+- $\{ x_1...x_n | \Phi(x_i)\land\Phi(x_{i+1})\}$
+- $\{ x_1...x_n | \Phi(x_i)\lor\Phi(x_{i+1})\}$
+- $\{ x_1...x_n | \Phi(x_i)\veebar\Phi(x_{i+1})\}$
+
+The domain $\mathcal{D}$ for each variable $x$ may either be described as the set of all elements in a sequence type
+$\mathcal{V}$, or the set of all values for a type $\mathcal{T}$.
+
+1. $\{ x | x \in \mathcal{V} \land \Phi(x)\}$ returns a sequence of all values $x$ in the collection $\mathcal{V}$ for which the
+   predicate $\Phi$ holds (evaluates to ~true~).
+   - Example: $\{ m | x \in self.members \land optional(m)\}$
+1. $\{ x | x \in \mathcal{T} \land \Phi(x)\}$ returns a sequence of all values $x$ in the type $\mathcal{T}$ for which the
+   predicate $\Phi$ holds (evaluates to ~true~).
+   - Example: $\{ v | v \in FutureDate \land gt(v today)\}$.
+   - Example: $\{ v | v → FutureDate \land gt(v today)\}$.
+
+It can be shown that this is a universal quantification, /all/ values from the type $\mathcal{T}$ or sequence
+$\mathcal{V}$ will be considered. A variable can be identified as existentially quantified by prefacing it's definition
+with either the keyword ~exists~ or the operator ~∃~.
+
+$$\{ x | x \in self.tags \land ∃ y \in self.container.tags \land x = y\}$$
+
+The following definitions are taken from the standard library and act as filters over a sequence of ~Annotation~ union
+values to provide sequences which only contain one or other of the types in the union.
+
+#+BEGIN_EXAMPLE
+def annotation_properties(anns -> Bag of Annotation) -> Bag of AnnotationProperty
+    ≔ {a | a ∈ anns ∧ AnnotationProperty(a)}
+
+def constraints(anns - > Bag of Annotation) -> Bag of Constraint
+    ≔ {a | a ∈ anns ∧ Constraint(a)}
+#+END_EXAMPLE
 
 # ----- Footnotes
 

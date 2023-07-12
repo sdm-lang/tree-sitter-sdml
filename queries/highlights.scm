@@ -66,7 +66,7 @@
  name: (identifier) @function.definition
  [ ":=" "≔" ] @operator)
 
-(constraint_environment "in" @keyword)
+(constraint_environment (constraint_environment_end) @keyword)
 
 (constraint_sentence [ "(" ")" ] @punctuation.bracket)
 
@@ -142,30 +142,30 @@
 
 (list_of_predicate_values [ "[" "]" ] @punctuation.bracket)
 
-(sequence_builder
+(sequence_comprehension
  "{" @punctuation.bracket
  "|" @punctuation.separator
  "}" @punctuation.bracket)
 
-(builder_binding name: (identifier) @variable.special)
+(binding_expression name: (identifier) @variable.special)
 
-(builder_expression [ "(" ")" ] @punctuation.bracket)
+(expression [ "(" ")" ] @punctuation.bracket)
 
-(builder_negation "not" @keyword)
-(builder_negation "¬" @operator)
+(expression_negation "not" @keyword)
+(expression_negation "¬" @operator)
 
-(builder_conjunction "and" @keyword)
-(builder_conjunction "∧" @operator)
+(expression_conjunction "and" @keyword)
+(expression_conjunction "∧" @operator)
 
-(builder_disjunction "or" @keyword)
-(builder_disjunction "∨" @operator)
+(expression_disjunction "or" @keyword)
+(expression_disjunction "∨" @operator)
 
-(builder_exclusive_disjunction "xor" @keyword)
-(builder_exclusive_disjunction "⊻" @operator)
+(expression_exclusive_disjunction "xor" @keyword)
+(expression_exclusive_disjunction "⊻" @operator)
 
-(builder_return (identifier) @variable)
+(return_values (identifier) @variable)
 
-(builder_return [ "[" "]" ] @punctuation.bracket)
+(return_values [ "[" "]" ] @punctuation.bracket)
 
 (list_of_predicate_values [ "[" "]" ] @punctuation.bracket)
 

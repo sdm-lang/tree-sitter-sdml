@@ -325,27 +325,43 @@ qualification is optional unless the application is ambiguous in a particular co
 
 *** Equality and Inequality
 
-■ ~eq(Any Any) -> boolean~
+#+BEGIN_EXAMPLE
+def eq(Any Any) -> boolean
+#+END_EXAMPLE
 
 Returns ~true~ if the two values are equal, else ~false~.
 
-■ ~gt(Any Any) -> boolean~
+#+BEGIN_EXAMPLE
+def gt(Any Any) -> boolean
+#+END_EXAMPLE
 
 Returns ~true~ if the first value is greater than the second, else ~false~.
 
-■ ~gte(v1 -> Any v2 -> Any) -> boolean ≔ gt(v1 v2) ∨ eq(v1 v2)~
+#+BEGIN_EXAMPLE
+def gte(v1 -> Any v2 -> Any) -> boolean
+    ≔ gt(v1 v2) ∨ eq(v1 v2)
+#+END_EXAMPLE
 
 Returns ~true~ if the first value is greater than or equal to the second, else ~false~.
 
-■ ~lt(v1 -> Any v2 -> Any) -> boolean ≔ ¬gte(v1 v2)~
+#+BEGIN_EXAMPLE
+def lt(v1 -> Any v2 -> Any) -> boolean
+    ≔ ¬gte(v1 v2)
+#+END_EXAMPLE
 
 Returns ~true~ if the first value is less than the second, else ~false~.
 
-■ ~lte(v1 -> Any v2 -> Any) -> boolean ≔ ¬gt(v1 v2)~
+#+BEGIN_EXAMPLE
+def lte(v1 -> Any v2 -> Any) -> boolean
+    ≔ ¬gt(v1 v2)
+#+END_EXAMPLE
 
 Returns ~true~ if the first value is less than or equal to the second, else ~false~.
 
-■ ~ne(v1 -> Any v2 -> Any) -> boolean ≔ ¬eq(v1 v2)~
+#+BEGIN_EXAMPLE
+def ne(v1 -> Any v2 -> Any) -> boolean
+    ≔ ¬eq(v1 v2)
+#+END_EXAMPLE
 
 Returns ~true~ if the two values are not equal, else ~false~.
 
@@ -353,487 +369,1003 @@ Returns ~true~ if the two values are not equal, else ~false~.
 
 *Class: Any*
 
-■ ~class_of(Any) -> Class~
+#+BEGIN_EXAMPLE
+def class_of(Any) -> Class
+#+END_EXAMPLE
 
 example: ~class_of(rentals:Customer) = sdml:Entity~
 
 *Class: Class*
 
-■ ~name(Class) -> string~
+#+BEGIN_EXAMPLE
+def name(Class) -> string
+#+END_EXAMPLE
 
-~name(class_of(rentals:Customer)) = "sdml:Entity"~
+example: ~name(class_of(rentals:Customer)) = "sdml:Entity"~
 
 *Class: Type*
 
-■ ~name(Type) -> IdentifierReference~
+#+BEGIN_EXAMPLE
+def name(Type) -> IdentifierReference
+#+END_EXAMPLE
 
 *** Identifiers
 
 *Class: Identifier*
 
+#+BEGIN_EXAMPLE
+def Identifier(Any) → boolean
+#+END_EXAMPLE
+
 *Class: QualifiedIdentifier*
 
-■ ~module(QualifiedIdentifier) -> Identifier~
+#+BEGIN_EXAMPLE
+def QualifiedIdentifier(Any) → boolean
+#+END_EXAMPLE
 
-■ ~member(QualifiedIdentifier) -> Identifier~
+#+BEGIN_EXAMPLE
+def member(QualifiedIdentifier) -> Identifier
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def module(QualifiedIdentifier) -> Identifier
+#+END_EXAMPLE
 
 *Union: IdentifierReference*
 
-■ ~is_identifier(IdentifierReference) -> boolean~
+#+BEGIN_EXAMPLE
+def IdentifierReference(Any) → boolean
+#+END_EXAMPLE
 
-■ ~is_qualified_identifier(IdentifierReference) -> boolean~
+#+BEGIN_EXAMPLE
+def as_dentifier(IdentifierReference) -> Maybe of Identifier
+#+END_EXAMPLE
 
-■ ~as_dentifier(IdentifierReference) -> Maybe of Identifier~
+#+BEGIN_EXAMPLE
+def as_qualified_identifier(IdentifierReference) -> Maybe of QualifiedIdentifier
+#+END_EXAMPLE
 
-■ ~as_qualified_identifier(IdentifierReference) -> Maybe of QualifiedIdentifier~
+#+BEGIN_EXAMPLE
+def is_identifier(IdentifierReference) -> boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def is_qualified_identifier(IdentifierReference) -> boolean
+#+END_EXAMPLE
 
 *** Module Definition
 
 *Class: Module*
 
-■ ~annotations(Module) -> Bag of Annotation~
+#+BEGIN_EXAMPLE
+def Module(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def annotations(Module) -> Bag of Annotation
+#+END_EXAMPLE
 
 Returns an unordered sequence of annotations attached to the module.
 
-■ ~definitions(Module) -> Set of Definition~
+#+BEGIN_EXAMPLE
+def base_uri(Module) -> Maybe of iri
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def definitions(Module) -> Set of Definition
+#+END_EXAMPLE
 
 Returns an unordered, unique, sequence of variants contained within the union.
 
-■ ~imports(Module) -> Set of ImportStatement~
+#+BEGIN_EXAMPLE
+def imports(Module) -> Set of ImportStatement
+#+END_EXAMPLE
 
 Returns an unordered, unique, sequence of import statements.
 
-■ ~def is_complete(m -> Module) -> boolean ≔ ∀ d ∈ definitions(m) ( is_complete(d) )~
+#+BEGIN_EXAMPLE
+def is_complete(m -> Module) -> boolean
+    ≔ ∀ d ∈ definitions(m) ( is_complete(d) )
+#+END_EXAMPLE
 
-■ ~name(Module) -> Identifier~
+#+BEGIN_EXAMPLE
+def name(Module) -> Identifier
+#+END_EXAMPLE
 
 Returns the identifier naming the module.
 
+#+BEGIN_EXAMPLE
+def resolved_uri(Module) -> iri
+#+END_EXAMPLE
+
 *Union: Definition*
 
-■ ~as_datatype(Definition) -> Maybe of Datatype~
+#+BEGIN_EXAMPLE
+def Definition(Any) → boolean
+#+END_EXAMPLE
 
-■ ~as_entity(Definition) -> Maybe of Entity~
+#+BEGIN_EXAMPLE
+def as_datatype(Definition) -> Maybe of Datatype
+#+END_EXAMPLE
 
-■ ~as_enumeration(Definition) -> Maybe of Enumeration~
+#+BEGIN_EXAMPLE
+def as_entity(Definition) -> Maybe of Entity
+#+END_EXAMPLE
 
-■ ~as_event(Definition) -> Maybe of Event~
+#+BEGIN_EXAMPLE
+def as_enumeration(Definition) -> Maybe of Enumeration
+#+END_EXAMPLE
 
-■ ~as_structure(Definition) -> Maybe of Structure~
+#+BEGIN_EXAMPLE
+def as_event(Definition) -> Maybe of Event
+#+END_EXAMPLE
 
-■ ~as_property(Definition) -> Maybe of Property~
+#+BEGIN_EXAMPLE
+def as_structure(Definition) -> Maybe of Structure
+#+END_EXAMPLE
 
-■ ~is_datatype(Definition) -> boolean~
+#+BEGIN_EXAMPLE
+def as_property(Definition) -> Maybe of Property
+#+END_EXAMPLE
 
-■ ~is_entty(Definition) -> boolean~
+#+BEGIN_EXAMPLE
+def is_datatype(Definition) -> boolean
+#+END_EXAMPLE
 
-■ ~is_enumeration(Definition) -> boolean~
+#+BEGIN_EXAMPLE
+def is_entity(Definition) -> boolean
+#+END_EXAMPLE
 
-■ ~is_event(Definition) -> boolean~
+#+BEGIN_EXAMPLE
+def is_enumeration(Definition) -> boolean
+#+END_EXAMPLE
 
-■ ~is_structure(Definition) -> boolean~
+#+BEGIN_EXAMPLE
+def is_event(Definition) -> boolean
+#+END_EXAMPLE
 
-■ ~is_property(Definition) -> boolean~
+#+BEGIN_EXAMPLE
+def is_structure(Definition) -> boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def is_property(Definition) -> boolean
+#+END_EXAMPLE
 
 *** Imports
 
 *Class: ImportStatement*
 
-■ ~imports(ImportStatement) -> Bag of Import~
+#+BEGIN_EXAMPLE
+def ImportStatement(Any) → boolean
+#+END_EXAMPLE
 
-■ ~def module_imports(i -> ImportStatement) ≔ {i | i ∈ imports(i) ∧ ModuleImport(i)}~
+#+BEGIN_EXAMPLE
+def imports(ImportStatement) -> Bag of Import
+#+END_EXAMPLE
 
-■ ~def member_imports(i -> ImportStatement) ≔ {i | i ∈ imports(i) ∧ MemberImport(i)}~
+#+BEGIN_EXAMPLE
+def member_imports(i -> ImportStatement)
+    ≔ {i | i ∈ imports(i) ∧ MemberImport(i)}
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def module_imports(i -> ImportStatement)
+    ≔ {i | i ∈ imports(i) ∧ ModuleImport(i)}
+#+END_EXAMPLE
 
 *Class: Import*
 
-■ ~is_module_import(Import) -> boolean~
+#+BEGIN_EXAMPLE
+def Import(Any) → boolean
+#+END_EXAMPLE
 
-■ ~is_member_import(Import) -> boolean~
+#+BEGIN_EXAMPLE
+def is_module_import(Import) -> boolean
+#+END_EXAMPLE
 
-■ ~as_module_import(Import) -> Maybe of ModuleImport~
+#+BEGIN_EXAMPLE
+def is_member_import(Import) -> boolean
+#+END_EXAMPLE
 
-■ ~as_member_import(Import) -> Maybe of MemberImport~
+#+BEGIN_EXAMPLE
+def as_module_import(Import) -> Maybe of ModuleImport
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def as_member_import(Import) -> Maybe of MemberImport
+#+END_EXAMPLE
 
 *Class: ModuleImport*
 
-■ ~module(ModuleImport) -> Identifier~
+#+BEGIN_EXAMPLE
+def ModuleImport(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def module(ModuleImport) -> Identifier
+#+END_EXAMPLE
 
 *Class: MemberImport*
 
-■ ~module(MemberImport) -> Identifier~
+#+BEGIN_EXAMPLE
+def MemberImport(Any) → boolean
+#+END_EXAMPLE
 
-■ ~member(MemberImport) -> Identifier~
+#+BEGIN_EXAMPLE
+def module(MemberImport) -> Identifier
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def member(MemberImport) -> Identifier
+#+END_EXAMPLE
 
 *** Datatypes and Values
 
 *Class: Datatype*
 
-■ ~base_type(Datatype) -> Maybe of Datatype~
+#+BEGIN_EXAMPLE
+def Datatype(Any) → boolean
+#+END_EXAMPLE
 
-■ ~contained_within(Datatype) -> Module~
+#+BEGIN_EXAMPLE
+def base_type(Datatype) -> Maybe of Datatype
+#+END_EXAMPLE
 
-■ ~name(Datatype) -> IdentifierReference~
+#+BEGIN_EXAMPLE
+def contained_within(Datatype) -> Module
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def name(Datatype) -> IdentifierReference
+#+END_EXAMPLE
 
 *Datatype: decimal*
 
-■ ~whole_part(decimal) -> decimal~
+#+BEGIN_EXAMPLE
+def Decimal(Any) → boolean
+#+END_EXAMPLE
 
-■ ~decimal_part(decimal) -> decimal~
+#+BEGIN_EXAMPLE
+def whole_part(decimal) -> decimal
+#+END_EXAMPLE
 
-■ ~round(decimal) -> decimal~
+#+BEGIN_EXAMPLE
+def decimal_part(decimal) -> decimal
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def round(decimal) -> decimal
+#+END_EXAMPLE
 
 *Datatype: double*
 
-■ ~whole_part(double) -> double~
+#+BEGIN_EXAMPLE
+def Double(Any) → boolean
+#+END_EXAMPLE
 
-■ ~decimal_part(double) -> double~
+#+BEGIN_EXAMPLE
+def whole_part(double) -> double
+#+END_EXAMPLE
 
-■ ~round(double) -> double~
+#+BEGIN_EXAMPLE
+def decimal_part(double) -> double
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def round(double) -> double
+#+END_EXAMPLE
 
 *Datatype: integer*
 
+#+BEGIN_EXAMPLE
+def Integer(Any) → boolean
+#+END_EXAMPLE
+
+*Datatype: iri*
+
+#+BEGIN_EXAMPLE
+def Iri(Any) → boolean
+#+END_EXAMPLE
+
+TBD
+
+*Datatype: language*
+
+#+BEGIN_EXAMPLE
+def Language(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def broader(languageTag languageTag) -> boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def language_extended_part(languageTag) -> string
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def language_part(languageTag) -> string
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def narrower(languageTag languageTag) -> boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def region_part(languageTag) -> string
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def script_part(languageTag) -> string
+#+END_EXAMPLE
+
 *Datatype: string*
 
-■ ~contains(string substring -> string) -> boolean~
+#+BEGIN_EXAMPLE
+def String(Any) → boolean
+#+END_EXAMPLE
 
-■ ~eq_ci(string string) -> boolean~
+#+BEGIN_EXAMPLE
+def contains(string substring -> string) -> boolean
+#+END_EXAMPLE
 
-■ ~language_part(string) -> languageTag~
+#+BEGIN_EXAMPLE
+def eq_ci(string string) -> boolean
+#+END_EXAMPLE
 
-■ ~length(string) -> integer~
+#+BEGIN_EXAMPLE
+def language_part(string) -> language
+#+END_EXAMPLE
 
-■ ~matches(string regex -> string) -> boolean~
+#+BEGIN_EXAMPLE
+def length(string) -> integer
+#+END_EXAMPLE
 
-■ ~ne_ci(string string) -> boolean~
+#+BEGIN_EXAMPLE
+def matches(string regex -> string) -> boolean
+#+END_EXAMPLE
 
-■ ~prefix(string prefix -> string) -> boolean~
+#+BEGIN_EXAMPLE
+def ne_ci(string string) -> boolean
+#+END_EXAMPLE
 
-■ ~suffix(string suffix -> string) -> boolean~
+#+BEGIN_EXAMPLE
+def prefix(string prefix -> string) -> boolean
+#+END_EXAMPLE
 
-■ ~quoted_part(string) -> string~
+#+BEGIN_EXAMPLE
+def quoted_part(string) -> string
+#+END_EXAMPLE
 
-*Datatype: languageTag*
-
-■ ~broader(languageTag languageTag) -> boolean~
-
-■ ~broader(languageTag languageTag) -> boolean~
-
-■ ~language_part(languageTag) -> string~
-
-■ ~language_extended_part(languageTag) -> string~
-
-■ ~region_part(languageTag) -> string~
-
-■ ~script_part(languageTag) -> string~
+#+BEGIN_EXAMPLE
+def suffix(string suffix -> string) -> boolean
+#+END_EXAMPLE
 
 *** Sequence Types
 
 *Class: Sequence*
 
 #+BEGIN_EXAMPLE
-Sequence(Any) → boolean
+def Sequence(Any) → boolean
 #+END_EXAMPLE
 
 Returns ~true~ if the value is of type ~Sequence~ or any sub-type of ~Sequence~, else ~false~.
 
 #+BEGIN_EXAMPLE
-contains(s → Sequence of Any t → element of Any) → boolean
-  ≔ ¬is_empty({ e | e ∈ s ∧ e = t})
+def contains(s → Sequence of Any t → element of Any) → boolean
+    ≔ ¬is_empty({ e | e ∈ s ∧ e = t})
 #+END_EXAMPLE
 
 Returns ~true~ if the sequence ~s~ contains the element ~t~, else ~false~.
 
 #+BEGIN_EXAMPLE
-count(Sequence of Any) → unsigned
+def count(Sequence of Any) → unsigned
 #+END_EXAMPLE
 
 Returns the number of elements in the sequence.
 
 #+BEGIN_EXAMPLE
-is_empty(seq → Sequence of Any) → boolean
-  ≔ count(seq) = 0
+def into_bag(seq → Sequence of Any) → Bag of Any
+#+END_EXAMPLE
+
+Transforms the input sequence into a ~Bag~, this *may* remove ordering and uniqueness constraints from the input sequence
+but *will not* remove any elements.
+
+#+BEGIN_EXAMPLE
+def into_list(seq → Sequence of Any) → List of Any
+#+END_EXAMPLE
+
+Transforms the input sequence into a ~List~, this *may* add ordering and remove uniqueness constraints from the input sequence
+but *will not* remove any elements.
+
+#+BEGIN_EXAMPLE
+def into_ordered_set(seq → Sequence of Any) → OrderedSet of Any
+#+END_EXAMPLE
+
+Transforms the input sequence into a ~OrderedSet~, this *may* add both ordering and uniqueness constraints to the input sequence
+and *will* remove duplicate elements.
+
+#+BEGIN_EXAMPLE
+def into_set(seq → Sequence of Any) → Set of Any
+#+END_EXAMPLE
+
+Transforms the input sequence into a ~Set~, this *may* remove ordering and add uniqueness constraints to the input sequence
+and *will* remove duplicate elements.
+
+#+BEGIN_EXAMPLE
+def is_empty(seq → Sequence of Any) → boolean
+    ≔ count(seq) = 0
 #+END_EXAMPLE
 
 Return ~true~ if the sequence has no elements, else ~false~.
 
 #+BEGIN_EXAMPLE
-is_ordered(t → Type) → boolean
-  ≔ t = List ∨ t = OrderedSet
+def is_ordered(t → Type) → boolean
+    ≔ t = List ∨ t = OrderedSet
 #+END_EXAMPLE
 
 Returns ~true~ if the provided type ~t~ is an ordered sequence, else ~false~.
 
 #+BEGIN_EXAMPLE
-is_unique(t → Type) → boolean
-  ≔ t = Set ∨ t = OrderedSet
+def is_unique(t → Type) → boolean
+    ≔ t = Set ∨ t = OrderedSet
 #+END_EXAMPLE
 
 Returns ~true~ if the provided type ~t~ is a sequence that guarantees uniqueness of elements, else ~false~.
 
 *Class: Bag*
 
-■ ~order(Bag of Any count -> integer) -> List of Any~
+#+BEGIN_EXAMPLE
+def Bag(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def order(Bag of Any count -> integer) -> List of Any
+#+END_EXAMPLE
 
 *Class: List*
 
-■ ~drop(List of Any count -> unsigned) -> List of Any~
+#+BEGIN_EXAMPLE
+def List(Any) → boolean
+#+END_EXAMPLE
 
-■ ~get(List of Any index -> unsigned) -> Any~
+#+BEGIN_EXAMPLE
+def drop(List of Any count -> unsigned) -> List of Any
+#+END_EXAMPLE
 
-■ ~order(List of unknown count -> integer) -> List of unknown~
+#+BEGIN_EXAMPLE
+def get(List of Any index -> unsigned) -> Any
+#+END_EXAMPLE
 
-■ ~reverse(List of Any) -> List of Any~
+#+BEGIN_EXAMPLE
+def order(List of Any) -> List of Any
+#+END_EXAMPLE
 
-■ ~slice(List of Any start -> unsigned count -> unsigned) -> List of Any~
+#+BEGIN_EXAMPLE
+def reverse(List of Any) -> List of Any
+#+END_EXAMPLE
 
-■ ~take(List of Any count -> unsigned) -> List of Any~
+#+BEGIN_EXAMPLE
+def slice(List of Any start -> unsigned count -> unsigned) -> List of Any
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def take(List of Any count -> unsigned) -> List of Any
+#+END_EXAMPLE
 
 *Class: Maybe*
 
+#+BEGIN_EXAMPLE
+def Maybe(Any) → boolean
+#+END_EXAMPLE
+
 *Class: OrderedSet*
 
-■ ~drop(OrderedSet of Any count -> unsigned) -> OrderedSet of Any~
+#+BEGIN_EXAMPLE
+def OrderedSet(Any) → boolean
+#+END_EXAMPLE
 
-■ ~get(OrderedSet of Any index -> unsigned) -> Any~
+#+BEGIN_EXAMPLE
+drop(OrderedSet of Any count -> unsigned) -> OrderedSet of Any
+#+END_EXAMPLE
 
-■ ~intersection(lhs -> OrderedSet of unknown rhs -> OrderedSet of unknown) -> OrderedSet of unknown~
+#+BEGIN_EXAMPLE
+get(OrderedSet of Any index -> unsigned) -> Any
+#+END_EXAMPLE
 
-■ ~minus -> OrderedSet of unknown rhs -> OrderedSet of unknown) -> OrderedSet of unknown~
+#+BEGIN_EXAMPLE
+intersection(lhs -> OrderedSet of unknown rhs -> OrderedSet of unknown) -> OrderedSet of Any
+#+END_EXAMPLE
 
-■ ~order(OrderedSet of unknown count -> integer) -> OrderedSet of unknown~
+#+BEGIN_EXAMPLE
+is_strict_subset(lhs -> OrderedSet of Any rhs -> OrderedSet of Any) -> boolean
+    ≔ is_subset(lhs rhs) ∧ ¬eq(lhs rhs)
+#+END_EXAMPLE
 
-■ ~reverse(OrderedSet of Any) -> OrderedSet of Any~
+#+BEGIN_EXAMPLE
+is_strict_superset(lhs -> OrderedSet of Any rhs -> OrderedSet of Any) -> boolean
+    ≔ is_superset(lhs rhs) ∧ ¬eq(lhs rhs)
+#+END_EXAMPLE
 
-■ ~slice(OrderedSet of Any start -> unsigned count -> unsigned) -> OrderedSet of Any~
+#+BEGIN_EXAMPLE
+is_subset(lhs -> OrderedSet of Any rhs -> OrderedSet of Any) -> boolean
+#+END_EXAMPLE
 
-■ ~take(OrderedSet of Any count -> unsigned) -> OrderedSet of Any~
+#+BEGIN_EXAMPLE
+is_superset(lhs -> OrderedSet of Any rhs -> OrderedSet of Any) -> boolean
+#+END_EXAMPLE
 
-■ ~union -> OrderedSet of unknown rhs -> OrderedSet of unknown) -> OrderedSet of unknown~
+#+BEGIN_EXAMPLE
+minus -> OrderedSet of unknown rhs -> OrderedSet of unknown) -> OrderedSet of Any
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+reverse(OrderedSet of Any) -> OrderedSet of Any
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+slice(OrderedSet of Any start -> unsigned count -> unsigned) -> OrderedSet of Any
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+take(OrderedSet of Any count -> unsigned) -> OrderedSet of Any
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+union(OrderedSet of Any rhs -> OrderedSet of Any) -> OrderedSet of Any
+#+END_EXAMPLE
 
 *Class: Set*
-   
-■ ~intersection(lhs -> Set of unknown rhs -> Set of unknown) -> Set of unknown~
 
-■ ~minus(lhs -> Set of unknown rhs -> Set of unknown) -> Set of unknown~
+#+BEGIN_EXAMPLE
+def Set(Any) → boolean
+#+END_EXAMPLE
 
-■ ~order(Set of unknown count -> integer) -> OrderedSet of unknown~
+#+BEGIN_EXAMPLE
+intersection(lhs -> Set of Any rhs -> Set of Any) -> Set of Any
+#+END_EXAMPLE
 
-■ ~union(lhs -> Set of unknown rhs -> Set of unknown) -> Set of unknown~
+#+BEGIN_EXAMPLE
+is_strict_subset(lhs -> Set of Any rhs -> Set of Any) -> boolean
+    ≔ is_subset(lhs rhs) ∧ ¬eq(lhs rhs)
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+is_strict_superset(lhs -> Set of Any rhs -> Set of Any) -> boolean
+    ≔ is_superset(lhs rhs) ∧ ¬eq(lhs rhs)
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+is_subset(lhs -> Set of Any rhs -> Set of Any) -> boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+is_superset(lhs -> Set of Any rhs -> Set of Any) -> boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+minus(lhs -> Set of Any rhs -> Set of Any) -> Set of Any
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+order(Set of Any) -> OrderedSet of Any
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+union(lhs -> Set of Any rhs -> Set of Any) -> Set of Any
+#+END_EXAMPLE
 
 *** Annotations
 
-*Annotation Collections*
-
-■ ~def annotation_properties(as -> Bag of Annotation) ≔ {a | a ∈ as ∧ AnnotationProperty(a)}~
-
-■ ~def constraints(as - > Bag of Annotation) ≔ {a | a ∈ as ∧ Constraint(a)}~
-
 *Class Annotation*
 
-■ ~as_annotation_property(Annotation) -> Maybe of AnnotationProperty~
+#+BEGIN_EXAMPLE
+def Annotation(Any) → boolean
+#+END_EXAMPLE
 
-■ ~as_constraint(Annotation) -> Maybe of Constraint~
+#+BEGIN_EXAMPLE
+def as_annotation_property(Annotation) -> Maybe of AnnotationProperty
+#+END_EXAMPLE
 
-■ ~is_annotation_property(Annotation) -> boolean~
+#+BEGIN_EXAMPLE
+def as_constraint(Annotation) -> Maybe of Constraint
+#+END_EXAMPLE
 
-■ ~is_constraint(Annotation) -> boolean~
+#+BEGIN_EXAMPLE
+def is_annotation_property(Annotation) -> boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def is_constraint(Annotation) -> boolean
+#+END_EXAMPLE
 
 *Class AnnotationProperty*
 
-■ ~name(AnnotationProperty) -> IdentiferReference~
+#+BEGIN_EXAMPLE
+def AnnotationProperty(Any) → boolean
+#+END_EXAMPLE
 
-■ ~value(AnnotationProperty) -> Value~
+#+BEGIN_EXAMPLE
+def name(AnnotationProperty) -> IdentiferReference
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def value(AnnotationProperty) -> Value
+#+END_EXAMPLE
 
 *Class Constraint*
 
-■ ~as_formal(Constraint) -> Maybe of FormalConstraint~
+#+BEGIN_EXAMPLE
+def Constraint(Any) → boolean
+#+END_EXAMPLE
 
-■ ~as_informal(Constraint) -> Maybe of string~
+#+BEGIN_EXAMPLE
+def as_formal(Constraint) -> Maybe of FormalConstraint
+#+END_EXAMPLE
 
-■ ~is_formal(Constraint) -> boolean~
+#+BEGIN_EXAMPLE
+def as_informal(Constraint) -> Maybe of string
+#+END_EXAMPLE
 
-■ ~is_informal(Constraint) -> boolean~
+#+BEGIN_EXAMPLE
+def is_formal(Constraint) -> boolean
+#+END_EXAMPLE
 
-■ ~name(Constraint) -> Maybe of Identifier~
+#+BEGIN_EXAMPLE
+def is_informal(Constraint) -> boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def name(Constraint) -> Maybe of Identifier
+#+END_EXAMPLE
+
+*Annotation Collections*
+
+#+BEGIN_EXAMPLE
+def annotation_properties(as -> Bag of Annotation)
+    ≔ {a | a ∈ as ∧ AnnotationProperty(a)}
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def constraints(as - > Bag of Annotation)
+    ≔ {a | a ∈ as ∧ Constraint(a)}
+#+END_EXAMPLE
 
 *** Structured Type Members
 
 *Class: Member*
 
-■ ~annotations(Member) -> Bag of Annotation~
+#+BEGIN_EXAMPLE
+def Member(Any) → boolean
+#+END_EXAMPLE
 
-■ ~name(Member) -> Identifier~
+#+BEGIN_EXAMPLE
+def annotations(Member) -> Bag of Annotation
+#+END_EXAMPLE
 
 Returns the identifier naming the member.
 
-■ ~contained_within(Member) -> Type~
+#+BEGIN_EXAMPLE
+def container(Member) -> Type
+#+END_EXAMPLE
 
-■ ~target_type(Member) -> Type~
+#+BEGIN_EXAMPLE
+def is_complete(m -> Member) -> boolean
+    ≔ ne(type_of(m) Unknown)
+#+END_EXAMPLE
 
-■ ~def is_complete(m -> Member) -> boolean ≔ ne(type_of(m) Unknown)~
+#+BEGIN_EXAMPLE
+def name(Member) -> Identifier
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def target_type(Member) -> Type
+#+END_EXAMPLE
 
 *Class: IdentityMember*
 
+#+BEGIN_EXAMPLE
+def IdentityMember(Any) → boolean
+#+END_EXAMPLE
+
 *Class: ByReferenceMember*
+
+#+BEGIN_EXAMPLE
+def ByReferenceMember(Any) → boolean
+#+END_EXAMPLE
 
 *Class: ByValueMember*
 
+#+BEGIN_EXAMPLE
+def ByValueMember(Any) → boolean
+#+END_EXAMPLE
+
 *Class: Cardinality*
 
-■ ~min(Cardinality) -> unsigned~
+#+BEGIN_EXAMPLE
+def Cardinality(Any) → boolean
+#+END_EXAMPLE
 
-■ ~max(Cardinality) -> Maybe of unsigned~
+#+BEGIN_EXAMPLE
+def is_optional(c -> Cardinality) -> boolean
+    ≔ min(c) = 0 ∧ eq(max(c) 1)
+#+END_EXAMPLE
 
-■ ~is_range(Cardinality) -> boolean~
+#+BEGIN_EXAMPLE
+def is_range(Cardinality) -> boolean
+#+END_EXAMPLE
 
-■ ~is_range_unbounded(c -> Cardinality) -> boolean ≔ is_range(c) ∧ is_empty(max(c))~
+#+BEGIN_EXAMPLE
+def is_range_unbounded(c -> Cardinality) -> boolean
+    ≔ is_range(c) ∧ is_empty(max(c))
+#+END_EXAMPLE
 
-■ ~is_optional(c -> Cardinality) -> boolean ≔ min(c) = 0 ∧ eq(max(c) 1)~
+#+BEGIN_EXAMPLE
+def max(Cardinality) -> Maybe of unsigned
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def min(Cardinality) -> unsigned
+#+END_EXAMPLE
 
 *** Entities
 
 *Class: Entity*
 
-■ ~annotations(Entity) -> Bag of Annotation~
+#+BEGIN_EXAMPLE
+def Entity(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def annotations(Entity) -> Bag of Annotation
+#+END_EXAMPLE
 
 Returns an unordered sequence of annotations attached to the entity.
 
-■ ~contained_within(Entity) -> Module~
+#+BEGIN_EXAMPLE
+def container(Entity) -> Module
+#+END_EXAMPLE
 
-■ ~name(Entity) -> Identifier~
+#+BEGIN_EXAMPLE
+def flat_members(Entity) -> Set of EntityMember
+#+END_EXAMPLE
+
+Returns an unordered, unique, sequence of variants contained within the union.
+#+BEGIN_EXAMPLE
+def groups(Entity) -> Set of EntityGroup
+#+END_EXAMPLE
+
+Returns an unordered, unique, sequence of variants contained within the union.
+
+#+BEGIN_EXAMPLE
+def identity(Entity) -> IdentityMember
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def members(Entity) -> Set of EntityMember
+#+END_EXAMPLE
+
+Returns an unordered, unique, sequence of variants contained within the union.
+
+#+BEGIN_EXAMPLE
+def name(Entity) -> Identifier
+#+END_EXAMPLE
 
 Returns the identifier naming the entity.
 
-■ ~flat_members(Entity) -> Set of EntityMember~
-
-Returns an unordered, unique, sequence of variants contained within the union.
-
-■ ~groups(Entity) -> Set of EntityGroup~
-
-Returns an unordered, unique, sequence of variants contained within the union.
-
-■ ~identity(Entity) -> IdentityMember~
-
-■ ~members(Entity) -> Set of EntityMember~
-
-Returns an unordered, unique, sequence of variants contained within the union.
 
 *Class: EntityGroup*
 
-■ ~annotations(EntityGroup) -> Bag of Annotation~
+#+BEGIN_EXAMPLE
+def EntityGroup(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def annotations(EntityGroup) -> Bag of Annotation
+#+END_EXAMPLE
 
 Returns an unordered sequence of annotations attached to the entity group.
 
-■ ~contained_within(EntityGroup) -> Entity~
+#+BEGIN_EXAMPLE
+def container(EntityGroup) -> Entity
+#+END_EXAMPLE
 
-■ ~members(EntityGroup) -> Set of EntityMember~
+#+BEGIN_EXAMPLE
+def members(EntityGroup) -> Set of EntityMember
+#+END_EXAMPLE
 
 Returns an unordered, unique, sequence of variants contained within the union.
 
 *Union: EntityMember*
 
-■ ~as_by_reference(EntityMember) -> Maybe of ByReferenceMember~
+#+BEGIN_EXAMPLE
+def EntityMember(Any) → boolean
+#+END_EXAMPLE
 
-■ ~as_by_value(EntityMember) -> Maybe of ByValueMember~
+#+BEGIN_EXAMPLE
+def as_by_reference(EntityMember) -> Maybe of ByReferenceMember
+#+END_EXAMPLE
 
-■ ~is_by_reference(EntityMember) -> boolean~
+#+BEGIN_EXAMPLE
+def as_by_value(EntityMember) -> Maybe of ByValueMember
+#+END_EXAMPLE
 
-■ ~is_by_value(EntityMember) -> boolean~
+#+BEGIN_EXAMPLE
+def is_by_reference(EntityMember) -> boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def is_by_value(EntityMember) -> boolean
+#+END_EXAMPLE
 
 *** Entity Events
 
-■ ~annotations(Event) -> Bag of Annotation~
+*Class: Event*
+
+#+BEGIN_EXAMPLE
+def Event(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def annotations(Event) -> Bag of Annotation
+#+END_EXAMPLE
 
 Returns an unordered sequence of annotations attached to the event.
 
-■ ~contained_within(Event) -> Module~
+#+BEGIN_EXAMPLE
+def container(Event) -> Module
+#+END_EXAMPLE
 
-■ ~name(Event) -> Identifier~
+#+BEGIN_EXAMPLE
+def flat_members(Event) -> Set of ByValueMember
+#+END_EXAMPLE
+
+Returns an unordered, unique, sequence of variants contained within the union.
+
+#+BEGIN_EXAMPLE
+def groups(Event) -> Set of StructureGroup
+#+END_EXAMPLE
+
+Returns an unordered, unique, sequence of variants contained within the union.
+
+#+BEGIN_EXAMPLE
+def members(Event) -> Set of ByValueMember
+#+END_EXAMPLE
+
+Returns an unordered, unique, sequence of variants contained within the union.
+
+#+BEGIN_EXAMPLE
+def name(Event) -> Identifier
+#+END_EXAMPLE
 
 Returns the identifier naming the event.
 
-■ ~source(Event) -> IdentifierReference~
-
-■ ~members(Event) -> Set of ByValueMember~
-
-Returns an unordered, unique, sequence of variants contained within the union.
-
-■ ~flat_members(Event) -> Set of ByValueMember~
-
-Returns an unordered, unique, sequence of variants contained within the union.
-
-■ ~groups(Event) -> Set of StructureGroup~
-
-Returns an unordered, unique, sequence of variants contained within the union.
+#+BEGIN_EXAMPLE
+def source(Event) -> IdentifierReference
+#+END_EXAMPLE
 
 *** Enumerations
 
 *Class: Enumeration*
 
-■ ~annotations(Enumeration) -> Bag of Annotation~
+#+BEGIN_EXAMPLE
+def Enumeration(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def annotations(Enumeration) -> Bag of Annotation
+#+END_EXAMPLE
 
 Returns an unordered sequence of annotations attached to the enumeration.
 
-■ ~contained_within(Enumeration) -> Module~
+#+BEGIN_EXAMPLE
+def container(Enumeration) -> Module
+#+END_EXAMPLE
 
-■ ~name(Enumeration) -> Identifier~
+#+BEGIN_EXAMPLE
+def is_complete(e -> Enumeration) -> boolean ≔ ¬has_body(e)
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def name(Enumeration) -> Identifier
+#+END_EXAMPLE
 
 Returns the identifier naming the enum.
 
-■ ~variants(Enumeration) -> OrderedSet of EnumVariant~
+#+BEGIN_EXAMPLE
+def variants(Enumeration) -> OrderedSet of EnumVariant
+#+END_EXAMPLE
 
 Returns an ordered, unique, sequence of variants contained within the enumeration.
 
-■ ~def is_complete(e -> Enumeration) -> boolean ≔ ¬has_body(e)~
-
 *Class: EnumVariant*
 
-■ ~annotations(EnumVariant) -> Bag of Annotation~
+#+BEGIN_EXAMPLE
+def EnumVariant(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def annotations(EnumVariant) -> Bag of Annotation
+#+END_EXAMPLE
 
 Returns an unordered sequence of annotations attached to the enumeration variant.
 
-■ ~contained_within(EnumVariant) -> Enumeration~
+#+BEGIN_EXAMPLE
+def container(EnumVariant) -> Enumeration
+#+END_EXAMPLE
 
-■ ~name(EnumVariant) -> Identifier~
+#+BEGIN_EXAMPLE
+def name(EnumVariant) -> Identifier
+#+END_EXAMPLE
 
 Returns the identifier naming the enumeration variant.
 
-■ ~value(EnumVariant) -> integer~
+#+BEGIN_EXAMPLE
+def value(EnumVariant) -> integer
+#+END_EXAMPLE
 
 *** Structures
 
-■ ~annotations(Structure) -> Bag of Annotation~
+*Class: Structure*
+
+#+BEGIN_EXAMPLE
+def Structure(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def annotations(Structure) -> Bag of Annotation
+#+END_EXAMPLE
 
 Returns an unordered sequence of annotations attached to the structure.
 
-■ ~contained_within(Structure) -> Module~
+#+BEGIN_EXAMPLE
+def container(Structure) -> Module
+#+END_EXAMPLE
 
-■ ~flat_members(Structure) -> Set of ByValueMember~
+#+BEGIN_EXAMPLE
+def flat_members(Structure) -> Set of ByValueMember
+#+END_EXAMPLE
 
 Returns an unordered, unique, sequence of members contained within the structure and all of it's groups.
 
-■ ~groups(Structure) -> Set of StructureGroup~
+#+BEGIN_EXAMPLE
+def groups(Structure) -> Set of StructureGroup
+#+END_EXAMPLE
 
 Returns an unordered, unique, sequence of groups contained within the structure.
 
-■ ~members(Structure) -> Set of ByValueMember~
+#+BEGIN_EXAMPLE
+def members(Structure) -> Set of ByValueMember
+#+END_EXAMPLE
 
 Returns an unordered, unique, sequence of members contained within the structure.
 
-■ ~name(Structure) -> Identifier~
+#+BEGIN_EXAMPLE
+def name(Structure) -> Identifier
+#+END_EXAMPLE
 
 Returns the identifier naming the structure.
 
 *Class: StructureGroup*
 
-■ ~annotations(StructureGroup) -> Bag of Annotation~
+#+BEGIN_EXAMPLE
+def StructureGroup(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def annotations(StructureGroup) -> Bag of Annotation
+#+END_EXAMPLE
 
 Returns an unordered sequence of annotations attached to the structure group.
 
-■ ~contained_within(StructureGroup) -> Structure~
+#+BEGIN_EXAMPLE
+def contained_within(StructureGroup) -> Structure
+#+END_EXAMPLE
 
-■ ~members(StructureGroup) -> Set of ByValueMember~
+#+BEGIN_EXAMPLE
+def members(StructureGroup) -> Set of ByValueMember
+#+END_EXAMPLE
 
 Returns an unordered, unique, sequence of members contained within the structure group.
 
@@ -841,75 +1373,138 @@ Returns an unordered, unique, sequence of members contained within the structure
 
 *Class: Union*
 
-■ ~annotations(Union) -> Bag of Annotation~
+#+BEGIN_EXAMPLE
+def Union(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def annotations(Union) -> Bag of Annotation
+#+END_EXAMPLE
 
 Returns an unordered sequence of annotations attached to the union.
 
-■ ~contained_within(Union) -> Module~
+#+BEGIN_EXAMPLE
+def container(Union) -> Module
+#+END_EXAMPLE
 
-■ ~name(Union) -> Identifier~
+#+BEGIN_EXAMPLE
+def is_complete(u -> Union) -> boolean
+    ≔ ¬has_body(u)
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def name(Union) -> Identifier
+#+END_EXAMPLE
 
 Returns the identifier naming the union.
 
-■ ~variants(Union) -> Set of TypeVariant~
+#+BEGIN_EXAMPLE
+def variants(Union) -> Set of TypeVariant
+#+END_EXAMPLE
 
 Returns an unordered, unique, sequence of variants contained within the union.
 
-■ ~def is_complete(u -> Union) -> boolean ≔ ¬has_body(u)~
-
 *Class: TypeVariant*
 
-■ ~annotations(TypeVariant) -> Bag of Annotation~
+#+BEGIN_EXAMPLE
+def TypeVariant(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def annotations(TypeVariant) -> Bag of Annotation
+#+END_EXAMPLE
 
 Returns an unordered sequence of annotations attached to the type variant.
 
-■ ~contained_within(TypeVariant) -> union~
+#+BEGIN_EXAMPLE
+def container(TypeVariant) -> union
+#+END_EXAMPLE
 
-■ ~is_renamed(PropertyRole) -> boolean~
+#+BEGIN_EXAMPLE
+def is_renamed(PropertyRole) -> boolean
+#+END_EXAMPLE
 
-■ ~name(TypeVariant) -> Identifier~
+#+BEGIN_EXAMPLE
+def name(TypeVariant) -> Identifier
+#+END_EXAMPLE
 
 Returns the identifier naming the type variant.
 
-■ ~renamed_as(PropertyRole) -> Maybe of Identifier~
+#+BEGIN_EXAMPLE
+def renamed_as(PropertyRole) -> Maybe of Identifier
+#+END_EXAMPLE
 
 *** Property Definitions
 
 *Class: Property*
 
-■ ~annotations(ModuleProperty) -> Bag of Annotation~
+#+BEGIN_EXAMPLE
+def Property(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def annotations(ModuleProperty) -> Bag of Annotation
+#+END_EXAMPLE
 
 Returns an unordered sequence of annotations attached to the property.
 
-■ ~contained_within(Property) -> Module~
+#+BEGIN_EXAMPLE
+def container(Property) -> Module
+#+END_EXAMPLE
 
-■ ~is_complete(p -> Property) -> boolean ≔ p.body.present ∧ ∀ r in p.roles ( r.is_complete )~
+#+BEGIN_EXAMPLE
+def is_complete(p -> Property) -> boolean
+    ≔ p.body.present ∧ ∀ r in p.roles ( r.is_complete )
+#+END_EXAMPLE
 
-■ ~name(Property) -> Identifier~
+#+BEGIN_EXAMPLE
+def name(Property) -> Identifier
+#+END_EXAMPLE
 
 Returns the identifier naming the property.
 
-■ ~roles(Property) -> Bag of PropertyRole~
+#+BEGIN_EXAMPLE
+def roles(Property) -> Bag of PropertyRole
+#+END_EXAMPLE
 
 *Class: Property Role*
 
-■ ~annotations(PropertyRole) -> Bag of Annotation~
+#+BEGIN_EXAMPLE
+def PropertyRole(Any) → boolean
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def annotations(PropertyRole) -> Bag of Annotation
+#+END_EXAMPLE
 
 Returns an unordered sequence of annotations attached to the property role.
 
-■ ~contained_within(PropertyRole) -> Property~
+#+BEGIN_EXAMPLE
+def container(PropertyRole) -> Property
+#+END_EXAMPLE
 
-■ ~def is_complete(r -> PropertyRole) -> boolean ≔ ne(type_of(r) Unknown)~
+#+BEGIN_EXAMPLE
+def is_complete(r -> PropertyRole) -> boolean
+    ≔ ne(type_of(r) Unknown)
+#+END_EXAMPLE
 
-■ ~name(PropertyRole) -> Identifier~
+#+BEGIN_EXAMPLE
+def name(PropertyRole) -> Identifier
+#+END_EXAMPLE
 
 Returns the identifier naming the property role.
 
-■ ~source_cardinality(PropertyRole) -> Maybe of Cardinality~
+#+BEGIN_EXAMPLE
+def source_cardinality(PropertyRole) -> Maybe of Cardinality
+#+END_EXAMPLE
 
-■ ~target_type(PropertyRole) -> Type~
+#+BEGIN_EXAMPLE
+def target_type(PropertyRole) -> Type
+#+END_EXAMPLE
 
-■ ~target_cardinality(PropertyRole) -> Cardinality~
+#+BEGIN_EXAMPLE
+def target_cardinality(PropertyRole) -> Cardinality
+#+END_EXAMPLE
 
 *** Formal Constraints
 

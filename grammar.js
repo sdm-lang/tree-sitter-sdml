@@ -169,20 +169,34 @@ module.exports = grammar({
             repeat1(
                 $.environment_definition
             ),
-            keyword('in'),
+            $.constraint_environment_end,
         ),
+
+        constraint_environment_end: $ => keyword('in'),
 
         environment_definition: $ => seq(
             keyword('def'),
-            field('name', $.identifier),
+            field(
+                'name',
+                $.identifier
+            ),
             optional(
-                field('signature', $.function_signature)
+                field(
+                    'signature',
+                    $.function_signature
+                )
             ),
             choice(
                 operator(':='),
                 operator('≔'),
             ),
-            field('body', $.constraint_sentence)
+            field(
+                'rhs',
+                choice(
+                    $.predicate_value,
+                    $.constraint_sentence
+                )
+            )
         ),
 
         term: $ => choice(
@@ -190,7 +204,7 @@ module.exports = grammar({
             $.identifier_reference,
             $.predicate_value,
             $.functional_term,
-            $.sequence_builder,
+            $.sequence_comprehension,
         ),
 
         predicate_value: $ => choice(
@@ -281,8 +295,8 @@ module.exports = grammar({
                 field('lhs', $.constraint_sentence),
                 choice(
                     $.conjunction,
-                    $.disjunction,
                     $.exclusive_disjunction,
+                    $.disjunction,
                     $.implication,
                     $.biconditional,
                 )
@@ -290,7 +304,7 @@ module.exports = grammar({
         ),
 
         negation: $ => prec(
-            5,
+            6,
             seq(
                 choice(
                     keyword('not'),
@@ -405,7 +419,6 @@ module.exports = grammar({
                 choice(
                     $.reserved_self_type,
                     $.identifier_reference,
-                    $.sequence_builder
                 )
             )
         ),
@@ -420,7 +433,7 @@ module.exports = grammar({
                 choice(
                     $.name_path,
                     $.identifier_reference,
-                    $.sequence_builder
+                    $.sequence_comprehension
                 )
             )
         ),
@@ -472,102 +485,119 @@ module.exports = grammar({
             keyword('Set'),
         ),
 
-        sequence_builder: $ => seq(
+        sequence_comprehension: $ => seq(
             '{',
-            field('return', $.builder_return),
+            field('return', $.return_values),
             '|',
-            field('expression', $.builder_expression),
+            field('expression', $.expression),
             '}',
         ),
 
-        builder_expression: $ => choice(
-            prec(
-                5,
-                $.builder_atomic
-            ),
-            prec(
-                4,
-                $.builder_negation
-            ),
+        expression: $ => choice(
             prec(
                 3,
-                $.builder_conjunction
+                $.boolean_expression
             ),
             prec(
                 2,
-                $.builder_exclusive_disjunction
-            ),
-            prec(
-                1,
-                $.builder_disjunction
-            ),
-            seq(
-                '(',
-                $.builder_expression,
-                ')'
-            )
-        ),
-
-        builder_atomic: $ => choice(
-            prec(
-                2,
-                $.builder_binding
+                $.binding_expression
             ),
             prec(
                 1,
                 $.constraint_sentence
             ),
-        ),
-
-        builder_negation: $ => seq(
             seq(
-                choice(
-                    keyword('not'),
-                    operator('¬') // LaTeX: \lnot
-                ),
-                field('rhs', $.builder_expression),
+                '(',
+                $.expression,
+                ')'
             )
         ),
 
-        builder_conjunction: $ => seq(
+        boolean_expression: $ => choice(
+            $.expression_negation,
             seq(
+                field('lhs', $.expression),
                 choice(
-                    keyword('and'),
-                    operator('∧') // LaTeX: \land
-                ),
-                field('rhs', $.builder_expression),
+                    $.expression_conjunction,
+                    $.expression_exclusive_disjunction,
+                    $.expression_disjunction,
+                )
             )
         ),
 
-        builder_exclusive_disjunction: $ => seq(
+        expression_negation: $ => prec(
+            7,
             seq(
-                choice(
-                    keyword('xor'),
-                    operator('⊻') // LaTeX: \veebar
-                ),
-                field('rhs', $.builder_expression),
+                seq(
+                    choice(
+                        keyword('not'),
+                        operator('¬') // LaTeX: \lnot
+                    ),
+                    field('rhs', $.expression),
+                )
             )
         ),
 
-        builder_disjunction: $ => seq(
+        expression_conjunction: $ => prec(
+            6,
             seq(
-                choice(
-                    keyword('or'),
-                    operator('∨') // LaTeX: \lor
-                ),
-                field('rhs', $.builder_expression),
+                seq(
+                    choice(
+                        keyword('and'),
+                        operator('∧') // LaTeX: \land
+                    ),
+                    field('rhs', $.expression),
+                )
             )
         ),
 
-        builder_binding: $ => seq(
-            field('name', $.identifier),
+        expression_exclusive_disjunction: $ => prec(
+            5,
+            seq(
+                seq(
+                    choice(
+                        keyword('xor'),
+                        operator('⊻') // LaTeX: \veebar
+                    ),
+                    field('rhs', $.expression),
+                )
+            )
+        ),
+
+        expression_disjunction: $ => prec(
+            4,
+            seq(
+                seq(
+                    choice(
+                        keyword('or'),
+                        operator('∨') // LaTeX: \lor
+                    ),
+                    field('rhs', $.expression),
+                )
+            )
+        ),
+
+        binding_expression: $ => seq(
+            field(
+                'existential',
+                optional(
+                    choice(
+                        keyword('exists'),
+                        operator('∃') // LaTeX: \exists
+                    )
+                )
+            ),
+            field(
+                'name',
+                $.identifier
+            ),
             choice(
                 $.binding_type_reference,
                 $.binding_seq_iterator,
             )
         ),
 
-        builder_return: $ => choice(
+        return_values: $ => choice(
             $.identifier,
             seq(
                 '[',
@@ -971,70 +1001,6 @@ module.exports = grammar({
                     /.*/
                 )
             )
-        ),
-
-        // -----------------------------------------------------------------------
-        // Operators
-        // -----------------------------------------------------------------------
-
-        _op_equal_by_definition: $ => choice(
-            operator(':='),
-            operator('≔'),
-        ),
-
-        _op_equality: $ => operator('='),
-
-        _op_not: $ => choice(
-            keyword('not'),
-            operator('¬') // LaTeX: \lnot
-        ),
-
-        _op_and: $ => choice(
-            keyword('and'),
-            operator('∧') // LaTeX: \land
-        ),
-
-        _op_or: $ => choice(
-            keyword('or'),
-            operator('∨') // LaTeX: \lor
-        ),
-
-        _op_xor: $ => choice(
-            keyword('xor'),
-            operator('⊻') // LaTeX: \veebar
-        ),
-
-        _op_implies: $ => choice(
-            keyword('implies'),
-            operator('==>'),
-            operator('⇒') // LaTeX: \implies
-        ),
-
-        _op_iff: $ => choice(
-            keyword('iff'),
-            operator('<==>'),
-            operator('⇔') // LaTeX: \iff
-        ),
-
-        _op_forall: $ => choice(
-            keyword('forall'),
-            operator('∀') // LaTeX: \forall
-        ),
-
-        _op_exists: $ => choice(
-            keyword('exists'),
-            operator('∃') // LaTeX: \exists
-        ),
-
-        _op_in_sequence: $ => choice(
-            keyword('in'),
-            operator('∈')
-        ),
-
-        _op_has_type: $ => operator('->'),
-
-        _op_restricts_type: $ => operator('<-'),
- 
-        _op_range: $ => operator('..')
+        )
     }
 })

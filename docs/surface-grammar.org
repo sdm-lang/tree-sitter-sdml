@@ -115,7 +115,11 @@ BuiltinSimpleType   =
 SimpleValue         =
     String | Double | Decimal | Integer | Boolean | IriReference
 
-Boolean             = "true" | "false"
+Boolean             = Tautology | Contradiction
+
+Tautology           = ( "true" | "⊤" )
+
+Contradiction       = ( "false" | "⊥" )
 
 NumericSign         = "+" | "-"
 
@@ -195,11 +199,7 @@ fairly long we have made it a separate section.
 #+BEGIN_SRC ebnf
 FormalConstraint    = "is", ConstraintEnvironment?, ConstraintSentence, "end"
 
-ConstraintEnvironment =
-    EnvironmentDef+, "in"
-
-EnvironmentDef      =
-    "def", Identifier, FunctionSignature?, ( ":=" | "≔" ), ConstraintSentence
+ConstraintEnvironment = EnvironmentDef+, "in"
 
 ConstraintSentence  =
     SimpleSentence | BooleanSentence | QuantifiedSentence |
@@ -244,42 +244,75 @@ BindingTarget       =
 
 BindingFromType     = "->", ( "Self" | IdentifierReference )
 
-BindingFromSequence = ( "in" "∈" ), ( NamePath | IdentifierReference )
+BindingFromSequence =
+    ( "in" "∈" ), ( NamePath | IdentifierReference | SequenceComprehension )
  
 QuantifiedBody      = "(", ConstraintSentence, ")"
 
 Term                =
-    NamePath | QualifiedIdentifier | PredicateValue | FunctionalTerm
+    NamePath | IdentifierReference | PredicateValue | FunctionalTerm | SequenceComprehension
 
 NamePath            = ( "self" | "Self" | Identifier ), ( ".", Identifier )+
 
 PredicateValue      =
-    SimpleValue | Tautology | Contradiction | ListOfPredicateValues
+    SimpleValue | ListOfPredicateValues
 
-Tautology           = "⊤"
-
-Contradiction       = "⊥"
-
-ListOfPredicateValues =
-    "[", ( SimpleValue | Tautology | Contradiction )*, "]"
+ListOfPredicateValues = "[", SimpleValue*, "]"
 
 FunctionalTerm      = Term, "(", Term*, ")"
 #+END_SRC
 
-
 ** Constraint Function Definitions
 
 #+BEGIN_SRC ebnf
+EnvironmentDef      =
+    "def", Identifier, FunctionSignature?,
+        ( ":=" | "≔" ), ( PredicateValue | ConstraintSentence )
+
 FunctionSignature   = "(", Parameter+, ")", "->", FunctionalType
 
 Parameter           = ( Identifier, "->" )?, FunctionalType
 
-FunctionalType      = TypeReference | CollectionType
+FunctionalType      =  CollectionType | TypeReference
 
 CollectionType      = BuiltinCollectionType, "of", TypeReference
 
 BuiltinCollectionType =
     "Bag" | "List" | "Maybe" | "OrderedSet" | "Sequence" | "Set"
+#+END_SRC
+
+** Sequence Comprehensions
+
+#+BEGIN_SRC ebnf
+SequenceComprehension = "{", ReturnValues, "|", Expression "}"
+
+ReturnValues          = Identifier | ( "[", Identifier+, "]" )
+
+Expression            =
+    BooleanExpression | BindingExpression | ConstraintSentence | ( "(", Expression ")" )
+
+BooleanExpression     =
+    ExpressionNegation
+    | ( Expression, (
+        ExpressionConjunction,
+        ExpressionExclusiveDisjunction,
+        ExpressionDisjunction,
+        )
+    )
+
+ExpressionNegation   = ( "not" | "¬" ), Expression
+
+ExpressionConjunction =
+    ( "and" | "∧" ), Expression
+
+ExpressionExclusiveDisjunction =
+    ( "xor" | "⊻" ), Expression
+
+ExpressionDisjunction =
+    ( "or" | "∨" ), Expression
+
+BindingExpression    =
+    ( "exists" | "∃" )?, Identifier, ( BindingFromType | BindingFromSequence )
 #+END_SRC
 
 

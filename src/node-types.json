@@ -102,6 +102,50 @@
     }
   },
   {
+    "type": "binding_expression",
+    "named": true,
+    "fields": {
+      "existential": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "exists",
+            "named": false
+          },
+          {
+            "type": "∃",
+            "named": false
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "binding_seq_iterator",
+          "named": true
+        },
+        {
+          "type": "binding_type_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "binding_seq_iterator",
     "named": true,
     "fields": {
@@ -118,7 +162,7 @@
             "named": true
           },
           {
-            "type": "sequence_builder",
+            "type": "sequence_comprehension",
             "named": true
           }
         ]
@@ -163,10 +207,6 @@
           {
             "type": "reserved_self_type",
             "named": true
-          },
-          {
-            "type": "sequence_builder",
-            "named": true
           }
         ]
       }
@@ -176,6 +216,44 @@
     "type": "boolean",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "boolean_expression",
+    "named": true,
+    "fields": {
+      "lhs": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expression_conjunction",
+          "named": true
+        },
+        {
+          "type": "expression_disjunction",
+          "named": true
+        },
+        {
+          "type": "expression_exclusive_disjunction",
+          "named": true
+        },
+        {
+          "type": "expression_negation",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "boolean_sentence",
@@ -218,169 +296,6 @@
         },
         {
           "type": "negation",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "builder_atomic",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "builder_binding",
-          "named": true
-        },
-        {
-          "type": "constraint_sentence",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "builder_binding",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "binding_seq_iterator",
-          "named": true
-        },
-        {
-          "type": "binding_type_reference",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "builder_conjunction",
-    "named": true,
-    "fields": {
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "builder_expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "builder_disjunction",
-    "named": true,
-    "fields": {
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "builder_expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "builder_exclusive_disjunction",
-    "named": true,
-    "fields": {
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "builder_expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "builder_expression",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "builder_atomic",
-          "named": true
-        },
-        {
-          "type": "builder_conjunction",
-          "named": true
-        },
-        {
-          "type": "builder_disjunction",
-          "named": true
-        },
-        {
-          "type": "builder_exclusive_disjunction",
-          "named": true
-        },
-        {
-          "type": "builder_expression",
-          "named": true
-        },
-        {
-          "type": "builder_negation",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "builder_negation",
-    "named": true,
-    "fields": {
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "builder_expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "builder_return",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
           "named": true
         }
       ]
@@ -519,11 +434,20 @@
       "required": true,
       "types": [
         {
+          "type": "constraint_environment_end",
+          "named": true
+        },
+        {
           "type": "environment_definition",
           "named": true
         }
       ]
     }
+  },
+  {
+    "type": "constraint_environment_end",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "constraint_sentence",
@@ -795,22 +719,26 @@
     "type": "environment_definition",
     "named": true,
     "fields": {
-      "body": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "constraint_sentence",
-            "named": true
-          }
-        ]
-      },
       "name": {
         "multiple": false,
         "required": true,
         "types": [
           {
             "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "rhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "constraint_sentence",
+            "named": true
+          },
+          {
+            "type": "predicate_value",
             "named": true
           }
         ]
@@ -929,6 +857,97 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "binding_expression",
+          "named": true
+        },
+        {
+          "type": "boolean_expression",
+          "named": true
+        },
+        {
+          "type": "constraint_sentence",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "expression_conjunction",
+    "named": true,
+    "fields": {
+      "rhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "expression_disjunction",
+    "named": true,
+    "fields": {
+      "rhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "expression_exclusive_disjunction",
+    "named": true,
+    "fields": {
+      "rhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "expression_negation",
+    "named": true,
+    "fields": {
+      "rhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -1718,7 +1737,22 @@
     }
   },
   {
-    "type": "sequence_builder",
+    "type": "return_values",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sequence_comprehension",
     "named": true,
     "fields": {
       "expression": {
@@ -1726,7 +1760,7 @@
         "required": true,
         "types": [
           {
-            "type": "builder_expression",
+            "type": "expression",
             "named": true
           }
         ]
@@ -1736,7 +1770,7 @@
         "required": true,
         "types": [
           {
-            "type": "builder_return",
+            "type": "return_values",
             "named": true
           }
         ]
@@ -1916,7 +1950,7 @@
           "named": true
         },
         {
-          "type": "sequence_builder",
+          "type": "sequence_comprehension",
           "named": true
         }
       ]
@@ -2258,11 +2292,11 @@
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "def",

@@ -9,23 +9,22 @@
  ] @indent.end
 
 [
+ (string)
  (line_comment)
- ] @ignore
+ ] @indent.auto
 
-(quantified_body "(" @indent)
-(quantified_body ")" @indent.end)
+(constraint_environment_end) @indent.dedent
 
-(builder_expression "(" @indent)
-(builder_expression ")" @indent.end)
+(quantified_body "(" @indent ")" @indent.end)
 
-(functional_term "(" @indent)
-(functional_term ")" @indent.end)
+(sequence_comprehension "{" @indent "}" @indent.end)
 
-(atomic_sentence "(" @indent)
-(atomic_sentence ")" @indent.end)
+(expression "(" @indent ")" @indent.end)
 
-(list_of_predicate_values "[" @indent)
-(list_of_predicate_values "]" @indent.end)
+(functional_term "(" @indent ")" @indent.end)
 
-(list_of_values "[" @indent)
-(list_of_values "]" @indent.end)
+(atomic_sentence "(" @indent ")" @indent.end)
+
+(list_of_predicate_values "[" @indent "]" @indent.end)
+
+(list_of_values "[" @indent "]" @indent.end)

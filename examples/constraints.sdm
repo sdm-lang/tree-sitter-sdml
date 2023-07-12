@@ -18,13 +18,21 @@ module Campaign is
 
     ref d -> Target is
       assert tagged_with_foo_path is
-        ∀ self (self.tags.contains("foo"))
+        def foo := "foo"
+        in
+        ∀ self (self.tags.contains(foo))
       end
     end
 
     ref e -> Target is
       assert tagged_with_foo_builder is
-        ∀ self (¬is_empty({t | t in self.tags and t = "foo"}))
+        ∀ self ( ¬is_empty({t | t in self.tags and t = "foo"}) )
+      end
+    end
+
+    ref f -> Target is
+      assert tagged_with_parent_tags is
+        ∀ self ( ∃ tag ∈ self.container.tags ( self.tags.contains(tag) ) )
       end
     end
 

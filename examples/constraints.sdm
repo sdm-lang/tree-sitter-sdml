@@ -1,5 +1,7 @@
 module Campaign is
 
+  @skos:prefLabel = "Example"
+
   entity Campaign is
 
     identity a -> CampaignId
@@ -9,10 +11,21 @@ module Campaign is
     end
 
     ref c -> Target is
-      assert is
+      assert tagged_with_foo is
         ∀ self (contains(self.tags "foo"))
       end
+    end
 
+    ref d -> Target is
+      assert tagged_with_foo_path is
+        ∀ self (self.tags.contains("foo"))
+      end
+    end
+
+    ref e -> Target is
+      assert tagged_with_foo_builder is
+        ∀ self (¬is_empty({t | t in self.tags and t = "foo"}))
+      end
     end
 
   end

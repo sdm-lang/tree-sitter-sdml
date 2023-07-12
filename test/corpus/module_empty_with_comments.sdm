@@ -7,7 +7,7 @@ Module, Empty with Comments
 
 ;; This is a general comment that starts at the left
 ;; with current indentation
-module Campaign is end ; a trailing comment
+module Campaign is end
 
 ---
 
@@ -17,5 +17,4 @@ module Campaign is end ; a trailing comment
   (line_comment)
   (line_comment)
   name: (identifier)
-  body: (module_body)
-  (line_comment))
+  body: (module_body))

@@ -1,6 +1,126 @@
 #+LANGUAGE: en
 #+STARTUP: overview hidestars inlineimages entitiespretty
 
-* Capturing Model Constraints
+* <<sec:model-constraints>>Capturing Model Constraints
 
-TBD
+In developing any data, domain, or information  model there are certain constraints between model elements that are
+either difficult to represent in the model language itself. This is particularly true of visual languages or those with
+a visual representation. For example, in UML it is not possible to define cross-attribute constraints (if this attribute
+is true, that attribute must be false), or setting cardinality on transitive associations. To address this UML uses
+Object Constraint Language[fn:ocl1][fn:ocl2], and similar languages have been proposed for parametric modeling
+languages.
+
+SDML allows constraints to be added to any model element where annotations are also allowed. A constraints MAY be named,
+and MAY be either /informally/, or /formally/ specified. Informal constraints are free-form strings, these are a common
+place to start even if you intend to make a formal version later. An example informal constraint is shown in listing
+[[lst:ex-informal-constraint]].
+
+#+NAME: lst:ex-informal-constraint
+#+CAPTION: Example Informal Constraint
+#+BEGIN_SRC sdml :noeval
+module example is
+
+  assert must_have_preferred_label =
+    "All definitions in this module MUST have an annotation providing a skos:prefLabel value."
+
+end
+#+END_SRC
+
+Formal constraints have their own embedded constraint language whose semantics are a subset of ISO Common
+Logic[fn:isocl]. ISO Common Logic is most easily understood as an abstract language that allows for the interchange of
+logical expressions based in first-order predicate logic between systems using standardized representations (Common
+Logic Interchange Format (CLIF), Conceptual Graph Interchange Format (CGIF), and XML notation for Common Logic (XCL)).
+The example in listing [[lst:ex-formal-constraint]] is an expansion of the informal example where we check for the presence
+of the annotation on every top-level definition and then any members of that definition. Note that this example also
+demonstrates the ability to create new predicates as in ~has_pref_label~ which simplifies the body of the constraint.
+
+#+NAME: lst:ex-formal-constraint
+#+CAPTION: Example Formal Constraint
+#+BEGIN_SRC sdml :noeval
+module labelled is
+
+  assert must_have_preferred_label is
+    def has_pref_label(anns -> Bag of Annotation) ≔
+      ∃ a ∈ anns ( name(a) = skos:prefLabel ∧ ¬empty(value(a)) )
+  in
+    has_pref_label(self.annotations)
+    ∧ ∀ d ∈ self.definitions (
+      has_pref_label(d.annotations)
+      ∧ Entity(d) ⇒ ∀ m ∈ d.flat_members ( has_pref_label(m.annotations) )
+      ∧ Enumeration(d) ⇒ ∀ m ∈ d.variants ( has_pref_label(m.annotations) )
+      ∧ Event(d) ⇒ ∀ m ∈ d.flat_members ( has_pref_label(m.annotations) )
+      ∧ Structure(d) ⇒ ∀ m ∈ d.flat_members ( has_pref_label(m.annotations) )
+      ∧ Union(d) ⇒ ∀ m ∈ d.variants ( has_pref_label(m.annotations) )
+      ∧ Property(d) ⇒ ∀ m ∈ d.roles ( has_pref_label(m.annotations) )
+    )
+  end
+
+end
+#+END_SRC
+
+
+This notation is effectively syntactic sugar as it can be systematically transformed into the form above. The
+transformation rules are:
+
+1. The reserved words ~self~ and ~Self~ may only appear as the first element.
+2. The list of names *after* the first are reversed and applied in turn as functions.
+   * ~name.suffix~ becomes ~suffix(name(_))~
+3. The first element will become the first argument to the inner-most function.
+   * ~name.suffix~ becomes ~suffix(name(def))~
+4. If the path ends in an argument list the arguments are added to the corresponding function call.
+   *  ~suffix(name(def)) + ("Rental")~ becomes ~suffix(name(def) "Rental")~
+
+Similarly the quantifier collection ~self.definitions~ becomes ~definitions(self)~.
+
+** Constraint Semantics
+
+The embedded constraint language is purely functional and constraint assertions MUST return a single boolean value
+determining correctness.
+
+- Simple Statements :: .
+  - Atomic: ~predicate(term ...)~
+  - Equation: ~lhs = rhs~
+- Boolean Statements :: .
+  - Conjunction: ~lhs and rhs~ /equivalent to/ ~lhs ∧ rhs~
+  - Disjunction:  ~lhs or rhs~ /equivalent to/ ~lhs ∧ rhs~
+  - Exclusive Disjunction:  ~lhs xor rhs~ /equivalent to/ ~lhs ⊻ rhs~
+  - Implication:  ~lhs implies rhs~ /equivalent to/ ~lhs ⇒ rhs~
+  - Biconditional:  ~lhs iff rhs~ /equivalent to/ ~lhs ⇔ rhs~
+- Quantified Statements :: .
+  - Universal over Type: ~forall x -> Type~ /equivalent to/  ~∀ x -> Type~
+  - Universal over Sequence: ~forall e in collection~ /equivalent to/ ~∀ e ∈ collection~
+  - Existential over Type: ~exists x -> Type~ /equivalent to/ ~∃ x -> Type~
+  - Existential over Sequence: ~exists e in collection~ /equivalent to/ ~∃ e ∈ collection~
+    
+** Constraint Predicates, Relations, and Functions
+
+■ ~predicate(Type) -> boolean~ or ~predicate(value -> Type) -> boolean~
+
+■ ~relation(Type1, Type2) -> boolean~ or ~relation(value1 -> Type1, value2 -> Type2) -> boolean~
+
+■ ~function(Type, ...) -> RType~ or ~function(value -> Type, ...) -> RType~
+
+Additionally, in the following sections we are sometimes able to define one predicate in terms of existing ones. In this
+case we use the equation operation to denote a function /body/.
+
+■ ~ne(v1 -> boolean, v2 -> boolean) -> boolean ≔ not(eq(v1, v2))~
+
+All types, both builtin and introduced in a module introduce a predicate that acts as an /isa/ check. This automatic
+predicate takes the form of the following example:
+
+■ ~TypeName(unknown) -> boolean~
+
+*** Collection Types
+
+■ ~predicate(Bag of integer) -> boolean~ or ~predicate(value -> Set of string) -> boolean~
+
+■ ~Collection(Type, v -> unknown) -> boolean ≔ Collection(v) ∧ v.all(e | Type(e))~
+
+■ ~map(Bag of unknown) -> Bag of unknown~
+
+# ----- Footnotes
+
+[fn:ocl1] [[https://www.omg.org/spec/OCL/2.4][Object Constraint Language (OCL)]], OMG
+[fn:ocl2] [[https://www.iso.org/standard/57306.html][ISO/IEC 19507:2012 Object Management Group Object Constraint Language (OCL)]], ISO/IEC
+[fn:isocl] [[https://www.iso.org/standard/66249.html][ISO/IEC 24707:2018 Common Logic (CL) — A framework for a family of logic-based languages]], ISO/IEC
+

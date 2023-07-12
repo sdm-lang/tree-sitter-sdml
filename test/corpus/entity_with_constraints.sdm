@@ -1,6 +1,6 @@
-=======================
-Entity, With Constaints
-=======================
+========================
+Entity, With Constraints
+========================
 
 module Campaign is
 
@@ -13,7 +13,7 @@ module Campaign is
     end
 
     ref c -> Target is
-      assert is
+      assert tagged_with_foo is
         ∀ self (contains(self.tags "foo"))
       end
 
@@ -58,6 +58,7 @@ end
              (annotation_only_body
                (annotation
                  (constraint
+                  (identifier)
                   (formal_constraint
                     (constraint_sentence
                       (quantified_sentence
@@ -69,13 +70,11 @@ end
                               (simple_sentence
                                 (atomic_sentence
                                   (term
-                                    (name_path
-                                      (name
-                                        (identifier))))
+                                    (identifier_reference
+                                      (identifier)))
                                   (term
                                     (name_path
-                                      (name
-                                        (reserved_self))
+                                      (reserved_self)
                                       (identifier)))
                                   (term
                                     (predicate_value

@@ -94,7 +94,7 @@ A type reference may be to a locally defined type by an identifier, or an import
 IdentifierReference = QualifiedIdentifier | Identifier
 #+END_SRC
 
-** <<sec:modules-and-imports>> Module Declaration and Imports
+** <<sec:modules-and-imports>> Module Definition and Imports
 
 A module is the container for a set of type definitions and typically models a /Domain/ or /Sub-domain/. A single resource
 (in the web sense of some /thing/ identified by an IRI) may contain only a single module. Therefore, the smallest valid
@@ -134,7 +134,7 @@ module example base <https://example.org/rdf/example#> is
 end
 #+END_SRC
 
-*** (Module URI Resolution)
+*Module URI Resolution*
 
 Each module has an identifer/name defined within the module source as well as a base URI used to assign URIs to every
 model element within the resource. This URI identifier for each model element necessary as the identifier for the
@@ -514,7 +514,12 @@ underlying RDF/OWL equivalence relationship to a subset of the XML Schema dataty
 
 ** <<sec:annotations>>Annotations
 
-Annotations are an extension mechanism that interacts directly with the underlying RDF representation of the subject
+Annotations allow for the assertion of facts attached to model elements that go beyond what is possible to describe in
+the core syntax. Annotations are available in two forms, annotation properties, and constraints.
+
+*** Annotation Properties
+
+Annotation Properties are an extension mechanism that interacts directly with the underlying RDF representation of the subject
 model element. While these may look like Java /annotations/, Python /decorators/, or Rust /attributes/ it is more powerful in
 that it can express arbitrary statements about the model element. An SDML annotation starts with the symbol "@" and then
 has an identifier that resolves to an OWL annotation property (see section [[sec:define-rdf]] for the detailed rules), and a
@@ -527,7 +532,7 @@ Annotation      = "@", IdentiferReference, "=", Value
 
 *Example:*
 
-The following example demonstrates a common annotation attached to a module.
+The following example demonstrates a common annotation property attached to a module.
 
 #+NAME: lst:sdml-ex-annotation-property
 #+CAPTION: Annotation Property
@@ -583,6 +588,38 @@ should be a triple:
 
 =a rdf:type owl:AnnotationProperty=
 #+END_QUOTE
+
+*** Constraints
+
+This section will only briefly introduce constraints as section [[sec:model-constraints]] provides a detailed description.
+The first example, in listing [[lst:sdml-ex-constrained-module]], provides an informal constraint in that it is simply a
+string which is useful to readers but cannot be verified. 
+
+#+NAME: lst:sdml-ex-constrained-module
+#+CAPTION: Informal Constraint on Module
+#+BEGIN_SRC sdml :exports code :noeval
+module rental is
+
+  assert name_form = "All definition names MUST start with 'Rental'"
+
+end
+#+END_SRC
+
+A formal constraint on the other hand may be verified, but takes more work to structure correctly. The example in
+listing [[lst:sdml-ex-formal-constrained-module]] example above by methodically checking every definition and any members
+therein.
+
+#+NAME: lst:sdml-ex-formal-constrained-module
+#+CAPTION: Formal Constraint on Module
+#+BEGIN_SRC sdml :exports code :noeval
+module rental is
+
+  assert name_form is
+    forall def in definitions(self) ( suffix(name(def) "Rental") )
+  end
+
+end
+#+END_SRC
 
 *** <<sec:define-rdf>> Defining RDF Classes and Properties
 

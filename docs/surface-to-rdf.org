@@ -12,8 +12,8 @@ Whitespace present in the surface syntax has *no* effect on the corresponding RD
 ** Comments
 
 Comments present in the surface syntax are *not* translated into the corresponding RDF.
-
-** Identifiers
+ 
+** Identifiers 
 
 Identifiers for modules and type definitions are appended to the base IRI of the module resource, making individual
 types within a module directly addressable.
@@ -193,6 +193,7 @@ end
 #+END_SRC
 
 ** Annotations
+** Constraints
 ** Data Type Definitions
 
 *Example:*

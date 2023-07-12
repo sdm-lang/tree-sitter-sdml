@@ -30,16 +30,6 @@
  "union"
  (unknown_type)
  (builtin_simple_type)
- ;; For constraints
- "and"
- "exists"
- "forall"
- "iff"
- "implies"
- "not"
- "or"
- (reserved_self)
- (reserved_self_type)
  ] @keyword
 
 ;; ---------------------------------------------------------------------------
@@ -48,15 +38,11 @@
 
 (module name: (identifier) @module.definition)
 
-(import_statement
- "[" @punctuation.bracket
- "]" @punctuation.bracket)
+(import_statement [ "[" "]" ] @punctuation.bracket)
 
-(member_import
- name: (qualified_identifier) @type)
+(member_import name: (qualified_identifier) @type)
 
-(module_import
- name: (identifier) @module)
+(module_import name: (identifier) @module)
 
 ;; ---------------------------------------------------------------------------
 ;; Annotations and Constraints
@@ -65,31 +51,123 @@
 (annotation_property
  "@" @property
  name: (identifier_reference) @property
- "="? @operator)
+ "=" @operator)
 
-(annotation_property
- value: (value (identifier_reference) @type))
+(annotation_property value: (value (identifier_reference) @type))
 
-(constraint
- name: (identifier) @property)
+(constraint name: (identifier) @property)
 
 (informal_constraint
  "=" @operator
  (quoted_string) @embedded)
 
-(name_path) @variable
+(environment_definition
+ "def" @keyword
+ name: (identifier) @function.definition
+ [ ":=" "≔" ] @operator)
 
-(tautology) @constant.builtin
+(constraint_environment "in" @keyword)
 
-(contradiction) @constant.builtin
+(constraint_sentence [ "(" ")" ] @punctuation.bracket)
 
+(name_path
+ subject: [ (reserved_self) (reserved_self_type) ] @keyword
+ "." @punctuation.delimiter
+ path: (identifier) @function.call)
+
+(term (name_path subject: (identifier) @variable))
+(equation (term (identifier_reference) @type))
+
+(functional_term
+ function: (_) @function.call
+ [ "(" ")" ] @punctuation.bracket)
+
+(functional_term arguments: (term (identifier_reference) @variable))
+
+(atomic_sentence
+ predicate: (_) @function.call
+ [ "(" ")" ] @punctuation.bracket)
+
+(atomic_sentence arguments: (term (identifier_reference) @variable))
+
+(negation "not" @keyword)
 (negation "¬" @operator)
+
+(conjunction "and" @keyword)
 (conjunction "∧" @operator)
+
+(disjunction "or" @keyword)
 (disjunction "∨" @operator)
-(implication "⇒" @operator)
-(biconditional "⇔" @operator)
+
+(exclusive_disjunction "xor" @keyword)
+(exclusive_disjunction "⊻" @operator)
+
+(implication "implies" @keyword)
+(implication [ "==>" "⇒" ] @operator)
+
+(biconditional "iff" @keyword)
+(biconditional [ "<==>" "⇔" ] @operator)
+
+(universal "forall" @keyword)
 (universal "∀" @operator)
+
+(existential "exists" @keyword)
 (existential "∃" @operator)
+
+(quantified_body [ "(" ")" ] @punctuation.bracket)
+
+(quantifier_binding name: (identifier) @variable)
+
+(binding_type_reference "->" @operator)
+(binding_type_reference from_type: (identifier_reference) @type)
+
+(binding_seq_iterator "in" @keyword)
+(binding_seq_iterator "∈" @operator)
+(binding_seq_iterator from_collection: (identifier_reference) @variable)
+(binding_seq_iterator from_collection: (name_path subject: (identifier) @variable))
+(binding_seq_iterator from_collection: (name_path path: (identifier) @function.call))
+
+(function_signature "->" @operator)
+
+(fn_parameter
+ name: (identifier) @variable.parameter
+ "->" @operator)
+
+(fn_type (type_reference (identifier_reference) @type))
+
+(collection_type
+ collection: (builtin_collection_type) @type
+ "of" @keyword
+ element: (_) @type)
+
+(list_of_predicate_values [ "[" "]" ] @punctuation.bracket)
+
+(sequence_builder
+ "{" @punctuation.bracket
+ "|" @punctuation.separator
+ "}" @punctuation.bracket)
+
+(builder_binding name: (identifier) @variable.special)
+
+(builder_expression [ "(" ")" ] @punctuation.bracket)
+
+(builder_negation "not" @keyword)
+(builder_negation "¬" @operator)
+
+(builder_conjunction "and" @keyword)
+(builder_conjunction "∧" @operator)
+
+(builder_disjunction "or" @keyword)
+(builder_disjunction "∨" @operator)
+
+(builder_exclusive_disjunction "xor" @keyword)
+(builder_exclusive_disjunction "⊻" @operator)
+
+(builder_return (identifier) @variable)
+
+(builder_return [ "[" "]" ] @punctuation.bracket)
+
+(list_of_predicate_values [ "[" "]" ] @punctuation.bracket)
 
 ;; ---------------------------------------------------------------------------
 ;; Types
@@ -100,45 +178,37 @@
  "<-" @operator
  base: (data_type_base (identifier_reference) @type))
 
-(entity_def
-name: (identifier) @type.definition)
+(entity_def name: (identifier) @type.definition)
 
-(enum_def
- name: (identifier) @type.definition)
+(enum_def name: (identifier) @type.definition)
 
 (event_def
  name: (identifier) @type.definition
  source: (identifier_reference) @type)
 
-(structure_def
- name: (identifier) @type.definition)
+(structure_def name: (identifier) @type.definition)
 
-(union_def
- name: (identifier) @type.definition)
+(union_def name: (identifier) @type.definition)
 
 ;; ---------------------------------------------------------------------------
 ;; Members
 ;; ---------------------------------------------------------------------------
 
-(property_member
- role: (identifier) @variable.field)
+(property_member role: (identifier) @variable.field)
 
-(identity_member
- name: (identifier) @variable.field)
+(identity_member name: (identifier) @variable.field)
 
 (identity_member
  "->" @operator
  target: (type_reference) @type)
 
-(member_by_value
- name: (identifier) @variable.field)
+(member_by_value name: (identifier) @variable.field)
 
 (member_by_value
  "->" @operator
  target: (type_reference) @type)
 
-(member_by_reference
- name: (identifier) @variable.field)
+(member_by_reference name: (identifier) @variable.field)
 
 (member_by_reference
  "->" @operator
@@ -148,20 +218,15 @@ name: (identifier) @type.definition)
  name: (identifier) @constant
  "=" @operator)
 
-(type_variant
- (identifier_reference) @type)
+(type_variant (identifier_reference) @type)
 
-(type_variant
- rename: (identifier) @type)
+(type_variant rename: (identifier) @type)
 
-(cardinality_expression
- "{" @punctuation.bracket
- "}" @punctuation.bracket)
+(cardinality_expression [ "{" "}" ] @punctuation.bracket)
 
 (cardinality_range ".." @operator)
 
-(property_def
- name: (identifier) @variable.field)
+(property_def name: (identifier) @variable.field)
 
 (property_role
  name: (identifier) @variable.field
@@ -191,18 +256,13 @@ name: (identifier) @type.definition)
 
 (value_constructor
  name: (identifier_reference) @function.call
- "(" @punctuation.bracket
- ")" @punctuation.bracket)
+ [ "(" ")" ] @punctuation.bracket)
 
-(value
- (identifier_reference) @type)
+(value (identifier_reference) @type)
 
-(list_of_values
- (identifier_reference) @type)
+(list_of_values (identifier_reference) @type)
 
-(list_of_values
- "[" @punctuation.bracket
- "]" @punctuation.bracket)
+(list_of_values [ "[" "]" ] @punctuation.bracket)
 
 ;; ---------------------------------------------------------------------------
 ;; Errors

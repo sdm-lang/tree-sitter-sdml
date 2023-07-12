@@ -30,7 +30,7 @@
 
 #+INCLUDE: "./implementation.org" :minlevel 1
 
-# ----- Appendices -----
+# --------------- Appendices ---------------
 
 # This is simply the BNF, with any relevant introduction.
  

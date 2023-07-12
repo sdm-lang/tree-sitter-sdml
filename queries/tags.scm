@@ -3,39 +3,39 @@
 ;; ---------------------------------------------------------------------------
 
 (module
- name: (identifier) @name) @definition.module
+ name: (identifier) @definition.module)
 
 (module_import
- name: (identifier) @name) @reference.module
+ name: (identifier) @reference.module)
 
 (member_import
  name: (qualified_identifier
-        module: (identifier) @name)) @reference.module
+        module: (identifier) @reference.module))
 
 (member_import
- name: (qualified_identifier) @name) @reference.class
+ name: (qualified_identifier) @reference.class)
 
 ;; ---------------------------------------------------------------------------
 ;; Types
 ;; ---------------------------------------------------------------------------
 
 (data_type_def
- name: (identifier) @name) @definition.class
+ name: (identifier) @definition.class)
 
 (data_type_def
- base: (data_type_base (identifier_reference) @name)) @reference.class
+ base: (data_type_base (identifier_reference) @reference.class))
 
 (entity_def
- name: (identifier) @name) @definition.class
+ name: (identifier) @definition.class)
 
 (enum_def
- name: (identifier) @name) @definition.class
+ name: (identifier) @definition.class)
 
 (event_def
- name: (identifier) @name) @definition.class
+ name: (identifier) @definition.class)
 
 (event_def
- source: (identifier_reference) @name) @reference.class
+ source: (identifier_reference) @reference.class)
 
 (structure_def
  name: (identifier) @name) @definition.class
@@ -48,46 +48,56 @@
 ;; ---------------------------------------------------------------------------
 
 (identity_member
- target: (type_reference (identifier_reference) @name)) @reference.class
+ target: (type_reference (identifier_reference) @reference.class))
 
 (member_by_value
- target: (type_reference (identifier_reference) @name)) @reference.class
+ target: (type_reference (identifier_reference) @reference.class))
 
 (member_by_reference
- target: (type_reference (identifier_reference) @name)) @reference.class
+ target: (type_reference (identifier_reference) @reference.class))
 
 (enum_variant
  name: (identifier) @definition.constant)
 
-(type_variant (identifier_reference) @name) @reference.class
+(type_variant (identifier_reference) @reference.class)
 
-(type_variant rename: (identifier) @name) @reference.class
+(type_variant rename: (identifier) @reference.class)
 
 (property_role
- target: (type_reference) @name) @reference.class
+ target: (type_reference) @reference.class)
 
 ;; ---------------------------------------------------------------------------
 ;; Annotations, Constraints, and Values
 ;; ---------------------------------------------------------------------------
 
 (annotation_property
- value: (value (identifier_reference) @name)) @reference.class
+ value: (value (identifier_reference) @reference.class))
 
 (value_constructor
- name: (identifier_reference) @name) @reference.class
+ name: (identifier_reference) @reference.class)
+
+(constraint name: (identifier) @name)
+
+(binding_type_reference from_type: (identifier_reference) @reference.class)
+
+(name_path (identifier) @name)
+
+(environment_definition name: (identifier) @definition.function)
+
+(builtin_collection_type) @reference.class
 
 ;; ---------------------------------------------------------------------------
 ;; Field Names
 ;; ---------------------------------------------------------------------------
 
 (identity_member
- name: (identifier) @name) @definition.field
+ name: (identifier) @definition.field)
 
 (member_by_value
- name: (identifier) @name) @definition.field
+ name: (identifier) @definition.field)
 
 (member_by_reference
- name: (identifier) @name) @definition.field
+ name: (identifier) @definition.field)
 
 (property_def
- name: (identifier) @name) @definition.field
+ name: (identifier) @definition.field)

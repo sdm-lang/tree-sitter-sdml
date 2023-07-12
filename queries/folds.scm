@@ -14,4 +14,6 @@
  (structure_group)
  (union_body)
  (property_body)
+ ;; ----------------
+ (formal_constraint)
  ] @fold

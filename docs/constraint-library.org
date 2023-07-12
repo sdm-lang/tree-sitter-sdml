@@ -1,0 +1,2 @@
+#+LANGUAGE: en
+#+STARTUP: overview hidestars inlineimages entitiespretty

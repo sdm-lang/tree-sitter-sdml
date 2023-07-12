@@ -73,7 +73,7 @@ UnionBody           = "of", Annotation*, TypeVariant+, "end"
 TypeVariant         = IdentifierReference, TypeVariantRename?, AnnotationOnlyBody?
 
 TypeVariantRename   = "as" Identifier
-
+6M175;46M[<35;173;42M>]
 PropertyDef         = "property", Identifier, PropertyBody?
 
 PropertyBody        = "is", Annotation*, PropertyRole+, "end"
@@ -186,17 +186,24 @@ Whitespace          =
     | "\u{feff}"
 #+END_SRC
 
+
 ** The Embedded Constraint Language
 
 Given that the /formal/ constraint language component of SDML is likely to be used less frequently *and* the grammar is
 fairly long we have made it a separate section.
 
 #+BEGIN_SRC ebnf
-FormalConstraint    = "is", ConstraintSentence, "end"
+FormalConstraint    = "is", ConstraintEnvironment?, ConstraintSentence, "end"
+
+ConstraintEnvironment =
+    EnvironmentDef+, "in"
+
+EnvironmentDef      =
+    "def", Identifier, FunctionSignature?, ( ":=" | "≔" ), ConstraintSentence
 
 ConstraintSentence  =
-     SimpleSentence | BooleanSentence | QuantifiedSentence |
-     "(", ConstraintSentence, ")"
+    SimpleSentence | BooleanSentence | QuantifiedSentence |
+        "(", ConstraintSentence, ")"
 
 SimpleSentence      = Atomic | Equation
 
@@ -207,13 +214,18 @@ Equation            = Term, "=", Term
 BooleanSentence     =
     Negation |
     ConstraintSentence,
-        ( Conjunction | Disjunction | Implication | Biconditional )
+        (
+          Conjunction | Disjunction | ExclusiveDisjunction |
+          Implication | Biconditional
+        )
 
 Negation            = ( "not" | "¬" ), ConstraintSentence
 
 Conjunction         = ( "and" | "∧" ), ConstraintSentence
 
 Disjunction         = ( "or" | "∨" ), ConstraintSentence
+
+ExclusiveDisjunction = ( "xor" | "⊻" ), ConstraintSentence
 
 Implication         = ( "implies" | "⇒" ), ConstraintSentence
 
@@ -225,18 +237,21 @@ Universal           = ( "forall" | "∀" ), QuantifierBinding*, QuantifiedBody
 
 Existential         = ( "exists" | "∃" ), QuantifierBinding*, QuantifiedBody
 
-QuantifierBinding   = "self" | Identifer, BindingTypeReference?
+QuantifierBinding   = "self" | ( Identifer, BindingTarget )
 
-BindingTypeReference =
-    "->", ( "Self" | IdentifierReference )
+BindingTarget       =
+    BindingFromType | BindingFromSequence | "(", BindingTarget, ")"
 
+BindingFromType     = "->", ( "Self" | IdentifierReference )
+
+BindingFromSequence = ( "in" "∈" ), ( NamePath | IdentifierReference )
+ 
 QuantifiedBody      = "(", ConstraintSentence, ")"
 
-Term                = NamePath | PredicateValue | FunctionalTerm
+Term                =
+    NamePath | QualifiedIdentifier | PredicateValue | FunctionalTerm
 
-NamePath            = Name, ( ".", Name )*
-
-Name                = "self" | "Self" | Identifier
+NamePath            = ( "self" | "Self" | Identifier ), ( ".", Identifier )+
 
 PredicateValue      =
     SimpleValue | Tautology | Contradiction | ListOfPredicateValues
@@ -249,6 +264,22 @@ ListOfPredicateValues =
     "[", ( SimpleValue | Tautology | Contradiction )*, "]"
 
 FunctionalTerm      = Term, "(", Term*, ")"
+#+END_SRC
+
+
+** Constraint Function Definitions
+
+#+BEGIN_SRC ebnf
+FunctionSignature   = "(", Parameter+, ")", "->", FunctionalType
+
+Parameter           = ( Identifier, "->" )?, FunctionalType
+
+FunctionalType      = TypeReference | CollectionType
+
+CollectionType      = BuiltinCollectionType, "of", TypeReference
+
+BuiltinCollectionType =
+    "Bag" | "List" | "Maybe" | "OrderedSet" | "Sequence" | "Set"
 #+END_SRC
 
 

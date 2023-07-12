@@ -22,5 +22,895 @@ The following are standard modules that are included with the command-line tool.
 | =xml=          | <http://www.w3.org/XML/1998/namespace>        | In Progress |
 | =xsd=          | <http://www.w3.org/2001/XMLSchema#>           | In Progress |
 
+** SDML Modules
 
 
+#+BEGIN_SRC sdml :noeval
+module sdml base <http://sdml.io/> is
+end
+#+END_SRC
+
+#+BEGIN_SRC sdml :noeval
+module sdml_types base <http://sdml.io/> is
+end
+#+END_SRC
+
+** Commonly Used Modules
+
+*** Module: Dublin Core Elements (dc)
+
+This module 
+
+#+BEGIN_SRC sdml :noeval
+module dc base <http://purl.org/dc/elements/1.1/> is
+  structure contributor ;; ...
+  structure coverage ;; ...
+  structure creator ;; ...
+  structure date ;; ...
+  structure description ;; ...
+  structure format ;; ...
+  structure identifier ;; ...
+  structure language ;; ...
+  structure publisher ;; ...
+  structure relation ;; ...
+  structure rights ;; ...
+  structure source ;; ...
+  structure subject ;; ...
+  structure title ;; ...
+  structure type ;; ...
+end
+#+END_SRC
+
+*** Module:  (dcam)
+
+This module 
+
+#+BEGIN_SRC sdml :noeval
+module dcam base <http://purl.org/dc/dcam/> is
+  structure VocabularyEncodingScheme ;; ...
+  structure domainIncludes ;; ...
+  structure memberOf ;; ...
+  structure rangeIncludes ;; ...
+end
+#+END_SRC
+
+*** Module:  (dcmi__type)
+
+This module 
+
+#+BEGIN_SRC sdml :noeval
+module dcmi_type base <http://purl.org/dc/dcmitype/> is
+ structure Collection ;; ...
+  structure Dataset ;; ...
+  structure Event ;; ...
+  structure Image ;; ...
+  structure InteractiveResource ;; ...
+  structure MovingImage ;; ...
+  structure PhysicalObject ;; ...
+  structure Service ;; ...
+  structure Software ;; ...
+  structure Sound ;; ...
+  structure StillImage ;; ...
+  structure Text ;; ...
+end
+#+END_SRC
+
+*** Module:  (dcterms)
+
+This module 
+
+#+BEGIN_SRC sdml :noeval
+module dcterms base <http://purl.org/dc/terms/> is
+  structure Agent ;; ...
+  structure AgentClass ;; ...
+  structure BibliographicResource ;; ...
+  structure Box ;; ...
+  structure DCMIType ;; ...
+  structure DDC ;; ...
+  structure FileFormat ;; ...
+  structure Frequency ;; ...
+  structure IMT ;; ...
+  structure ISO3166 ;; ...
+  structure ISO639_2 ;; ...
+  structure ISO639_3 ;; ...
+  structure Jurisdiction ;; ...
+  structure LLC ;; ...
+  structure LCSH ;; ...
+  structure LicenseDocument ;; ...
+  structure LinguisticSystem ;; ...
+  structure Location ;; ...
+  structure LocationPeriodOrJurisdiction ;; ...
+  structure MESH ;; ...
+  structure MediaType ;; ...
+  structure MediaTypeOrExtent ;; ...
+  structure MethodOfAccrual ;; ...
+  structure MethodOfInstruction ;; ...
+  structure NLM ;; ...
+  structure Period ;; ...
+  structure PeriodOfTime ;; ...
+  structure PhysicalMedium ;; ...
+  structure PhysicalResource ;; ...
+  structure Point ;; ...
+  structure Policy ;; ...
+  structure ProvenanceStatement ;; ...
+  structure RFC1766 ;; ...
+  structure RFC3066 ;; ...
+  structure RFC4646 ;; ...
+  structure RFC5646 ;; ...
+  structure RightsStatement ;; ...
+  structure SizeOrDuration ;; ...
+  structure Standard ;; ...
+  structure TGN ;; ...
+  structure UDC ;; ...
+  structure URI ;; ...
+  structure WthreeCDTF ;; ...
+  structure abstract ;; ...
+  structure accessRights ;; ...
+  structure accrualMethod ;; ...
+  structure accrualPeriodicity ;; ...
+  structure accrualPolicy ;; ...
+  structure alternative ;; ...
+  structure audience ;; ...
+  structure available ;; ...
+  structure bibliographicCitation ;; ...
+  structure conformsTo ;; ...
+  structure contributor ;; ...
+  structure coverage ;; ...
+  structure created ;; ...
+  structure creator ;; ...
+  structure date ;; ...
+  structure dateCopyrighted ;; ...
+  structure dateSubmitted ;; ...
+  structure description ;; ...
+  structure educationLevel ;; ...
+  structure extent ;; ...
+  structure forma ;; ...
+  structure hasFormat ;; ...
+  structure hasPart ;; ...
+  structure hasVersion ;; ...
+  structure identifier ;; ...
+  structure instructionalMethod ;; ...
+  structure isFormatOf ;; ...
+  structure isPartOf ;; ...
+  structure isReferencedBy ;; ...
+  structure isReplacedBy ;; ...
+  structure isRequiredBy ;; ...
+  structure isVersionOf ;; ...
+  structure issued ;; ...
+  structure language ;; ...
+  structure license ;; ...
+  structure mediator ;; ...
+  structure medium ;; ...
+  structure modified ;; ...
+  structure provenance ;; ...
+  structure publisher ;; ...
+  structure references ;; ...
+  structure relation ;; ...
+  structure replaces ;; ...
+  structure requires ;; ...
+  structure rights ;; ...
+  structure rightsHolder ;; ...
+  structure source ;; ...
+  structure spatial ;; ...
+  structure subject ;; ...
+  structure tableOfContents ;; ...
+  structure temporal ;; ...
+  structure title ;; ...
+  structure type ;; ...
+  structure valid ;; ...
+end
+#+END_SRC
+
+*** Module:  (owl)
+
+This module 
+
+#+BEGIN_SRC sdml :noeval
+#+END_SRC
+
+*** Module:  (rdf)
+
+This module 
+
+#+BEGIN_SRC sdml :noeval
+module rdf base <http://www.w3.org/1999/02/22-rdf-syntax-ns#> is
+  structure Alt ;; ...
+  structure Bag ;; ...
+  structure CompoundLiteral ;; ...
+  structure HTML  ;; ...
+  structure JSON ;; ...
+  structure List ;; ...
+  structure PlainLiteral ;; ...
+  structure Property ;; ...
+  structure Seq ;; ...
+  structure Statement ;; ...
+  structure XMLLiteral ;; ...
+  structure direction
+  structure first ;; ...
+  structure langString ;; ...
+  structure language ;; ...
+  structure nil ;; ...
+  structure object ;; ...
+  structure predicate ;; ...
+  structure rest ;; ...
+  structure subject ;; ...
+  structure type ;; ...
+  structure value ;; ...
+end
+#+END_SRC
+
+*** Module:  (rdfs)
+
+This module 
+
+#+BEGIN_SRC sdml :noeval
+module rdfs base <http://www.w3.org/2000/01/rdf-schema#> is
+  structure Class ;; ...
+  structure Container ;; ...
+  structure ContainerMembershipProperty  ;; ...
+  structure Datatype ;; ...
+  structure Literal ;; ...
+  structure Resource ;; ...
+  structure comment ;; ...
+  structure domain ;; ...
+  structure isDefinedBy ;; ...
+  structure label ;; ...
+  structure member ;; ...
+  structure range ;; ...
+  structure seeAlso ;; ...
+  structure subClassOf ;; ...
+  structure subPropertyOf ;; ...
+end
+#+END_SRC
+
+*** Module:  (skos)
+
+This module 
+
+#+BEGIN_SRC sdml :noeval
+module skos base <http://www.w3.org/2004/02/skos/core#> is
+  structure Collection  ;; ...
+  structure Concept ;; ...
+  structure ConceptScheme ;; ...
+  structure OrderedCollection ;; ...
+  structure altLabel ;; ...
+  structure broadMatch ;; ...
+  structure broader ;; ...
+  structure broaderTransitive ;; ...
+  structure changeNote ;; ...
+  structure closeMatch ;; ...
+  structure definition ;; ...
+  structure editorialNote ;; ...
+  structure exactMatch ;; ...
+  structure example ;; ...
+  structure hasTopConcept ;; ...
+  structure hiddenLabel ;; ...
+  structure historyNote ;; ...
+  structure inScheme ;; ...
+  structure mappingRelation ;; ...
+  structure member ;; ...
+  structure memberList ;; ...
+  structure narrowMatch ;; ...
+  structure narrower ;; ...
+  structure narrowerTransitive ;; ...
+  structure notation ;; ...
+  structure note ;; ...
+  structure prefLabel ;; ...
+  structure related ;; ...
+  structure relatedMatch ;; ...
+  structure scopeNote ;; ...
+  structure semanticRelation ;; ...
+  structure topConceptOf ;; ...
+end
+#+END_SRC
+
+*** Module:  (xml)
+
+This module 
+
+#+BEGIN_SRC sdml :noeval
+#+END_SRC
+
+*** Module:  (xsd)
+
+This module 
+
+#+BEGIN_SRC sdml :noeval
+#+END_SRC
+
+** Constraint Language Library
+
+Note that all of the predicates, relations, and functions in this section exist within the ~sdml~ module scope but
+qualification is optional unless the application is ambiguous in a particular context.
+
+*** Equality and Inequality
+
+■ ~eq(Any Any) -> boolean~
+
+Returns ~true~ if the two values are equal, else ~false~.
+
+■ ~gt(Any Any) -> boolean~
+
+Returns ~true~ if the first value is greater than the second, else ~false~.
+
+■ ~gte(v1 -> Any v2 -> Any) -> boolean ≔ gt(v1 v2) ∨ eq(v1 v2)~
+
+Returns ~true~ if the first value is greater than or equal to the second, else ~false~.
+
+■ ~lt(v1 -> Any v2 -> Any) -> boolean ≔ ¬gte(v1 v2)~
+
+Returns ~true~ if the first value is less than the second, else ~false~.
+
+■ ~lte(v1 -> Any v2 -> Any) -> boolean ≔ ¬gt(v1 v2)~
+
+Returns ~true~ if the first value is less than or equal to the second, else ~false~.
+
+■ ~ne(v1 -> Any v2 -> Any) -> boolean ≔ ¬eq(v1 v2)~
+
+Returns ~true~ if the two values are not equal, else ~false~.
+
+*** Metaclasses
+
+*Class: Any*
+
+■ ~class_of(Any) -> Class~
+
+example: ~class_of(rentals:Customer) = sdml:Entity~
+
+*Class: Class*
+
+■ ~name(Class) -> string~
+
+~name(class_of(rentals:Customer)) = "sdml:Entity"~
+
+*Class: Type*
+
+■ ~name(Type) -> IdentifierReference~
+
+*** Identifiers
+
+*Class: Identifier*
+
+*Class: QualifiedIdentifier*
+
+■ ~module(QualifiedIdentifier) -> Identifier~
+
+■ ~member(QualifiedIdentifier) -> Identifier~
+
+*Union: IdentifierReference*
+
+■ ~is_identifier(IdentifierReference) -> boolean~
+
+■ ~is_qualified_identifier(IdentifierReference) -> boolean~
+
+■ ~as_dentifier(IdentifierReference) -> Maybe of Identifier~
+
+■ ~as_qualified_identifier(IdentifierReference) -> Maybe of QualifiedIdentifier~
+
+*** Module Definition
+
+*Class: Module*
+
+■ ~annotations(Module) -> Bag of Annotation~
+
+Returns an unordered sequence of annotations attached to the module.
+
+■ ~definitions(Module) -> Set of Definition~
+
+Returns an unordered, unique, sequence of variants contained within the union.
+
+■ ~imports(Module) -> Set of ImportStatement~
+
+Returns an unordered, unique, sequence of import statements.
+
+■ ~def is_complete(m -> Module) -> boolean ≔ ∀ d ∈ definitions(m) ( is_complete(d) )~
+
+■ ~name(Module) -> Identifier~
+
+Returns the identifier naming the module.
+
+*Union: Definition*
+
+■ ~as_datatype(Definition) -> Maybe of Datatype~
+
+■ ~as_entity(Definition) -> Maybe of Entity~
+
+■ ~as_enumeration(Definition) -> Maybe of Enumeration~
+
+■ ~as_event(Definition) -> Maybe of Event~
+
+■ ~as_structure(Definition) -> Maybe of Structure~
+
+■ ~as_property(Definition) -> Maybe of Property~
+
+■ ~is_datatype(Definition) -> boolean~
+
+■ ~is_entty(Definition) -> boolean~
+
+■ ~is_enumeration(Definition) -> boolean~
+
+■ ~is_event(Definition) -> boolean~
+
+■ ~is_structure(Definition) -> boolean~
+
+■ ~is_property(Definition) -> boolean~
+
+*** Imports
+
+*Class: ImportStatement*
+
+■ ~imports(ImportStatement) -> Bag of Import~
+
+■ ~def module_imports(i -> ImportStatement) ≔ {i | i ∈ imports(i) ∧ ModuleImport(i)}~
+
+■ ~def member_imports(i -> ImportStatement) ≔ {i | i ∈ imports(i) ∧ MemberImport(i)}~
+
+*Class: Import*
+
+■ ~is_module_import(Import) -> boolean~
+
+■ ~is_member_import(Import) -> boolean~
+
+■ ~as_module_import(Import) -> Maybe of ModuleImport~
+
+■ ~as_member_import(Import) -> Maybe of MemberImport~
+
+*Class: ModuleImport*
+
+■ ~module(ModuleImport) -> Identifier~
+
+*Class: MemberImport*
+
+■ ~module(MemberImport) -> Identifier~
+
+■ ~member(MemberImport) -> Identifier~
+
+*** Datatypes and Values
+
+*Class: Datatype*
+
+■ ~base_type(Datatype) -> Maybe of Datatype~
+
+■ ~contained_within(Datatype) -> Module~
+
+■ ~name(Datatype) -> IdentifierReference~
+
+*Datatype: decimal*
+
+■ ~whole_part(decimal) -> decimal~
+
+■ ~decimal_part(decimal) -> decimal~
+
+■ ~round(decimal) -> decimal~
+
+*Datatype: double*
+
+■ ~whole_part(double) -> double~
+
+■ ~decimal_part(double) -> double~
+
+■ ~round(double) -> double~
+
+*Datatype: integer*
+
+*Datatype: string*
+
+■ ~contains(string substring -> string) -> boolean~
+
+■ ~eq_ci(string string) -> boolean~
+
+■ ~language_part(string) -> languageTag~
+
+■ ~length(string) -> integer~
+
+■ ~matches(string regex -> string) -> boolean~
+
+■ ~ne_ci(string string) -> boolean~
+
+■ ~prefix(string prefix -> string) -> boolean~
+
+■ ~suffix(string suffix -> string) -> boolean~
+
+■ ~quoted_part(string) -> string~
+
+*Datatype: languageTag*
+
+■ ~broader(languageTag languageTag) -> boolean~
+
+■ ~broader(languageTag languageTag) -> boolean~
+
+■ ~language_part(languageTag) -> string~
+
+■ ~language_extended_part(languageTag) -> string~
+
+■ ~region_part(languageTag) -> string~
+
+■ ~script_part(languageTag) -> string~
+
+*** Sequence Types
+
+*Class: Sequence*
+
+#+BEGIN_EXAMPLE
+Sequence(Any) → boolean
+#+END_EXAMPLE
+
+Returns ~true~ if the value is of type ~Sequence~ or any sub-type of ~Sequence~, else ~false~.
+
+#+BEGIN_EXAMPLE
+contains(s → Sequence of Any t → element of Any) → boolean
+  ≔ ¬is_empty({ e | e ∈ s ∧ e = t})
+#+END_EXAMPLE
+
+Returns ~true~ if the sequence ~s~ contains the element ~t~, else ~false~.
+
+#+BEGIN_EXAMPLE
+count(Sequence of Any) → unsigned
+#+END_EXAMPLE
+
+Returns the number of elements in the sequence.
+
+#+BEGIN_EXAMPLE
+is_empty(seq → Sequence of Any) → boolean
+  ≔ count(seq) = 0
+#+END_EXAMPLE
+
+Return ~true~ if the sequence has no elements, else ~false~.
+
+#+BEGIN_EXAMPLE
+is_ordered(t → Type) → boolean
+  ≔ t = List ∨ t = OrderedSet
+#+END_EXAMPLE
+
+Returns ~true~ if the provided type ~t~ is an ordered sequence, else ~false~.
+
+#+BEGIN_EXAMPLE
+is_unique(t → Type) → boolean
+  ≔ t = Set ∨ t = OrderedSet
+#+END_EXAMPLE
+
+Returns ~true~ if the provided type ~t~ is a sequence that guarantees uniqueness of elements, else ~false~.
+
+*Class: Bag*
+
+■ ~order(Bag of Any count -> integer) -> List of Any~
+
+*Class: List*
+
+■ ~drop(List of Any count -> unsigned) -> List of Any~
+
+■ ~get(List of Any index -> unsigned) -> Any~
+
+■ ~order(List of unknown count -> integer) -> List of unknown~
+
+■ ~reverse(List of Any) -> List of Any~
+
+■ ~slice(List of Any start -> unsigned count -> unsigned) -> List of Any~
+
+■ ~take(List of Any count -> unsigned) -> List of Any~
+
+*Class: Maybe*
+
+*Class: OrderedSet*
+
+■ ~drop(OrderedSet of Any count -> unsigned) -> OrderedSet of Any~
+
+■ ~get(OrderedSet of Any index -> unsigned) -> Any~
+
+■ ~intersection(lhs -> OrderedSet of unknown rhs -> OrderedSet of unknown) -> OrderedSet of unknown~
+
+■ ~minus -> OrderedSet of unknown rhs -> OrderedSet of unknown) -> OrderedSet of unknown~
+
+■ ~order(OrderedSet of unknown count -> integer) -> OrderedSet of unknown~
+
+■ ~reverse(OrderedSet of Any) -> OrderedSet of Any~
+
+■ ~slice(OrderedSet of Any start -> unsigned count -> unsigned) -> OrderedSet of Any~
+
+■ ~take(OrderedSet of Any count -> unsigned) -> OrderedSet of Any~
+
+■ ~union -> OrderedSet of unknown rhs -> OrderedSet of unknown) -> OrderedSet of unknown~
+
+*Class: Set*
+   
+■ ~intersection(lhs -> Set of unknown rhs -> Set of unknown) -> Set of unknown~
+
+■ ~minus(lhs -> Set of unknown rhs -> Set of unknown) -> Set of unknown~
+
+■ ~order(Set of unknown count -> integer) -> OrderedSet of unknown~
+
+■ ~union(lhs -> Set of unknown rhs -> Set of unknown) -> Set of unknown~
+
+*** Annotations
+
+*Annotation Collections*
+
+■ ~def annotation_properties(as -> Bag of Annotation) ≔ {a | a ∈ as ∧ AnnotationProperty(a)}~
+
+■ ~def constraints(as - > Bag of Annotation) ≔ {a | a ∈ as ∧ Constraint(a)}~
+
+*Class Annotation*
+
+■ ~as_annotation_property(Annotation) -> Maybe of AnnotationProperty~
+
+■ ~as_constraint(Annotation) -> Maybe of Constraint~
+
+■ ~is_annotation_property(Annotation) -> boolean~
+
+■ ~is_constraint(Annotation) -> boolean~
+
+*Class AnnotationProperty*
+
+■ ~name(AnnotationProperty) -> IdentiferReference~
+
+■ ~value(AnnotationProperty) -> Value~
+
+*Class Constraint*
+
+■ ~as_formal(Constraint) -> Maybe of FormalConstraint~
+
+■ ~as_informal(Constraint) -> Maybe of string~
+
+■ ~is_formal(Constraint) -> boolean~
+
+■ ~is_informal(Constraint) -> boolean~
+
+■ ~name(Constraint) -> Maybe of Identifier~
+
+*** Structured Type Members
+
+*Class: Member*
+
+■ ~annotations(Member) -> Bag of Annotation~
+
+■ ~name(Member) -> Identifier~
+
+Returns the identifier naming the member.
+
+■ ~contained_within(Member) -> Type~
+
+■ ~target_type(Member) -> Type~
+
+■ ~def is_complete(m -> Member) -> boolean ≔ ne(type_of(m) Unknown)~
+
+*Class: IdentityMember*
+
+*Class: ByReferenceMember*
+
+*Class: ByValueMember*
+
+*Class: Cardinality*
+
+■ ~min(Cardinality) -> unsigned~
+
+■ ~max(Cardinality) -> Maybe of unsigned~
+
+■ ~is_range(Cardinality) -> boolean~
+
+■ ~is_range_unbounded(c -> Cardinality) -> boolean ≔ is_range(c) ∧ is_empty(max(c))~
+
+■ ~is_optional(c -> Cardinality) -> boolean ≔ min(c) = 0 ∧ eq(max(c) 1)~
+
+*** Entities
+
+*Class: Entity*
+
+■ ~annotations(Entity) -> Bag of Annotation~
+
+Returns an unordered sequence of annotations attached to the entity.
+
+■ ~contained_within(Entity) -> Module~
+
+■ ~name(Entity) -> Identifier~
+
+Returns the identifier naming the entity.
+
+■ ~flat_members(Entity) -> Set of EntityMember~
+
+Returns an unordered, unique, sequence of variants contained within the union.
+
+■ ~groups(Entity) -> Set of EntityGroup~
+
+Returns an unordered, unique, sequence of variants contained within the union.
+
+■ ~identity(Entity) -> IdentityMember~
+
+■ ~members(Entity) -> Set of EntityMember~
+
+Returns an unordered, unique, sequence of variants contained within the union.
+
+*Class: EntityGroup*
+
+■ ~annotations(EntityGroup) -> Bag of Annotation~
+
+Returns an unordered sequence of annotations attached to the entity group.
+
+■ ~contained_within(EntityGroup) -> Entity~
+
+■ ~members(EntityGroup) -> Set of EntityMember~
+
+Returns an unordered, unique, sequence of variants contained within the union.
+
+*Union: EntityMember*
+
+■ ~as_by_reference(EntityMember) -> Maybe of ByReferenceMember~
+
+■ ~as_by_value(EntityMember) -> Maybe of ByValueMember~
+
+■ ~is_by_reference(EntityMember) -> boolean~
+
+■ ~is_by_value(EntityMember) -> boolean~
+
+*** Entity Events
+
+■ ~annotations(Event) -> Bag of Annotation~
+
+Returns an unordered sequence of annotations attached to the event.
+
+■ ~contained_within(Event) -> Module~
+
+■ ~name(Event) -> Identifier~
+
+Returns the identifier naming the event.
+
+■ ~source(Event) -> IdentifierReference~
+
+■ ~members(Event) -> Set of ByValueMember~
+
+Returns an unordered, unique, sequence of variants contained within the union.
+
+■ ~flat_members(Event) -> Set of ByValueMember~
+
+Returns an unordered, unique, sequence of variants contained within the union.
+
+■ ~groups(Event) -> Set of StructureGroup~
+
+Returns an unordered, unique, sequence of variants contained within the union.
+
+*** Enumerations
+
+*Class: Enumeration*
+
+■ ~annotations(Enumeration) -> Bag of Annotation~
+
+Returns an unordered sequence of annotations attached to the enumeration.
+
+■ ~contained_within(Enumeration) -> Module~
+
+■ ~name(Enumeration) -> Identifier~
+
+Returns the identifier naming the enum.
+
+■ ~variants(Enumeration) -> OrderedSet of EnumVariant~
+
+Returns an ordered, unique, sequence of variants contained within the enumeration.
+
+■ ~def is_complete(e -> Enumeration) -> boolean ≔ ¬has_body(e)~
+
+*Class: EnumVariant*
+
+■ ~annotations(EnumVariant) -> Bag of Annotation~
+
+Returns an unordered sequence of annotations attached to the enumeration variant.
+
+■ ~contained_within(EnumVariant) -> Enumeration~
+
+■ ~name(EnumVariant) -> Identifier~
+
+Returns the identifier naming the enumeration variant.
+
+■ ~value(EnumVariant) -> integer~
+
+*** Structures
+
+■ ~annotations(Structure) -> Bag of Annotation~
+
+Returns an unordered sequence of annotations attached to the structure.
+
+■ ~contained_within(Structure) -> Module~
+
+■ ~flat_members(Structure) -> Set of ByValueMember~
+
+Returns an unordered, unique, sequence of members contained within the structure and all of it's groups.
+
+■ ~groups(Structure) -> Set of StructureGroup~
+
+Returns an unordered, unique, sequence of groups contained within the structure.
+
+■ ~members(Structure) -> Set of ByValueMember~
+
+Returns an unordered, unique, sequence of members contained within the structure.
+
+■ ~name(Structure) -> Identifier~
+
+Returns the identifier naming the structure.
+
+*Class: StructureGroup*
+
+■ ~annotations(StructureGroup) -> Bag of Annotation~
+
+Returns an unordered sequence of annotations attached to the structure group.
+
+■ ~contained_within(StructureGroup) -> Structure~
+
+■ ~members(StructureGroup) -> Set of ByValueMember~
+
+Returns an unordered, unique, sequence of members contained within the structure group.
+
+*** Disjoint Unions
+
+*Class: Union*
+
+■ ~annotations(Union) -> Bag of Annotation~
+
+Returns an unordered sequence of annotations attached to the union.
+
+■ ~contained_within(Union) -> Module~
+
+■ ~name(Union) -> Identifier~
+
+Returns the identifier naming the union.
+
+■ ~variants(Union) -> Set of TypeVariant~
+
+Returns an unordered, unique, sequence of variants contained within the union.
+
+■ ~def is_complete(u -> Union) -> boolean ≔ ¬has_body(u)~
+
+*Class: TypeVariant*
+
+■ ~annotations(TypeVariant) -> Bag of Annotation~
+
+Returns an unordered sequence of annotations attached to the type variant.
+
+■ ~contained_within(TypeVariant) -> union~
+
+■ ~is_renamed(PropertyRole) -> boolean~
+
+■ ~name(TypeVariant) -> Identifier~
+
+Returns the identifier naming the type variant.
+
+■ ~renamed_as(PropertyRole) -> Maybe of Identifier~
+
+*** Property Definitions
+
+*Class: Property*
+
+■ ~annotations(ModuleProperty) -> Bag of Annotation~
+
+Returns an unordered sequence of annotations attached to the property.
+
+■ ~contained_within(Property) -> Module~
+
+■ ~is_complete(p -> Property) -> boolean ≔ p.body.present ∧ ∀ r in p.roles ( r.is_complete )~
+
+■ ~name(Property) -> Identifier~
+
+Returns the identifier naming the property.
+
+■ ~roles(Property) -> Bag of PropertyRole~
+
+*Class: Property Role*
+
+■ ~annotations(PropertyRole) -> Bag of Annotation~
+
+Returns an unordered sequence of annotations attached to the property role.
+
+■ ~contained_within(PropertyRole) -> Property~
+
+■ ~def is_complete(r -> PropertyRole) -> boolean ≔ ne(type_of(r) Unknown)~
+
+■ ~name(PropertyRole) -> Identifier~
+
+Returns the identifier naming the property role.
+
+■ ~source_cardinality(PropertyRole) -> Maybe of Cardinality~
+
+■ ~target_type(PropertyRole) -> Type~
+
+■ ~target_cardinality(PropertyRole) -> Cardinality~
+
+*** Formal Constraints
+
+TBD

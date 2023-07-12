@@ -50,6 +50,12 @@ end
 
 # Changes
 
+**Version: 0.1.21**
+
+* Fixed highlighting/indent/fold for constraints.
+* Added sequence builder support.
+* A number of cosmetic changes to formal constraints.
+
 **Version: 0.1.19/0.1.20**
 
 * Minor change to add a field name to the '..' range operator.

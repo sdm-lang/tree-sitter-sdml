@@ -1,0 +1,210 @@
+module Campaign is
+; <- keyword
+;      ^ module.definition
+;               ^ keyword
+
+  @skos:prefLabel = "Example"
+  ; <- property
+  ;^ property
+  ;               ^ operator
+  ;                 ^ string
+
+  entity Campaign is
+  ; <- keyword
+  ;      ^ type.definition
+  ;               ^ keyword
+
+    identity a -> CampaignId
+    ; <- keyword
+    ;        ^ variable.field
+    ;          ^ operator
+    ;             ^ type
+
+    b -> xsd:string is
+    ; <- variable.field
+    ; ^ operator
+    ;    ^ type
+    ;               ^ keyword
+
+      assert not_null = "self is not null"
+      ; <- keyword
+      ;      ^ property
+      ;               ^ operator
+      ;                 ^ embedded
+
+    end
+    ; <- keyword
+
+    c -> Target is
+    ; <- variable.field
+    ; ^ operator
+    ;    ^ type
+    ;           ^ keyword
+
+      assert tagged_with_foo is
+      ; <- keyword
+      ;      ^ property
+      ;                      ^ keyword
+
+        ∀ self ( contains(self.tags "foo") )
+        ; <- operator
+        ;   ^ keyword
+        ;        ^ punctuation.bracket
+        ;          ^ function.call
+        ;                  ^ punctuation.bracket
+        ;                    ^ keyword
+        ;                       ^ punctuation.delimiter
+        ;                        ^ function.call
+        ;                             ^ string
+        ;                                  ^ punctuation.bracket
+        ;                                    ^ punctuation.bracket
+      end
+      ; <- keyword
+      
+    end
+    ; <- keyword
+
+    d -> Target is
+    ; <- variable.field
+    ; ^ operator
+    ;    ^ type
+    ;           ^ keyword
+
+      assert tagged_with_foo_path is
+      ; <- keyword
+      ;      ^ property
+      ;                           ^ keyword
+
+
+        def foo := "foo"
+        ; <- keyword
+        ;   ^ function.definition
+        ;       ^ operator
+        ;          ^ string
+        
+        in
+        ; <- keyword
+        
+        ∀ self ( self.tags.contains(foo) )
+        ; <- operator
+        ;   ^ keyword
+        ;        ^ punctuation.bracket
+        ;          ^ keyword
+        ;              ^ punctuation.delimiter
+        ;               ^ function.call
+        ;                   ^ punctuation.delimiter
+        ;                    ^ function.call
+        ;                            ^ punctuation.bracket
+        ;                             ^ variable
+        ;                                ^ punctuation.bracket
+        ;                                  ^ punctuation.bracket
+        
+      end
+      ; <- keyword
+      
+    end
+    ; <- keyword
+
+    e -> Target is
+    ; <- variable.field
+    ; ^ operator
+    ;    ^ type
+    ;           ^ keyword
+
+      assert tagged_with_foo_builder is
+      ; <- keyword
+      ;      ^ property
+      ;                              ^ keyword
+
+
+        ∀ self (
+        ; <- operator
+        ;   ^ keyword
+        ;        ^ punctuation.bracket
+        
+          ¬is_empty(
+          ; <- operator
+          ; ^ function.call
+          ;         ^ punctuation.bracket
+          
+            {t | t in self.tags and t = "foo"}
+            ; <- punctuation.bracket
+            ;^ variable
+            ;  ^ punctuation.separator
+            ;    ^ variable.special
+            ;      ^ keyword
+            ;         ^ keyword
+            ;             ^ punctuation.delimiter
+            ;              ^ function.call
+            ;                   ^ keyword
+            ;                       ^ variable
+            ;                         ^ operator
+            ;                           ^ string
+            ;                                ^ punctuation.bracket
+            
+          )
+        ; ^ punctuation.bracket
+        
+        )
+        ; <- punctuation.bracket
+        
+      end
+      ; <- keyword
+      
+    end
+    ; <- keyword
+
+    f -> Target is
+    ; <- variable.field
+    ; ^ operator
+    ;    ^ type
+    ;           ^ keyword
+
+      assert tagged_with_parent_tags is
+      ; <- keyword
+      ;      ^ property
+      ;                              ^ keyword
+
+        ∀ self (
+        ; <- operator
+        ;   ^ keyword
+        ;        ^ punctuation.bracket
+        
+          ∃ tag ∈ self.container.tags (
+          ;<- operator
+          ;   ^ variable
+          ;       ^ operator
+          ;           ^ keyword
+          ;               ^ punctuation.delimiter
+          ;                ^ function.call
+          ;                         ^ punctuation.delimiter
+          ;                          ^ function.call
+          ;                               ^ punctuation.bracket
+          
+            self.tags.contains(tag)
+            ; <- keyword
+            ;   ^ punctuation.delimiter
+            ;    ^ function.call
+            ;        ^ punctuation.delimiter
+            ;         ^ function.call
+            ;                 ^ punctuation.bracket
+            ;                  ^ variable
+            ;                     ^ punctuation.bracket
+            
+          )
+        ; ^ punctuation.bracket
+        
+        )
+        ; <- punctuation.bracket
+        
+      end
+      ; <- keyword
+      
+    end
+    ; <- keyword
+
+  end
+  ; <- keyword
+
+end
+; <- keyword

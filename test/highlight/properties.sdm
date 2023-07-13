@@ -57,7 +57,7 @@ module properties is
     accountId as identitifer
     ; <- variable.field
     ;         ^ keyword
-    ;            ^ variable.field
+    ;            ^ variable.special
 
     name -> string
     ; <- variable.field

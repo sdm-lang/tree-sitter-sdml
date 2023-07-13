@@ -3288,7 +3288,7 @@
         }
       ]
     },
-    "property_member": {
+    "_property_member": {
       "type": "SEQ",
       "members": [
         {
@@ -3339,7 +3339,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "property_member"
+              "name": "_property_member"
             },
             {
               "type": "SEQ",
@@ -3386,7 +3386,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "property_member"
+              "name": "_property_member"
             },
             {
               "type": "SEQ",
@@ -3444,7 +3444,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "property_member"
+              "name": "_property_member"
             },
             {
               "type": "SEQ",

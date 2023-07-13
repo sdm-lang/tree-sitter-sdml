@@ -50,6 +50,10 @@ end
 
 # Changes
 
+**Version: 0.1.23**
+
+* Added highlighting test for constraints, had to tweak a few things.
+
 **Version: 0.1.22**
 
 * Renamed the grammar rule `type_definition` to `definition` to address the fact that property definitions aren't types.

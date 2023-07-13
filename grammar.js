@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.22
+// Version:    0.1.23
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -904,7 +904,7 @@ module.exports = grammar({
         // Members
         // -----------------------------------------------------------------------
 
-        property_member: $ => seq(
+        _property_member: $ => seq(
             keyword('as'),
             field('role', $.identifier),
         ),
@@ -914,7 +914,7 @@ module.exports = grammar({
             keyword('identity'),
             field('name', $.identifier),
             choice(
-                $.property_member,
+                $._property_member,
                 seq(
                     $._type_expression,
                     optional(field('body', $.annotation_only_body))
@@ -926,7 +926,7 @@ module.exports = grammar({
         member_by_value: $ => seq(
             field('name', $.identifier),
             choice(
-                $.property_member,
+                $._property_member,
                 seq(
                     $._type_expression_to,
                     optional(field('body', $.annotation_only_body))
@@ -939,7 +939,7 @@ module.exports = grammar({
             keyword('ref'),
             field('name', $.identifier),
             choice(
-                $.property_member,
+                $._property_member,
                 seq(
                     $._type_expression_from_to,
                     optional(field('body', $.annotation_only_body))

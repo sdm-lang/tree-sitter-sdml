@@ -19,5 +19,4 @@ end
         body: (structure_body
           (member_by_value
             name: (identifier)
-            (property_member
-              role: (identifier))))))))
+            role: (identifier)))))))

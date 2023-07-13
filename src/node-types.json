@@ -1119,6 +1119,16 @@
           }
         ]
       },
+      "role": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
       "target": {
         "multiple": false,
         "required": false,
@@ -1129,16 +1139,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "property_member",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1274,6 +1274,16 @@
           }
         ]
       },
+      "role": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
       "source_cardinality": {
         "multiple": false,
         "required": false,
@@ -1304,16 +1314,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "property_member",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1333,6 +1333,16 @@
       "name": {
         "multiple": false,
         "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "role": {
+        "multiple": false,
+        "required": false,
         "types": [
           {
             "type": "identifier",
@@ -1360,16 +1370,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "property_member",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1566,22 +1566,6 @@
         ]
       },
       "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "property_member",
-    "named": true,
-    "fields": {
-      "role": {
         "multiple": false,
         "required": true,
         "types": [

@@ -76,7 +76,8 @@
  path: (identifier) @function.call)
 
 (term (name_path subject: (identifier) @variable))
-(equation (term (identifier_reference) @type))
+(equation (term (identifier_reference) @variable))
+(equation "=" @operator)
 
 (functional_term
  function: (_) @function.call
@@ -116,9 +117,11 @@
 
 (quantified_body [ "(" ")" ] @punctuation.bracket)
 
+(quantifier_binding (reserved_self) @keyword)
 (quantifier_binding name: (identifier) @variable)
 
 (binding_type_reference "->" @operator)
+(binding_type_reference from_type: (reserved_self_type) @keyword)
 (binding_type_reference from_type: (identifier_reference) @type)
 
 (binding_seq_iterator "in" @keyword)
@@ -194,22 +197,21 @@
 ;; Members
 ;; ---------------------------------------------------------------------------
 
-(property_member role: (identifier) @variable.field)
 
 (identity_member name: (identifier) @variable.field)
-
+(identity_member role: (identifier) @variable.special)
 (identity_member
  "->" @operator
  target: (type_reference) @type)
 
 (member_by_value name: (identifier) @variable.field)
-
+(member_by_value role: (identifier) @variable.special)
 (member_by_value
  "->" @operator
  target: (type_reference) @type)
 
 (member_by_reference name: (identifier) @variable.field)
-
+(member_by_reference role: (identifier) @variable.special)
 (member_by_reference
  "->" @operator
  target: (type_reference) @type)

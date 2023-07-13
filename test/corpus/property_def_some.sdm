@@ -16,7 +16,7 @@ end
 (module
   (identifier)
   (module_body
-    (type_def
+    (definition
       (property_def
         (identifier)
         (property_body

@@ -5,7 +5,7 @@ Import multiple modules
 module Campaign is
 
   import [ xsd skos ]
-  
+
 end
 
 ---

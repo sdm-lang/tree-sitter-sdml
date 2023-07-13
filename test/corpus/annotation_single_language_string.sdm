@@ -20,7 +20,7 @@ end
           module: (identifier)
           member: (identifier)))
         value: (value
-          (simple_value 
+          (simple_value
              (string
                (quoted_string)
                language: (language_tag))))))))

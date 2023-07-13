@@ -56,12 +56,12 @@
 (member_by_reference
  target: (type_reference (identifier_reference) @reference.class))
 
-(enum_variant
- name: (identifier) @definition.constant)
-
 (type_variant (identifier_reference) @reference.class)
 
 (type_variant rename: (identifier) @reference.class)
+
+(value_variant
+ name: (identifier) @definition.constant)
 
 (property_role
  target: (type_reference) @reference.class)

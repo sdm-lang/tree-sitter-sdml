@@ -13,6 +13,6 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (type_def
+    (definition
       (union_def
         name: (identifier)))))

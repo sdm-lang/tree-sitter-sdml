@@ -11,7 +11,7 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (type_def
+    (definition
       (property_def
         name: (identifier)))))
 

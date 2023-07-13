@@ -5,7 +5,7 @@ Import single module only
 module Campaign is
 
   import xsd
-  
+
 end
 
 ---

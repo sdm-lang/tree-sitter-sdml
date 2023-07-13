@@ -5,7 +5,7 @@ Import multiple mixed
 module Campaign is
 
   import [ target xsd:base xml:lang skos ]
-  
+
 end
 
 ---

@@ -13,7 +13,7 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (type_def
+    (definition
       (structure_def
         name: (identifier)
         body: (structure_body

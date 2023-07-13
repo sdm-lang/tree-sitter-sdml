@@ -245,6 +245,33 @@ module example is
 end
 #+END_SRC
 
+*** Definitions
+
+#+NAME: lst:sdml-type-model
+#+BEGIN_SRC dot :file sdml-type-model.svg :exports results
+strict digraph {
+   rankdir=BT;
+   
+   node [shape=rect; width=1.0];
+   edge [arrowhead=onormal];
+   
+   Type;
+   Scalar -> Type;
+   Sum -> Type;
+   Enumeration -> Sum;
+   Union -> Sum;
+   Product -> Type;
+   Entity -> Product;
+   Event -> Product;
+   Structure -> Product;
+}
+#+END_SRC
+
+#+NAME: fig:sdml-type-model
+#+CAPTION: The SDML Type Model
+#+RESULTS: lst:sdml-type-model
+[[file:sdml-type-model.svg]]
+
 ** Data Types and Values
 
 A data /value/ is either a simple value, a value constructor expression, an identifier reference or a list of values.

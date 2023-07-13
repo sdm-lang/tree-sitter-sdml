@@ -28,7 +28,7 @@ end
 (module
    (identifier)
    (module_body
-     (type_def
+     (definition
        (entity_def
          (identifier)
          (entity_body

@@ -15,7 +15,7 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (type_def
+    (definition
       (data_type_def
         name: (identifier)
         base: (data_type_base

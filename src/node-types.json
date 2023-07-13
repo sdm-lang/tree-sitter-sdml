@@ -532,6 +532,45 @@
     }
   },
   {
+    "type": "definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "data_type_def",
+          "named": true
+        },
+        {
+          "type": "entity_def",
+          "named": true
+        },
+        {
+          "type": "enum_def",
+          "named": true
+        },
+        {
+          "type": "event_def",
+          "named": true
+        },
+        {
+          "type": "property_def",
+          "named": true
+        },
+        {
+          "type": "structure_def",
+          "named": true
+        },
+        {
+          "type": "union_def",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "disjunction",
     "named": true,
     "fields": {
@@ -647,7 +686,7 @@
           "named": true
         },
         {
-          "type": "enum_variant",
+          "type": "value_variant",
           "named": true
         }
       ]
@@ -673,42 +712,6 @@
         "types": [
           {
             "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "enum_variant",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "annotation_only_body",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "value": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "unsigned",
             "named": true
           }
         ]
@@ -1434,11 +1437,11 @@
           "named": true
         },
         {
-          "type": "import_statement",
+          "type": "definition",
           "named": true
         },
         {
-          "type": "type_def",
+          "type": "import_statement",
           "named": true
         }
       ]
@@ -1957,45 +1960,6 @@
     }
   },
   {
-    "type": "type_def",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "data_type_def",
-          "named": true
-        },
-        {
-          "type": "entity_def",
-          "named": true
-        },
-        {
-          "type": "enum_def",
-          "named": true
-        },
-        {
-          "type": "event_def",
-          "named": true
-        },
-        {
-          "type": "property_def",
-          "named": true
-        },
-        {
-          "type": "structure_def",
-          "named": true
-        },
-        {
-          "type": "union_def",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "type_reference",
     "named": true,
     "fields": {},
@@ -2172,6 +2136,42 @@
         "types": [
           {
             "type": "simple_value",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "value_variant",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "annotation_only_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "unsigned",
             "named": true
           }
         ]

@@ -41,15 +41,15 @@ digraph G {
 
 The language uses some ideas from UML[fn:uml] which is often used in the construction of such models today. However, the goal is
 to keep the language as small as possible, taking away some options where they don't make sense or where their use may
-distract from the major purpose of the model. The model also takes some of the language from Domain-Driven Design[fn:ddd],
+distract from the major purpose of the model. The model also takes some of the language from Domain-Driven Design (DDD)[fn:ddd],
 namely the separation of entities (/an object defined not by its attributes, but its identity/) from value objects (/an
 immutable object that contains attributes but has no conceptual identity/), simply termed structures in SDML. This model
-does not include the following as first-class concepts: /aggregates/, /repositories/, /factories/, or /services/.
+does not include the following DDD as first-class concepts: /aggregates/, /repositories/, /factories/, or /services/.
 
 ** <<sec:domain-modeling>> Domain Modeling
 
 There is often confusion around the use of the term /Domain Model/ especially in regard to terms such as /Data Model/, /Class
-Model/, /Schema/ and more. This short appendix is an attempt to clarify the terminology and how the relevant modeling
+Model/, /Schema/ and more. This short section is an attempt to clarify the terminology and how the relevant modeling
 efforts are undertaken. This is not intended as an exhaustive review of modelling approaches, standards, or technologies
 and neither does it make any judgement as to the usefulness of any approach or technology.
 
@@ -130,7 +130,9 @@ Variability
 
 - *Inheritence* :: ...
 - Interface and Implementation :: ...
-- 
+-
+
+Scope: Breadth and Depth
 
 *** Domain-Driven Design
 

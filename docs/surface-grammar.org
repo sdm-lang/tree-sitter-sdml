@@ -12,7 +12,7 @@ Module              = "module", Identifier, ModuleBase?, ModuleBody
 
 ModuleBase          = "base", IriReference
 
-ModuleBody          = "is", ImportStatement*, Annotation*, ( TypeDef | PropertyDef )*, "end"
+ModuleBody          = "is", ImportStatement*, Annotation*, Definition*, "end"
 
 MemberImport        = QualifiedIdentifier
 
@@ -32,8 +32,8 @@ InformalConstraint  = "=", QuotedString
 
 FormalConstraint    = ?see below?
 
-TypeDef             =
-    DataTypeDef | EntityDef | EnumDef | EventDef | StructureDef | UnionDef
+Definition          =
+    DataTypeDef | EntityDef | EnumDef | EventDef | StructureDef | UnionDef | PropertyDef
 
 DataTypeDef         =
     "datatype", Identifier, "<-", DataTypeBase, AnnotationOnlyBody?
@@ -53,9 +53,9 @@ EntityGroup         = "group", Annotation*, ( MemberByValue | MemberByReference 
 
 EnumDef             = "enum", Identifier, EnumBody?
 
-EnumBody            = "of", Annotation*, EnumVariant+, "end"
+EnumBody            = "of", Annotation*, ValueVariant+, "end"
 
-EnumVariant         = Identifier, "=", Unsigned, AnnotationOnlyBody?
+ValueVariant        = Identifier, "=", Unsigned, AnnotationOnlyBody?
 
 EventDef            =
     "event", Identifier, "source", IdentifierReference, StructureBody?
@@ -73,7 +73,7 @@ UnionBody           = "of", Annotation*, TypeVariant+, "end"
 TypeVariant         = IdentifierReference, TypeVariantRename?, AnnotationOnlyBody?
 
 TypeVariantRename   = "as" Identifier
-6M175;46M[<35;173;42M>]
+
 PropertyDef         = "property", Identifier, PropertyBody?
 
 PropertyBody        = "is", Annotation*, PropertyRole+, "end"

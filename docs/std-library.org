@@ -370,24 +370,20 @@ Returns ~true~ if the two values are not equal, else ~false~.
 *Class: Any*
 
 #+BEGIN_EXAMPLE
-def class_of(Any) -> Class
+def class_of(Any) -> Type
 #+END_EXAMPLE
+
+Returns the SDML type of the passed value.
 
 example: ~class_of(rentals:Customer) = sdml:Entity~
-
-*Class: Class*
-
-#+BEGIN_EXAMPLE
-def name(Class) -> string
-#+END_EXAMPLE
-
-example: ~name(class_of(rentals:Customer)) = "sdml:Entity"~
 
 *Class: Type*
 
 #+BEGIN_EXAMPLE
-def name(Type) -> IdentifierReference
+def name(Type) -> QualifiedIdentifier
 #+END_EXAMPLE
+
+The qualified identifier that names this type. In all cases the module portion of the name will be ~"sdml"~.
 
 *** Identifiers
 
@@ -397,19 +393,33 @@ def name(Type) -> IdentifierReference
 def Identifier(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Identifier~, else ~false~.
+
+#+BEGIN_EXAMPLE
+def join(Identifier Identifer) -> QualifiedIdentifier
+#+END_EXAMPLE
+
+Return a new qualified identifier with the first parameter as the module name and the second as the member name.
+
 *Class: QualifiedIdentifier*
 
 #+BEGIN_EXAMPLE
 def QualifiedIdentifier(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~QualifiedIdentifier~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def member(QualifiedIdentifier) -> Identifier
 #+END_EXAMPLE
 
+Return the member name part of the identifier.
+
 #+BEGIN_EXAMPLE
 def module(QualifiedIdentifier) -> Identifier
 #+END_EXAMPLE
+
+Return the module name part of the identifier.
 
 *Union: IdentifierReference*
 
@@ -417,8 +427,10 @@ def module(QualifiedIdentifier) -> Identifier
 def IdentifierReference(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~IdentifierReference~, else ~false~.
+
 #+BEGIN_EXAMPLE
-def as_dentifier(IdentifierReference) -> Maybe of Identifier
+def as_identifier(IdentifierReference) -> Maybe of Identifier
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
@@ -441,11 +453,13 @@ def is_qualified_identifier(IdentifierReference) -> boolean
 def Module(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Module~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def annotations(Module) -> Bag of Annotation
 #+END_EXAMPLE
 
-Returns an unordered sequence of annotations attached to the module.
+Returns an unordered sequence of annotations attached to this model element.
 
 #+BEGIN_EXAMPLE
 def base_uri(Module) -> Maybe of iri
@@ -472,7 +486,7 @@ def is_complete(m -> Module) -> boolean
 def name(Module) -> Identifier
 #+END_EXAMPLE
 
-Returns the identifier naming the module.
+Returns the identifier naming this model element.
 
 #+BEGIN_EXAMPLE
 def resolved_uri(Module) -> iri
@@ -483,6 +497,8 @@ def resolved_uri(Module) -> iri
 #+BEGIN_EXAMPLE
 def Definition(Any) → boolean
 #+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~Definition~, else ~false~.
 
 #+BEGIN_EXAMPLE
 def as_datatype(Definition) -> Maybe of Datatype
@@ -540,6 +556,8 @@ def is_property(Definition) -> boolean
 def ImportStatement(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~ImportStatement~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def imports(ImportStatement) -> Bag of Import
 #+END_EXAMPLE
@@ -559,6 +577,8 @@ def module_imports(i -> ImportStatement)
 #+BEGIN_EXAMPLE
 def Import(Any) → boolean
 #+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~Import~, else ~false~.
 
 #+BEGIN_EXAMPLE
 def is_module_import(Import) -> boolean
@@ -582,6 +602,8 @@ def as_member_import(Import) -> Maybe of MemberImport
 def ModuleImport(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~ModuleImport~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def module(ModuleImport) -> Identifier
 #+END_EXAMPLE
@@ -591,6 +613,8 @@ def module(ModuleImport) -> Identifier
 #+BEGIN_EXAMPLE
 def MemberImport(Any) → boolean
 #+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~MemberImport~, else ~false~.
 
 #+BEGIN_EXAMPLE
 def module(MemberImport) -> Identifier
@@ -608,23 +632,44 @@ def member(MemberImport) -> Identifier
 def Datatype(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Datatype~, else ~false~.
+
+#+BEGIN_EXAMPLE
+def annotations(Module) -> Bag of Annotation
+#+END_EXAMPLE
+
+Returns an unordered sequence of annotations attached to this model element.
+
 #+BEGIN_EXAMPLE
 def base_type(Datatype) -> Maybe of Datatype
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-def contained_within(Datatype) -> Module
+def container(Datatype) -> Module
 #+END_EXAMPLE
+
+Returns the module that contains this model element's definition.
 
 #+BEGIN_EXAMPLE
 def name(Datatype) -> IdentifierReference
 #+END_EXAMPLE
 
+Returns the identifier naming this model element.
+
+#+BEGIN_EXAMPLE
+def qualified_name(c -> Constraint) -> Identifier
+    ≔ join(name(container(c)) name(c))
+#+END_EXAMPLE
+
+Return the qualified identifier naming this model element and it's containing module.
+
 *Datatype: decimal*
 
 #+BEGIN_EXAMPLE
-def Decimal(Any) → boolean
+def decimal(Any) → boolean
 #+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~decimal~, else ~false~.
 
 #+BEGIN_EXAMPLE
 def whole_part(decimal) -> decimal
@@ -641,8 +686,10 @@ def round(decimal) -> decimal
 *Datatype: double*
 
 #+BEGIN_EXAMPLE
-def Double(Any) → boolean
+def double(Any) → boolean
 #+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~double~, else ~false~.
 
 #+BEGIN_EXAMPLE
 def whole_part(double) -> double
@@ -659,22 +706,26 @@ def round(double) -> double
 *Datatype: integer*
 
 #+BEGIN_EXAMPLE
-def Integer(Any) → boolean
+def integer(Any) → boolean
 #+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~integer~, else ~false~.
 
 *Datatype: iri*
 
 #+BEGIN_EXAMPLE
-def Iri(Any) → boolean
+def iri(Any) → boolean
 #+END_EXAMPLE
 
-TBD
+Returns ~true~ if the passed value is of type ~iri~, else ~false~.
 
 *Datatype: language*
 
 #+BEGIN_EXAMPLE
-def Language(Any) → boolean
+def language(Any) → boolean
 #+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~language~, else ~false~.
 
 #+BEGIN_EXAMPLE
 def broader(languageTag languageTag) -> boolean
@@ -703,8 +754,10 @@ def script_part(languageTag) -> string
 *Datatype: string*
 
 #+BEGIN_EXAMPLE
-def String(Any) → boolean
+def string(Any) → boolean
 #+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~string~, else ~false~.
 
 #+BEGIN_EXAMPLE
 def contains(string substring -> string) -> boolean
@@ -820,6 +873,8 @@ Returns ~true~ if the provided type ~t~ is a sequence that guarantees uniqueness
 def Bag(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Bag~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def order(Bag of Any count -> integer) -> List of Any
 #+END_EXAMPLE
@@ -829,6 +884,8 @@ def order(Bag of Any count -> integer) -> List of Any
 #+BEGIN_EXAMPLE
 def List(Any) → boolean
 #+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~List~, else ~false~.
 
 #+BEGIN_EXAMPLE
 def drop(List of Any count -> unsigned) -> List of Any
@@ -860,11 +917,15 @@ def take(List of Any count -> unsigned) -> List of Any
 def Maybe(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Maybe~, else ~false~.
+
 *Class: OrderedSet*
 
 #+BEGIN_EXAMPLE
 def OrderedSet(Any) → boolean
 #+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~OrderedSet~, else ~false~.
 
 #+BEGIN_EXAMPLE
 drop(OrderedSet of Any count -> unsigned) -> OrderedSet of Any
@@ -922,6 +983,8 @@ union(OrderedSet of Any rhs -> OrderedSet of Any) -> OrderedSet of Any
 def Set(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Set~, else ~false~.
+
 #+BEGIN_EXAMPLE
 intersection(lhs -> Set of Any rhs -> Set of Any) -> Set of Any
 #+END_EXAMPLE
@@ -964,6 +1027,8 @@ union(lhs -> Set of Any rhs -> Set of Any) -> Set of Any
 def Annotation(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Annotation~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def as_annotation_property(Annotation) -> Maybe of AnnotationProperty
 #+END_EXAMPLE
@@ -986,9 +1051,19 @@ def is_constraint(Annotation) -> boolean
 def AnnotationProperty(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~AnnotationProperty~, else ~false~.
+
+#+BEGIN_EXAMPLE
+def container(Member) -> ModelElement
+#+END_EXAMPLE
+
+Returns the model element that contains this annotation assertion.
+
 #+BEGIN_EXAMPLE
 def name(AnnotationProperty) -> IdentiferReference
 #+END_EXAMPLE
+
+Returns the identifier naming this model element.
 
 #+BEGIN_EXAMPLE
 def value(AnnotationProperty) -> Value
@@ -1000,6 +1075,8 @@ def value(AnnotationProperty) -> Value
 def Constraint(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Constraint~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def as_formal(Constraint) -> Maybe of FormalConstraint
 #+END_EXAMPLE
@@ -1007,6 +1084,12 @@ def as_formal(Constraint) -> Maybe of FormalConstraint
 #+BEGIN_EXAMPLE
 def as_informal(Constraint) -> Maybe of string
 #+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def container(Member) -> ModelElement
+#+END_EXAMPLE
+
+Returns the model element that contains this annotation assertion.
 
 #+BEGIN_EXAMPLE
 def is_formal(Constraint) -> boolean
@@ -1017,8 +1100,10 @@ def is_informal(Constraint) -> boolean
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-def name(Constraint) -> Maybe of Identifier
+def name(Constraint) -> Identifier
 #+END_EXAMPLE
+
+Returns the identifier naming this model element.
 
 *Annotation Collections*
 
@@ -1040,15 +1125,19 @@ def constraints(as - > Bag of Annotation)
 def Member(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Member~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def annotations(Member) -> Bag of Annotation
 #+END_EXAMPLE
 
-Returns the identifier naming the member.
+Returns an unordered sequence of annotations attached to this model element.
 
 #+BEGIN_EXAMPLE
 def container(Member) -> Type
 #+END_EXAMPLE
+
+Returns the container type that contains this member's definition.
 
 #+BEGIN_EXAMPLE
 def is_complete(m -> Member) -> boolean
@@ -1058,6 +1147,8 @@ def is_complete(m -> Member) -> boolean
 #+BEGIN_EXAMPLE
 def name(Member) -> Identifier
 #+END_EXAMPLE
+
+Returns the identifier naming this model element.
 
 #+BEGIN_EXAMPLE
 def target_type(Member) -> Type
@@ -1069,11 +1160,15 @@ def target_type(Member) -> Type
 def IdentityMember(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~IdentityMember~, else ~false~.
+
 *Class: ByReferenceMember*
 
 #+BEGIN_EXAMPLE
 def ByReferenceMember(Any) → boolean
 #+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~ByReferenceMember~, else ~false~.
 
 *Class: ByValueMember*
 
@@ -1081,11 +1176,15 @@ def ByReferenceMember(Any) → boolean
 def ByValueMember(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~ByValueMember~, else ~false~.
+
 *Class: Cardinality*
 
 #+BEGIN_EXAMPLE
 def Cardinality(Any) → boolean
 #+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~Cardinality~, else ~false~.
 
 #+BEGIN_EXAMPLE
 def is_optional(c -> Cardinality) -> boolean
@@ -1117,15 +1216,19 @@ def min(Cardinality) -> unsigned
 def Entity(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Entity~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def annotations(Entity) -> Bag of Annotation
 #+END_EXAMPLE
 
-Returns an unordered sequence of annotations attached to the entity.
+Returns an unordered sequence of annotations attached to this model element.
 
 #+BEGIN_EXAMPLE
 def container(Entity) -> Module
 #+END_EXAMPLE
+
+Returns the module that contains this model element's definition.
 
 #+BEGIN_EXAMPLE
 def flat_members(Entity) -> Set of EntityMember
@@ -1152,8 +1255,14 @@ Returns an unordered, unique, sequence of variants contained within the union.
 def name(Entity) -> Identifier
 #+END_EXAMPLE
 
-Returns the identifier naming the entity.
+Returns the identifier naming this model element.
 
+#+BEGIN_EXAMPLE
+def qualified_name(c -> Constraint) -> Identifier
+    ≔ join(name(container(c)) name(c))
+#+END_EXAMPLE
+
+Return the qualified identifier naming this model element and it's containing module.
 
 *Class: EntityGroup*
 
@@ -1161,15 +1270,19 @@ Returns the identifier naming the entity.
 def EntityGroup(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~EntityGroup~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def annotations(EntityGroup) -> Bag of Annotation
 #+END_EXAMPLE
 
-Returns an unordered sequence of annotations attached to the entity group.
+Returns an unordered sequence of annotations attached to this model element.
 
 #+BEGIN_EXAMPLE
 def container(EntityGroup) -> Entity
 #+END_EXAMPLE
+
+Returns the entity that contains group's definition.
 
 #+BEGIN_EXAMPLE
 def members(EntityGroup) -> Set of EntityMember
@@ -1182,6 +1295,8 @@ Returns an unordered, unique, sequence of variants contained within the union.
 #+BEGIN_EXAMPLE
 def EntityMember(Any) → boolean
 #+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~EntityMember~, else ~false~.
 
 #+BEGIN_EXAMPLE
 def as_by_reference(EntityMember) -> Maybe of ByReferenceMember
@@ -1207,15 +1322,19 @@ def is_by_value(EntityMember) -> boolean
 def Event(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Event~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def annotations(Event) -> Bag of Annotation
 #+END_EXAMPLE
 
-Returns an unordered sequence of annotations attached to the event.
+Returns an unordered sequence of annotations attached to this model element.
 
 #+BEGIN_EXAMPLE
 def container(Event) -> Module
 #+END_EXAMPLE
+
+Returns the module that contains this model element's definition.
 
 #+BEGIN_EXAMPLE
 def flat_members(Event) -> Set of ByValueMember
@@ -1239,7 +1358,14 @@ Returns an unordered, unique, sequence of variants contained within the union.
 def name(Event) -> Identifier
 #+END_EXAMPLE
 
-Returns the identifier naming the event.
+Returns the identifier naming this model element.
+
+#+BEGIN_EXAMPLE
+def qualified_name(c -> Constraint) -> Identifier
+    ≔ join(name(container(c)) name(c))
+#+END_EXAMPLE
+
+Return the qualified identifier naming this model element and it's containing module.
 
 #+BEGIN_EXAMPLE
 def source(Event) -> IdentifierReference
@@ -1253,15 +1379,19 @@ def source(Event) -> IdentifierReference
 def Enumeration(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Enumeration~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def annotations(Enumeration) -> Bag of Annotation
 #+END_EXAMPLE
 
-Returns an unordered sequence of annotations attached to the enumeration.
+Returns an unordered sequence of annotations attached to this model element.
 
 #+BEGIN_EXAMPLE
 def container(Enumeration) -> Module
 #+END_EXAMPLE
+
+Returns the module that contains this model element's definition.
 
 #+BEGIN_EXAMPLE
 def is_complete(e -> Enumeration) -> boolean ≔ ¬has_body(e)
@@ -1271,38 +1401,49 @@ def is_complete(e -> Enumeration) -> boolean ≔ ¬has_body(e)
 def name(Enumeration) -> Identifier
 #+END_EXAMPLE
 
-Returns the identifier naming the enum.
+Returns the identifier naming this model element.
 
 #+BEGIN_EXAMPLE
-def variants(Enumeration) -> OrderedSet of EnumVariant
+def qualified_name(c -> Constraint) -> Identifier
+    ≔ join(name(container(c)) name(c))
+#+END_EXAMPLE
+
+Return the qualified identifier naming this model element and it's containing module.
+
+#+BEGIN_EXAMPLE
+def variants(Enumeration) -> OrderedSet of ValueVariant
 #+END_EXAMPLE
 
 Returns an ordered, unique, sequence of variants contained within the enumeration.
 
-*Class: EnumVariant*
+*Class: ValueVariant*
 
 #+BEGIN_EXAMPLE
-def EnumVariant(Any) → boolean
+def ValueVariant(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~ValueVariant~, else ~false~.
+
 #+BEGIN_EXAMPLE
-def annotations(EnumVariant) -> Bag of Annotation
+def annotations(ValueVariant) -> Bag of Annotation
 #+END_EXAMPLE
 
-Returns an unordered sequence of annotations attached to the enumeration variant.
+Returns an unordered sequence of annotations attached to this model element.
 
 #+BEGIN_EXAMPLE
-def container(EnumVariant) -> Enumeration
+def container(ValueVariant) -> Enumeration
 #+END_EXAMPLE
 
+Returns the enumeration that contains this variant's definition.
+
 #+BEGIN_EXAMPLE
-def name(EnumVariant) -> Identifier
+def name(ValueVariant) -> Identifier
 #+END_EXAMPLE
 
-Returns the identifier naming the enumeration variant.
+Returns the identifier naming this model element.
 
 #+BEGIN_EXAMPLE
-def value(EnumVariant) -> integer
+def value(ValueVariant) -> integer
 #+END_EXAMPLE
 
 *** Structures
@@ -1313,15 +1454,19 @@ def value(EnumVariant) -> integer
 def Structure(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Structure~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def annotations(Structure) -> Bag of Annotation
 #+END_EXAMPLE
 
-Returns an unordered sequence of annotations attached to the structure.
+Returns an unordered sequence of annotations attached to this model element.
 
 #+BEGIN_EXAMPLE
 def container(Structure) -> Module
 #+END_EXAMPLE
+
+Returns the module that contains this model element's definition.
 
 #+BEGIN_EXAMPLE
 def flat_members(Structure) -> Set of ByValueMember
@@ -1345,7 +1490,14 @@ Returns an unordered, unique, sequence of members contained within the structure
 def name(Structure) -> Identifier
 #+END_EXAMPLE
 
-Returns the identifier naming the structure.
+Returns the identifier naming this model element.
+
+#+BEGIN_EXAMPLE
+def qualified_name(c -> Constraint) -> Identifier
+    ≔ join(name(container(c)) name(c))
+#+END_EXAMPLE
+
+Return the qualified identifier naming this model element and it's containing module.
 
 *Class: StructureGroup*
 
@@ -1353,15 +1505,19 @@ Returns the identifier naming the structure.
 def StructureGroup(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~StructureGroup~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def annotations(StructureGroup) -> Bag of Annotation
 #+END_EXAMPLE
 
-Returns an unordered sequence of annotations attached to the structure group.
+Returns an unordered sequence of annotations attached to this model element.
 
 #+BEGIN_EXAMPLE
-def contained_within(StructureGroup) -> Structure
+def container(StructureGroup) -> Structure
 #+END_EXAMPLE
+
+Returns the structure that contains this group's definition.
 
 #+BEGIN_EXAMPLE
 def members(StructureGroup) -> Set of ByValueMember
@@ -1377,15 +1533,19 @@ Returns an unordered, unique, sequence of members contained within the structure
 def Union(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Union~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def annotations(Union) -> Bag of Annotation
 #+END_EXAMPLE
 
-Returns an unordered sequence of annotations attached to the union.
+Returns an unordered sequence of annotations attached to this model element.
 
 #+BEGIN_EXAMPLE
 def container(Union) -> Module
 #+END_EXAMPLE
+
+Returns the module that contains this model element's definition.
 
 #+BEGIN_EXAMPLE
 def is_complete(u -> Union) -> boolean
@@ -1396,7 +1556,14 @@ def is_complete(u -> Union) -> boolean
 def name(Union) -> Identifier
 #+END_EXAMPLE
 
-Returns the identifier naming the union.
+Returns the identifier naming this model element.
+
+#+BEGIN_EXAMPLE
+def qualified_name(c -> Constraint) -> Identifier
+    ≔ join(name(container(c)) name(c))
+#+END_EXAMPLE
+
+Return the qualified identifier naming this model element and it's containing module.
 
 #+BEGIN_EXAMPLE
 def variants(Union) -> Set of TypeVariant
@@ -1410,15 +1577,19 @@ Returns an unordered, unique, sequence of variants contained within the union.
 def TypeVariant(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~TypeVariant~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def annotations(TypeVariant) -> Bag of Annotation
 #+END_EXAMPLE
 
-Returns an unordered sequence of annotations attached to the type variant.
+Returns an unordered sequence of annotations attached to this model element.
 
 #+BEGIN_EXAMPLE
-def container(TypeVariant) -> union
+def container(TypeVariant) -> Union
 #+END_EXAMPLE
+
+Returns the union that contains this variant's definition.
 
 #+BEGIN_EXAMPLE
 def is_renamed(PropertyRole) -> boolean
@@ -1428,7 +1599,7 @@ def is_renamed(PropertyRole) -> boolean
 def name(TypeVariant) -> Identifier
 #+END_EXAMPLE
 
-Returns the identifier naming the type variant.
+Returns the identifier naming this model element, this identifier *must* refer to a type definition.
 
 #+BEGIN_EXAMPLE
 def renamed_as(PropertyRole) -> Maybe of Identifier
@@ -1442,15 +1613,19 @@ def renamed_as(PropertyRole) -> Maybe of Identifier
 def Property(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~Property~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def annotations(ModuleProperty) -> Bag of Annotation
 #+END_EXAMPLE
 
-Returns an unordered sequence of annotations attached to the property.
+Returns an unordered sequence of annotations attached to this model element.
 
 #+BEGIN_EXAMPLE
 def container(Property) -> Module
 #+END_EXAMPLE
+
+Returns the module that contains this model element's definition.
 
 #+BEGIN_EXAMPLE
 def is_complete(p -> Property) -> boolean
@@ -1461,11 +1636,20 @@ def is_complete(p -> Property) -> boolean
 def name(Property) -> Identifier
 #+END_EXAMPLE
 
-Returns the identifier naming the property.
+Returns the identifier naming this model element.
 
 #+BEGIN_EXAMPLE
-def roles(Property) -> Bag of PropertyRole
+def qualified_name(c -> Constraint) -> Identifier
+    ≔ join(name(container(c)) name(c))
 #+END_EXAMPLE
+
+Return the qualified identifier naming this model element and it's containing module.
+
+#+BEGIN_EXAMPLE
+def roles(Property) -> Set of PropertyRole
+#+END_EXAMPLE
+
+Returns an unordered set of roles defined within this property.
 
 *Class: Property Role*
 
@@ -1473,15 +1657,19 @@ def roles(Property) -> Bag of PropertyRole
 def PropertyRole(Any) → boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the passed value is of type ~PropertyRole~, else ~false~.
+
 #+BEGIN_EXAMPLE
 def annotations(PropertyRole) -> Bag of Annotation
 #+END_EXAMPLE
 
-Returns an unordered sequence of annotations attached to the property role.
+Returns an unordered sequence of annotations attached to this model element.
 
 #+BEGIN_EXAMPLE
 def container(PropertyRole) -> Property
 #+END_EXAMPLE
+
+Returns the property that contains this role's definition.
 
 #+BEGIN_EXAMPLE
 def is_complete(r -> PropertyRole) -> boolean
@@ -1492,7 +1680,7 @@ def is_complete(r -> PropertyRole) -> boolean
 def name(PropertyRole) -> Identifier
 #+END_EXAMPLE
 
-Returns the identifier naming the property role.
+Returns the identifier naming this model element.
 
 #+BEGIN_EXAMPLE
 def source_cardinality(PropertyRole) -> Maybe of Cardinality

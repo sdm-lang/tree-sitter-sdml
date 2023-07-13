@@ -50,6 +50,11 @@ end
 
 # Changes
 
+**Version: 0.1.22**
+
+* Renamed the grammar rule `type_definition` to `definition` to address the fact that property definitions aren't types.
+* Renamed the grammar rule `enum_variant` to `value_variant` to align with `type_variant` on unions.
+
 **Version: 0.1.21**
 
 * Fixed highlighting/indent/fold for constraints.

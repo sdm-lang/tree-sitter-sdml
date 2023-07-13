@@ -5,7 +5,7 @@ Structure, Empty
 module Campaign is
 
   structure Duration
-  
+
 end
 
 ---
@@ -13,6 +13,6 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (type_def
+    (definition
       (structure_def
         name: (identifier)))))

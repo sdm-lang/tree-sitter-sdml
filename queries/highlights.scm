@@ -214,7 +214,7 @@
  "->" @operator
  target: (type_reference) @type)
 
-(enum_variant
+(value_variant
  name: (identifier) @constant
  "=" @operator)
 

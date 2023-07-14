@@ -141,17 +141,8 @@ model element within the resource. This URI identifier for each model element ne
 corresponding RDF resource(s). Our first problem is to determine the base URI for the module,as follows:
 
 1. If the module has a ~base~ specifier it MUST be used as the module URI.
-2. If the reader has access to an XML catalog file, a matching catalog entry MUST be used as the module URI.
+2. If the reader has access to an SDML catalog file (For details of the catalog file format see appendix [[app:resolver-catalog]]), a matching catalog entry MUST be used as the module URI.
 3. A URI is calculated for the module using the =file:= scheme and the file path relative to a /project root/.
-   
-Using the OASIS [[https://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html][XML Catalogs]] allows for namespace resolution for offline development.
-
-Specifically, each module results in an element in the catalog of the form:
-
-1. A single ~uri~ element with:
-   1. an ~id~ attribute with the module's identifier
-   2. a ~name~ attribute with the module's calculated IRI
-   3. a ~uri~ attribute with the relative URI for the source file.
 
 Considering the following simple module in the file =vehicle.sdm=.
 
@@ -161,33 +152,18 @@ module vehicle is end
 
 If the following file is in the same directory as the vehicle module it is possible to   
 
-#+BEGIN_SRC xml :noeval
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<catalog
-    xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-  <uri
-      id="vehicle"
-      name="https://example.org/rentals/vehicle#"
-      uri="vehicle.sdm"/>
-</catalog>
-#+END_SRC
-
-Alternatively, 
-
-#+BEGIN_SRC xml :noeval
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<catalog
-    xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-  <group
-      id="rentals"
-      prefer="public"
-      xml:base="https://example.org/rentals/">
-    <uri
-        id="vehicle"
-        name="vehicle#"
-        uri="vehicle.sdm"/>
-  </group>
-</catalog>
+#+BEGIN_SRC json :noeval
+{
+  "base": "https://example.org/rentals/",
+  "entries": {
+    "rentals": {
+      "item": {
+        "relative_name": "vehicle#",
+        "relative_path": "vehicle-v1.sdm"
+      }
+    }
+  }
+}
 #+END_SRC
 
 *** Importing Modules and Members

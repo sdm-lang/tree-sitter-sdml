@@ -39,6 +39,8 @@
 # A List of modules and top-level definitions only.
 #+INCLUDE: "./std-library.org" :minlevel 1
 
+#+INCLUDE: "./resolver-catalog.org" :minlevel 1
+
 # A detailed mapping
 #+INCLUDE: "./surface-to-rdf.org" :minlevel 1
 

@@ -1493,6 +1493,10 @@
       "members": [
         {
           "type": "SYMBOL",
+          "name": "wildcard_type"
+        },
+        {
+          "type": "SYMBOL",
           "name": "collection_type"
         },
         {
@@ -1527,11 +1531,31 @@
           "type": "FIELD",
           "name": "element",
           "content": {
-            "type": "SYMBOL",
-            "name": "type_reference"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "wildcard_type"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "type_reference"
+              }
+            ]
           }
         }
       ]
+    },
+    "wildcard_type": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "STRING",
+          "value": "_"
+        }
+      }
     },
     "builtin_collection_type": {
       "type": "CHOICE",

@@ -226,20 +226,26 @@ end
 #+NAME: lst:sdml-type-model
 #+BEGIN_SRC dot :file sdml-type-model.svg :exports results
 strict digraph {
+   bgcolor="transparent";
    rankdir=BT;
+   fontname="Helvetica,Arial,sans-serif";
+   node [shape="rect"; fontname="Helvetica,Arial,sans-serif"; fontsize=10; width=1.0; height=0.4];
+   edge [arrowhead=onormal; fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="darkgrey"];
    
-   node [shape=rect; width=1.0];
-   edge [arrowhead=onormal];
-   
-   Type;
+   Type [label="Any"];
    Scalar -> Type;
+   Scalar [color="grey"; fontcolor="grey"];
+   Datatype -> Scalar;
+   Sum [color="grey"; fontcolor="grey"];
    Sum -> Type;
    Enumeration -> Sum;
    Union -> Sum;
+   Product [color="grey"; fontcolor="grey"];
    Product -> Type;
    Entity -> Product;
    Event -> Product;
    Structure -> Product;
+   Unknown -> Type [label="disjoint"];
 }
 #+END_SRC
 
@@ -1013,7 +1019,7 @@ be unique. Note also that the keyword =of= and not =is= starts an enumeration bo
 #+NAME: lst:grammar-enum-def
 #+BEGIN_SRC ebnf
 EnumDef         = "enum", Identifier, EnumBody?
-EnumBody        = "of", Annotation*, EnumVariant*, "end"
+EnumBody        = "of", Annotation*, ValueVariant*, "end"
 #+END_SRC
 
 *Example*:
@@ -1033,7 +1039,7 @@ the addition of a body with enumeration variants.
 
 #+NAME: lst:grammar-enum-variant
 #+BEGIN_SRC ebnf
-EnumVariant     = Identifier, "=", Unsigned, AnnotationOnlyBody?
+ValueVariant    = Identifier, "=", Unsigned, AnnotationOnlyBody?
 #+END_SRC
 
 *Example*:

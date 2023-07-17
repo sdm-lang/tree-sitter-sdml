@@ -136,6 +136,7 @@
  name: (identifier) @variable.parameter
  "->" @operator)
 
+(fn_type (wildcard_type) @type)
 (fn_type (type_reference (identifier_reference) @type))
 
 (collection_type

@@ -143,7 +143,7 @@ digraph G {
   Structure [shape=ellipse];
   Union [shape=ellipse];
   Property [shape=ellipse];
-  EnumVariant [shape=ellipse];
+  ValueVariant [shape=ellipse];
   Datatype [shape=ellipse];
   integer [shape=rectangle;style=filled;color=lightgrey;label="xsd:nonNegativeInteger"];
 
@@ -156,7 +156,7 @@ digraph G {
   Datatype -> Datatype [label="baseDatatype";style=dashed;arrowhead=empty];
 
   Enumeration -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
-  Enumeration -> EnumVariant [label="hasVariant";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
+  Enumeration -> ValueVariant [label="hasVariant";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
 
   Structure -> Classifier [label="rdfs:subClassOf";arrowhead=empty];
   Structure -> Group [label="hasGroup";dir=both;arrowtail=diamond;arrowhead=open;headlabel="*"];
@@ -185,7 +185,7 @@ digraph G {
   Cardinality -> integer [label="owl:maxCardinality";dir=both;arrowtail=diamond;arrowhead=open;headlabel="?"];
   Cardinality -> integer [label="owl:minCardinality";dir=both;arrowtail=diamond;arrowhead=open];
 
-  EnumVariant -> integer [label="hasValue";dir=both;arrowtail=diamond;arrowhead=open];
+  ValueVariant -> integer [label="hasValue";dir=both;arrowtail=diamond;arrowhead=open];
 }
 #+END_SRC
 
@@ -388,7 +388,7 @@ annotating a model.
 #+CAPTION: Commonly Used Annotation Properties
 | Name             | Usage                                                                                          | Domain       | Range          |
 |------------------+------------------------------------------------------------------------------------------------+--------------+----------------|
-| =:defaultVariant=  | Denotes, if present, the default variant of an enumeration.                                    | =:EnumVariant= | =xsd:NMTOKEN=    |
+| =:defaultVariant=  | Denotes, if present, the default variant of an enumeration.                                    | =:ValueVariant= | =xsd:NMTOKEN=    |
 | =:deprecatedSince= | The specific version in which this model element was marked as deprecated.                     | N/A          | =:versionString= |
 | =:introducedIn=    | The specific version this model element first appeared.                                        | N/A          | =:versionString= |
 | =dc:conformsTo=    | An established standard to which the described  model element conforms.                        | N/A          | =xsd:AnyURI=     |

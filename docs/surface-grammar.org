@@ -273,9 +273,9 @@ FunctionSignature   = "(", Parameter+, ")", "->", FunctionalType
 
 Parameter           = ( Identifier, "->" )?, FunctionalType
 
-FunctionalType      =  CollectionType | TypeReference
+FunctionalType      =  "_" | "CollectionType | TypeReference
 
-CollectionType      = BuiltinCollectionType, "of", TypeReference
+CollectionType      = BuiltinCollectionType, "of", ( "_" | TypeReference )
 
 BuiltinCollectionType =
     "Bag" | "List" | "Maybe" | "OrderedSet" | "Sequence" | "Set"

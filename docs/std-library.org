@@ -323,61 +323,20 @@ This module
 Note that all of the predicates, relations, and functions in this section exist within the ~sdml~ module scope but
 qualification is optional unless the application is ambiguous in a particular context.
 
-*** Equality and Inequality
-
-#+BEGIN_EXAMPLE
-def eq(Any Any) -> boolean
-#+END_EXAMPLE
-
-Returns ~true~ if the two values are equal, else ~false~.
-
-#+BEGIN_EXAMPLE
-def gt(Any Any) -> boolean
-#+END_EXAMPLE
-
-Returns ~true~ if the first value is greater than the second, else ~false~.
-
-#+BEGIN_EXAMPLE
-def gte(v1 -> Any v2 -> Any) -> boolean
-    ≔ gt(v1 v2) ∨ eq(v1 v2)
-#+END_EXAMPLE
-
-Returns ~true~ if the first value is greater than or equal to the second, else ~false~.
-
-#+BEGIN_EXAMPLE
-def lt(v1 -> Any v2 -> Any) -> boolean
-    ≔ ¬gte(v1 v2)
-#+END_EXAMPLE
-
-Returns ~true~ if the first value is less than the second, else ~false~.
-
-#+BEGIN_EXAMPLE
-def lte(v1 -> Any v2 -> Any) -> boolean
-    ≔ ¬gt(v1 v2)
-#+END_EXAMPLE
-
-Returns ~true~ if the first value is less than or equal to the second, else ~false~.
-
-#+BEGIN_EXAMPLE
-def ne(v1 -> Any v2 -> Any) -> boolean
-    ≔ ¬eq(v1 v2)
-#+END_EXAMPLE
-
-Returns ~true~ if the two values are not equal, else ~false~.
-
-*** Metaclasses
-
-*Class: Any*
-
-#+BEGIN_EXAMPLE
-def class_of(Any) -> Type
-#+END_EXAMPLE
-
-Returns the SDML type of the passed value.
-
-example: ~class_of(rentals:Customer) = sdml:Entity~
+*** The Type ~Type~
 
 *Class: Type*
+
+#+BEGIN_EXAMPLE
+def Type(_) -> boolean
+#+END_EXAMPLE
+
+Returns ~true~ if the passed value is a ~Type~, else ~false~.
+
+#+BEGIN_EXAMPLE
+def is_unknown(self -> _) -> boolean
+    ≔ Type(self) ⇒ self = sdml:Unknown ∨ is_unknown(type_of(self))
+#+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
 def name(Type) -> QualifiedIdentifier
@@ -385,12 +344,65 @@ def name(Type) -> QualifiedIdentifier
 
 The qualified identifier that names this type. In all cases the module portion of the name will be ~"sdml"~.
 
+example: ~type_of(rentals:Customer) = "sdml:Entity"~
+
+#+BEGIN_EXAMPLE
+def type_of(_) -> Type
+#+END_EXAMPLE
+
+Returns the SDML type of the passed value.
+
+example: ~type_of(rentals:Customer) = sdml:Entity~
+
+*** Equality and Inequality
+
+#+BEGIN_EXAMPLE
+def eq(_ _) -> boolean
+#+END_EXAMPLE
+
+Returns ~true~ if the two values are equal, else ~false~.
+
+#+BEGIN_EXAMPLE
+def gt(_ _) -> boolean
+#+END_EXAMPLE
+
+Returns ~true~ if the first value is greater than the second, else ~false~.
+
+#+BEGIN_EXAMPLE
+def gte(v1 -> _ v2 -> _) -> boolean
+    ≔ gt(v1 v2) ∨ eq(v1 v2)
+#+END_EXAMPLE
+
+Returns ~true~ if the first value is greater than or equal to the second, else ~false~.
+
+#+BEGIN_EXAMPLE
+def lt(v1 -> _ v2 -> _) -> boolean
+    ≔ ¬gte(v1 v2)
+#+END_EXAMPLE
+
+Returns ~true~ if the first value is less than the second, else ~false~.
+
+#+BEGIN_EXAMPLE
+def lte(v1 -> _ v2 -> _) -> boolean
+    ≔ ¬gt(v1 v2)
+#+END_EXAMPLE
+
+Returns ~true~ if the first value is less than or equal to the second, else ~false~.
+
+#+BEGIN_EXAMPLE
+def ne(v1 -> _ v2 -> _) -> boolean
+    ≔ ¬eq(v1 v2)
+#+END_EXAMPLE
+
+Returns ~true~ if the two values are not equal, else ~false~.
+
 *** Identifiers
 
 *Class: Identifier*
 
 #+BEGIN_EXAMPLE
-def Identifier(Any) → boolean
+def Identifier(self -> _) → boolean
+    ≔ type_of(self) = sdml:Identifier
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Identifier~, else ~false~.
@@ -404,7 +416,8 @@ Return a new qualified identifier with the first parameter as the module name an
 *Class: QualifiedIdentifier*
 
 #+BEGIN_EXAMPLE
-def QualifiedIdentifier(Any) → boolean
+def QualifiedIdentifier(self -> _) → boolean
+    ≔ type_of(self) = sdml:QualifiedIdentifier
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~QualifiedIdentifier~, else ~false~.
@@ -424,7 +437,8 @@ Return the module name part of the identifier.
 *Union: IdentifierReference*
 
 #+BEGIN_EXAMPLE
-def IdentifierReference(Any) → boolean
+def IdentifierReference(self -> _) → boolean
+    ≔ type_of(self) = sdml:IdentiferReference
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~IdentifierReference~, else ~false~.
@@ -450,7 +464,8 @@ def is_qualified_identifier(IdentifierReference) -> boolean
 *Class: Module*
 
 #+BEGIN_EXAMPLE
-def Module(Any) → boolean
+def Module(self -> _) → boolean
+    ≔ type_of(self) = sdml:Module
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Module~, else ~false~.
@@ -478,9 +493,11 @@ def imports(Module) -> Set of ImportStatement
 Returns an unordered, unique, sequence of import statements.
 
 #+BEGIN_EXAMPLE
-def is_complete(m -> Module) -> boolean
-    ≔ ∀ d ∈ definitions(m) ( is_complete(d) )
+def is_complete(self -> Module) -> boolean
+    ≔ ∀ d ∈ definitions(self) ( is_complete(d) )
 #+END_EXAMPLE
+
+Returns ~true~ if the module definition is /complete/, else ~false~.
 
 #+BEGIN_EXAMPLE
 def name(Module) -> Identifier
@@ -495,7 +512,8 @@ def resolved_uri(Module) -> iri
 *Union: Definition*
 
 #+BEGIN_EXAMPLE
-def Definition(Any) → boolean
+def Definition(self -> _) → boolean
+    ≔ type_of(self) = sdml:Definition
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Definition~, else ~false~.
@@ -553,7 +571,8 @@ def is_property(Definition) -> boolean
 *Class: ImportStatement*
 
 #+BEGIN_EXAMPLE
-def ImportStatement(Any) → boolean
+def ImportStatement(self -> _) → boolean
+    ≔ type_of(self) = sdml:ImportStatement
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~ImportStatement~, else ~false~.
@@ -575,7 +594,8 @@ def module_imports(i -> ImportStatement)
 *Class: Import*
 
 #+BEGIN_EXAMPLE
-def Import(Any) → boolean
+def Import(self -> _) → boolean
+    ≔ type_of(self) = sdml:Import
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Import~, else ~false~.
@@ -599,7 +619,8 @@ def as_member_import(Import) -> Maybe of MemberImport
 *Class: ModuleImport*
 
 #+BEGIN_EXAMPLE
-def ModuleImport(Any) → boolean
+def ModuleImport(self -> _) → boolean
+    ≔ type_of(self) = sdml:ModuleImport
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~ModuleImport~, else ~false~.
@@ -611,7 +632,8 @@ def module(ModuleImport) -> Identifier
 *Class: MemberImport*
 
 #+BEGIN_EXAMPLE
-def MemberImport(Any) → boolean
+def MemberImport(self -> _) → boolean
+    ≔ type_of(self) = sdml:MemberImport
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~MemberImport~, else ~false~.
@@ -629,7 +651,8 @@ def member(MemberImport) -> Identifier
 *Class: Datatype*
 
 #+BEGIN_EXAMPLE
-def Datatype(Any) → boolean
+def Datatype(self -> _) → boolean
+    ≔ type_of(self) = sdml:Datatype
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Datatype~, else ~false~.
@@ -666,7 +689,7 @@ Return the qualified identifier naming this model element and it's containing mo
 *Datatype: decimal*
 
 #+BEGIN_EXAMPLE
-def decimal(Any) → boolean
+def decimal(_) → boolean
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~decimal~, else ~false~.
@@ -686,7 +709,7 @@ def round(decimal) -> decimal
 *Datatype: double*
 
 #+BEGIN_EXAMPLE
-def double(Any) → boolean
+def double(_) → boolean
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~double~, else ~false~.
@@ -706,7 +729,7 @@ def round(double) -> double
 *Datatype: integer*
 
 #+BEGIN_EXAMPLE
-def integer(Any) → boolean
+def integer(_) → boolean
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~integer~, else ~false~.
@@ -714,7 +737,7 @@ Returns ~true~ if the passed value is of type ~integer~, else ~false~.
 *Datatype: iri*
 
 #+BEGIN_EXAMPLE
-def iri(Any) → boolean
+def iri(_) → boolean
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~iri~, else ~false~.
@@ -722,7 +745,7 @@ Returns ~true~ if the passed value is of type ~iri~, else ~false~.
 *Datatype: language*
 
 #+BEGIN_EXAMPLE
-def language(Any) → boolean
+def language(_) → boolean
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~language~, else ~false~.
@@ -754,7 +777,7 @@ def script_part(languageTag) -> string
 *Datatype: string*
 
 #+BEGIN_EXAMPLE
-def string(Any) → boolean
+def string(_) → boolean
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~string~, else ~false~.
@@ -800,54 +823,55 @@ def suffix(string suffix -> string) -> boolean
 *Class: Sequence*
 
 #+BEGIN_EXAMPLE
-def Sequence(Any) → boolean
+def Sequence(self -> _) → boolean
+    ≔ type_of(self) = sdml:Sequence
 #+END_EXAMPLE
 
 Returns ~true~ if the value is of type ~Sequence~ or any sub-type of ~Sequence~, else ~false~.
 
 #+BEGIN_EXAMPLE
-def contains(s → Sequence of Any t → element of Any) → boolean
+def contains(s → Sequence of _ t → element of _) → boolean
     ≔ ¬is_empty({ e | e ∈ s ∧ e = t})
 #+END_EXAMPLE
 
 Returns ~true~ if the sequence ~s~ contains the element ~t~, else ~false~.
 
 #+BEGIN_EXAMPLE
-def count(Sequence of Any) → unsigned
+def count(Sequence of _) → unsigned
 #+END_EXAMPLE
 
 Returns the number of elements in the sequence.
 
 #+BEGIN_EXAMPLE
-def into_bag(seq → Sequence of Any) → Bag of Any
+def into_bag(seq → Sequence of _) → Bag of _
 #+END_EXAMPLE
 
 Transforms the input sequence into a ~Bag~, this *may* remove ordering and uniqueness constraints from the input sequence
 but *will not* remove any elements.
 
 #+BEGIN_EXAMPLE
-def into_list(seq → Sequence of Any) → List of Any
+def into_list(seq → Sequence of _) → List of _
 #+END_EXAMPLE
 
 Transforms the input sequence into a ~List~, this *may* add ordering and remove uniqueness constraints from the input sequence
 but *will not* remove any elements.
 
 #+BEGIN_EXAMPLE
-def into_ordered_set(seq → Sequence of Any) → OrderedSet of Any
+def into_ordered_set(seq → Sequence of _) → OrderedSet of _
 #+END_EXAMPLE
 
 Transforms the input sequence into a ~OrderedSet~, this *may* add both ordering and uniqueness constraints to the input sequence
 and *will* remove duplicate elements.
 
 #+BEGIN_EXAMPLE
-def into_set(seq → Sequence of Any) → Set of Any
+def into_set(seq → Sequence of _) → Set of _
 #+END_EXAMPLE
 
 Transforms the input sequence into a ~Set~, this *may* remove ordering and add uniqueness constraints to the input sequence
 and *will* remove duplicate elements.
 
 #+BEGIN_EXAMPLE
-def is_empty(seq → Sequence of Any) → boolean
+def is_empty(seq → Sequence of _) → boolean
     ≔ count(seq) = 0
 #+END_EXAMPLE
 
@@ -870,51 +894,54 @@ Returns ~true~ if the provided type ~t~ is a sequence that guarantees uniqueness
 *Class: Bag*
 
 #+BEGIN_EXAMPLE
-def Bag(Any) → boolean
+def Bag(self -> _) → boolean
+    ≔ type_of(self) = sdml:Bag
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Bag~, else ~false~.
 
 #+BEGIN_EXAMPLE
-def order(Bag of Any count -> integer) -> List of Any
+def order(Bag of _) -> List of _
 #+END_EXAMPLE
 
 *Class: List*
 
 #+BEGIN_EXAMPLE
-def List(Any) → boolean
+def List(self -> _) → boolean
+    ≔ type_of(self) = sdml:List
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~List~, else ~false~.
 
 #+BEGIN_EXAMPLE
-def drop(List of Any count -> unsigned) -> List of Any
+def drop(List of _ count -> unsigned) -> List of _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-def get(List of Any index -> unsigned) -> Any
+def get(List of _ index -> unsigned) -> _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-def order(List of Any) -> List of Any
+def order(List of _) -> List of _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-def reverse(List of Any) -> List of Any
+def reverse(List of _) -> List of _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-def slice(List of Any start -> unsigned count -> unsigned) -> List of Any
+def slice(List of _ start -> unsigned count -> unsigned) -> List of _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-def take(List of Any count -> unsigned) -> List of Any
+def take(List of _ count -> unsigned) -> List of _
 #+END_EXAMPLE
 
 *Class: Maybe*
 
 #+BEGIN_EXAMPLE
-def Maybe(Any) → boolean
+def Maybe(self -> _) → boolean
+    ≔ type_of(self) = sdml:Maybe
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Maybe~, else ~false~.
@@ -922,101 +949,103 @@ Returns ~true~ if the passed value is of type ~Maybe~, else ~false~.
 *Class: OrderedSet*
 
 #+BEGIN_EXAMPLE
-def OrderedSet(Any) → boolean
+def OrderedSet(self) → boolean
+    ≔ type_of(self) = sdml:OrderedSet
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~OrderedSet~, else ~false~.
 
 #+BEGIN_EXAMPLE
-drop(OrderedSet of Any count -> unsigned) -> OrderedSet of Any
+drop(OrderedSet of _ count -> unsigned) -> OrderedSet of _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-get(OrderedSet of Any index -> unsigned) -> Any
+get(OrderedSet of _ index -> unsigned) -> _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-intersection(lhs -> OrderedSet of unknown rhs -> OrderedSet of unknown) -> OrderedSet of Any
+intersection(lhs -> OrderedSet of _ rhs -> OrderedSet of _) -> OrderedSet of _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-is_strict_subset(lhs -> OrderedSet of Any rhs -> OrderedSet of Any) -> boolean
+is_strict_subset(lhs -> OrderedSet of _ rhs -> OrderedSet of _) -> boolean
     ≔ is_subset(lhs rhs) ∧ ¬eq(lhs rhs)
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-is_strict_superset(lhs -> OrderedSet of Any rhs -> OrderedSet of Any) -> boolean
+is_strict_superset(lhs -> OrderedSet of _ rhs -> OrderedSet of _) -> boolean
     ≔ is_superset(lhs rhs) ∧ ¬eq(lhs rhs)
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-is_subset(lhs -> OrderedSet of Any rhs -> OrderedSet of Any) -> boolean
+is_subset(lhs -> OrderedSet of _ rhs -> OrderedSet of _) -> boolean
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-is_superset(lhs -> OrderedSet of Any rhs -> OrderedSet of Any) -> boolean
+is_superset(lhs -> OrderedSet of _ rhs -> OrderedSet of _) -> boolean
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-minus -> OrderedSet of unknown rhs -> OrderedSet of unknown) -> OrderedSet of Any
+minus -> OrderedSet of _ rhs -> OrderedSet of _) -> OrderedSet of _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-reverse(OrderedSet of Any) -> OrderedSet of Any
+reverse(OrderedSet of _) -> OrderedSet of _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-slice(OrderedSet of Any start -> unsigned count -> unsigned) -> OrderedSet of Any
+slice(OrderedSet of _ start -> unsigned count -> unsigned) -> OrderedSet of _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-take(OrderedSet of Any count -> unsigned) -> OrderedSet of Any
+take(OrderedSet of _ count -> unsigned) -> OrderedSet of _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-union(OrderedSet of Any rhs -> OrderedSet of Any) -> OrderedSet of Any
+union(OrderedSet of _ rhs -> OrderedSet of _) -> OrderedSet of _
 #+END_EXAMPLE
 
 *Class: Set*
 
 #+BEGIN_EXAMPLE
-def Set(Any) → boolean
+def Set(self -> _) → boolean
+    ≔ type_of(self) = sdml:Set
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Set~, else ~false~.
 
 #+BEGIN_EXAMPLE
-intersection(lhs -> Set of Any rhs -> Set of Any) -> Set of Any
+intersection(lhs -> Set of _ rhs -> Set of _) -> Set of _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-is_strict_subset(lhs -> Set of Any rhs -> Set of Any) -> boolean
+is_strict_subset(lhs -> Set of _ rhs -> Set of _) -> boolean
     ≔ is_subset(lhs rhs) ∧ ¬eq(lhs rhs)
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-is_strict_superset(lhs -> Set of Any rhs -> Set of Any) -> boolean
+is_strict_superset(lhs -> Set of _ rhs -> Set of _) -> boolean
     ≔ is_superset(lhs rhs) ∧ ¬eq(lhs rhs)
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-is_subset(lhs -> Set of Any rhs -> Set of Any) -> boolean
+is_subset(lhs -> Set of _ rhs -> Set of _) -> boolean
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-is_superset(lhs -> Set of Any rhs -> Set of Any) -> boolean
+is_superset(lhs -> Set of _ rhs -> Set of _) -> boolean
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-minus(lhs -> Set of Any rhs -> Set of Any) -> Set of Any
+minus(lhs -> Set of _ rhs -> Set of _) -> Set of _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-order(Set of Any) -> OrderedSet of Any
+order(Set of _) -> OrderedSet of _
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-union(lhs -> Set of Any rhs -> Set of Any) -> Set of Any
+union(lhs -> Set of _ rhs -> Set of _) -> Set of _
 #+END_EXAMPLE
 
 *** Annotations
@@ -1024,7 +1053,8 @@ union(lhs -> Set of Any rhs -> Set of Any) -> Set of Any
 *Class Annotation*
 
 #+BEGIN_EXAMPLE
-def Annotation(Any) → boolean
+def Annotation(self -> _) → boolean
+    ≔ type_of(self) = sdml:Annotation
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Annotation~, else ~false~.
@@ -1048,7 +1078,8 @@ def is_constraint(Annotation) -> boolean
 *Class AnnotationProperty*
 
 #+BEGIN_EXAMPLE
-def AnnotationProperty(Any) → boolean
+def AnnotationProperty(self -> _) → boolean
+    ≔ type_of(self) = sdml:AnnotationProperty
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~AnnotationProperty~, else ~false~.
@@ -1072,7 +1103,8 @@ def value(AnnotationProperty) -> Value
 *Class Constraint*
 
 #+BEGIN_EXAMPLE
-def Constraint(Any) → boolean
+def Constraint(self -> _) → boolean
+    ≔ type_of(self) = sdml:Constraint
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Constraint~, else ~false~.
@@ -1122,7 +1154,8 @@ def constraints(as - > Bag of Annotation)
 *Class: Member*
 
 #+BEGIN_EXAMPLE
-def Member(Any) → boolean
+def Member(self -> _) → boolean
+    ≔ type_of(self) = sdml:Member
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Member~, else ~false~.
@@ -1140,8 +1173,8 @@ def container(Member) -> Type
 Returns the container type that contains this member's definition.
 
 #+BEGIN_EXAMPLE
-def is_complete(m -> Member) -> boolean
-    ≔ ne(type_of(m) Unknown)
+def is_complete(self -> Member) -> boolean
+    ≔ ¬Unknown(type_of(self))
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
@@ -1157,7 +1190,8 @@ def target_type(Member) -> Type
 *Class: IdentityMember*
 
 #+BEGIN_EXAMPLE
-def IdentityMember(Any) → boolean
+def IdentityMember(self -> _) → boolean
+    ≔ type_of(self) = sdml:IdentityMember
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~IdentityMember~, else ~false~.
@@ -1165,7 +1199,8 @@ Returns ~true~ if the passed value is of type ~IdentityMember~, else ~false~.
 *Class: ByReferenceMember*
 
 #+BEGIN_EXAMPLE
-def ByReferenceMember(Any) → boolean
+def ByReferenceMember(self -> _) → boolean
+    ≔ type_of(self) = sdml:ByReferenceMember
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~ByReferenceMember~, else ~false~.
@@ -1173,7 +1208,8 @@ Returns ~true~ if the passed value is of type ~ByReferenceMember~, else ~false~.
 *Class: ByValueMember*
 
 #+BEGIN_EXAMPLE
-def ByValueMember(Any) → boolean
+def ByValueMember(self -> _) → boolean
+    ≔ type_of(self) = sdml:ByValueMember
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~ByValueMember~, else ~false~.
@@ -1181,7 +1217,8 @@ Returns ~true~ if the passed value is of type ~ByValueMember~, else ~false~.
 *Class: Cardinality*
 
 #+BEGIN_EXAMPLE
-def Cardinality(Any) → boolean
+def Cardinality(self -> _) → boolean
+    ≔ type_of(self) = sdml:Cardinality
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Cardinality~, else ~false~.
@@ -1213,7 +1250,8 @@ def min(Cardinality) -> unsigned
 *Class: Entity*
 
 #+BEGIN_EXAMPLE
-def Entity(Any) → boolean
+def Entity(self -> _) → boolean
+    ≔ type_of(self) = sdml:Entity
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Entity~, else ~false~.
@@ -1234,22 +1272,33 @@ Returns the module that contains this model element's definition.
 def flat_members(Entity) -> Set of EntityMember
 #+END_EXAMPLE
 
-Returns an unordered, unique, sequence of variants contained within the union.
+Returns an unordered, unique, sequence of members contained within the entity.
+
 #+BEGIN_EXAMPLE
 def groups(Entity) -> Set of EntityGroup
 #+END_EXAMPLE
 
-Returns an unordered, unique, sequence of variants contained within the union.
+Returns an unordered, unique, sequence of members contained within the entity.
 
 #+BEGIN_EXAMPLE
 def identity(Entity) -> IdentityMember
 #+END_EXAMPLE
 
+Returns the identity member for this entity.
+
+#+BEGIN_EXAMPLE
+def is_complete(self -> Structure) -> boolean
+    ≔ has_body(self)
+    ∧ ∀ member ∈ flat_members(self) (is_complete(member))
+#+END_EXAMPLE
+
+Returns ~true~ if the entity definition is /complete/, else ~false~.
+
 #+BEGIN_EXAMPLE
 def members(Entity) -> Set of EntityMember
 #+END_EXAMPLE
 
-Returns an unordered, unique, sequence of variants contained within the union.
+Returns an unordered, unique, sequence of members contained within the entity.
 
 #+BEGIN_EXAMPLE
 def name(Entity) -> Identifier
@@ -1258,8 +1307,8 @@ def name(Entity) -> Identifier
 Returns the identifier naming this model element.
 
 #+BEGIN_EXAMPLE
-def qualified_name(c -> Constraint) -> Identifier
-    ≔ join(name(container(c)) name(c))
+def qualified_name(self -> Constraint) -> Identifier
+    ≔ join(name(container(self)) name(self))
 #+END_EXAMPLE
 
 Return the qualified identifier naming this model element and it's containing module.
@@ -1267,7 +1316,8 @@ Return the qualified identifier naming this model element and it's containing mo
 *Class: EntityGroup*
 
 #+BEGIN_EXAMPLE
-def EntityGroup(Any) → boolean
+def EntityGroup(self -> _) → boolean
+    ≔ type_of(self) = sdml:EntityGroup
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~EntityGroup~, else ~false~.
@@ -1285,6 +1335,13 @@ def container(EntityGroup) -> Entity
 Returns the entity that contains group's definition.
 
 #+BEGIN_EXAMPLE
+def is_complete(self -> Structure) -> boolean
+    ∀ member ∈ members(self) (is_complete(member))
+#+END_EXAMPLE
+
+Returns ~true~ if the entity group is /complete/, else ~false~.
+
+#+BEGIN_EXAMPLE
 def members(EntityGroup) -> Set of EntityMember
 #+END_EXAMPLE
 
@@ -1293,7 +1350,8 @@ Returns an unordered, unique, sequence of variants contained within the union.
 *Union: EntityMember*
 
 #+BEGIN_EXAMPLE
-def EntityMember(Any) → boolean
+def EntityMember(self -> _) → boolean
+    ≔ type_of(self) = sdml:EntityMember
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~EntityMember~, else ~false~.
@@ -1319,7 +1377,8 @@ def is_by_value(EntityMember) -> boolean
 *Class: Event*
 
 #+BEGIN_EXAMPLE
-def Event(Any) → boolean
+def Event(self -> _) → boolean
+    ≔ type_of(self) = sdml:Event
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Event~, else ~false~.
@@ -1340,19 +1399,27 @@ Returns the module that contains this model element's definition.
 def flat_members(Event) -> Set of ByValueMember
 #+END_EXAMPLE
 
-Returns an unordered, unique, sequence of variants contained within the union.
+Returns an unordered, unique, sequence of members contained within the event.
 
 #+BEGIN_EXAMPLE
 def groups(Event) -> Set of StructureGroup
 #+END_EXAMPLE
 
-Returns an unordered, unique, sequence of variants contained within the union.
+Returns an unordered, unique, sequence of groups contained within the event.
+
+#+BEGIN_EXAMPLE
+def is_complete(self -> Event) -> boolean
+    ≔ has_body(self)
+    ∧ ∀ member ∈ flat_members(self) (is_complete(member))
+#+END_EXAMPLE
+
+Returns ~true~ if the structure definition is /complete/, else ~false~.
 
 #+BEGIN_EXAMPLE
 def members(Event) -> Set of ByValueMember
 #+END_EXAMPLE
 
-Returns an unordered, unique, sequence of variants contained within the union.
+Returns an unordered, unique, sequence of members contained within the event.
 
 #+BEGIN_EXAMPLE
 def name(Event) -> Identifier
@@ -1376,7 +1443,8 @@ def source(Event) -> IdentifierReference
 *Class: Enumeration*
 
 #+BEGIN_EXAMPLE
-def Enumeration(Any) → boolean
+def Enumeration(self -> _) → boolean
+    ≔ type_of(self) = sdml:Enumeration
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Enumeration~, else ~false~.
@@ -1394,8 +1462,11 @@ def container(Enumeration) -> Module
 Returns the module that contains this model element's definition.
 
 #+BEGIN_EXAMPLE
-def is_complete(e -> Enumeration) -> boolean ≔ ¬has_body(e)
+def is_complete(self -> Enumeration) -> boolean
+    ≔ has_body(self)
 #+END_EXAMPLE
+
+Returns ~true~ if the enumeration definition is /complete/, else ~false~.
 
 #+BEGIN_EXAMPLE
 def name(Enumeration) -> Identifier
@@ -1404,8 +1475,8 @@ def name(Enumeration) -> Identifier
 Returns the identifier naming this model element.
 
 #+BEGIN_EXAMPLE
-def qualified_name(c -> Constraint) -> Identifier
-    ≔ join(name(container(c)) name(c))
+def qualified_name(self -> Constraint) -> Identifier
+    ≔ join(name(container(self)) name(self))
 #+END_EXAMPLE
 
 Return the qualified identifier naming this model element and it's containing module.
@@ -1419,7 +1490,8 @@ Returns an ordered, unique, sequence of variants contained within the enumeratio
 *Class: ValueVariant*
 
 #+BEGIN_EXAMPLE
-def ValueVariant(Any) → boolean
+def ValueVariant(self -> _) → boolean
+    ≔ type_of(self) = sdml:ValueVariant
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~ValueVariant~, else ~false~.
@@ -1451,7 +1523,8 @@ def value(ValueVariant) -> integer
 *Class: Structure*
 
 #+BEGIN_EXAMPLE
-def Structure(Any) → boolean
+def Structure(self -> _) → boolean
+    ≔ type_of(self) = sdml:Structure
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Structure~, else ~false~.
@@ -1481,6 +1554,14 @@ def groups(Structure) -> Set of StructureGroup
 Returns an unordered, unique, sequence of groups contained within the structure.
 
 #+BEGIN_EXAMPLE
+def is_complete(self -> Structure) -> boolean
+    ≔ has_body(self)
+    ∧ ∀ member ∈ flat_members(self) (is_complete(member))
+#+END_EXAMPLE
+
+Returns ~true~ if the structure definition is /complete/, else ~false~.
+
+#+BEGIN_EXAMPLE
 def members(Structure) -> Set of ByValueMember
 #+END_EXAMPLE
 
@@ -1493,8 +1574,8 @@ def name(Structure) -> Identifier
 Returns the identifier naming this model element.
 
 #+BEGIN_EXAMPLE
-def qualified_name(c -> Constraint) -> Identifier
-    ≔ join(name(container(c)) name(c))
+def qualified_name(self -> Structure) -> Identifier
+    ≔ join(name(container(self)) name(self))
 #+END_EXAMPLE
 
 Return the qualified identifier naming this model element and it's containing module.
@@ -1502,7 +1583,8 @@ Return the qualified identifier naming this model element and it's containing mo
 *Class: StructureGroup*
 
 #+BEGIN_EXAMPLE
-def StructureGroup(Any) → boolean
+def StructureGroup(self -> _) → boolean
+    ≔ type_of(self) = sdml:StructureGroup
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~StructureGroup~, else ~false~.
@@ -1520,6 +1602,13 @@ def container(StructureGroup) -> Structure
 Returns the structure that contains this group's definition.
 
 #+BEGIN_EXAMPLE
+def is_complete(self -> StructureGroup) -> boolean
+    ≔ ∀ member ∈ members(self) (is_complete(member))
+#+END_EXAMPLE
+
+Returns ~true~ if the structure group is /complete/, else ~false~.
+
+#+BEGIN_EXAMPLE
 def members(StructureGroup) -> Set of ByValueMember
 #+END_EXAMPLE
 
@@ -1530,7 +1619,8 @@ Returns an unordered, unique, sequence of members contained within the structure
 *Class: Union*
 
 #+BEGIN_EXAMPLE
-def Union(Any) → boolean
+def Union(self -> _) → boolean
+    ≔ type_of(self) = sdml:Union
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Union~, else ~false~.
@@ -1548,9 +1638,11 @@ def container(Union) -> Module
 Returns the module that contains this model element's definition.
 
 #+BEGIN_EXAMPLE
-def is_complete(u -> Union) -> boolean
-    ≔ ¬has_body(u)
+def is_complete(self -> Union) -> boolean
+    ≔ has_body(self)
 #+END_EXAMPLE
+
+Returns ~true~ if the union definition is /complete/, else ~false~.
 
 #+BEGIN_EXAMPLE
 def name(Union) -> Identifier
@@ -1559,8 +1651,8 @@ def name(Union) -> Identifier
 Returns the identifier naming this model element.
 
 #+BEGIN_EXAMPLE
-def qualified_name(c -> Constraint) -> Identifier
-    ≔ join(name(container(c)) name(c))
+def qualified_name(self -> Union) -> Identifier
+    ≔ join(name(container(self)) name(self))
 #+END_EXAMPLE
 
 Return the qualified identifier naming this model element and it's containing module.
@@ -1574,7 +1666,8 @@ Returns an unordered, unique, sequence of variants contained within the union.
 *Class: TypeVariant*
 
 #+BEGIN_EXAMPLE
-def TypeVariant(Any) → boolean
+def TypeVariant(self -> _) → boolean
+    ≔ type_of(self) = sdml:TypeVariant
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~TypeVariant~, else ~false~.
@@ -1595,6 +1688,8 @@ Returns the union that contains this variant's definition.
 def is_renamed(PropertyRole) -> boolean
 #+END_EXAMPLE
 
+Returns ~true~ if variant has a rename clause, else ~false~.
+
 #+BEGIN_EXAMPLE
 def name(TypeVariant) -> Identifier
 #+END_EXAMPLE
@@ -1605,18 +1700,21 @@ Returns the identifier naming this model element, this identifier *must* refer t
 def renamed_as(PropertyRole) -> Maybe of Identifier
 #+END_EXAMPLE
 
+Returns the identifier representing the new name of the variant.
+
 *** Property Definitions
 
 *Class: Property*
 
 #+BEGIN_EXAMPLE
-def Property(Any) → boolean
+def Property(self -> _) → boolean
+    ≔ type_of(self) = sdml:Property
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~Property~, else ~false~.
 
 #+BEGIN_EXAMPLE
-def annotations(ModuleProperty) -> Bag of Annotation
+def annotations(Property) -> Bag of Annotation
 #+END_EXAMPLE
 
 Returns an unordered sequence of annotations attached to this model element.
@@ -1628,9 +1726,11 @@ def container(Property) -> Module
 Returns the module that contains this model element's definition.
 
 #+BEGIN_EXAMPLE
-def is_complete(p -> Property) -> boolean
-    ≔ p.body.present ∧ ∀ r in p.roles ( r.is_complete )
+def is_complete(self -> Property) -> boolean
+    ≔ self.body.present ∧ ∀ role in self.roles ( role.is_complete )
 #+END_EXAMPLE
+
+Returns ~true~ if the property definition is /complete/, else ~false~.
 
 #+BEGIN_EXAMPLE
 def name(Property) -> Identifier
@@ -1639,8 +1739,8 @@ def name(Property) -> Identifier
 Returns the identifier naming this model element.
 
 #+BEGIN_EXAMPLE
-def qualified_name(c -> Constraint) -> Identifier
-    ≔ join(name(container(c)) name(c))
+def qualified_name(self -> Property) -> Identifier
+    ≔ join(name(container(self)) name(self))
 #+END_EXAMPLE
 
 Return the qualified identifier naming this model element and it's containing module.
@@ -1654,7 +1754,8 @@ Returns an unordered set of roles defined within this property.
 *Class: Property Role*
 
 #+BEGIN_EXAMPLE
-def PropertyRole(Any) → boolean
+def PropertyRole(self -> _) → boolean
+    ≔ type_of(self) = sdml:PropertyRole
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~PropertyRole~, else ~false~.
@@ -1672,9 +1773,11 @@ def container(PropertyRole) -> Property
 Returns the property that contains this role's definition.
 
 #+BEGIN_EXAMPLE
-def is_complete(r -> PropertyRole) -> boolean
-    ≔ ne(type_of(r) Unknown)
+def is_complete(self -> PropertyRole) -> boolean
+    ≔ ne(type_of(self) Unknown)
 #+END_EXAMPLE
+
+Returns ~true~ if the property role definition is /complete/, else ~false~.
 
 #+BEGIN_EXAMPLE
 def name(PropertyRole) -> Identifier

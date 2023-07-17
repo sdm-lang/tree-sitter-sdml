@@ -463,6 +463,7 @@ module.exports = grammar({
         ),
 
         fn_type: $ => choice(
+            $.wildcard_type,
             $.collection_type,
             $.type_reference
         ),
@@ -473,8 +474,16 @@ module.exports = grammar({
                 $.builtin_collection_type
             ),
             keyword('of'),
-            field('element', $.type_reference)
+            field(
+                'element',
+                choice(
+                    $.wildcard_type,
+                    $.type_reference
+                )
+            )
         ),
+
+        wildcard_type: $ => operator('_'),
 
         builtin_collection_type: $ => choice(
             keyword('Bag'),

@@ -374,6 +374,10 @@
           {
             "type": "type_reference",
             "named": true
+          },
+          {
+            "type": "wildcard_type",
+            "named": true
           }
         ]
       }
@@ -993,6 +997,10 @@
         },
         {
           "type": "type_reference",
+          "named": true
+        },
+        {
+          "type": "wildcard_type",
           "named": true
         }
       ]
@@ -2288,11 +2296,11 @@
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "end",
@@ -2436,6 +2444,10 @@
   },
   {
     "type": "unsigned",
+    "named": true
+  },
+  {
+    "type": "wildcard_type",
     "named": true
   },
   {

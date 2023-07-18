@@ -17,11 +17,38 @@ place to start even if you intend to make a formal version later. An example inf
 
 #+NAME: lst:ex-informal-constraint
 #+CAPTION: Example Informal Constraint
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
 module example is
 
   assert must_have_preferred_label =
     "All definitions in this module MUST have an annotation providing a skos:prefLabel value."
+
+end
+#+END_SRC
+
+** Informal Constraints
+
+Informal constraints, much like regular string values, have an optional language specifier. However, unlike regular
+strings this specifier has a more limited range as it's purpose is to identify the /controlled natural language/ being used.
+
+#+CAPTION: Informal Constraint with Controlled Language
+#+BEGIN_SRC sdml :noeval :exports code
+module example is
+
+  assert must_have_preferred_label =
+    "..."@en
+
+end
+#+END_SRC
+
+For example, Common Logic Controlled English[fn:clce] (or Attempto Controlled English[fn:ace]) are ...
+
+#+CAPTION: Informal Constraint with Controlled Language Dialect
+#+BEGIN_SRC sdml :noeval :exports code
+module example is
+
+  assert must_have_preferred_label =
+    "..."@en-CLCE
 
 end
 #+END_SRC
@@ -37,7 +64,7 @@ Listing [[lst:ex-tagged-constraint-1]] is another informal constraint.
 
 #+NAME: lst:ex-tagged-constraint-1
 #+CAPTION: Example Formal Constraint (1 of 3)
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
 module tagged is
   datatype Tag <- string
 
@@ -62,7 +89,7 @@ structure's tag collection (~self.container.tags~).
 
 #+NAME: lst:ex-tagged-constraint-2
 #+CAPTION: Example Formal Constraint (2 of 3)
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
 module tagged is
   structure Thing is
     tags -> {0..} Tag
@@ -76,7 +103,13 @@ end
 
 *** Quantified Statements
 
+SDML supports, as shown in listing [[lst:ex-tagged-constraint-2]] sentences that range over values using the universal ($\forall$)
+or existential ($\exists$) quantifier.
+
+More TBD
+
 *** Constraint Predicates, Relations, and Functions
+
 
 #+BEGIN_EXAMPLE
 def predicate(Type) -> boolean
@@ -115,7 +148,7 @@ Alternatively, listing [[lst:ex-tagged-constraint-3]] turns each sequence of tag
 
 #+NAME: lst:ex-tagged-constraint-3
 #+CAPTION: Example Formal Constraint (3 of 3)
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
 module tagged is
   structure Thing is
     tags -> {0..} Tag
@@ -136,7 +169,7 @@ members of that definition. Note that this example also demonstrates the ability
 
 #+NAME: lst:ex-formal-constraint
 #+CAPTION: Example Formal Constraint
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
 module labelled is
 
   assert must_have_preferred_label is
@@ -163,46 +196,50 @@ Environment & Definitions
 ** Constraint Semantics
 
 The embedded constraint language is purely functional and constraint assertions MUST return a single boolean value
-determining correctness.
+determining correctness. The constraint language follows the naming convention of Common Logic, and so a constraint
+corresponds to a Common Logic /sentence/ which may be one of the following forms.
 
-*** Simple Statements
+*** Simple Sentences
 
-Atomic
+An /atomic sentence/ takes the form of a predicate with a set of zero or more arguments.
 
 #+BEGIN_EXAMPLE
 predicate(t1, ..., tn)
 #+END_EXAMPLE
 
-Equation
+An /equation/ sentence asserts the equality of two terms.
 
 #+BEGIN_EXAMPLE
 rhs = rhs
 #+END_EXAMPLE
   
-*** Boolean Statements
+*** Boolean Sentences
 
-Conjunction
+The /conjunction/ of two sentences takes the form of the application of the logical /and/ operation.
 
 #+BEGIN_EXAMPLE
 lhs and rhs
 lhs  ∧  rhs
 #+END_EXAMPLE
 
-Disjunction
+The /disjunction/ of two sentences takes the form of the application of the logical /or/ operation.
 
 #+BEGIN_EXAMPLE
 lhs or rhs
 lhs ∧  rhs
 #+END_EXAMPLE
 
-Exclusive Disjunction
+The /exclusive disjunction/ of two sentences takes the form of the application of the logical /xor/ operation.
 
 #+BEGIN_EXAMPLE
 lhs xor rhs
 lhs  ⊻  rhs
 #+END_EXAMPLE
 
-Implication
+An /implication/ relation between two sentences holds true when the right-hand proposition is a logical
+consequence of the left-hand. In effect it says that "if the left-hand side is true, then the right-hand side is also
+true"; however, it does not say what one can deduce if the left-hand side is not true, or under what other conditions
+the right-hand side may be true.
 
 #+BEGIN_EXAMPLE
 lhs implies rhs
@@ -210,42 +247,48 @@ lhs   ==>   rhs
 lhs    ⇒    rhs
 #+END_EXAMPLE
 
-Biconditional
+A /biconditional/ relation between two sentences holds true when the both sides are either true or false. In effect, "the
+left-hand side implies the right-hand side and the right-hand side implies the left-hand-side".
 
 #+BEGIN_EXAMPLE
 lhs iff  rhs
 lhs <==> rhs
 lhs  ⇔   rhs
 #+END_EXAMPLE
+
+$$L \iff R \equiv L \implies R \land R \implies L$$
     
-*** Quantified Statements
+*** Quantified Sentences
 
-Universal over Type
+The /universal quantification/ over a type says that "for all values of type $T$ the sentence $s$ must hold true".
 
 #+BEGIN_EXAMPLE
-forall x -> Type
-     ∀ x -> Type
+forall v -> Type (s)
+     ∀ v -> Type (s)
 #+END_EXAMPLE
 
-Universal over Sequence
+The /universal quantification/ over a sequence says that "for all elements in the sequence $S$ the sentence $s$ must hold
+true".
 
 #+BEGIN_EXAMPLE
-forall e in collection
-     ∀ e ∈  collection
+forall e in Sequence (s)
+     ∀ e ∈  Sequence (s)
 #+END_EXAMPLE
 
-Existential over Type
+The /existential quantification/ over a type says that "there exists a value of type $T$ where the sentence $s$ holds
+true".
 
 #+BEGIN_EXAMPLE
-exists x -> Type
-     ∃ x -> Type
+exists v -> Type (s)
+     ∃ v -> Type (s)
 #+END_EXAMPLE
 
-Existential over Sequence
+The /existential quantification/ over a sequence says that "there exists an element in the sequence $S$ where the sentence
+$s$ holds true".
 
 #+BEGIN_EXAMPLE
-exists e in collection
-     ∃ e ∈  collection
+exists e in Sequence (s)
+     ∃ e ∈  Sequence (s)
 #+END_EXAMPLE
      
 *** Sequence Comprehensions
@@ -295,9 +338,11 @@ def constraints(anns - > Bag of Annotation) -> Bag of Constraint
     ≔ {a | a ∈ anns ∧ Constraint(a)}
 #+END_EXAMPLE
 
+
 # ----- Footnotes
 
 [fn:ocl1] [[https://www.omg.org/spec/OCL/2.4][Object Constraint Language (OCL)]], OMG
 [fn:ocl2] [[https://www.iso.org/standard/57306.html][ISO/IEC 19507:2012 Object Management Group Object Constraint Language (OCL)]], ISO/IEC
 [fn:isocl] [[https://www.iso.org/standard/66249.html][ISO/IEC 24707:2018 Common Logic (CL) — A framework for a family of logic-based languages]], ISO/IEC
-
+[fn:clce] [[http://www.jfsowa.com/clce/specs.htm][Common Logic Controlled English]], John F. Sowa, 2004.
+[fn:ace] [[http://attempto.ifi.uzh.ch/site/][Attempto Controlled English (ACE)]], University of Zurich

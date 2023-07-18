@@ -61,6 +61,8 @@
  "=" @operator
  (quoted_string) @embedded)
 
+(informal_constraint language: (controlled_language_tag) @property)
+
 (environment_definition
  "def" @keyword
  name: (identifier) @function.definition
@@ -136,7 +138,7 @@
  name: (identifier) @variable.parameter
  "->" @operator)
 
-(fn_type (wildcard_type) @type)
+(fn_type (any_type) @type)
 (fn_type (type_reference (identifier_reference) @type))
 
 (collection_type

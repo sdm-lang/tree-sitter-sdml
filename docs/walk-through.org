@@ -310,5 +310,5 @@ end
 #+NAME: fig:example-fifth-pass
 #+CAPTION: Rentals Structural Detail
 #+RESULTS: lst:example-fifth-pass
-[[./rentals-uml-5.svg]]
+[[file:./rentals-uml-5.svg]]
 

@@ -17,21 +17,55 @@ The following are standard modules that are included with the command-line tool.
 | =rdf=          | <http://www.w3.org/1999/02/22-rdf-syntax-ns#> | Complete    |
 | =rdfs=         | <http://www.w3.org/2000/01/rdf-schema#>       | Complete    |
 | *=sdml=*       | *<https://sdml.io/sdml-owl.ttl#>*               | In Progress |
-| *=sdml_types=* | *<https://sdml.io/sdml-types.ttl#>*             | Complete    |
 | =skos=         | <http://www.w3.org/2004/02/skos/core#>        | Complete    |
 | =xml=          | <http://www.w3.org/XML/1998/namespace>        | In Progress |
 | =xsd=          | <http://www.w3.org/2001/XMLSchema#>           | In Progress |
 
-** SDML Modules
+** SDML Module
 
 
 #+BEGIN_SRC sdml :noeval
 module sdml base <http://sdml.io/> is
-end
-#+END_SRC
+  structure Datatype ;; ...
+  structure Annotation ;; ...
+  structure AnnotationProperty ;; ...
+  structure ByReferenceMember ;; ...
+  structure ByValueMember ;; ...
+  structure Cardinality ;; ...
+  structure Constraint ;; ...
+  structure Definition ;; ...
+  structure Entity ;; ...
+  structure EntityGroup ;; ...
+  structure EntityMember ;; ...
+  structure Enumeration ;; ...
+  structure Event ;; ...
+  structure FormalConstraint ;; ...
+  structure Identifier ;; ...
+  structure IdentiferReference ;; ...
+  structure IdentityMember ;; ...
+  structure ImportStatement ;; ...
+  structure Import ;; ...
+  structure Member ;; ...
+  structure MemberImport ;; ...
+  structure Module ;; ...
+  structure ModuleImport ;; ...
+  structure Property ;; ...
+  structure PropertyRole ;; ...
+  structure QualifiedIdentifier ;; ...
+  structure Structure ;; ...
+  structure StructureGroup ;; ...
+  structure TypeVariant ;; ...
+  structure Union ;; ...
+  structure ValueVariant ;; ...
 
-#+BEGIN_SRC sdml :noeval
-module sdml_types base <http://sdml.io/> is
+  structure boolean ;; ...
+  structure decimal ;; ...
+  structure double ;; ...
+  structure integer ;; ...
+  structure iri ;; ...
+  structure language ;; ...
+  structure string ;; ...
+  structure unsigned ;; ...
 end
 #+END_SRC
 
@@ -74,7 +108,7 @@ module dcam base <http://purl.org/dc/dcam/> is
 end
 #+END_SRC
 
-*** Module:  (dcmi__type)
+*** Module:  (dcmi\under{}type)
 
 This module 
 
@@ -742,6 +776,10 @@ def iri(_) → boolean
 
 Returns ~true~ if the passed value is of type ~iri~, else ~false~.
 
+#+BEGIN_EXAMPLE
+def is_absolute(iri) → boolean
+#+END_EXAMPLE
+
 *Datatype: language*
 
 #+BEGIN_EXAMPLE
@@ -783,15 +821,29 @@ def string(_) → boolean
 Returns ~true~ if the passed value is of type ~string~, else ~false~.
 
 #+BEGIN_EXAMPLE
-def contains(string substring -> string) -> boolean
+def contains(string sub -> string) -> boolean
 #+END_EXAMPLE
+
+Returns ~true~ if the value of the second string is contained within the first, else ~false~.
 
 #+BEGIN_EXAMPLE
 def eq_ci(string string) -> boolean
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
-def language_part(string) -> language
+def into_list(string) -> List of unsigned
+#+END_EXAMPLE
+
+Returns a new list where each element is the Unicode code-point of a character in the input string.
+
+#+BEGIN_EXAMPLE
+def join(string string) -> string
+#+END_EXAMPLE
+
+Return a new string which is the concatenation of the two input strings.
+
+#+BEGIN_EXAMPLE
+def language_part(string) -> Maybe of language
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
@@ -810,12 +862,28 @@ def ne_ci(string string) -> boolean
 def prefix(string prefix -> string) -> boolean
 #+END_EXAMPLE
 
+Returns ~true~ if the first string starts with the value of the second, else ~false~.
+
 #+BEGIN_EXAMPLE
 def quoted_part(string) -> string
 #+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
 def suffix(string suffix -> string) -> boolean
+#+END_EXAMPLE
+
+Returns ~true~ if the first string ends with the value of the second, else ~false~.
+
+*Datatype: unsigned*
+
+#+BEGIN_EXAMPLE
+def unsigned(_) → boolean
+#+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~unsigned~, else ~false~.
+
+#+BEGIN_EXAMPLE
+def into_integer(unsigned) -> integer
 #+END_EXAMPLE
 
 *** Sequence Types
@@ -890,6 +958,15 @@ def is_unique(t → Type) → boolean
 #+END_EXAMPLE
 
 Returns ~true~ if the provided type ~t~ is a sequence that guarantees uniqueness of elements, else ~false~.
+
+#+BEGIN_EXAMPLE
+def join(Sequence of _ sep -> string) → string
+#+END_EXAMPLE
+
+Return a new string where the string form of each value in the sequence is concatenated with the value of the string
+placed between each.
+
+Example: ~join([1 2 3] ",") = "1,2,3"~
 
 *Class: Bag*
 
@@ -1800,3 +1877,281 @@ def target_cardinality(PropertyRole) -> Cardinality
 *** Formal Constraints
 
 TBD
+
+*Class: FormalConstraint*
+
+#+BEGIN_EXAMPLE
+def FormalConstraint(_) -> boolean
+    ≔ type_of(self) = sdml:FormalConstraint
+#+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~FormalConstraint~, else ~false~.
+
+#+BEGIN_EXAMPLE
+def environment(FormalConstraint) -> Maybe of ConstraintEnvironment
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def sentence(FormalConstraint) -> ConstraintSentence
+#+END_EXAMPLE
+
+*** Constraint Sentences
+
+*Class: AtomicSentence*
+
+TBD
+
+#+BEGIN_EXAMPLE
+def predicate(AtomicSentence) -> Term
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def arguments(AtomicSentence) -> List of Term
+#+END_EXAMPLE
+
+*Union: BindingFromSequence*
+
+TBD
+
+*Class: BindingFromType*
+
+TBD
+
+*Union: BindingTarget*
+
+TBD
+
+*Enumeration: BinaryOperation*
+
+TBD
+
+#+BEGIN_EXAMPLE
+BinaryOperation::Conjunction = 1
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+BinaryOperation::Disjunction = 2
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+BinaryOperation::ExclusiveDisjunction = 3
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+BinaryOperation::Implication = 4
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+BinaryOperation::Biconditional = 5
+#+END_EXAMPLE
+
+*Class: BinarySentence*
+
+TBD
+
+*Union: BooleanSentence*
+
+TBD
+
+*Union: ConstraintSentence*
+
+TBD
+
+*Class: EquationSentence*
+
+TBD
+
+#+BEGIN_EXAMPLE
+def left_hand_side(EquationSentence) -> Term
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def right_hand_side(EquationSentence) -> Term
+#+END_EXAMPLE
+
+*Class: Negation*
+
+TBD
+
+*Union: QuantifiedSentence*
+
+TBD
+
+*Class: QuantifierBinding*
+
+TBD
+
+*Enumeration: QuantifierKind*
+
+#+BEGIN_EXAMPLE
+QuantifierKind::Existential = 1
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+QuantifierKind::Universal = 2
+#+END_EXAMPLE
+
+*Union: SimpleSentence*
+
+TBD
+
+*** Constraint Terms
+
+*Class: BinaryExpression*
+
+TBD
+
+*Union: BooleanExpression*
+
+TBD
+
+*Union: Expression*
+
+TBD
+
+*Class: ExpressionBinding*
+
+TBD
+
+*Class: ExpressionNegation*
+
+TBD
+
+*Class: FunctionalTerm*
+
+TBD
+
+*Class: ListOfPredicateValues*
+
+TBD
+
+*Class: NamePath*
+
+TBD
+
+*Union: PredicateValue*
+
+TBD
+
+*Union: ReturnValues*
+
+TBD
+
+*Class: SequenceComprehension*
+
+TBD
+
+*Union: Term*
+
+TBD
+
+*** Constraint Environment
+
+*Class: ConstraintEnvironment*
+
+#+BEGIN_EXAMPLE
+def ConstraintEnvironment(_) -> boolean
+    ≔ type_of(self) = sdml:ConstraintEnvironment
+#+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~ConstraintEnvironment~, else ~false~.
+
+#+BEGIN_EXAMPLE
+def bindings(ConstraintEnvironment) -> List of EnvironmentBinding
+#+END_EXAMPLE
+
+*Class: CollectionType*
+
+#+BEGIN_EXAMPLE
+def CollectionType(_) -> boolean
+    ≔ type_of(self) = sdml:CollectionType
+#+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~CollectionType~, else ~false~.
+
+#+BEGIN_EXAMPLE
+def sequence(CollectionType) -> Type
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def element(CollectionType) -> Maybe of Type
+#+END_EXAMPLE
+
+*Class: EnvironmentBinding*
+
+#+BEGIN_EXAMPLE
+def EnvironmentBinding(_) -> boolean
+    ≔ type_of(self) = sdml:EnvironmentBinding
+#+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~EnvironmentBinding~, else ~false~.
+
+#+BEGIN_EXAMPLE
+def name(EnvironmentBinding) -> Identifer
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def signature(EnvironmentBinding) -> Maybe of FunctionSignature
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def body(EnvironmentBinding) -> EnvironmentBindingValue
+#+END_EXAMPLE
+
+*Union: EnvironmentBindingValue*
+
+#+BEGIN_EXAMPLE
+def EnvironmentBindingValue(_) -> boolean
+    ≔ type_of(self) = sdml:EnvironmentBindingValue
+#+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~EnvironmentBindingValue~, else ~false~.
+
+TBD
+
+*Class: FunctionParameter*
+
+#+BEGIN_EXAMPLE
+def FunctionParameter(_) -> boolean
+    ≔ type_of(self) = sdml:FunctionParameter
+#+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~FunctionParameter~, else ~false~.
+
+#+BEGIN_EXAMPLE
+def name(FunctionParameter) -> Maybe of Identifier
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def type(FunctionParameter) -> FunctionType
+#+END_EXAMPLE
+
+*Class: FunctionSignature*
+
+#+BEGIN_EXAMPLE
+def FunctionSignature(_) -> boolean
+    ≔ type_of(self) = sdml:FunctionSignature
+#+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~FunctionSignature~, else ~false~.
+
+#+BEGIN_EXAMPLE
+def parameters(FunctionSignature) -> List of FunctionParameter
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+def type(FunctionSignature) -> FunctionType
+#+END_EXAMPLE
+
+*Union: FunctionType*
+
+#+BEGIN_EXAMPLE
+def FunctionType(_) -> boolean
+    ≔ type_of(self) = sdml:FunctionType
+#+END_EXAMPLE
+
+Returns ~true~ if the passed value is of type ~FunctionType~, else ~false~.
+
+TBD
+
+ 

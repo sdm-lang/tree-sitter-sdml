@@ -11,7 +11,7 @@ ontology (see section [[sec:rdf-semantic-model]] for more details), and *2.* a /
 artifacts (see section [[sec:surface-syntax]] for more details). Figure [[fig:sdml-overview]] shows the relationship between
 these high-level components.
 
-This document covers both the semantic model and surface syntax representation andas well as the correspondence between
+This document covers both the semantic model and surface syntax representation as well as the correspondence between
 them. However, the primary focus of the documentation is the surface syntax as most users will be interacting with it
 alone.
 
@@ -48,8 +48,11 @@ does not include the following DDD as first-class concepts: /aggregates/, /repos
 
 ** <<sec:domain-modeling>> Domain Modeling
 
+Domain modeling is the process by which we develop a model of our business domain. In particular, we model /what/ our
+business does and not /how/ it is done. 
+
 There is often confusion around the use of the term /Domain Model/ especially in regard to terms such as /Data Model/, /Class
-Model/, /Schema/ and more. This short section is an attempt to clarify the terminology and how the relevant modeling
+Model/, /Schema/ and more. The rest of this section is an attempt to clarify the terminology and how the relevant modeling
 efforts are undertaken. This is not intended as an exhaustive review of modelling approaches, standards, or technologies
 and neither does it make any judgement as to the usefulness of any approach or technology.
 
@@ -118,7 +121,7 @@ for UML and BPMN.
 6. Action Semantics and action languages.
 
 UML has a built-in extension mechanism with /stereotypes/ and /profiles/ and data modeling concerns are often introduced
-with specific extensions such as stereotypes for different key types.
+with specific extensions such as stereotypes for different key types. 
 
 *** Modeling Themes
 

@@ -6,149 +6,148 @@
 The grammar of the surface syntax is presented in Extended Backus–Naur form (EBNF)[fn:ebnf]. The addition of a character literal
 range operation =..= reduces the number of single character alternatives for clarity. There are also a set of pre-defined
 terminals such as =ASCII_DIGIT=, =ASCII_HEX_DIGIT=, =UC_LETTER_UPPER=, and =UC_LETTER_LOWER= used to simplify character ranges.
+While there are many variations[fn:ebnfs] of EBNF in existence, including multiple standardized forms, the specific form
+used here follows the notation described the W3C Extensible Markup Language (XML) 1.0 (Fifth Edition), section 6
+[[https://www.w3.org/TR/xml/#sec-notation][Notation]].
 
 #+BEGIN_SRC ebnf
-Module              = "module", Identifier, ModuleBase?, ModuleBody
+Module              ::= "module", Identifier, ModuleBase?, ModuleBody
 
-ModuleBase          = "base", IriReference
+ModuleBase          ::= "base", IriReference
 
-ModuleBody          = "is", ImportStatement*, Annotation*, Definition*, "end"
+ModuleBody          ::= "is", ImportStatement*, Annotation*, Definition*, "end"
 
-MemberImport        = QualifiedIdentifier
+MemberImport        ::= QualifiedIdentifier
 
-ModuleImport        = Identifer
+ModuleImport        ::= Identifer
 
-Import              = MemberImport | ModuleImport
+Import              ::= MemberImport | ModuleImport
 
-ImportStatement     = "import", ( Import | "[", Import+, "]" )
+ImportStatement     ::= "import", ( Import | "[", Import+, "]" )
 
-Annotation          = AnnotationProperty | Constraint
+Annotation          ::= AnnotationProperty | Constraint
 
-AnnotationProperty  = "@", IdentiferReference, "=", Value
+AnnotationProperty  ::= "@", IdentiferReference, "=", Value
 
-Constraint          = InformalConstraint | FormalConstraint
+Constraint          ::= InformalConstraint | FormalConstraint
 
-InformalConstraint  = "=", QuotedString
-
-FormalConstraint    = ?see below?
-
-Definition          =
+Definition          ::=
     DataTypeDef | EntityDef | EnumDef | EventDef | StructureDef | UnionDef | PropertyDef
 
-DataTypeDef         =
+DataTypeDef         ::=
     "datatype", Identifier, "<-", DataTypeBase, AnnotationOnlyBody?
 
-DataTypeBase        = IdentifierReference | BuiltinSimpleType
+DataTypeBase        ::= IdentifierReference | BuiltinSimpleType
 
-AnnotationOnlyBody  = "is", Annotation+, "end"
+AnnotationOnlyBody  ::= "is", Annotation+, "end"
 
-EntityDef           = "entity", Identifier, EntityBody?
+EntityDef           ::= "entity", Identifier, EntityBody?
 
-EntityBody          =
+EntityBody          ::=
     "is",
     Annotation*, IdentityMember, ( MemberByValue | MemberByReference | EntityGroup )*,
     "end"
 
-EntityGroup         = "group", Annotation*, ( MemberByValue | MemberByReference )+, "end"
+EntityGroup         ::= "group", Annotation*, ( MemberByValue | MemberByReference )+, "end"
 
-EnumDef             = "enum", Identifier, EnumBody?
+EnumDef             ::= "enum", Identifier, EnumBody?
 
-EnumBody            = "of", Annotation*, ValueVariant+, "end"
+EnumBody            ::= "of", Annotation*, ValueVariant+, "end"
 
-ValueVariant        = Identifier, "=", Unsigned, AnnotationOnlyBody?
+ValueVariant        ::= Identifier, "=", Unsigned, AnnotationOnlyBody?
 
-EventDef            =
+EventDef            ::=
     "event", Identifier, "source", IdentifierReference, StructureBody?
 
-StructureDef        = "structure", Identifier, StructureBody?
+StructureDef        ::= "structure", Identifier, StructureBody?
 
-StructureBody       = "is", Annotation*, ( MemberByValue | StructureGroup )*, "end"
+StructureBody       ::= "is", Annotation*, ( MemberByValue | StructureGroup )*, "end"
 
-StructureGroup      = "group", Annotation*, MemberByValue+, "end"
+StructureGroup      ::= "group", Annotation*, MemberByValue+, "end"
 
-UnionDef            = "union", Identifier, UnionBody?
+UnionDef            ::= "union", Identifier, UnionBody?
 
-UnionBody           = "of", Annotation*, TypeVariant+, "end"
+UnionBody           ::= "of", Annotation*, TypeVariant+, "end"
 
-TypeVariant         = IdentifierReference, TypeVariantRename?, AnnotationOnlyBody?
+TypeVariant         ::= IdentifierReference, TypeVariantRename?, AnnotationOnlyBody?
 
-TypeVariantRename   = "as" Identifier
+TypeVariantRename   ::= "as" Identifier
 
-PropertyDef         = "property", Identifier, PropertyBody?
+PropertyDef         ::= "property", Identifier, PropertyBody?
 
-PropertyBody        = "is", Annotation*, PropertyRole+, "end"
+PropertyBody        ::= "is", Annotation*, PropertyRole+, "end"
 
-PropertyRole        =
+PropertyRole        ::=
     Identifier, ( "ref", Cardinality )?, TypeExpressionTo, AnnotationOnlyBody?
 
-PropertyMember      = "as", Identifier
+PropertyMember      ::= "as", Identifier
 
-IdentityMember      =
+IdentityMember      ::=
     "identity", Identifier, ( PropertyMember | ( TypeExpressionTo, AnnotationOnlyBody? ) )
 
-MemberByValue       =
+MemberByValue       ::=
     Identifier, ( PropertyMember | ( TypeExpressionTo, AnnotationOnlyBody? ) )
 
-MemberByReference   =
+MemberByReference   ::=
     "ref", Identifier, ( PropertyMember | ( TypeExpressionFromTo, AnnotationOnlyBody? ) )
 
-TypeExpression      = "->" TypeReference
+TypeExpression      ::= "->" TypeReference
 
-TypeExpressionTo    = "->" Cardinality?, TypeReference
+TypeExpressionTo    ::= "->" Cardinality?, TypeReference
 
-TypeExpressionFromto = Cardinality?, TypeExpressionTo
+TypeExpressionFromto ::= Cardinality?, TypeExpressionTo
 
-TypeReference       =  UnknownType | IdentifierReference | BuiltinSimpleType
+TypeReference       ::=  UnknownType | IdentifierReference | BuiltinSimpleType
 
-UnknownType         = "unknown"
+UnknownType         ::= "unknown"
 
-Cardinality         = "{", Unsigned, CardinalityRange?, "}"
+Cardinality         ::= "{", Unsigned, CardinalityRange?, "}"
 
-CardinalityRange    = "..", Unsigned?
+CardinalityRange    ::= "..", Unsigned?
 
-Value               =
+Value               ::=
     SimpleValue | ValueConstructor | IdentifierReference | ListOfValues
 
-BuiltinSimpleType   = 
+BuiltinSimpleType   ::= 
     "string" | "double" | "decimal" | "integer" | "boolean" | "iri"
 
-SimpleValue         =
+SimpleValue         ::=
     String | Double | Decimal | Integer | Boolean | IriReference
 
-Boolean             = Tautology | Contradiction
+Boolean             ::= Tautology | Contradiction
 
-Tautology           = ( "true" | "⊤" )
+Tautology           ::= ( "true" | "⊤" )
 
-Contradiction       = ( "false" | "⊥" )
+Contradiction       ::= ( "false" | "⊥" )
 
-NumericSign         = "+" | "-"
+NumericSign         ::= "+" | "-"
 
-Zero                = "0"
+Zero                ::= "0"
 
-NonZero             = "1".."9"
+NonZero             ::= "1".."9"
 
-Unsigned            = Zero | NonZero, ( ASCII_DIGIT )*
+Unsigned            ::= Zero | NonZero, ( ASCII_DIGIT )*
 
-Integer             = NumericSign?, Unsigned
+Integer             ::= NumericSign?, Unsigned
 
-Decimal             = Integer, ".", ( ASCII_DIGIT )+
+Decimal             ::= Integer, ".", ( ASCII_DIGIT )+
 
-ExponentChar        = "e" | "E"
+ExponentChar        ::= "e" | "E"
 
-Double              = Decimal, ExponentChar, NumericSign?, Integer
+Double              ::= Decimal, ExponentChar, NumericSign?, Integer
 
-HexPair             = ASCII_HEX_DIGIT, ASCII_HEX_DIGIT
+HexPair             ::= ASCII_HEX_DIGIT, ASCII_HEX_DIGIT
 
-CharacterEscape     = "\\", ( "\"" | "\\" | "\/" | "a" | "b"
+CharacterEscape     ::= "\\", ( "\"" | "\\" | "\/" | "a" | "b"
                           "e" | "f" | "n" | "r" | "t" | "v" )
 
-UnicodeEscape       = "\\u{", HexPair, ( HexPair ( HexPair )? )?, "}"
+UnicodeEscape       ::= "\\u{", HexPair, ( HexPair ( HexPair )? )?, "}"
 
-NotAllowed          = "\"" | "\\" | "\u{00}".."\u{08}" | "\u{0B}".."\u{1F}" | "\u{7F}"
+NotAllowed          ::= "\"" | "\\" | "\u{00}".."\u{08}" | "\u{0B}".."\u{1F}" | "\u{7F}"
 
-QuotedString        = "\"", ( -NotAllowed | CharacterEscape | UnicodeEscape )*, "\""
+QuotedString        ::= "\"", ( -NotAllowed | CharacterEscape | UnicodeEscape )*, "\""
 
-LanguageTag         =
+LanguageTag         ::= 
     "@", ASCII_LETTER_LOWER, ASCII_LETTER_LOWER, ASCII_LETTER_LOWER?
         ( "-", ASCII_LETTER_UPPER, ASCII_LETTER_UPPER, ASCII_LETTER_UPPER )?
         ( "-", ASCII_LETTER_UPPER, ASCII_LETTER_LOWER,
@@ -156,9 +155,9 @@ LanguageTag         =
         ( "-", ( ( ASCII_LETTER_UPPER, ASCII_LETTER_UPPER )
                | ( ASCII_DIGIT, ASCII_DIGIT, ASCII_DIGIT ) ) )
 
-String              = QuotedString, LanguageTag?
+String              ::= QuotedString, LanguageTag?
 
-IriReference        =
+IriReference        ::=
     "<",
     (
     - ("<" | ">" | "\"" | "{" | "}" | "|" | "^" | "`" | "\\" | "\u{00}".."\u{20}")
@@ -166,24 +165,24 @@ IriReference        =
     )*,
     ">"
 
-ValueConstructor    = IdentifierReference, "(", SimpleValue, ")"
+ValueConstructor    ::= IdentifierReference, "(", SimpleValue, ")"
 
-ListOfValues        =
+ListOfValues        ::=
     "[", ( SimpleValue | ValueConstructor | IdentifierReference )+, "]"
 
-IdentifierInitial   = UC_LETTER_UPPER | UC_LETTER_LOWER
+IdentifierInitial   ::= UC_LETTER_UPPER | UC_LETTER_LOWER
 
-IdentifierChar      = IdentifierInitial | UC_NUMBER_DECIMAL
+IdentifierChar      ::= IdentifierInitial | UC_NUMBER_DECIMAL
 
-Identifier          = IdentifierInitial, IdentifierChar*, ( "_", IdentifierChar+ )*
+Identifier          ::= IdentifierInitial, IdentifierChar*, ( "_", IdentifierChar+ )*
 
-QualifiedIdentifier = Identifier, ":", Identifier
+QualifiedIdentifier ::= Identifier, ":", Identifier
 
-IdentifierReference = QualifiedIdentifier | Identifier
+IdentifierReference ::= QualifiedIdentifier | Identifier
 
-LineComment         = ";", ( -( "\r" | "\n" ) )*
+LineComment         ::= ";", ( -( "\r" | "\n" ) )*
 
-Whitespace          =
+Whitespace          ::=
     "\f" | "\n" | "\r" | "\t" | "\v"
     | "\u{0020}" | "\u{00a0}" | "\u{1680}" | "\u{2000}".."\u{200a}"
     | "\u{2028}" | "\u{2029}" | "\u{202f}" | "\u{205f}" | "\u{3000}"
@@ -197,21 +196,29 @@ Given that the /formal/ constraint language component of SDML is likely to be us
 fairly long we have made it a separate section.
 
 #+BEGIN_SRC ebnf
-FormalConstraint    = "is", ConstraintEnvironment?, ConstraintSentence, "end"
 
-ConstraintEnvironment = EnvironmentDef+, "in"
+InformalConstraint  ::= "=", QuotedString, ControlledLanguageTag?
 
-ConstraintSentence  =
+ControlledLanguageTag ::=
+    "@", ASCII_LETTER_LOWER, ASCII_LETTER_LOWER, ASCII_LETTER_LOWER?
+        ( "-", ASCII_LETTER_UPPER,
+               ASCII_LETTER, ASCII_LETTER?, ASCII_LETTER?
+               ASCII_LETTER?, ASCII_LETTER?, ASCII_LETTER?
+               ASCII_LETTER?, ASCII_LETTER?, ASCII_LETTER? )?
+
+FormalConstraint    ::= "is", ConstraintEnvironment?, ConstraintSentence, "end"
+
+ConstraintSentence  ::=
     SimpleSentence | BooleanSentence | QuantifiedSentence |
         "(", ConstraintSentence, ")"
 
-SimpleSentence      = Atomic | Equation
+SimpleSentence      ::= Atomic | Equation
 
-Atomic              = Term, "(", Term*, ")"
+Atomic              ::= Term, "(", Term*, ")"
 
-Equation            = Term, "=", Term
+Equation            ::= Term, "=", Term
 
-BooleanSentence     =
+BooleanSentence     ::=
     Negation |
     ConstraintSentence,
         (
@@ -219,79 +226,83 @@ BooleanSentence     =
           Implication | Biconditional
         )
 
-Negation            = ( "not" | "¬" ), ConstraintSentence
+Negation            ::= ( "not" | "¬" ), ConstraintSentence
 
-Conjunction         = ( "and" | "∧" ), ConstraintSentence
+Conjunction         ::= ( "and" | "∧" ), ConstraintSentence
 
-Disjunction         = ( "or" | "∨" ), ConstraintSentence
+Disjunction         ::= ( "or" | "∨" ), ConstraintSentence
 
-ExclusiveDisjunction = ( "xor" | "⊻" ), ConstraintSentence
+ExclusiveDisjunction ::= ( "xor" | "⊻" ), ConstraintSentence
 
-Implication         = ( "implies" | "⇒" ), ConstraintSentence
+Implication         ::= ( "implies" | "⇒" ), ConstraintSentence
 
-Biconditional       = ( "iff" | "⇔" ), ConstraintSentence
+Biconditional       ::= ( "iff" | "⇔" ), ConstraintSentence
 
-QuantifiedSentence  = Universal | Existential
+QuantifiedSentence  ::= Universal | Existential
 
-Universal           = ( "forall" | "∀" ), QuantifierBinding*, QuantifiedBody
+Universal           ::= ( "forall" | "∀" ), QuantifierBinding*, QuantifiedBody
 
-Existential         = ( "exists" | "∃" ), QuantifierBinding*, QuantifiedBody
+Existential         ::= ( "exists" | "∃" ), QuantifierBinding*, QuantifiedBody
 
-QuantifierBinding   = "self" | ( Identifer, BindingTarget )
+QuantifierBinding   ::= "self" | ( Identifer, BindingTarget )
 
-BindingTarget       =
+BindingTarget       ::=
     BindingFromType | BindingFromSequence | "(", BindingTarget, ")"
 
-BindingFromType     = "->", ( "Self" | IdentifierReference )
+BindingFromType     ::= "->", ( "Self" | IdentifierReference )
 
-BindingFromSequence =
+BindingFromSequence ::=
     ( "in" "∈" ), ( NamePath | IdentifierReference | SequenceComprehension )
  
-QuantifiedBody      = "(", ConstraintSentence, ")"
+QuantifiedBody      ::= "(", ConstraintSentence, ")"
 
-Term                =
+Term                ::=
     NamePath | IdentifierReference | PredicateValue | FunctionalTerm | SequenceComprehension
 
-NamePath            = ( "self" | "Self" | Identifier ), ( ".", Identifier )+
+NamePath            ::= ( "self" | "Self" | Identifier ), ( ".", Identifier )+
 
-PredicateValue      =
+PredicateValue      ::=
     SimpleValue | ListOfPredicateValues
 
-ListOfPredicateValues = "[", SimpleValue*, "]"
+ListOfPredicateValues ::= "[", SimpleValue*, "]"
 
-FunctionalTerm      = Term, "(", Term*, ")"
+FunctionalTerm      ::= Term, "(", Term*, ")"
 #+END_SRC
 
-** Constraint Function Definitions
+** Constraint Environment Definitions
 
 #+BEGIN_SRC ebnf
-EnvironmentDef      =
+ConstraintEnvironment ::= EnvironmentDef+, "in"
+
+EnvironmentDef      ::=
     "def", Identifier, FunctionSignature?,
         ( ":=" | "≔" ), ( PredicateValue | ConstraintSentence )
 
-FunctionSignature   = "(", Parameter+, ")", "->", FunctionalType
+FunctionSignature   ::= "(", FunctionParameter+, ")", "->", FunctionType
 
-Parameter           = ( Identifier, "->" )?, FunctionalType
+FunctionParameter   ::= ( Identifier, "->" )?, FunctionType
 
-FunctionalType      =  "_" | "CollectionType | TypeReference
+FunctionType        ::=  AnyType | CollectionType | TypeReference
 
-CollectionType      = BuiltinCollectionType, "of", ( "_" | TypeReference )
+CollectionType      ::= BuiltinCollectionType, "of", ( AnyType | TypeReference )
 
-BuiltinCollectionType =
+BuiltinCollectionType ::=
     "Bag" | "List" | "Maybe" | "OrderedSet" | "Sequence" | "Set"
+
+AnyType             ::= "_"
 #+END_SRC
 
 ** Sequence Comprehensions
 
 #+BEGIN_SRC ebnf
-SequenceComprehension = "{", ReturnValues, "|", Expression "}"
+SequenceComprehension ::= "{", ReturnValues, "|", Expression "}"
 
-ReturnValues          = Identifier | ( "[", Identifier+, "]" )
+ReturnValues          ::= Identifier | ( "[", Identifier+, "]" )
 
-Expression            =
+Expression            ::=
     BooleanExpression | BindingExpression | ConstraintSentence | ( "(", Expression ")" )
 
-BooleanExpression     =
+BooleanExpression     ::=
     ExpressionNegation
     | ( Expression, (
         ExpressionConjunction,
@@ -300,18 +311,18 @@ BooleanExpression     =
         )
     )
 
-ExpressionNegation   = ( "not" | "¬" ), Expression
+ExpressionNegation   ::= ( "not" | "¬" ), Expression
 
-ExpressionConjunction =
+ExpressionConjunction ::=
     ( "and" | "∧" ), Expression
 
-ExpressionExclusiveDisjunction =
+ExpressionExclusiveDisjunction ::=
     ( "xor" | "⊻" ), Expression
 
-ExpressionDisjunction =
+ExpressionDisjunction ::=
     ( "or" | "∨" ), Expression
 
-BindingExpression    =
+BindingExpression    ::=
     ( "exists" | "∃" )?, Identifier, ( BindingFromType | BindingFromSequence )
 #+END_SRC
 
@@ -319,3 +330,4 @@ BindingExpression    =
 # ----- Footnotes
 
 [fn:ebnf] [[https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form][Extended Backus-Naur Form (EBNF)]], Wikipedia
+[fn:ebnfs] See [[http://www.cs.man.ac.uk/~pjj/bnf/ebnf.html][BNF/EBNF Variants]]

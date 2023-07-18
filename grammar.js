@@ -152,6 +152,14 @@ module.exports = grammar({
         informal_constraint: $ => seq(
             operator('='),
             field('value', $.quoted_string),
+            optional(
+                field('language', $.controlled_language_tag),
+            )
+        ),
+
+
+        controlled_language_tag: $ => token.immediate(
+            prec(1, /@[a-z]{2,3}(-[A-Z][A-Za-z]{1,9})?/)
         ),
 
         // -----------------------------------------------------------------------
@@ -165,91 +173,7 @@ module.exports = grammar({
             keyword('end'),
         ),
 
-        constraint_environment: $ => seq(
-            repeat1(
-                $.environment_definition
-            ),
-            $.constraint_environment_end,
-        ),
-
-        constraint_environment_end: $ => keyword('in'),
-
-        environment_definition: $ => seq(
-            keyword('def'),
-            field(
-                'name',
-                $.identifier
-            ),
-            optional(
-                field(
-                    'signature',
-                    $.function_signature
-                )
-            ),
-            choice(
-                operator(':='),
-                operator('≔'),
-            ),
-            field(
-                'rhs',
-                choice(
-                    $.predicate_value,
-                    $.constraint_sentence
-                )
-            )
-        ),
-
-        term: $ => choice(
-            $.name_path,
-            $.identifier_reference,
-            $.predicate_value,
-            $.functional_term,
-            $.sequence_comprehension,
-        ),
-
-        predicate_value: $ => choice(
-            $.simple_value,
-            $.list_of_predicate_values,
-        ),
-
-        list_of_predicate_values: $ => seq(
-            '[',
-            repeat(
-                $.simple_value
-            ),
-            ']'
-        ),
-
-        name_path: $ => seq(
-            field(
-                'subject',
-                choice(
-                    $.reserved_self,
-                    $.reserved_self_type,
-                    $.identifier,
-                )
-            ),
-            repeat1(
-                seq(
-                    token.immediate('.'), // LaTeX: reverse with \circ
-                    field(
-                        'path',
-                        $.identifier
-                    )
-                )
-            )
-        ),
-
-        reserved_self: $ =>  keyword('self'),
-
-        reserved_self_type: $ =>  keyword('Self'),
-
-        functional_term: $ => seq(
-            field('function', $.term),
-            '(',
-            field('arguments', repeat($.term)),
-            ')',
-        ),
+        // -----------------------------------------------------------------------
 
         constraint_sentence: $ => choice(
             prec(
@@ -444,6 +368,96 @@ module.exports = grammar({
             ')'
         ),
 
+        // -----------------------------------------------------------------------
+
+        term: $ => choice(
+            $.name_path,
+            $.identifier_reference,
+            $.predicate_value,
+            $.functional_term,
+            $.sequence_comprehension,
+        ),
+
+        name_path: $ => seq(
+            field(
+                'subject',
+                choice(
+                    $.reserved_self,
+                    $.reserved_self_type,
+                    $.identifier,
+                )
+            ),
+            repeat1(
+                seq(
+                    token.immediate('.'), // LaTeX: reverse with \circ
+                    field(
+                        'path',
+                        $.identifier
+                    )
+                )
+            )
+        ),
+
+        predicate_value: $ => choice(
+            $.simple_value,
+            $.list_of_predicate_values,
+        ),
+
+        list_of_predicate_values: $ => seq(
+            '[',
+            repeat(
+                $.simple_value
+            ),
+            ']'
+        ),
+
+        reserved_self: $ =>  keyword('self'),
+
+        reserved_self_type: $ =>  keyword('Self'),
+
+        functional_term: $ => seq(
+            field('function', $.term),
+            '(',
+            field('arguments', repeat($.term)),
+            ')',
+        ),
+
+        // -----------------------------------------------------------------------
+
+        constraint_environment: $ => seq(
+            repeat1(
+                $.environment_definition
+            ),
+            $.constraint_environment_end,
+        ),
+
+        environment_definition: $ => seq(
+            keyword('def'),
+            field(
+                'name',
+                $.identifier
+            ),
+            optional(
+                field(
+                    'signature',
+                    $.function_signature
+                )
+            ),
+            choice(
+                operator(':='),
+                operator('≔'),
+            ),
+            field(
+                'rhs',
+                choice(
+                    $.predicate_value,
+                    $.constraint_sentence
+                )
+            )
+        ),
+
+        constraint_environment_end: $ => keyword('in'),
+
         function_signature: $ => seq(
             '(',
             repeat1($.fn_parameter),
@@ -463,7 +477,7 @@ module.exports = grammar({
         ),
 
         fn_type: $ => choice(
-            $.wildcard_type,
+            $.any_type,
             $.collection_type,
             $.type_reference
         ),
@@ -477,13 +491,13 @@ module.exports = grammar({
             field(
                 'element',
                 choice(
-                    $.wildcard_type,
+                    $.any_type,
                     $.type_reference
                 )
             )
         ),
 
-        wildcard_type: $ => operator('_'),
+        any_type: $ => operator('_'),
 
         builtin_collection_type: $ => choice(
             keyword('Bag'),
@@ -493,6 +507,8 @@ module.exports = grammar({
             keyword('Sequence'),
             keyword('Set'),
         ),
+
+        // -----------------------------------------------------------------------
 
         sequence_comprehension: $ => seq(
             '{',
@@ -680,7 +696,9 @@ module.exports = grammar({
 
         language_tag: $ => token.immediate(
             // language: a two-letter language code from ISO 639-1 or a three-letter code from ISO 639-2
-            // extended: zero to 3 selected ISO 639 codes
+            //     4-char: reserved
+            //     5-8 char: registered language subtag
+            // extended: zero to 3 selected 3-char ISO 639 codes
             // Script: ISO 15924 code in title case
             // region: either 2 character ISO 3166-1 code or 3 digit UN M.49 code
             // this type does not support extensions or private-use components.

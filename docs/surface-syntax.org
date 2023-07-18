@@ -1,4 +1,4 @@
->#+LANGUAGE: en
+#+LANGUAGE: en
 #+STARTUP: overview hidestars inlineimages entitiespretty
 
 * <<sec:surface-syntax>>Surface Syntax
@@ -26,27 +26,34 @@ Whitespace      =
     | "\u{feff}"
 #+END_SRC
 
-Comments follow Lisp-like forms, starting with a semi-colon character and continuing to the end of line.
+Comments follow Lisp-like forms, starting with a semi-colon character and continuing to the end of line. Comments are
+intended to capture only information regarding the file contents and not model contents. Because of this, parsers are
+*not* required to capture comments, and tools are *not* required to emit comments back into changed files. For model-related
+comments relevant annotations should be attached to the model elements.
 
 #+NAME: lst:grammar-line-comment
 #+BEGIN_SRC ebnf
 LineComment     = ";", ( -( "\r" | "\n" ) )*
 #+END_SRC
 
-#+NAME: lst:sdml-ex-comments
 #+CAPTION: Comments
 #+BEGIN_SRC sdml :exports code :noeval
-; <- comments start here, end here ->
+; <- comments start here and end here ->
 #+END_SRC
 
-Lisp conventions for single, double, and triple comment characters are useful but in no way enforced.
+In the following example a tool reading the following file is not required to preserve the comment, which in this case
+is OK as the ~editorialNote~ is preserved and correctly used for the same purpose.
 
-#+NAME: lst:sdml-ex-comment-conventions
-#+CAPTION: Comment Conventions
+#+CAPTION: Comments
 #+BEGIN_SRC sdml :exports code :noeval
-;;; File-level comment
-;; Comment at-point
-; Comments in right margin
+module foo is
+  import [dc skos]
+
+  ; Should come up with a better name.
+  @skos:prefLabel = "Foo"@en
+  @dc:description = "Here's a descriptive comment"
+  @skos:editorialNode = "Someone should fix the name"
+end
 #+END_SRC
 
 ** Identifiers
@@ -613,6 +620,9 @@ module rental is
 
 end
 #+END_SRC
+
+While informal constraints are not validated in any way, given the ambiguities of human language a controlled language
+is a useful alternative.
 
 A formal constraint on the other hand may be verified, but takes more work to structure correctly. The example in
 listing [[lst:sdml-ex-formal-constrained-module]] example above by methodically checking every definition and any members
@@ -1201,15 +1211,15 @@ module example is
 
   property account_id is
   
-    internal -> {1} xsd:long is
-      @skos:definition = "This is our internal representation."@en
-    end
+  internal -> {1} xsd:long is
+    @skos:definition = "This is our internal representation."@en
+  end
   
-    external -> {1} url is
-      @skos:definition = "This is our external representation for customers."@en
-    end
+  external -> {1} url is
+    @skos:definition = "This is our external representation for customers."@en
+  end
   
-    child -> {2} xsd:long
+  child -> {2} xsd:long
   end
 
   entity Account is
@@ -1226,7 +1236,6 @@ end
 Discuss role of unions in modeling variability
 
 
-
 # ----- Footnotes
 
 [fn:dcmi] [[https://www.dublincore.org/specifications/dublin-core/dcmi-terms/][DublinCoreDCMI Metadata Terms]], DublinCore
@@ -1235,3 +1244,4 @@ Discuss role of unions in modeling variability
 [fn:sparql] [[https://www.w3.org/TR/sparql11-overview/][SPARQL 1.1 Overview]], W3C
 [fn:owlqr] [[https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide][OWL 2 Web Ontology Language Quick Reference Guide
 (Second Edition)]], W3C
+

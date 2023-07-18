@@ -1,0 +1,20 @@
+====================================================
+Constraint, informal string with controlled language
+====================================================
+
+module Example is
+  assert no_definitions = "This module has no definitions"@en-ACE
+end
+
+---
+
+(module
+   (identifier)
+   (module_body
+     (annotation
+       (constraint
+         (identifier)
+         (informal_constraint
+           (quoted_string)
+           (controlled_language_tag))))))
+

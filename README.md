@@ -50,6 +50,11 @@ end
 
 # Changes
 
+**Version: 0.1.24**
+
+* Added a language-tag to informal constraints.
+* Implemented a wildcard type for the constraint language.
+
 **Version: 0.1.23**
 
 * Added highlighting test for constraints, had to tweak a few things.

@@ -1,16 +1,3 @@
-#+LANGUAGE: en
-#+STARTUP: overview hidestars inlineimages entitiespretty
-
-* <<app:syntax>>Appendix: Complete Surface Syntax Grammar
-
-The grammar of the surface syntax is presented in Extended Backus–Naur form (EBNF)[fn:ebnf]. The addition of a character literal
-range operation =..= reduces the number of single character alternatives for clarity. There are also a set of pre-defined
-terminals such as =ASCII_DIGIT=, =ASCII_HEX_DIGIT=, =UC_LETTER_UPPER=, and =UC_LETTER_LOWER= used to simplify character ranges.
-While there are many variations[fn:ebnfs] of EBNF in existence, including multiple standardized forms, the specific form
-used here follows the notation described the W3C Extensible Markup Language (XML) 1.0 (Fifth Edition), section 6
-[[https://www.w3.org/TR/xml/#sec-notation][Notation]].
-
-#+BEGIN_SRC ebnf
 Module              ::= "module" Identifier ModuleBase? ModuleBody
 
 ModuleBase          ::= "base" IriReference
@@ -44,9 +31,7 @@ AnnotationOnlyBody  ::= "is" Annotation+ "end"
 EntityDef           ::= "entity" Identifier EntityBody?
 
 EntityBody          ::=
-    "is"
-    Annotation* IdentityMember ( EntityMember | EntityGroup )*
-    "end"
+    "is" Annotation* IdentityMember ( EntityMember | EntityGroup )* "end"
 
 EntityGroup         ::= "group" Annotation* EntityMember+ "end"
 
@@ -110,7 +95,7 @@ CardinalityRange    ::= ".." Unsigned?
 Value               ::=
     SimpleValue | ValueConstructor | IdentifierReference | ListOfValues
 
-BuiltinSimpleType   ::= 
+BuiltinSimpleType   ::=
     "string" | "double" | "decimal" | "integer" | "boolean" | "iri"
 
 SimpleValue         ::=
@@ -118,27 +103,31 @@ SimpleValue         ::=
 
 Boolean             ::= Tautology | Contradiction
 
-Tautology           ::= ( "true" | "⊤" )
+Tautology           ::= "true" | "⊤"
 
-Contradiction       ::= ( "false" | "⊥" )
+Contradiction       ::= "false" | "⊥"
 
 NumericSign         ::= "+" | "-"
 
 Zero                ::= "0"
 
-NonZero             ::= "1".."9"
+NonZero             ::= [1-9]
 
-Unsigned            ::= Zero | NonZero ( ASCII_DIGIT )*
+Digit               ::= Zero | NonZero
+
+Unsigned            ::= Zero | NonZero Digit*
 
 Integer             ::= NumericSign? Unsigned
 
-Decimal             ::= Integer "." ( ASCII_DIGIT )+
+Decimal             ::= Integer "." Digit+
 
 ExponentChar        ::= "e" | "E"
 
 Double              ::= Decimal ExponentChar NumericSign? Integer
 
-HexPair             ::= ASCII_HEX_DIGIT ASCII_HEX_DIGIT
+HexDigit            ::= [0-9A-Fa-f]
+
+HexPair             ::= HexDigit HexDigit
 
 CharacterEscape     ::= "\" ( '"' | "\" | "/" | "a" | "b"
                                "e" | "f" | "n" | "r" | "t" | "v" )
@@ -149,20 +138,18 @@ NotAllowed          ::= [^"\#x00-#x08#x0B-#x1F#x7F]
 
 QuotedString        ::= '"' ( NotAllowed | CharacterEscape | UnicodeEscape )* '"'
 
-LanguageTag         ::= 
+LanguageTag         ::=
     "@" ASCII_LETTER_LOWER ASCII_LETTER_LOWER ASCII_LETTER_LOWER?
         ( "-" ASCII_LETTER_UPPER ASCII_LETTER_UPPER ASCII_LETTER_UPPER )?
         ( "-" ASCII_LETTER_UPPER ASCII_LETTER_LOWER
                ASCII_LETTER_LOWER ASCII_LETTER_LOWER )?
         ( "-" ( ( ASCII_LETTER_UPPER ASCII_LETTER_UPPER )
-               | ( ASCII_DIGIT ASCII_DIGIT ASCII_DIGIT ) ) )
+               | ( Digit Digit Digit ) ) )
 
 String              ::= QuotedString LanguageTag?
 
 IriReference        ::=
-    "<"
-    ( [^<>"{}|^`\#x00-#x20] | UnicodeEscape )*
-    ">"
+    "<" ( [^<>\"{}|^`\#x00-#x20] | UnicodeEscape )* ">"
 
 ValueConstructor    ::= IdentifierReference "(" SimpleValue ")"
 
@@ -181,17 +168,13 @@ IdentifierReference ::= QualifiedIdentifier | Identifier
 
 LineComment         ::= ";" [^\r\n]*
 
-Whitespace          ::= 
+Whitespace          ::=
     [^\f\n\r\t\v#x20#xa0#x1680#x2000#x200a#x2028#x2029#x202f#x205f#x3000#xfeff]
-#+END_SRC
 
+/*****************************************************************************
+ * The Embedded Constraint Language
+ ****************************************************************************/
 
-** The Embedded Constraint Language
-
-Given that the /formal/ constraint language component of SDML is likely to be used less frequently *and* the grammar is
-fairly long we have made it a separate section.
-
-#+BEGIN_SRC ebnf
 InformalConstraint  ::= "=" QuotedString ControlledLanguageTag?
 
 ControlledLanguageTag ::=
@@ -262,11 +245,7 @@ PredicateValue      ::=
 ListOfPredicateValues ::= "[" SimpleValue* "]"
 
 FunctionalTerm      ::= Term "(" Term* ")"
-#+END_SRC
 
-** Constraint Environment Definitions
-
-#+BEGIN_SRC ebnf
 ConstraintEnvironment ::= EnvironmentDef+ "in"
 
 EnvironmentDef      ::=
@@ -285,11 +264,34 @@ BuiltinCollectionType ::=
     "Bag" | "List" | "Maybe" | "OrderedSet" | "Sequence" | "Set"
 
 AnyType             ::= "_"
-#+END_SRC
 
-** Sequence Comprehensions
+/*****************************************************************************
+ * Constraint Environment Definitions
+ ****************************************************************************/
 
-#+BEGIN_SRC ebnf
+ConstraintEnvironment ::= EnvironmentDef+ "in"
+
+EnvironmentDef      ::=
+    "def" Identifier FunctionSignature?
+        ( ":=" | "≔" ) ( PredicateValue | ConstraintSentence )
+
+FunctionSignature   ::= "(" FunctionParameter+ ")" "->" FunctionType
+
+FunctionParameter   ::= ( Identifier "->" )? FunctionType
+
+FunctionType        ::=  AnyType | CollectionType | TypeReference
+
+CollectionType      ::= BuiltinCollectionType "of" ( AnyType | TypeReference )
+
+BuiltinCollectionType ::=
+    "Bag" | "List" | "Maybe" | "OrderedSet" | "Sequence" | "Set"
+
+AnyType             ::= "_"
+
+/*****************************************************************************
+ * Sequence Comprehensions
+ ****************************************************************************/
+
 SequenceComprehension ::= "{" ReturnValues "|" Expression "}"
 
 ReturnValues          ::= Identifier | ( "[" Identifier+ "]" )
@@ -319,10 +321,3 @@ ExpressionDisjunction ::=
 
 BindingExpression    ::=
     ( "exists" | "∃" )? Identifier ( BindingFromType | BindingFromSequence )
-#+END_SRC
-
-
-# ----- Footnotes
-
-[fn:ebnf] [[https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form][Extended Backus-Naur Form (EBNF)]], Wikipedia
-[fn:ebnfs] See [[http://www.cs.man.ac.uk/~pjj/bnf/ebnf.html][BNF/EBNF Variants]]

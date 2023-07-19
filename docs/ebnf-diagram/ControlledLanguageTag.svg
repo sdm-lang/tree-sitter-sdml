@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1769" height="187">
+   <defs>
+      <style type="text/css">
+    @namespace "http://www.w3.org/2000/svg";
+    .line                 {fill: none; stroke: #332900; stroke-width: 1;}
+    .bold-line            {stroke: #141000; shape-rendering: crispEdges; stroke-width: 2;}
+    .thin-line            {stroke: #1F1800; shape-rendering: crispEdges}
+    .filled               {fill: #332900; stroke: none;}
+    text.terminal         {font-family: Verdana, Sans-serif;
+                            font-size: 12px;
+                            fill: #141000;
+                            font-weight: bold;
+                          }
+    text.nonterminal      {font-family: Verdana, Sans-serif;
+                            font-size: 12px;
+                            fill: #1A1400;
+                            font-weight: normal;
+                          }
+    text.regexp           {font-family: Verdana, Sans-serif;
+                            font-size: 12px;
+                            fill: #1F1800;
+                            font-weight: normal;
+                          }
+    rect, circle, polygon {fill: #332900; stroke: #332900;}
+    rect.terminal         {fill: #FFDB4D; stroke: #332900; stroke-width: 1;}
+    rect.nonterminal      {fill: #FFEC9E; stroke: #332900; stroke-width: 1;}
+    rect.text             {fill: none; stroke: none;}
+    polygon.regexp        {fill: #FFF4C7; stroke: #332900; stroke-width: 1;}
+  </style>
+   </defs>
+   <polygon points="11 17 3 13 3 21"/>
+   <polygon points="19 17 11 13 11 21"/>
+   <rect x="33" y="3" width="32" height="32" rx="10"/>
+   <rect x="31"
+          y="1"
+          width="32"
+          height="32"
+          class="terminal"
+          rx="10"/>
+   <text class="terminal" x="41" y="21">@</text>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+       xlink:href="#ASCII_LETTER_LOWER"
+       xlink:title="ASCII_LETTER_LOWER">
+      <rect x="85" y="3" width="162" height="32"/>
+      <rect x="83" y="1" width="162" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="93" y="21">ASCII_LETTER_LOWER</text>
+   </a>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+       xlink:href="#ASCII_LETTER_LOWER"
+       xlink:title="ASCII_LETTER_LOWER">
+      <rect x="267" y="3" width="162" height="32"/>
+      <rect x="265" y="1" width="162" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="275" y="21">ASCII_LETTER_LOWER</text>
+   </a>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+       xlink:href="#ASCII_LETTER_LOWER"
+       xlink:title="ASCII_LETTER_LOWER">
+      <rect x="469" y="35" width="162" height="32"/>
+      <rect x="467" y="33" width="162" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="477" y="53">ASCII_LETTER_LOWER</text>
+   </a>
+   <rect x="45" y="121" width="26" height="32" rx="10"/>
+   <rect x="43"
+          y="119"
+          width="26"
+          height="32"
+          class="terminal"
+          rx="10"/>
+   <text class="terminal" x="53" y="139">-</text>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+       xlink:href="#ASCII_LETTER_UPPER"
+       xlink:title="ASCII_LETTER_UPPER">
+      <rect x="91" y="121" width="158" height="32"/>
+      <rect x="89" y="119" width="158" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="99" y="139">ASCII_LETTER_UPPER</text>
+   </a>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+       xlink:href="#ASCII_LETTER"
+       xlink:title="ASCII_LETTER">
+      <rect x="269" y="121" width="108" height="32"/>
+      <rect x="267" y="119" width="108" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="277" y="139">ASCII_LETTER</text>
+   </a>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+       xlink:href="#ASCII_LETTER"
+       xlink:title="ASCII_LETTER">
+      <rect x="417" y="153" width="108" height="32"/>
+      <rect x="415" y="151" width="108" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="425" y="171">ASCII_LETTER</text>
+   </a>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+       xlink:href="#ASCII_LETTER"
+       xlink:title="ASCII_LETTER">
+      <rect x="585" y="153" width="108" height="32"/>
+      <rect x="583" y="151" width="108" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="593" y="171">ASCII_LETTER</text>
+   </a>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+       xlink:href="#ASCII_LETTER"
+       xlink:title="ASCII_LETTER">
+      <rect x="753" y="153" width="108" height="32"/>
+      <rect x="751" y="151" width="108" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="761" y="171">ASCII_LETTER</text>
+   </a>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+       xlink:href="#ASCII_LETTER"
+       xlink:title="ASCII_LETTER">
+      <rect x="921" y="153" width="108" height="32"/>
+      <rect x="919" y="151" width="108" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="929" y="171">ASCII_LETTER</text>
+   </a>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+       xlink:href="#ASCII_LETTER"
+       xlink:title="ASCII_LETTER">
+      <rect x="1089" y="153" width="108" height="32"/>
+      <rect x="1087"
+             y="151"
+             width="108"
+             height="32"
+             class="nonterminal"/>
+      <text class="nonterminal" x="1097" y="171">ASCII_LETTER</text>
+   </a>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+       xlink:href="#ASCII_LETTER"
+       xlink:title="ASCII_LETTER">
+      <rect x="1257" y="153" width="108" height="32"/>
+      <rect x="1255"
+             y="151"
+             width="108"
+             height="32"
+             class="nonterminal"/>
+      <text class="nonterminal" x="1265" y="171">ASCII_LETTER</text>
+   </a>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+       xlink:href="#ASCII_LETTER"
+       xlink:title="ASCII_LETTER">
+      <rect x="1425" y="153" width="108" height="32"/>
+      <rect x="1423"
+             y="151"
+             width="108"
+             height="32"
+             class="nonterminal"/>
+      <text class="nonterminal" x="1433" y="171">ASCII_LETTER</text>
+   </a>
+   <a xmlns:xlink="http://www.w3.org/1999/xlink"
+       xlink:href="#ASCII_LETTER"
+       xlink:title="ASCII_LETTER">
+      <rect x="1593" y="153" width="108" height="32"/>
+      <rect x="1591"
+             y="151"
+             width="108"
+             height="32"
+             class="nonterminal"/>
+      <text class="nonterminal" x="1601" y="171">ASCII_LETTER</text>
+   </a>
+   <path class="line"
+          d="m19 17 h2 m0 0 h10 m32 0 h10 m0 0 h10 m162 0 h10 m0 0 h10 m162 0 h10 m20 0 h10 m0 0 h172 m-202 0 h20 m182 0 h20 m-222 0 q10 0 10 10 m202 0 q0 -10 10 -10 m-212 10 v12 m202 0 v-12 m-202 12 q0 10 10 10 m182 0 q10 0 10 -10 m-192 10 h10 m162 0 h10 m22 -32 l2 0 m2 0 l2 0 m2 0 l2 0 m-670 86 l2 0 m2 0 l2 0 m2 0 l2 0 m22 0 h10 m0 0 h1686 m-1716 0 h20 m1696 0 h20 m-1736 0 q10 0 10 10 m1716 0 q0 -10 10 -10 m-1726 10 v12 m1716 0 v-12 m-1716 12 q0 10 10 10 m1696 0 q10 0 10 -10 m-1706 10 h10 m26 0 h10 m0 0 h10 m158 0 h10 m0 0 h10 m108 0 h10 m20 0 h10 m0 0 h118 m-148 0 h20 m128 0 h20 m-168 0 q10 0 10 10 m148 0 q0 -10 10 -10 m-158 10 v12 m148 0 v-12 m-148 12 q0 10 10 10 m128 0 q10 0 10 -10 m-138 10 h10 m108 0 h10 m40 -32 h10 m0 0 h118 m-148 0 h20 m128 0 h20 m-168 0 q10 0 10 10 m148 0 q0 -10 10 -10 m-158 10 v12 m148 0 v-12 m-148 12 q0 10 10 10 m128 0 q10 0 10 -10 m-138 10 h10 m108 0 h10 m40 -32 h10 m0 0 h118 m-148 0 h20 m128 0 h20 m-168 0 q10 0 10 10 m148 0 q0 -10 10 -10 m-158 10 v12 m148 0 v-12 m-148 12 q0 10 10 10 m128 0 q10 0 10 -10 m-138 10 h10 m108 0 h10 m40 -32 h10 m0 0 h118 m-148 0 h20 m128 0 h20 m-168 0 q10 0 10 10 m148 0 q0 -10 10 -10 m-158 10 v12 m148 0 v-12 m-148 12 q0 10 10 10 m128 0 q10 0 10 -10 m-138 10 h10 m108 0 h10 m40 -32 h10 m0 0 h118 m-148 0 h20 m128 0 h20 m-168 0 q10 0 10 10 m148 0 q0 -10 10 -10 m-158 10 v12 m148 0 v-12 m-148 12 q0 10 10 10 m128 0 q10 0 10 -10 m-138 10 h10 m108 0 h10 m40 -32 h10 m0 0 h118 m-148 0 h20 m128 0 h20 m-168 0 q10 0 10 10 m148 0 q0 -10 10 -10 m-158 10 v12 m148 0 v-12 m-148 12 q0 10 10 10 m128 0 q10 0 10 -10 m-138 10 h10 m108 0 h10 m40 -32 h10 m0 0 h118 m-148 0 h20 m128 0 h20 m-168 0 q10 0 10 10 m148 0 q0 -10 10 -10 m-158 10 v12 m148 0 v-12 m-148 12 q0 10 10 10 m128 0 q10 0 10 -10 m-138 10 h10 m108 0 h10 m40 -32 h10 m0 0 h118 m-148 0 h20 m128 0 h20 m-168 0 q10 0 10 10 m148 0 q0 -10 10 -10 m-158 10 v12 m148 0 v-12 m-148 12 q0 10 10 10 m128 0 q10 0 10 -10 m-138 10 h10 m108 0 h10 m43 -64 h-3"/>
+   <polygon points="1759 103 1767 99 1767 107"/>
+   <polygon points="1759 103 1751 99 1751 107"/>
+</svg>

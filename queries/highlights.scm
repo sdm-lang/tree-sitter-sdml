@@ -219,6 +219,11 @@
  "->" @operator
  target: (type_reference) @type)
 
+(member_inverse_name
+ "(" @punctuation.bracket
+ (identifier) @variable.field
+ ")" @punctuation.bracket)
+
 (value_variant
  name: (identifier) @constant
  "=" @operator)

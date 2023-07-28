@@ -50,6 +50,12 @@ end
 
 # Changes
 
+**Version: 0.1.25**
+
+* Changed grammar for reference members:
+  * The production `source_cardinality` has been removed.
+  * The production `member_inverse_name` has been added.
+
 **Version: 0.1.24**
 
 * Added a language-tag to informal constraints.

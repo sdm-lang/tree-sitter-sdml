@@ -1282,6 +1282,16 @@
           }
         ]
       },
+      "inverse": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "member_inverse_name",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,
@@ -1298,16 +1308,6 @@
         "types": [
           {
             "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "source_cardinality": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "cardinality_expression",
             "named": true
           }
         ]
@@ -1404,6 +1404,21 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "member_inverse_name",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -2378,11 +2393,11 @@
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "iri",

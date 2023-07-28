@@ -3501,8 +3501,24 @@
               "type": "SEQ",
               "members": [
                 {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "FIELD",
+                      "name": "inverse",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "member_inverse_name"
+                      }
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                },
+                {
                   "type": "SYMBOL",
-                  "name": "_type_expression_from_to"
+                  "name": "_type_expression_to"
                 },
                 {
                   "type": "CHOICE",
@@ -3523,6 +3539,23 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    "member_inverse_name": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "STRING",
+          "value": ")"
         }
       ]
     },
@@ -3587,31 +3620,6 @@
             "type": "SYMBOL",
             "name": "type_reference"
           }
-        }
-      ]
-    },
-    "_type_expression_from_to": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "FIELD",
-              "name": "source_cardinality",
-              "content": {
-                "type": "SYMBOL",
-                "name": "cardinality_expression"
-              }
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "SYMBOL",
-          "name": "_type_expression_to"
         }
       ]
     },

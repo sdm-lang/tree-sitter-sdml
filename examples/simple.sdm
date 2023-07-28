@@ -32,10 +32,10 @@ module campaign is
 
     tag -> {0..} Tag
 
-    ref target {0..1} -> {0..5} Target
+    ref target (in_campaigns) -> {0..5} Target
   end
 
-  union foo of
+  union Foo of
     Bar
     Baz
   end

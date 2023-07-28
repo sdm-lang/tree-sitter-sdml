@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.24
+// Version:    0.1.25
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -968,10 +968,22 @@ module.exports = grammar({
             choice(
                 $._property_member,
                 seq(
-                    $._type_expression_from_to,
+                    optional(
+                        field(
+                            'inverse',
+                            $.member_inverse_name
+                        )
+                    ),
+                    $._type_expression_to,
                     optional(field('body', $.annotation_only_body))
                 )
             )
+        ),
+
+        member_inverse_name: $ => seq(
+            "(",
+            $.identifier,
+            ")"
         ),
 
         _type_expression: $ => seq(
@@ -985,13 +997,6 @@ module.exports = grammar({
                 field('target_cardinality', $.cardinality_expression)
             ),
             field('target', $.type_reference)
-        ),
-
-        _type_expression_from_to: $ => seq(
-            optional(
-                field('source_cardinality', $.cardinality_expression)
-            ),
-            $._type_expression_to
         ),
 
         type_reference: $ => choice(

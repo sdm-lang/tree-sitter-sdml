@@ -842,8 +842,8 @@ Structured type members fall into the following categories.
   that entity type.
 - By-Value :: A reference to a value type, i.e. Enumeration, Event, or Structure. Such a member may indicate the
   cardinality of the target.
-- By-Reference :: A reference to an Entity type. Such a member may indicate the cardinality of both the source and the
-  target.
+- By-Reference :: A reference to an Entity type. Such a member may indicate the cardinality of the
+  target as well as the name of the inverse member on the target type.
 - Variant :: A member within an enumeration that specifies a numeric value for each member rather than a type.
 - *Type Variant* :: A type reference that is a unique variant of a disjoint union.
 
@@ -851,11 +851,14 @@ Structured type members fall into the following categories.
 #+BEGIN_SRC ebnf
 PropertyMember      ::= "as" Identifier
 IdentityMember      ::=
-    "identity" Identifier ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
+    "identity" Identifier
+        ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
 MemberByValue       ::=
-    Identifier ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
+    Identifier
+        ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
 MemberByReference   ::=
-    "ref" Identifier ( PropertyMember | ( TypeExpressionFromTo AnnotationOnlyBody? ) )
+    "ref" Identifier
+        ( PropertyMember | ( InverseName? TypeExpressionTo AnnotationOnlyBody? ) )
 #+END_SRC
 
 For identity, by-value, and by-reference members the general syntax uses the /type reference/ operator, /name/ ~->~ /type/, with
@@ -877,9 +880,9 @@ target type to be replaced with the keyword ~unknown~. This marks the member, an
 #+BEGIN_SRC ebnf
 TypeExpression      ::= "->" TypeReference
 TypeExpressionTo    ::= "->" Cardinality? TypeReference
-TypeExpressionFromto ::= Cardinality? TypeExpressionTo
 TypeReference       ::=  UnknownType | IdentifierReference | BuiltinSimpleType
 UnknownType         ::= "unknown"
+InverseName         ::= "(" Identifier ")"
 #+END_SRC
 
 The cardinality of a member is specified as a range operation with a minimum and maximum number of occurrences
@@ -1089,7 +1092,7 @@ module example is
   
     identity id -> PersonId
 
-    ref contact {0..} -> {0..2} Person is
+    ref emergency_contact (emergency_contact_for) -> {0..2} Person is
       @dc:description = "Emergency contact person"
     end
   

@@ -85,19 +85,20 @@ PropertyRole        ::=
 PropertyMember      ::= "as" Identifier
 
 IdentityMember      ::=
-    "identity" Identifier ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
+    "identity" Identifier
+        ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
 
 MemberByValue       ::=
-    Identifier ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
+    Identifier
+        ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
 
 MemberByReference   ::=
-    "ref" Identifier ( PropertyMember | ( TypeExpressionFromTo AnnotationOnlyBody? ) )
+    "ref" Identifier
+        ( PropertyMember | ( InverseName? TypeExpressionTo AnnotationOnlyBody? ) )
 
 TypeExpression      ::= "->" TypeReference
 
 TypeExpressionTo    ::= "->" Cardinality? TypeReference
-
-TypeExpressionFromto ::= Cardinality? TypeExpressionTo
 
 TypeReference       ::=  UnknownType | IdentifierReference | BuiltinSimpleType
 
@@ -106,6 +107,8 @@ UnknownType         ::= "unknown"
 Cardinality         ::= "{" Unsigned CardinalityRange? "}"
 
 CardinalityRange    ::= ".." Unsigned?
+
+InverseName         ::= "(" Identifier ")"
 
 Value               ::=
     SimpleValue | ValueConstructor | IdentifierReference | ListOfValues

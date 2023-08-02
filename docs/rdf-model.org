@@ -1,7 +1,7 @@
 #+LANGUAGE: en
 #+STARTUP: overview hidestars inlineimages entitiespretty
 
-* <<sec:rdf-semantic-model>> RDF Semantic Model
+* <<sec:rdf-semantic-model>>The RDF Semantics
 
 The W3C's [[https://www.w3.org/RDF/][Resource Description Framework]] (RDF) is a mature standard for the open development of vocabularies and
 knowledge representation. Key characteristics are that it has a fundamentally simple model, was designed with an /Open

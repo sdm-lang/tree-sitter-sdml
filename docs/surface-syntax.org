@@ -1,7 +1,7 @@
 #+LANGUAGE: en
 #+STARTUP: overview hidestars inlineimages entitiespretty
 
-* <<sec:surface-syntax>>Surface Syntax
+* <<sec:surface-syntax>>The Surface Syntax
 
 This section describes the SDML surface syntax, a syntax intended to look and feel like a programming language but with
 extensibility provided by it's underlying RDF and OWL foundation. The goal of the following syntax is to allow for rapid
@@ -10,7 +10,7 @@ optional wherever possible such that the minimum information neccessary is requi
 document will use the terms /valid/ to denote a model that has no syntactic errors and /complete/ to denote a valid model
 that has no short-form, or /incomplete/, model elements.
 
-For the complete grammar, and notes on BNF notation, see Appendix [[app:syntax]].
+For the complete grammar, and notes on BNF notation, see section [[sec:complete-grammar]].
 
 ** Whitespace and Comments
 
@@ -169,7 +169,7 @@ model element within the resource. This URI identifier for each model element ne
 corresponding RDF resource(s). Our first problem is to determine the base URI for the module,as follows:
 
 1. If the module has a ~base~ specifier it MUST be used as the module URI.
-2. If the reader has access to an SDML catalog file (For details of the catalog file format see appendix [[app:resolver-catalog]]), a matching catalog entry MUST be used as the module URI.
+2. If the reader has access to an SDML catalog file (For details of the catalog file format see appendix [[sec:resolver-catalog]]), a matching catalog entry MUST be used as the module URI.
 3. A URI is calculated for the module using the =file:= scheme and the file path relative to a /project root/.
 
 Considering the following simple module in the file =vehicle.sdm=.
@@ -363,13 +363,13 @@ An *unsigned* value in SDML is
 
 #+NAME: lst:grammar-unsigned
 #+BEGIN_SRC ebnf
-Unsigned            ::= Zero | NonZero Digit*
+Unsigned            ::= Zero | NonZero ASCII_DIGIT*
 #+END_SRC
 
 [[./ebnf-diagram/Unsigned.svg]]
 
 #+BEGIN_SRC ebnf
-Zero                ::= "0"
+Zero                ::= [0]
 #+END_SRC
 
 [[./ebnf-diagram/Zero.svg]]
@@ -379,12 +379,6 @@ NonZero             ::= [1-9]
 #+END_SRC
 
 [[./ebnf-diagram/NonZero.svg]]
-
-#+BEGIN_SRC ebnf
-Digit               ::= Zero | NonZero
-#+END_SRC
-
-[[./ebnf-diagram/Digit.svg]]
 
 An *Integer* value in SDML is a string of ASCII decimal digits, without leading zeros; zero, =0=, is a valid value however
 =00= and =01= are not. The Integer type corresponds to a 64-bit signed integer number.
@@ -397,7 +391,7 @@ Integer             ::= NumericSign? Unsigned
 [[./ebnf-diagram/Integer.svg]]
 
 #+BEGIN_SRC ebnf
-NumericSign         ::= "+" | "-"
+NumericSign         ::= [+-]
 #+END_SRC
 
 [[./ebnf-diagram/NumericSign.svg]]
@@ -407,7 +401,7 @@ integer-like value. The Decimal type corresponds to a 128-bit representation of 
 
 #+NAME: lst:grammar-decimal
 #+BEGIN_SRC ebnf
-Decimal             ::= Integer "." Digit+
+Decimal             ::= Integer "." ASCII_DIGIT+
 #+END_SRC
 
 A *Double* value in SDML is a decimal-like value followed by a lower or upper case letter E (Latin Small Letter E, "e",
@@ -423,7 +417,7 @@ Double              ::= Decimal ExponentChar NumericSign? Integer
 [[./ebnf-diagram/Double.svg]]
 
 #+BEGIN_SRC ebnf
-ExponentChar        ::= "e" | "E"
+ExponentChar        ::=[eE]
 #+END_SRC
 
 [[./ebnf-diagram/ExponentChar.svg]]
@@ -435,15 +429,32 @@ a maximum of 6 such digits. In addition,the following single-character escape ch
 
 #+NAME: lst:grammar-string
 #+BEGIN_SRC ebnf
-HexDigit            ::= [0-9A-Fa-f]
-HexPair             ::= HexDigit HexDigit
-CharacterEscape     ::= "\" ( '"' | "\" | "/" | "a" | "b"
-                               "e" | "f" | "n" | "r" | "t" | "v" )
-UnicodeEscape       ::= "\u{" HexPair ( HexPair ( HexPair )? )? "}"
-NotAllowed          ::= [^"\#x00-#x08#x0B-#x1F#x7F]
-QuotedString        ::= '"' ( NotAllowed | CharacterEscape | UnicodeEscape )* '"'
+NotAllowed          ::= [^\#x00-#x08#x0B-#x1F#x7F]
+QuotedString        ::= "\"" ( Escape | NotAllowed )* "\""
 String              ::= QuotedString LanguageTag?
 #+END_SRC
+
+[[./ebnf-diagram/NotAllowed.svg]]
+
+[[./ebnf-diagram/QuotedString.svg]]
+
+[[./ebnf-diagram/String.svg]]
+
+#+NAME: lst:grammar-string-escape
+#+BEGIN_SRC ebnf
+HexPair             ::= HexDigit HexDigit
+CharacterEscape     ::= [\"\\/abefnrtv]
+UnicodeEscape       ::= "u{" HexPair ( HexPair ( HexPair )? )? "}"
+Escape              ::= "\\" ( CharacterEscape | UnicodeEscape )
+#+END_SRC
+
+[[./ebnf-diagram/HexPair.svg]]
+
+[[./ebnf-diagram/CharacterEscape.svg]]
+
+[[./ebnf-diagram/UnicodeEscape.svg]]
+
+[[./ebnf-diagram/Escape.svg]]
 
 Note also that strings allow literal newlines and do not /require/ they be present in escaped form. This means that a
 string literal supports multiline forms.
@@ -471,13 +482,54 @@ a string contribute to equality tests, so that ="abc"@en= is not equal to ="abc"
 #+NAME: lst:grammar-language-tag
 #+BEGIN_SRC ebnf
 LanguageTag         ::= 
-    "@" ASCII_LETTER_LOWER ASCII_LETTER_LOWER ASCII_LETTER_LOWER?
-        ( "-" ASCII_LETTER_UPPER ASCII_LETTER_UPPER ASCII_LETTER_UPPER )?
-        ( "-" ASCII_LETTER_UPPER ASCII_LETTER_LOWER
-               ASCII_LETTER_LOWER ASCII_LETTER_LOWER )?
-        ( "-" ( ( ASCII_LETTER_UPPER ASCII_LETTER_UPPER )
-               | ( Digit Digit Digit ) ) )
+    "@" LanguageTagPrimary
+        LanguageTagExtended?
+        LanguageTagScript?
+        LanguageTagRegion?
 #+END_SRC
+
+[[./ebnf-diagram/LanguageTag.svg]]
+
+The primary language is one of:
+
+- a two letter language code from ISO 639-1,
+- a three letter code from ISO 639-2.
+
+#+BEGIN_SRC ebnf
+LanguageTagPrimary  ::=
+    ASCII_LETTER_LOWER ASCII_LETTER_LOWER ASCII_LETTER_LOWER?
+#+END_SRC
+
+[[./ebnf-diagram/LanguageTagPrimary.svg]]
+
+The extended language is zero to three selected three letter ISO 639-2 codes.
+
+#+BEGIN_SRC ebnf
+LanguageTagExtended ::=
+    "-" ASCII_LETTER_UPPER ASCII_LETTER_UPPER ASCII_LETTER_UPPER
+#+END_SRC
+
+[[./ebnf-diagram/LanguageTagExtended.svg]]
+
+The language script is an ISO 15924 four letter code in title case.
+
+#+BEGIN_SRC ebnf
+LanguageTagScript   ::=
+    "-" ASCII_LETTER_UPPER ASCII_LETTER_LOWER
+        ASCII_LETTER_LOWER ASCII_LETTER_LOWER
+#+END_SRC
+
+[[./ebnf-diagram/LanguageTagScript.svg]]
+
+The language region is either a two letter ISO 3166-1 code or a three digit UN M.49 code.
+
+#+BEGIN_SRC ebnf
+LanguageTagRegion   ::=
+    "-" ( ( ASCII_LETTER_UPPER ASCII_LETTER_UPPER )
+          | ( ASCII_DIGIT ASCII_DIGIT ASCII_DIGIT ) )
+#+END_SRC
+
+[[./ebnf-diagram/LanguageTagRegion.svg]]
 
 An *IRI Reference value* in SDML is a value IRI value, either absolute or relative, between a Less-Than Sign ("<", =U+003C=)
 character and a Greater-Than Sign (">", =U+003E=) character. IRI references are more permissive in the SDML grammar than
@@ -505,8 +557,10 @@ referenced type, or one of it's super-types.
 
 #+NAME: lst:grammar-value-constructor
 #+BEGIN_SRC ebnf
-ValueConstructor    = IdentifierReference, "(", SimpleValue, ")"
+ValueConstructor    ::= IdentifierReference "(" SimpleValue ")"
 #+END_SRC
+
+[[./ebnf-diagram/ValueConstructor.svg]]
 
 Here we assert that the value =1= is an unsigned rather than the default signed integer.
 
@@ -534,9 +588,11 @@ heterogeneous and may contain elements of different types.
 
 #+NAME: lst:grammar-list-of-values
 #+BEGIN_SRC js :noeval
-ListOfValues    =
-    "[", ( SimpleValue | ValueConstructor | IdentifierReference )+, "]"
+ListOfValues        ::=
+    "[" ( SimpleValue | ValueConstructor | IdentifierReference )+ "]"
 #+END_SRC
+
+[[./ebnf-diagram/ListOfValues.svg]]
 
 #+NAME: lst:sdml-ex-value-lists
 #+CAPTION: Value List Example
@@ -556,12 +612,17 @@ A datatype definition introduces a new simple data type by /restriction/ of some
 
 #+NAME: lst:grammar-data-type-def
 #+BEGIN_SRC ebnf
-DataTypeDef     =
-    "datatype", Identifier, "<-", DataTypeBase, AnnotationOnlyBody?
-DataTypeBase    = BuiltinSimpleType | IdentifierReference
-BuiltinSimpleType   = 
-    "string" | "double" | "decimal" | "integer" | "boolean" | "iri"
+DataTypeDef         ::=
+    "datatype" Identifier "<-" DataTypeBase AnnotationOnlyBody?
 #+END_SRC
+
+[[./ebnf-diagram/DataTypeDef.svg]]
+
+#+BEGIN_SRC ebnf
+DataTypeBase        ::= IdentifierReference | BuiltinSimpleType
+#+END_SRC
+
+[[./ebnf-diagram/DataTypeBase.svg]]
 
 Listing [[lst:sdml-ex-datatype]] shows the /type restriction/ operator, =<-=, defining a new type named ~name~ as a restriction on
 the existing XML Schema data type ~xsd:string~.
@@ -617,6 +678,14 @@ qualified identifier where the module name is the reserved name =sdml=. This set
 underlying RDF/OWL equivalence relationship to a subset of the XML Schema datatypes, all shown in table
 [[tbl:builtin-simple-types]].
 
+#+NAME: lst:builtin-simple-types
+#+BEGIN_SRC ebnf
+BuiltinSimpleType   ::= 
+    "string" | "double" | "decimal" | "integer" | "boolean" | "iri"
+#+END_SRC
+
+[[./ebnf-diagram/BuiltinSimpleType.svg]]
+
 #+NAME: tbl:builtin-simple-types
 #+CAPTION: Built-in Simple Type Mapping
 | Type Keyword | Qualified Identifier | Equivalent XML Schema Datatype |
@@ -639,6 +708,13 @@ Annotation          ::= AnnotationProperty | Constraint
 #+END_SRC
 
 [[./ebnf-diagram/Annotation.svg]]
+
+#+NAME: lst:grammar-annotation-only-body
+#+BEGIN_SRC ebnf
+AnnotationOnlyBody  ::= "is" Annotation+ "end"
+#+END_SRC
+
+[[./ebnf-diagram/AnnotationOnlyBody.svg]]
 
 *** Annotation Properties
 
@@ -734,6 +810,19 @@ InformalConstraint  ::= "=" QuotedString ControlledLanguageTag?
 
 [[./ebnf-diagram/InformalConstraint.svg]]
 
+#+BEGIN_SRC ebnf
+ControlledLanguageTag ::=
+    "@" LanguageTagPrimary ControlledLanguageScheme?
+ControlledLanguageScheme ::=
+    "-" ASCII_LETTER ASCII_LETTER ASCII_LETTER
+        ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
+        ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
+#+END_SRC
+
+[[./ebnf-diagram/ControlledLanguageTag.svg]]
+
+[[./ebnf-diagram/ControlledLanguageScheme.svg]]
+
 #+NAME: lst:sdml-ex-constrained-module
 #+CAPTION: Informal Constraint on Module
 #+BEGIN_SRC sdml :exports code :noeval
@@ -751,20 +840,13 @@ A formal constraint on the other hand may be verified, but takes more work to st
 listing [[lst:sdml-ex-formal-constrained-module]] example above by methodically checking every definition and any members
 therein.
 
-#+NAME: lst:grammar-formal-constraint
-#+BEGIN_SRC ebnf
-FormalConstraint    ::= "is" ConstraintEnvironment? ConstraintSentence "end"
-#+END_SRC
-
-[[./ebnf-diagram/FormalConstraint.svg]]
-
 #+NAME: lst:sdml-ex-formal-constrained-module
 #+CAPTION: Formal Constraint on Module
 #+BEGIN_SRC sdml :exports code :noeval
 module rental is
 
   assert name_form is
-    forall def in definitions(self) ( suffix(name(def) "Rental") )
+    forall d in definitions(self) ( suffix(name(d) "Rental") )
   end
 
 end
@@ -836,7 +918,7 @@ whereas sum type bodies are introduced by the keyword ~of~.
 
 *** Members
 
-Structured type members fall into the following categories.
+Product type members fall into the following categories.
 
 - Identity :: A particular kind of member only available on entities, and required by them, to name the identifier for
   that entity type.
@@ -844,33 +926,58 @@ Structured type members fall into the following categories.
   cardinality of the target.
 - By-Reference :: A reference to an Entity type. Such a member may indicate the cardinality of the
   target as well as the name of the inverse member on the target type.
-- Variant :: A member within an enumeration that specifies a numeric value for each member rather than a type.
-- *Type Variant* :: A type reference that is a unique variant of a disjoint union.
 
-#+NAME: lst:grammar-members
+#+NAME: lst:grammar-identity-member
 #+BEGIN_SRC ebnf
-PropertyMember      ::= "as" Identifier
 IdentityMember      ::=
     "identity" Identifier
         ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
+#+END_SRC
+
+[[./ebnf-diagram/IdentityMember.svg]]
+
+#+NAME: lst:grammar-value-member
+#+BEGIN_SRC ebnf
 MemberByValue       ::=
     Identifier
         ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
+#+END_SRC
+
+[[./ebnf-diagram/MemberByValue.svg]]
+
+#+NAME: lst:grammar-reference-member
+#+BEGIN_SRC ebnf
 MemberByReference   ::=
     "ref" Identifier
         ( PropertyMember | ( InverseName? TypeExpressionTo AnnotationOnlyBody? ) )
 #+END_SRC
+
+[[./ebnf-diagram/MemberByReference.svg]]
+
+#+NAME: lst:grammar-reference-inverse
+#+BEGIN_SRC ebnf
+InverseName         ::= "(" Identifier ")"
+#+END_SRC
+
+[[./ebnf-diagram/InverseName.svg]]
+
+#+NAME: lst:grammar-property-member
+#+BEGIN_SRC ebnf
+PropertyMember      ::= "as" Identifier
+#+END_SRC
+
+[[./ebnf-diagram/PropertyMember.svg]]
 
 For identity, by-value, and by-reference members the general syntax uses the /type reference/ operator, /name/ ~->~ /type/, with
 additional keywords and cardinality included as follows.
 
 #+NAME: tbl:member-summary
 #+CAPTION: Summary of Member Formats
-| Kind         | Keyword  | From-Cardinality | To-Cardinality | Target Types                     |
-|--------------+----------+------------------+----------------+----------------------------------|
-| Identity     | ~identity~ | No               | No             | Enumeration, Event, or Structure |
-| By-Value     |          | No               | Yes            | Enumeration, Event, or Structure |
-| By-Reference | ~ref~      | Yes              | Yes            | Entity                           |
+| Kind         | Keyword  | To-Cardinality | Target Types                            |
+|--------------+----------+----------------+-----------------------------------------|
+| Identity     | ~identity~ | No             | Enumeration, Event, Structure, or Union |
+| By-Value     |          | Yes            | Enumeration, Event, Structure, or Union |
+| By-Reference | ~ref~      | Yes            | Entity                                  |
 
 Additionally, to allow for the capture of member names before the elaboration of all types the language allows for the
 target type to be replaced with the keyword ~unknown~. This marks the member, and by extension it's owning type, as
@@ -882,8 +989,13 @@ TypeExpression      ::= "->" TypeReference
 TypeExpressionTo    ::= "->" Cardinality? TypeReference
 TypeReference       ::=  UnknownType | IdentifierReference | BuiltinSimpleType
 UnknownType         ::= "unknown"
-InverseName         ::= "(" Identifier ")"
 #+END_SRC
+
+[[./ebnf-diagram/TypeExpression.svg]]
+
+[[./ebnf-diagram/TypeExpressionTo.svg]]
+
+[[./ebnf-diagram/TypeReference.svg]]
 
 The cardinality of a member is specified as a range operation with a minimum and maximum number of occurrences
 specified.
@@ -899,6 +1011,10 @@ Cardinality         ::= "{" Unsigned CardinalityRange? "}"
 CardinalityRange    ::= ".." Unsigned?
 #+END_SRC
 
+[[./ebnf-diagram/Cardinality.svg]]
+
+[[./ebnf-diagram/CardinalityRange.svg]]
+
 *Example*:
 
 #+NAME: lst:sdml-ex-members
@@ -913,6 +1029,15 @@ module example is
 
 end
 #+END_SRC
+
+*** Variants
+
+Sum type variants fall into the following categories.
+
+- Value Variant :: A member within an enumeration that specifies a numeric value for each member rather than a type.
+- *Type Variant* :: A type reference that is a unique variant of a disjoint union.
+
+The details of the two variant types are in the sections on /enumerations/ and /disjoint unions/ following.
 
 *** Structures
 
@@ -1406,9 +1531,329 @@ end
 
 Discuss role of unions in modeling variability
 
+** <<sec:complete-grammar>>Complete Surface Syntax Grammar
+
+The grammar of the surface syntax is presented in Extended Backus–Naur form (EBNF)[fn:ebnf]. The addition of a character literal
+range operation =..= reduces the number of single character alternatives for clarity. There are also a set of pre-defined
+terminals such as =ASCII_DIGIT=, =ASCII_HEX_DIGIT=, =UC_LETTER_UPPER=, and =UC_LETTER_LOWER= used to simplify character ranges.
+While there are many variations[fn:ebnfs] of EBNF in existence, including multiple standardized forms, the specific form
+used here follows the notation described the W3C Extensible Markup Language (XML) 1.0 (Fifth Edition), section 6
+[[https://www.w3.org/TR/xml/#sec-notation][Notation]].
+
+#+BEGIN_SRC ebnf
+Module              ::= "module" Identifier ModuleBase? ModuleBody
+
+ModuleBase          ::= "base" IriReference
+
+ModuleBody          ::= "is" ImportStatement* Annotation* Definition* "end"
+
+MemberImport        ::= QualifiedIdentifier
+
+ModuleImport        ::= Identifer
+
+Import              ::= MemberImport | ModuleImport
+
+ImportStatement     ::= "import" ( Import | "[" Import+ "]" )
+
+Annotation          ::= AnnotationProperty | Constraint
+
+AnnotationProperty  ::= "@" IdentiferReference "=" Value
+
+Constraint          ::= InformalConstraint | FormalConstraint
+
+Definition          ::=
+    DataTypeDef | EntityDef | EnumDef | EventDef | StructureDef | UnionDef | PropertyDef
+
+DataTypeDef         ::=
+    "datatype" Identifier "<-" DataTypeBase AnnotationOnlyBody?
+
+DataTypeBase        ::= IdentifierReference | BuiltinSimpleType
+
+AnnotationOnlyBody  ::= "is" Annotation+ "end"
+
+EntityDef           ::= "entity" Identifier EntityBody?
+
+EntityBody          ::=
+    "is"
+    Annotation* IdentityMember ( EntityMember | EntityGroup )*
+    "end"
+
+EntityGroup         ::= "group" Annotation* EntityMember+ "end"
+
+EntityMember        ::= MemberByValue | MemberByReference
+
+EnumDef             ::= "enum" Identifier EnumBody?
+
+EnumBody            ::= "of" Annotation* ValueVariant+ "end"
+
+ValueVariant        ::= Identifier "=" Unsigned AnnotationOnlyBody?
+
+EventDef            ::=
+    "event" Identifier "source" IdentifierReference StructureBody?
+
+StructureDef        ::= "structure" Identifier StructureBody?
+
+StructureBody       ::= "is" Annotation* ( MemberByValue | StructureGroup )* "end"
+
+StructureGroup      ::= "group" Annotation* MemberByValue+ "end"
+
+UnionDef            ::= "union" Identifier UnionBody?
+
+UnionBody           ::= "of" Annotation* TypeVariant+ "end"
+
+TypeVariant         ::= IdentifierReference TypeVariantRename? AnnotationOnlyBody?
+
+TypeVariantRename   ::= "as" Identifier
+
+PropertyDef         ::= "property" Identifier PropertyBody?
+
+PropertyBody        ::= "is" Annotation* PropertyRole+ "end"
+
+PropertyRole        ::=
+    Identifier ( "ref" Cardinality )? TypeExpressionTo AnnotationOnlyBody?
+
+PropertyMember      ::= "as" Identifier
+
+IdentityMember      ::=
+    "identity" Identifier
+        ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
+
+MemberByValue       ::=
+    Identifier
+        ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
+
+MemberByReference   ::=
+    "ref" Identifier
+        ( PropertyMember | ( InverseName? TypeExpressionTo AnnotationOnlyBody? ) )
+
+TypeExpression      ::= "->" TypeReference
+
+TypeExpressionTo    ::= "->" Cardinality? TypeReference
+
+TypeReference       ::=  UnknownType | IdentifierReference | BuiltinSimpleType
+
+UnknownType         ::= "unknown"
+
+Cardinality         ::= "{" Unsigned CardinalityRange? "}"
+
+CardinalityRange    ::= ".." Unsigned?
+
+InverseName         ::= "(" Identifier ")"
+
+Value               ::=
+    SimpleValue | ValueConstructor | IdentifierReference | ListOfValues
+
+BuiltinSimpleType   ::= 
+    "string" | "double" | "decimal" | "integer" | "boolean" | "iri"
+
+SimpleValue         ::=
+    String | Double | Decimal | Integer | Boolean | IriReference
+
+Boolean             ::= Tautology | Contradiction
+
+Tautology           ::= ( "true" | "⊤" )
+
+Contradiction       ::= ( "false" | "⊥" )
+
+NumericSign         ::= [+-]
+
+Zero                ::= [0]
+
+NonZero             ::= [1-9]
+
+Unsigned            ::= Zero | NonZero ASCII_DIGIT*
+
+Integer             ::= NumericSign? Unsigned
+
+Decimal             ::= Integer "." ASCII_DIGIT+
+
+ExponentChar        ::= [eE]
+
+Double              ::= Decimal ExponentChar NumericSign? Integer
+
+HexPair             ::= ASCII_HEX_DIGIT ASCII_HEX_DIGIT
+
+Escape              ::= "\\" ( CharacterEscape | UnicodeEscape )
+CharacterEscape     ::= [\"\\/abefnrtv]
+
+UnicodeEscape       ::= "u{" HexPair ( HexPair ( HexPair )? )? "}"
+
+NotAllowed          ::= [^\"\#x00-#x08#x0B-#x1F#x7F]
+
+QuotedString        ::= "\"" ( Escape | NotAllowed )* "\""
+
+LanguageTag         ::= 
+    "@" LanguageTagPrimary
+        LanguageTagExtended?
+        LanguageTagScript?
+        LanguageTagRegion?
+
+LanguageTagPrimary  ::=
+    ASCII_LETTER_LOWER ASCII_LETTER_LOWER ASCII_LETTER_LOWER?
+
+LanguageTagExtended ::=
+    "-" ASCII_LETTER_UPPER ASCII_LETTER_UPPER ASCII_LETTER_UPPER
+
+LanguageTagScript   ::=
+    "-" ASCII_LETTER_UPPER ASCII_LETTER_LOWER
+        ASCII_LETTER_LOWER ASCII_LETTER_LOWER
+
+LanguageTagRegion   ::=
+    "-" ( ( ASCII_LETTER_UPPER ASCII_LETTER_UPPER )
+          | ( ASCII_DIGIT ASCII_DIGIT ASCII_DIGIT ) )
+
+String              ::= QuotedString LanguageTag?
+
+IriReference        ::=
+    "<"
+    ( [^<>\"{}|^`\#x00-#x20] | UnicodeEscape )*
+    ">"
+
+ValueConstructor    ::= IdentifierReference "(" SimpleValue ")"
+
+ListOfValues        ::=
+    "[" ( SimpleValue | ValueConstructor | IdentifierReference )+ "]"
+
+IdentifierInitial   ::= UC_LETTER_UPPER | UC_LETTER_LOWER
+
+IdentifierChar      ::= IdentifierInitial | UC_NUMBER_DECIMAL
+
+Identifier          ::= IdentifierInitial IdentifierChar* ( "_" IdentifierChar+ )*
+
+QualifiedIdentifier ::= Identifier ":" Identifier
+
+IdentifierReference ::= QualifiedIdentifier | Identifier
+
+LineComment         ::= ";" [^\r\n]*
+
+Whitespace          ::= 
+    [^\f\n\r\t\v#x20#xa0#x1680#x2000#x200a#x2028#x2029#x202f#x205f#x3000#xfeff]
+#+END_SRC
+
+*** The Embedded Constraint Language
+
+Given that the /formal/ constraint language component of SDML is likely to be used less frequently *and* the grammar is
+fairly long we have made it a separate section.
+
+#+BEGIN_SRC ebnf
+InformalConstraint  ::= "=" QuotedString ControlledLanguageTag?
+
+ControlledLanguageTag ::=
+    "@" LanguageTagPrimary ControlledLanguageScheme?
+
+ControlledLanguageScheme ::=
+    "-" ASCII_LETTER ASCII_LETTER ASCII_LETTER
+        ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
+        ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
+
+FormalConstraint    ::= "is" ConstraintEnvironment? ConstraintSentence "end"
+
+ConstraintSentence  ::=
+    SimpleSentence | BooleanSentence | QuantifiedSentence |
+        "(" ConstraintSentence ")"
+
+SimpleSentence      ::= Atomic | Equation
+
+Atomic              ::= Term "(" Term* ")"
+
+Equation            ::= Term "=" Term
+
+BooleanSentence     ::=
+    Negation |
+    ConstraintSentence
+        (
+          Conjunction | Disjunction | ExclusiveDisjunction |
+          Implication | Biconditional
+        )
+
+Negation            ::= ( "not" | "¬" ) ConstraintSentence
+
+Conjunction         ::= ( "and" | "∧" ) ConstraintSentence
+
+Disjunction         ::= ( "or" | "∨" ) ConstraintSentence
+
+ExclusiveDisjunction ::= ( "xor" | "⊻" ) ConstraintSentence
+
+Implication         ::= ( "implies" | "⇒" ) ConstraintSentence
+
+Biconditional       ::= ( "iff" | "⇔" ) ConstraintSentence
+
+QuantifiedSentence  ::= Universal | Existential
+
+Universal           ::= ( "forall" | "∀" ) QuantifierBinding* QuantifiedBody
+
+Existential         ::= ( "exists" | "∃" ) QuantifierBinding* QuantifiedBody
+
+QuantifierBinding   ::= "self" | ( Identifer BindingTarget )
+
+BindingTarget       ::=
+    BindingFromType | BindingFromSequence | "(" BindingTarget ")"
+
+BindingFromType     ::= "->" ( "Self" | IdentifierReference )
+
+BindingFromSequence ::=
+    ( "in" | "∈" ) ( NamePath | IdentifierReference | SequenceComprehension )
+
+QuantifiedBody      ::= "(" ConstraintSentence ")"
+
+Term                ::=
+    NamePath | IdentifierReference | PredicateValue | FunctionalTerm | SequenceComprehension
+
+NamePath            ::= ( "self" | "Self" | Identifier ) ( "." Identifier )+
+
+PredicateValue      ::=
+    SimpleValue | ListOfPredicateValues
+
+ListOfPredicateValues ::= "[" SimpleValue* "]"
+
+FunctionalTerm      ::= Term "(" Term* ")"
+#+END_SRC
+
+*** Constraint Environment Definitions
+
+#+BEGIN_SRC ebnf
+ConstraintEnvironment ::= EnvironmentDef+ "in"
+
+EnvironmentDef      ::=
+    "def" Identifier FunctionSignature?
+        ( ":=" | "≔" ) ( PredicateValue | ConstraintSentence )
+
+FunctionSignature   ::= "(" FunctionParameter+ ")" "->" FunctionType
+
+FunctionParameter   ::= ( Identifier "->" )? FunctionType
+
+FunctionType        ::=  AnyType | CollectionType | TypeReference
+
+CollectionType      ::= BuiltinCollectionType "of" ( AnyType | TypeReference )
+
+BuiltinCollectionType ::=
+    "Bag" | "List" | "Maybe" | "OrderedSet" | "Sequence" | "Set"
+
+AnyType             ::= "_"
+#+END_SRC
+
+*** Sequence Comprehensions
+
+#+BEGIN_SRC ebnf
+SequenceComprehension ::= "{" ReturnedValue "|" Expression "}"
+
+ReturnedValue       ::= Identifier | ( "[" Identifier+ "]" )
+
+Expression          ::=
+    ConjunctiveExpression | LocalBinding | ConstraintSentence | "(" Expression ")"
+
+ConjunctiveExpression ::=
+    Expression ( "and" | "∧" ) Expression
+
+LocalBinding        ::=
+    Identifier ( BindingFromType | BindingFromSequence )
+#+END_SRC
+
 
 # ----- Footnotes
 
+[fn:ebnf] [[https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form][Extended Backus-Naur Form (EBNF)]], Wikipedia
+[fn:ebnfs] See [[http://www.cs.man.ac.uk/~pjj/bnf/ebnf.html][BNF/EBNF Variants]]
 [fn:dcmi] [[https://www.dublincore.org/specifications/dublin-core/dcmi-terms/][DublinCoreDCMI Metadata Terms]], DublinCore
 [fn:ucgc] [[https://unicode.org/reports/tr44/#GC_Values_Table][Unicode General Category]], Unicode.org
 [fn:iri] RDF 1.1 Turtle – Terse RDF Triple Language, §[[https://www.w3.org/TR/turtle/#sec-iri-references][6.3 IRI References]], W3C

@@ -1,6 +1,0 @@
-#+LANGUAGE: en
-#+STARTUP: overview hidestars inlineimages entitiespretty
-
-* Transformations
-
-TBD

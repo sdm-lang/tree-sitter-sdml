@@ -60,6 +60,13 @@ Logic[fn:isocl]. ISO Common Logic is most easily understood as an abstract langu
 logical expressions based in first-order predicate logic between systems using standardized representations (Common
 Logic Interchange Format (CLIF), Conceptual Graph Interchange Format (CGIF), and XML notation for Common Logic (XCL)).
 
+#+NAME: lst:grammar-formal-constraint
+#+BEGIN_SRC ebnf
+FormalConstraint    ::= "is" ConstraintEnvironment? ConstraintSentence "end"
+#+END_SRC
+
+[[./ebnf-diagram/FormalConstraint.svg]]
+
 Listing [[lst:ex-tagged-constraint-1]] is another informal constraint.
 
 #+NAME: lst:ex-tagged-constraint-1
@@ -101,14 +108,208 @@ module tagged is
 end
 #+END_SRC
 
-*** Quantified Statements
+#+NAME: lst:grammar-constraint-sentence
+#+BEGIN_SRC ebnf
+ConstraintSentence  ::=
+    SimpleSentence | BooleanSentence | QuantifiedSentence |
+        "(" ConstraintSentence ")"
+#+END_SRC
+
+[[./ebnf-diagram/ConstraintSentence.svg]]
+
+*** Simple Sentences
+
+#+NAME: lst:grammar-simple-sentence
+#+BEGIN_SRC ebnf
+SimpleSentence      ::= Atomic | Equation
+Atomic              ::= Term "(" Term* ")"
+Equation            ::= Term "=" Term
+#+END_SRC
+
+[[./ebnf-diagram/SimpleSentence.svg]]
+
+[[./ebnf-diagram/Atomic.svg]]
+
+[[./ebnf-diagram/Equation.svg]]
+
+*** Boolean Sentences
+
+#+NAME: lst:grammar-boolean-sentence
+#+BEGIN_SRC ebnf
+BooleanSentence     ::=
+    Negation |
+    ConstraintSentence
+        (
+          Conjunction | Disjunction | ExclusiveDisjunction |
+          Implication | Biconditional
+        )
+#+END_SRC
+
+[[./ebnf-diagram/BooleanSentence.svg]]
+
+#+NAME: lst:grammar-boolean-sentence-cons
+#+BEGIN_SRC ebnf
+Negation            ::= ( "not" | "¬" ) ConstraintSentence
+Conjunction         ::= ( "and" | "∧" ) ConstraintSentence
+Disjunction         ::= ( "or" | "∨" ) ConstraintSentence
+ExclusiveDisjunction ::= ( "xor" | "⊻" ) ConstraintSentence
+#+END_SRC
+
+[[./ebnf-diagram/Negation.svg]]
+
+[[./ebnf-diagram/Conjunction.svg]]
+
+[[./ebnf-diagram/Disjunction.svg]]
+
+[[./ebnf-diagram/ExclusiveDisjunction.svg]]
+
+#+NAME: lst:grammar-boolean-sentence-impl
+#+BEGIN_SRC ebnf
+Implication         ::= ( "implies" | "⇒" ) ConstraintSentence
+Biconditional       ::= ( "iff" | "⇔" ) ConstraintSentence
+#+END_SRC
+
+[[./ebnf-diagram/Implication.svg]]
+
+[[./ebnf-diagram/Biconditional.svg]]
+
+*** Quantified Sentences
 
 SDML supports, as shown in listing [[lst:ex-tagged-constraint-2]] sentences that range over values using the universal ($\forall$)
 or existential ($\exists$) quantifier.
 
+#+NAME: lst:grammar-quantified-sentence
+#+BEGIN_SRC ebnf
+QuantifiedSentence  ::= Universal | Existential
+Universal           ::= ( "forall" | "∀" ) QuantifierBinding* QuantifiedBody
+Existential         ::= ( "exists" | "∃" ) QuantifierBinding* QuantifiedBody
+#+END_SRC
+
+[[./ebnf-diagram/QuantifiedSentence.svg]]
+
+[[./ebnf-diagram/Universal.svg]]
+
+[[./ebnf-diagram/Existential.svg]]
+
+#+NAME: lst:grammar-quantifier-binding
+#+BEGIN_SRC ebnf
+QuantifierBinding   ::= "self" | ( Identifer BindingTarget )
+BindingTarget       ::=
+    BindingFromType | BindingFromSequence | "(" BindingTarget ")"
+BindingFromType     ::= "->" ( "Self" | IdentifierReference )
+BindingFromSequence ::=
+    ( "in" | "∈" ) ( NamePath | IdentifierReference | SequenceComprehension )
+#+END_SRC
+
+[[./ebnf-diagram/QuantifierBinding.svg]]
+
+[[./ebnf-diagram/BindingTarget.svg]]
+
+[[./ebnf-diagram/BindingFromType.svg]]
+
+[[./ebnf-diagram/BindingFromSequence.svg]]
+
+#+NAME: lst:grammar-quantified-body
+#+BEGIN_SRC ebnf
+QuantifiedBody      ::= "(" ConstraintSentence ")"
+#+END_SRC
+
+[[./ebnf-diagram/QuantifiedBody.svg]]
+
 More TBD
 
-*** Constraint Predicates, Relations, and Functions
+*** Terms
+
+#+NAME: lst:grammar-constraint-term
+#+BEGIN_SRC ebnf
+Term                ::=
+    NamePath
+    | IdentifierReference
+    | PredicateValue
+    | FunctionalTerm
+    | SequenceComprehension
+#+END_SRC
+
+[[./ebnf-diagram/Term.svg]]
+
+#+NAME: lst:grammar-name-path
+#+BEGIN_SRC ebnf
+NamePath            ::= PathSubject ( "." Identifier )+
+PathSubject         ::= ( "self" | "Self" | Identifier )
+#+END_SRC
+
+[[./ebnf-diagram/NamePath.svg]]
+
+[[./ebnf-diagram/PathSubject.svg]]
+
+This notation is effectively syntactic sugar as it can be systematically transformed into the form above. The
+transformation rules are:
+
+1. The reserved words ~self~ and ~Self~ may only appear as the first element.
+2. The list of names *after* the first are reversed and applied in turn as functions.
+   * ~name.suffix~ becomes ~suffix(name(_))~
+3. The first element will become the first argument to the inner-most function.
+   * ~name.suffix~ becomes ~suffix(name(def))~
+4. If the path ends in an argument list the arguments are added to the corresponding function call.
+   *  ~suffix(name(def)) + ("Rental")~ becomes ~suffix(name(def) "Rental")~
+
+Similarly the quantifier collection ~self.definitions~ becomes ~definitions(self)~.
+
+#+NAME: lst:grammar-predicate-values
+#+BEGIN_SRC ebnf
+PredicateValue      ::=
+    SimpleValue | ListOfPredicateValues
+ListOfPredicateValues ::= "[" SimpleValue* "]"
+#+END_SRC
+
+[[./ebnf-diagram/PredicateValue.svg]]
+
+[[./ebnf-diagram/ListOfPredicateValues.svg]]
+
+#+NAME: lst:grammar-functional-term
+#+BEGIN_SRC ebnf
+FunctionalTerm      ::= Term "(" Term* ")"
+#+END_SRC
+
+[[./ebnf-diagram/FunctionalTerm.svg]]
+
+*** Sequence Comprehensions
+
+#+NAME: lst:grammar-sequence-comprehension
+#+BEGIN_SRC ebnf
+SequenceComprehension ::= "{" ReturnedValue "|" Expression "}"
+#+END_SRC
+
+[[./ebnf-diagram/SequenceComprehension.svg]]
+
+#+NAME: lst:grammar-comprehension-returns
+#+BEGIN_SRC ebnf
+ReturnedValue       ::= Identifier | ( "[" Identifier+ "]" )
+#+END_SRC
+
+[[./ebnf-diagram/ReturnedValue.svg]]
+
+#+NAME: lst:grammar-comprehension-expression
+#+BEGIN_SRC ebnf
+Expression          ::=
+    ConjunctiveExpression | LocalBinding | ConstraintSentence | "(" Expression ")"
+ConjunctiveExpression   ::=
+    Expression ( "and" | "∧" ) Expression
+#+END_SRC
+
+[[./ebnf-diagram/Expression.svg]]
+
+[[./ebnf-diagram/ConjunctiveExpression.svg]]
+
+#+NAME: lst:grammar-comprehension-local-binding
+#+BEGIN_SRC ebnf
+LocalBinding   ::=
+    Identifier ( BindingFromType | BindingFromSequence )
+#+END_SRC
+
+[[./ebnf-diagram/LocalBinding.svg]]
+
+*** Library Functions
 
 
 #+BEGIN_EXAMPLE
@@ -126,22 +327,6 @@ def function(Type, ...) -> RType
 def function(value -> Type, ...) -> RType
 #+END_EXAMPLE
 
-*** Named Paths
-
-This notation is effectively syntactic sugar as it can be systematically transformed into the form above. The
-transformation rules are:
-
-1. The reserved words ~self~ and ~Self~ may only appear as the first element.
-2. The list of names *after* the first are reversed and applied in turn as functions.
-   * ~name.suffix~ becomes ~suffix(name(_))~
-3. The first element will become the first argument to the inner-most function.
-   * ~name.suffix~ becomes ~suffix(name(def))~
-4. If the path ends in an argument list the arguments are added to the corresponding function call.
-   *  ~suffix(name(def)) + ("Rental")~ becomes ~suffix(name(def) "Rental")~
-
-Similarly the quantifier collection ~self.definitions~ becomes ~definitions(self)~.
-
-*** Library Functions
 
 Alternatively, listing [[lst:ex-tagged-constraint-3]] turns each sequence of tags into a set with the library function
 ~into_set~ and can then perform a simple subset check with the library function ~is_subset~.
@@ -161,6 +346,51 @@ end
 #+END_SRC
 
 *** Constraint Environment
+
+TBD
+
+#+NAME: lst:grammar-constraint-environment
+#+BEGIN_SRC ebnf
+ConstraintEnvironment ::= EnvironmentDef+ "in"
+#+END_SRC
+
+[[./ebnf-diagram/ConstraintEnvironment.svg]]
+
+#+NAME: lst:grammar-environment-definition
+#+BEGIN_SRC ebnf
+EnvironmentDef      ::=
+    "def" Identifier FunctionSignature?
+        ( ":=" | "≔" ) ( PredicateValue | ConstraintSentence )
+#+END_SRC
+
+[[./ebnf-diagram/EnvironmentDef.svg]]
+
+#+NAME: lst:grammar-environment-function
+#+BEGIN_SRC ebnf
+FunctionSignature   ::= "(" FunctionParameter+ ")" "->" FunctionType
+FunctionParameter   ::= ( Identifier "->" )? FunctionType
+FunctionType        ::=  AnyType | CollectionType | TypeReference
+#+END_SRC
+
+[[./ebnf-diagram/FunctionSignature.svg]]
+
+[[./ebnf-diagram/FunctionParameter.svg]]
+
+[[./ebnf-diagram/FunctionType.svg]]
+
+#+NAME: lst:grammar-function-types
+#+BEGIN_SRC ebnf
+AnyType             ::= "_"
+CollectionType      ::= BuiltinCollectionType "of" ( AnyType | TypeReference )
+BuiltinCollectionType ::=
+    "Bag" | "List" | "Maybe" | "OrderedSet" | "Sequence" | "Set"
+#+END_SRC
+
+[[./ebnf-diagram/AnyType.svg]]
+
+[[./ebnf-diagram/CollectionType.svg]]
+
+[[./ebnf-diagram/BuiltinCollectionType.svg]]
 
 The example in listing [[lst:ex-formal-constraint]] is an expansion of the informal example in listing
 [[lst:ex-informal-constraint]]. Here we check for the presence of the annotation on every top-level definition and then any

@@ -31,7 +31,9 @@ AnnotationOnlyBody  ::= "is" Annotation+ "end"
 EntityDef           ::= "entity" Identifier EntityBody?
 
 EntityBody          ::=
-    "is" Annotation* IdentityMember ( EntityMember | EntityGroup )* "end"
+    "is"
+    Annotation* IdentityMember ( EntityMember | EntityGroup )*
+    "end"
 
 EntityGroup         ::= "group" Annotation* EntityMember+ "end"
 
@@ -70,19 +72,20 @@ PropertyRole        ::=
 PropertyMember      ::= "as" Identifier
 
 IdentityMember      ::=
-    "identity" Identifier ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
+    "identity" Identifier
+        ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
 
 MemberByValue       ::=
-    Identifier ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
+    Identifier
+        ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
 
 MemberByReference   ::=
-    "ref" Identifier ( PropertyMember | ( TypeExpressionFromTo AnnotationOnlyBody? ) )
+    "ref" Identifier
+        ( PropertyMember | ( InverseName? TypeExpressionTo AnnotationOnlyBody? ) )
 
 TypeExpression      ::= "->" TypeReference
 
 TypeExpressionTo    ::= "->" Cardinality? TypeReference
-
-TypeExpressionFromto ::= Cardinality? TypeExpressionTo
 
 TypeReference       ::=  UnknownType | IdentifierReference | BuiltinSimpleType
 
@@ -92,10 +95,12 @@ Cardinality         ::= "{" Unsigned CardinalityRange? "}"
 
 CardinalityRange    ::= ".." Unsigned?
 
+InverseName         ::= "(" Identifier ")"
+
 Value               ::=
     SimpleValue | ValueConstructor | IdentifierReference | ListOfValues
 
-BuiltinSimpleType   ::=
+BuiltinSimpleType   ::= 
     "string" | "double" | "decimal" | "integer" | "boolean" | "iri"
 
 SimpleValue         ::=
@@ -103,53 +108,64 @@ SimpleValue         ::=
 
 Boolean             ::= Tautology | Contradiction
 
-Tautology           ::= "true" | "⊤"
+Tautology           ::= ( "true" | "⊤" )
 
-Contradiction       ::= "false" | "⊥"
+Contradiction       ::= ( "false" | "⊥" )
 
-NumericSign         ::= "+" | "-"
+NumericSign         ::= [+-]
 
-Zero                ::= "0"
+Zero                ::= [0]
 
 NonZero             ::= [1-9]
 
-Digit               ::= Zero | NonZero
-
-Unsigned            ::= Zero | NonZero Digit*
+Unsigned            ::= Zero | NonZero ASCII_DIGIT*
 
 Integer             ::= NumericSign? Unsigned
 
-Decimal             ::= Integer "." Digit+
+Decimal             ::= Integer "." ASCII_DIGIT+
 
-ExponentChar        ::= "e" | "E"
+ExponentChar        ::= [eE]
 
 Double              ::= Decimal ExponentChar NumericSign? Integer
 
-HexDigit            ::= [0-9A-Fa-f]
+HexPair             ::= ASCII_HEX_DIGIT ASCII_HEX_DIGIT
 
-HexPair             ::= HexDigit HexDigit
+Escape              ::= "\\" ( CharacterEscape | UnicodeEscape )
 
-CharacterEscape     ::= "\" ( '"' | "\" | "/" | "a" | "b"
-                               "e" | "f" | "n" | "r" | "t" | "v" )
+CharacterEscape     ::= [\"\\/abefnrtv]
 
-UnicodeEscape       ::= "\u{" HexPair ( HexPair ( HexPair )? )? "}"
+UnicodeEscape       ::= "u{" HexPair ( HexPair ( HexPair )? )? "}"
 
-NotAllowed          ::= [^"\#x00-#x08#x0B-#x1F#x7F]
+NotAllowed          ::= [^\"\#x00-#x08#x0B-#x1F#x7F]
 
-QuotedString        ::= '"' ( NotAllowed | CharacterEscape | UnicodeEscape )* '"'
+QuotedString        ::= '"' ( Escape | NotAllowed )* '"'
 
-LanguageTag         ::=
-    "@" ASCII_LETTER_LOWER ASCII_LETTER_LOWER ASCII_LETTER_LOWER?
-        ( "-" ASCII_LETTER_UPPER ASCII_LETTER_UPPER ASCII_LETTER_UPPER )?
-        ( "-" ASCII_LETTER_UPPER ASCII_LETTER_LOWER
-               ASCII_LETTER_LOWER ASCII_LETTER_LOWER )?
-        ( "-" ( ( ASCII_LETTER_UPPER ASCII_LETTER_UPPER )
-               | ( Digit Digit Digit ) ) )
+LanguageTag         ::= 
+    "@" LanguageTagPrimary
+        LanguageTagExtended?
+        LanguageTagScript?
+        LanguageTagRegion?
+
+LanguageTagPrimary  ::=
+    ASCII_LETTER_LOWER ASCII_LETTER_LOWER ASCII_LETTER_LOWER?
+
+LanguageTagExtended ::=
+    "-" ASCII_LETTER_UPPER ASCII_LETTER_UPPER ASCII_LETTER_UPPER
+
+LanguageTagScript   ::=
+    "-" ASCII_LETTER_UPPER ASCII_LETTER_LOWER
+        ASCII_LETTER_LOWER ASCII_LETTER_LOWER
+
+LanguageTagRegion   ::=
+    "-" ( ( ASCII_LETTER_UPPER ASCII_LETTER_UPPER )
+          | ( ASCII_DIGIT ASCII_DIGIT ASCII_DIGIT ) )
 
 String              ::= QuotedString LanguageTag?
 
 IriReference        ::=
-    "<" ( [^<>\"{}|^`\#x00-#x20] | UnicodeEscape )* ">"
+    "<"
+    ( [^<>\"{}|^`\#x00-#x20] | UnicodeEscape )*
+    ">"
 
 ValueConstructor    ::= IdentifierReference "(" SimpleValue ")"
 
@@ -168,21 +184,18 @@ IdentifierReference ::= QualifiedIdentifier | Identifier
 
 LineComment         ::= ";" [^\r\n]*
 
-Whitespace          ::=
+Whitespace          ::= 
     [^\f\n\r\t\v#x20#xa0#x1680#x2000#x200a#x2028#x2029#x202f#x205f#x3000#xfeff]
-
-/*****************************************************************************
- * The Embedded Constraint Language
- ****************************************************************************/
 
 InformalConstraint  ::= "=" QuotedString ControlledLanguageTag?
 
 ControlledLanguageTag ::=
-    "@" ASCII_LETTER_LOWER ASCII_LETTER_LOWER ASCII_LETTER_LOWER?
-        ( "-" ASCII_LETTER_UPPER
-               ASCII_LETTER ASCII_LETTER? ASCII_LETTER?
-               ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
-               ASCII_LETTER? ASCII_LETTER? ASCII_LETTER? )?
+    "@" LanguageTagPrimary ControlledLanguageScheme?
+
+ControlledLanguageScheme ::=
+    "-" ASCII_LETTER ASCII_LETTER ASCII_LETTER
+        ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
+        ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
 
 FormalConstraint    ::= "is" ConstraintEnvironment? ConstraintSentence "end"
 
@@ -230,14 +243,16 @@ BindingTarget       ::=
 BindingFromType     ::= "->" ( "Self" | IdentifierReference )
 
 BindingFromSequence ::=
-    ( "in" "∈" ) ( NamePath | IdentifierReference | SequenceComprehension )
+    ( "in" | "∈" ) ( NamePath | IdentifierReference | SequenceComprehension )
 
 QuantifiedBody      ::= "(" ConstraintSentence ")"
 
 Term                ::=
     NamePath | IdentifierReference | PredicateValue | FunctionalTerm | SequenceComprehension
 
-NamePath            ::= ( "self" | "Self" | Identifier ) ( "." Identifier )+
+NamePath            ::= PathSubject ( "." Identifier )+
+
+PathSubject         ::= ( "self" | "Self" | Identifier )
 
 PredicateValue      ::=
     SimpleValue | ListOfPredicateValues
@@ -265,59 +280,15 @@ BuiltinCollectionType ::=
 
 AnyType             ::= "_"
 
-/*****************************************************************************
- * Constraint Environment Definitions
- ****************************************************************************/
+SequenceComprehension ::= "{" ReturnedValue "|" Expression "}"
 
-ConstraintEnvironment ::= EnvironmentDef+ "in"
+ReturnedValue       ::= Identifier | ( "[" Identifier+ "]" )
 
-EnvironmentDef      ::=
-    "def" Identifier FunctionSignature?
-        ( ":=" | "≔" ) ( PredicateValue | ConstraintSentence )
+Expression          ::=
+    ConjunctiveExpression | LocalBinding | ConstraintSentence | "(" Expression ")"
 
-FunctionSignature   ::= "(" FunctionParameter+ ")" "->" FunctionType
+ConjunctiveExpression ::=
+    Expression ( "and" | "∧" ) Expression
 
-FunctionParameter   ::= ( Identifier "->" )? FunctionType
-
-FunctionType        ::=  AnyType | CollectionType | TypeReference
-
-CollectionType      ::= BuiltinCollectionType "of" ( AnyType | TypeReference )
-
-BuiltinCollectionType ::=
-    "Bag" | "List" | "Maybe" | "OrderedSet" | "Sequence" | "Set"
-
-AnyType             ::= "_"
-
-/*****************************************************************************
- * Sequence Comprehensions
- ****************************************************************************/
-
-SequenceComprehension ::= "{" ReturnValues "|" Expression "}"
-
-ReturnValues          ::= Identifier | ( "[" Identifier+ "]" )
-
-Expression            ::=
-    BooleanExpression | BindingExpression | ConstraintSentence | "(" Expression ")"
-
-BooleanExpression     ::=
-    ExpressionNegation
-    | ( Expression (
-        ExpressionConjunction
-        ExpressionExclusiveDisjunction
-        ExpressionDisjunction
-        )
-    )
-
-ExpressionNegation   ::= ( "not" | "¬" ) Expression
-
-ExpressionConjunction ::=
-    ( "and" | "∧" ) Expression
-
-ExpressionExclusiveDisjunction ::=
-    ( "xor" | "⊻" ) Expression
-
-ExpressionDisjunction ::=
-    ( "or" | "∨" ) Expression
-
-BindingExpression    ::=
-    ( "exists" | "∃" )? Identifier ( BindingFromType | BindingFromSequence )
+LocalBinding        ::=
+    Identifier ( BindingFromType | BindingFromSequence )

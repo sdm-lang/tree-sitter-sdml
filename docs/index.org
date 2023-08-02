@@ -5,6 +5,8 @@
 #+STARTUP: overview hidestars inlineimages entitiespretty
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="sdml-io.css"/>
+#+LATEX_HEADER: \usepackage{makeidx}
+#+LATEX_HEADER: \makeindex
 #+OPTIONS: toc:3
 
 
@@ -26,35 +28,28 @@
 
 #+INCLUDE: "./walk-through.org" :minlevel 1
 
-#+INCLUDE: "./transforms.org" :minlevel 1
-
 #+INCLUDE: "./implementation.org" :minlevel 1
 
 # --------------- Appendices ---------------
 
-# This is simply the BNF, with any relevant introduction.
- 
-#+INCLUDE: "./surface-grammar.org" :minlevel 1
-
 # A List of modules and top-level definitions only.
 #+INCLUDE: "./std-library.org" :minlevel 1
 
-#+INCLUDE: "./resolver-catalog.org" :minlevel 1
-
-# A detailed mapping
+# Normative mapping
 #+INCLUDE: "./surface-to-rdf.org" :minlevel 1
 
+# Non-normative mapping
 #+INCLUDE: "./constraints-to-cl.org" :minlevel 1
 
 # Non-normative reference used by tooling
 #+INCLUDE: "./uml-profile.org" :minlevel 1
 
-* Appendix: License
+* License
 
 #+INCLUDE: ../LICENSE example
 
 
-* Appendix: Tables of Other Content
+* Tables of Other Content
 
 #+TOC: figures
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="359" height="141">
+<svg xmlns="http://www.w3.org/2000/svg" width="337" height="53">
    <defs>
       <style type="text/css">
     @namespace "http://www.w3.org/2000/svg";
@@ -31,46 +31,30 @@
    </defs>
    <polygon points="9 33 1 29 1 37"/>
    <polygon points="17 33 9 29 9 37"/>
-   <rect x="51" y="19" width="44" height="32" rx="10"/>
-   <rect x="49"
-          y="17"
-          width="44"
-          height="32"
-          class="terminal"
-          rx="10"/>
-   <text class="terminal" x="59" y="37">self</text>
-   <rect x="51" y="63" width="46" height="32" rx="10"/>
-   <rect x="49"
-          y="61"
-          width="46"
-          height="32"
-          class="terminal"
-          rx="10"/>
-   <text class="terminal" x="59" y="81">Self</text>
    <a xmlns:xlink="http://www.w3.org/1999/xlink"
-       xlink:href="#Identifier"
-       xlink:title="Identifier">
-      <rect x="51" y="107" width="78" height="32"/>
-      <rect x="49" y="105" width="78" height="32" class="nonterminal"/>
-      <text class="nonterminal" x="59" y="125">Identifier</text>
+       xlink:href="#PathSubject"
+       xlink:title="PathSubject">
+      <rect x="31" y="19" width="96" height="32"/>
+      <rect x="29" y="17" width="96" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="39" y="37">PathSubject</text>
    </a>
-   <rect x="189" y="19" width="24" height="32" rx="10"/>
-   <rect x="187"
+   <rect x="167" y="19" width="24" height="32" rx="10"/>
+   <rect x="165"
           y="17"
           width="24"
           height="32"
           class="terminal"
           rx="10"/>
-   <text class="terminal" x="197" y="37">.</text>
+   <text class="terminal" x="175" y="37">.</text>
    <a xmlns:xlink="http://www.w3.org/1999/xlink"
        xlink:href="#Identifier"
        xlink:title="Identifier">
-      <rect x="233" y="19" width="78" height="32"/>
-      <rect x="231" y="17" width="78" height="32" class="nonterminal"/>
-      <text class="nonterminal" x="241" y="37">Identifier</text>
+      <rect x="211" y="19" width="78" height="32"/>
+      <rect x="209" y="17" width="78" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="219" y="37">Identifier</text>
    </a>
    <path class="line"
-          d="m17 33 h2 m20 0 h10 m44 0 h10 m0 0 h34 m-118 0 h20 m98 0 h20 m-138 0 q10 0 10 10 m118 0 q0 -10 10 -10 m-128 10 v24 m118 0 v-24 m-118 24 q0 10 10 10 m98 0 q10 0 10 -10 m-108 10 h10 m46 0 h10 m0 0 h32 m-108 -10 v20 m118 0 v-20 m-118 20 v24 m118 0 v-24 m-118 24 q0 10 10 10 m98 0 q10 0 10 -10 m-108 10 h10 m78 0 h10 m40 -88 h10 m24 0 h10 m0 0 h10 m78 0 h10 m-162 0 l20 0 m-1 0 q-9 0 -9 -10 l0 -12 q0 -10 10 -10 m142 32 l20 0 m-20 0 q10 0 10 -10 l0 -12 q0 -10 -10 -10 m-142 0 h10 m0 0 h132 m23 32 h-3"/>
-   <polygon points="349 33 357 29 357 37"/>
-   <polygon points="349 33 341 29 341 37"/>
+          d="m17 33 h2 m0 0 h10 m96 0 h10 m20 0 h10 m24 0 h10 m0 0 h10 m78 0 h10 m-162 0 l20 0 m-1 0 q-9 0 -9 -10 l0 -12 q0 -10 10 -10 m142 32 l20 0 m-20 0 q10 0 10 -10 l0 -12 q0 -10 -10 -10 m-142 0 h10 m0 0 h132 m23 32 h-3"/>
+   <polygon points="327 33 335 29 335 37"/>
+   <polygon points="327 33 319 29 319 37"/>
 </svg>

@@ -3,29 +3,16 @@
 
 * Appendix: Standard Library
 
-The following are standard modules that are included with the command-line tool.
-
-#+NAME: tbl:std-library
-#+CAPTION: Standards Library Modules
-| Name         | Corresponding URI                             | Comment     |
-|--------------+-----------------------------------------------+-------------|
-| =dc=           | <http://purl.org/dc/elements/1.1/>            | Complete    |
-| =dcam=         | <http://purl.org/dc/dcam/>                    | Complete    |
-| =dcmi_type=    | <http://purl.org/dc/dcmitype/>                | Complete    |
-| =dcterms=      | <http://purl.org/dc/terms/>                   | Complete    |
-| =owl=          | <http://www.w3.org/2002/07/owl#>              | In Progress |
-| =rdf=          | <http://www.w3.org/1999/02/22-rdf-syntax-ns#> | Complete    |
-| =rdfs=         | <http://www.w3.org/2000/01/rdf-schema#>       | Complete    |
-| *=sdml=*       | *<https://sdml.io/sdml-owl.ttl#>*               | In Progress |
-| =skos=         | <http://www.w3.org/2004/02/skos/core#>        | Complete    |
-| =xml=          | <http://www.w3.org/XML/1998/namespace>        | In Progress |
-| =xsd=          | <http://www.w3.org/2001/XMLSchema#>           | In Progress |
+The standard library provided with SDML contains the language library itself, SDML modules representing commonly used
+external namespaces, and a set of predicates and functions that are available for writing constraints.
 
 ** SDML Module
 
+The ~sdml~ module contains the set of types that represent the language itself, most of which are only used in the writing
+of constraints. However, the pre-defined simple types ~boolean~, ~decimal~, etc. are also defined here.
 
-#+BEGIN_SRC sdml :noeval
-module sdml base <http://sdml.io/> is
+#+BEGIN_SRC sdml :noeval :exports code
+module sdml base <http://sdml.io/sdml-owl.ttl#> is
   structure Datatype ;; ...
   structure Annotation ;; ...
   structure AnnotationProperty ;; ...
@@ -71,11 +58,11 @@ end
 
 ** Commonly Used Modules
 
-*** Module: Dublin Core Elements (dc)
+*** Dublin Core Elements
 
 This module 
 
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
 module dc base <http://purl.org/dc/elements/1.1/> is
   structure contributor ;; ...
   structure coverage ;; ...
@@ -95,11 +82,11 @@ module dc base <http://purl.org/dc/elements/1.1/> is
 end
 #+END_SRC
 
-*** Module:  (dcam)
+*** DCMI Abstract Model
 
 This module 
 
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
 module dcam base <http://purl.org/dc/dcam/> is
   structure VocabularyEncodingScheme ;; ...
   structure domainIncludes ;; ...
@@ -108,11 +95,11 @@ module dcam base <http://purl.org/dc/dcam/> is
 end
 #+END_SRC
 
-*** Module:  (dcmi\under{}type)
+*** DCMI Type Vocabulary
 
 This module 
 
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
 module dcmi_type base <http://purl.org/dc/dcmitype/> is
  structure Collection ;; ...
   structure Dataset ;; ...
@@ -129,11 +116,11 @@ module dcmi_type base <http://purl.org/dc/dcmitype/> is
 end
 #+END_SRC
 
-*** Module:  (dcterms)
+*** DCMI Metadata Terms 
 
 This module 
 
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
 module dcterms base <http://purl.org/dc/terms/> is
   structure Agent ;; ...
   structure AgentClass ;; ...
@@ -235,18 +222,18 @@ module dcterms base <http://purl.org/dc/terms/> is
 end
 #+END_SRC
 
-*** Module:  (owl)
-
+*** The OWL 2 Schema Vocabulary 
 This module 
 
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
+module owl base <http://www.w3.org/2002/07/owl#> is end
 #+END_SRC
 
-*** Module:  (rdf)
+*** The RDF Concepts Vocabulary
 
 This module 
 
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
 module rdf base <http://www.w3.org/1999/02/22-rdf-syntax-ns#> is
   structure Alt ;; ...
   structure Bag ;; ...
@@ -273,11 +260,11 @@ module rdf base <http://www.w3.org/1999/02/22-rdf-syntax-ns#> is
 end
 #+END_SRC
 
-*** Module:  (rdfs)
+*** The RDF Schema Vocabulary
 
 This module 
 
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
 module rdfs base <http://www.w3.org/2000/01/rdf-schema#> is
   structure Class ;; ...
   structure Container ;; ...
@@ -297,11 +284,11 @@ module rdfs base <http://www.w3.org/2000/01/rdf-schema#> is
 end
 #+END_SRC
 
-*** Module:  (skos)
+*** Simple Knowledge Organization System Namespace
 
 This module 
 
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
 module skos base <http://www.w3.org/2004/02/skos/core#> is
   structure Collection  ;; ...
   structure Concept ;; ...
@@ -338,18 +325,20 @@ module skos base <http://www.w3.org/2004/02/skos/core#> is
 end
 #+END_SRC
 
-*** Module:  (xml)
+*** The xml Namespace
 
 This module 
 
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
+module xml <http://www.w3.org/XML/1998/namespace> is end
 #+END_SRC
 
-*** Module:  (xsd)
+*** XML Schema Datatypes
 
 This module 
 
-#+BEGIN_SRC sdml :noeval
+#+BEGIN_SRC sdml :noeval :exports code
+module xsd base <http://www.w3.org/2001/XMLSchema#> is end
 #+END_SRC
 
 ** Constraint Language Library

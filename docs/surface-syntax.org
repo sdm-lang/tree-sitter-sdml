@@ -1849,6 +1849,10 @@ LocalBinding        ::=
     Identifier ( BindingFromType | BindingFromSequence )
 #+END_SRC
 
+*** Acknowledgements
+
+The diagrams generated for this document were generated from the BNF source by the /Railroad Diagram Generator/ tool, written by
+Gunther Rademacher, and hosted at [[https://www.bottlecaps.de/rr/ui.]]
 
 # ----- Footnotes
 

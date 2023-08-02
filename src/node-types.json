@@ -102,50 +102,6 @@
     }
   },
   {
-    "type": "binding_expression",
-    "named": true,
-    "fields": {
-      "existential": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "exists",
-            "named": false
-          },
-          {
-            "type": "∃",
-            "named": false
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "binding_seq_iterator",
-          "named": true
-        },
-        {
-          "type": "binding_type_reference",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "binding_seq_iterator",
     "named": true,
     "fields": {
@@ -875,10 +831,6 @@
       "required": true,
       "types": [
         {
-          "type": "binding_expression",
-          "named": true
-        },
-        {
           "type": "boolean_expression",
           "named": true
         },
@@ -888,6 +840,10 @@
         },
         {
           "type": "expression",
+          "named": true
+        },
+        {
+          "type": "quantified_expression",
           "named": true
         }
       ]
@@ -1624,22 +1580,22 @@
           }
         ]
       },
+      "inverse": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "member_inverse_name",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,
         "types": [
           {
             "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "source_cardinality": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "cardinality_expression",
             "named": true
           }
         ]
@@ -1702,6 +1658,50 @@
       "types": [
         {
           "type": "constraint_sentence",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "quantified_expression",
+    "named": true,
+    "fields": {
+      "existential": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "exists",
+            "named": false
+          },
+          {
+            "type": "∃",
+            "named": false
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "binding_seq_iterator",
+          "named": true
+        },
+        {
+          "type": "binding_type_reference",
           "named": true
         }
       ]

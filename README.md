@@ -50,6 +50,10 @@ end
 
 # Changes
 
+**Version: 0.1.26**
+
+* Applied same change as 0.1.25 but for property roles as well.
+
 **Version: 0.1.25**
 
 * Changed grammar for reference members:

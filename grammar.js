@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.25
+// Version:    0.1.26
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -381,11 +381,7 @@ module.exports = grammar({
         name_path: $ => seq(
             field(
                 'subject',
-                choice(
-                    $.reserved_self,
-                    $.reserved_self_type,
-                    $.identifier,
-                )
+                $._path_subject
             ),
             repeat1(
                 seq(
@@ -396,6 +392,12 @@ module.exports = grammar({
                     )
                 )
             )
+        ),
+
+        _path_subject: $ => choice(
+            $.reserved_self,
+            $.reserved_self_type,
+            $.identifier,
         ),
 
         predicate_value: $ => choice(
@@ -525,7 +527,7 @@ module.exports = grammar({
             ),
             prec(
                 2,
-                $.binding_expression
+                $.quantified_expression
             ),
             prec(
                 1,
@@ -602,7 +604,7 @@ module.exports = grammar({
             )
         ),
 
-        binding_expression: $ => seq(
+        quantified_expression: $ => seq(
             field(
                 'existential',
                 optional(
@@ -920,7 +922,10 @@ module.exports = grammar({
             optional(
                 seq(
                     keyword('ref'),
-                    field('source_cardinality', $.cardinality_expression)
+                    field(
+                        'inverse',
+                        $.member_inverse_name
+                    )
                 )
             ),
             $._type_expression_to,

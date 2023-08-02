@@ -143,14 +143,16 @@ Double              ::= Decimal ExponentChar NumericSign? Integer
 
 HexPair             ::= ASCII_HEX_DIGIT ASCII_HEX_DIGIT
 
-CharacterEscape     ::= "\" ( '"' | "\" | "/" | "a" | "b"
-                               "e" | "f" | "n" | "r" | "t" | "v" )
+Escape              ::= "\\" ( CharacterEscape | UnicodeEscape )
+CharacterEscape     ::= ( "\"" | "\\" | "/" | "a" | "b"
+                          "e"  | "f"  | "n" | "r" | "t" | "v" )
 
-UnicodeEscape       ::= "\u{" HexPair ( HexPair ( HexPair )? )? "}"
+UnicodeEscape       ::= "u{" HexPair ( HexPair ( HexPair )? )? "}"
 
-NotAllowed          ::= [^"\#x00-#x08#x0B-#x1F#x7F]
+NotAllowed          ::= [^\"\#x00-#x08#x0B-#x1F#x7F]
 
-QuotedString        ::= '"' ( NotAllowed | CharacterEscape | UnicodeEscape )* '"'
+QuotedString        ::= "\"" ( NotAllowed | Escape )* "\""
+
 
 LanguageTag         ::= 
     "@" ASCII_LETTER_LOWER ASCII_LETTER_LOWER ASCII_LETTER_LOWER?
@@ -164,7 +166,7 @@ String              ::= QuotedString LanguageTag?
 
 IriReference        ::=
     "<"
-    ( [^<>"{}|^`\#x00-#x20] | UnicodeEscape )*
+    ( [^<>\"{}|^`\#x00-#x20] | UnicodeEscape )*
     ">"
 
 ValueConstructor    ::= IdentifierReference "(" SimpleValue ")"
@@ -187,7 +189,6 @@ LineComment         ::= ";" [^\r\n]*
 Whitespace          ::= 
     [^\f\n\r\t\v#x20#xa0#x1680#x2000#x200a#x2028#x2029#x202f#x205f#x3000#xfeff]
 #+END_SRC
-
 
 ** The Embedded Constraint Language
 
@@ -295,12 +296,12 @@ AnyType             ::= "_"
 #+BEGIN_SRC ebnf
 SequenceComprehension ::= "{" ReturnValues "|" Expression "}"
 
-ReturnValues          ::= Identifier | ( "[" Identifier+ "]" )
+ReturnValues        ::= Identifier | ( "[" Identifier+ "]" )
 
-Expression            ::=
+Expression          ::=
     BooleanExpression | BindingExpression | ConstraintSentence | "(" Expression ")"
 
-BooleanExpression     ::=
+BooleanExpression   ::=
     ExpressionNegation
     | ( Expression (
         ExpressionConjunction
@@ -309,7 +310,7 @@ BooleanExpression     ::=
         )
     )
 
-ExpressionNegation   ::= ( "not" | "¬" ) Expression
+ExpressionNegation  ::= ( "not" | "¬" ) Expression
 
 ExpressionConjunction ::=
     ( "and" | "∧" ) Expression
@@ -320,7 +321,7 @@ ExpressionExclusiveDisjunction ::=
 ExpressionDisjunction ::=
     ( "or" | "∨" ) Expression
 
-BindingExpression    ::=
+BindingExpression   ::=
     ( "exists" | "∃" )? Identifier ( BindingFromType | BindingFromSequence )
 #+END_SRC
 

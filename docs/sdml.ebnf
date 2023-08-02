@@ -100,7 +100,7 @@ InverseName         ::= "(" Identifier ")"
 Value               ::=
     SimpleValue | ValueConstructor | IdentifierReference | ListOfValues
 
-BuiltinSimpleType   ::= 
+BuiltinSimpleType   ::=
     "string" | "double" | "decimal" | "integer" | "boolean" | "iri"
 
 SimpleValue         ::=
@@ -140,7 +140,7 @@ NotAllowed          ::= [^\"\#x00-#x08#x0B-#x1F#x7F]
 
 QuotedString        ::= '"' ( Escape | NotAllowed )* '"'
 
-LanguageTag         ::= 
+LanguageTag         ::=
     "@" LanguageTagPrimary
         LanguageTagExtended?
         LanguageTagScript?
@@ -184,7 +184,7 @@ IdentifierReference ::= QualifiedIdentifier | Identifier
 
 LineComment         ::= ";" [^\r\n]*
 
-Whitespace          ::= 
+Whitespace          ::=
     [^\f\n\r\t\v#x20#xa0#x1680#x2000#x200a#x2028#x2029#x202f#x205f#x3000#xfeff]
 
 InformalConstraint  ::= "=" QuotedString ControlledLanguageTag?

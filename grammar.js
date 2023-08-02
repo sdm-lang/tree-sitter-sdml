@@ -514,7 +514,7 @@ module.exports = grammar({
 
         sequence_comprehension: $ => seq(
             '{',
-            field('return', $.return_values),
+            field('return', $.returned_value),
             '|',
             field('expression', $.expression),
             '}',
@@ -523,11 +523,11 @@ module.exports = grammar({
         expression: $ => choice(
             prec(
                 3,
-                $.boolean_expression
+                $.conjunctive_expression
             ),
             prec(
                 2,
-                $.quantified_expression
+                $.local_binding
             ),
             prec(
                 1,
@@ -540,81 +540,20 @@ module.exports = grammar({
             )
         ),
 
-        boolean_expression: $ => choice(
-            $.expression_negation,
+        conjunctive_expression: $ => prec.left(
+            4,
             seq(
                 field('lhs', $.expression),
                 choice(
-                    $.expression_conjunction,
-                    $.expression_exclusive_disjunction,
-                    $.expression_disjunction,
-                )
+                    keyword('and'),
+                    operator('∧') // LaTeX: \land
+                ),
+                field('rhs', $.expression)
             )
         ),
 
-        expression_negation: $ => prec(
-            7,
-            seq(
-                seq(
-                    choice(
-                        keyword('not'),
-                        operator('¬') // LaTeX: \lnot
-                    ),
-                    field('rhs', $.expression),
-                )
-            )
-        ),
-
-        expression_conjunction: $ => prec(
-            6,
-            seq(
-                seq(
-                    choice(
-                        keyword('and'),
-                        operator('∧') // LaTeX: \land
-                    ),
-                    field('rhs', $.expression),
-                )
-            )
-        ),
-
-        expression_exclusive_disjunction: $ => prec(
-            5,
-            seq(
-                seq(
-                    choice(
-                        keyword('xor'),
-                        operator('⊻') // LaTeX: \veebar
-                    ),
-                    field('rhs', $.expression),
-                )
-            )
-        ),
-
-        expression_disjunction: $ => prec(
-            4,
-            seq(
-                seq(
-                    choice(
-                        keyword('or'),
-                        operator('∨') // LaTeX: \lor
-                    ),
-                    field('rhs', $.expression),
-                )
-            )
-        ),
-
-        quantified_expression: $ => seq(
-            field(
-                'existential',
-                optional(
-                    choice(
-                        keyword('exists'),
-                        operator('∃') // LaTeX: \exists
-                    )
-                )
-            ),
-            field(
+        local_binding: $ => seq(
+           field(
                 'name',
                 $.identifier
             ),
@@ -624,7 +563,7 @@ module.exports = grammar({
             )
         ),
 
-        return_values: $ => choice(
+        returned_value: $ => choice(
             $.identifier,
             seq(
                 '[',

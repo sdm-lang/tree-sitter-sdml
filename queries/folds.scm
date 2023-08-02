@@ -16,4 +16,6 @@
  (property_body)
  ;; ----------------
  (formal_constraint)
+ (constraint_sentence)
+ (sequence_comprehension)
  ] @fold

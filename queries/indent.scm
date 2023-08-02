@@ -19,8 +19,6 @@
 
 (sequence_comprehension "{" @indent "}" @indent.end)
 
-(expression "(" @indent ")" @indent.end)
-
 (functional_term "(" @indent ")" @indent.end)
 
 (atomic_sentence "(" @indent ")" @indent.end)

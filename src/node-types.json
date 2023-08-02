@@ -174,44 +174,6 @@
     "fields": {}
   },
   {
-    "type": "boolean_expression",
-    "named": true,
-    "fields": {
-      "lhs": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "expression_conjunction",
-          "named": true
-        },
-        {
-          "type": "expression_disjunction",
-          "named": true
-        },
-        {
-          "type": "expression_exclusive_disjunction",
-          "named": true
-        },
-        {
-          "type": "expression_negation",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "boolean_sentence",
     "named": true,
     "fields": {
@@ -349,6 +311,32 @@
         "types": [
           {
             "type": "constraint_sentence",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "conjunctive_expression",
+    "named": true,
+    "fields": {
+      "lhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      },
+      "rhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
             "named": true
           }
         ]
@@ -831,7 +819,7 @@
       "required": true,
       "types": [
         {
-          "type": "boolean_expression",
+          "type": "conjunctive_expression",
           "named": true
         },
         {
@@ -843,74 +831,10 @@
           "named": true
         },
         {
-          "type": "quantified_expression",
+          "type": "local_binding",
           "named": true
         }
       ]
-    }
-  },
-  {
-    "type": "expression_conjunction",
-    "named": true,
-    "fields": {
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "expression_disjunction",
-    "named": true,
-    "fields": {
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "expression_exclusive_disjunction",
-    "named": true,
-    "fields": {
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "expression_negation",
-    "named": true,
-    "fields": {
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "expression",
-            "named": true
-          }
-        ]
-      }
     }
   },
   {
@@ -1219,6 +1143,36 @@
         },
         {
           "type": "value_constructor",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "local_binding",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "binding_seq_iterator",
+          "named": true
+        },
+        {
+          "type": "binding_type_reference",
           "named": true
         }
       ]
@@ -1664,50 +1618,6 @@
     }
   },
   {
-    "type": "quantified_expression",
-    "named": true,
-    "fields": {
-      "existential": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "exists",
-            "named": false
-          },
-          {
-            "type": "∃",
-            "named": false
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "binding_seq_iterator",
-          "named": true
-        },
-        {
-          "type": "binding_type_reference",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "quantified_sentence",
     "named": true,
     "fields": {},
@@ -1757,7 +1667,7 @@
     }
   },
   {
-    "type": "return_values",
+    "type": "returned_value",
     "named": true,
     "fields": {},
     "children": {
@@ -1790,7 +1700,7 @@
         "required": true,
         "types": [
           {
-            "type": "return_values",
+            "type": "returned_value",
             "named": true
           }
         ]
@@ -2317,11 +2227,11 @@
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "def",

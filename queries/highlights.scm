@@ -153,25 +153,13 @@
  "|" @punctuation.separator
  "}" @punctuation.bracket)
 
-(binding_expression name: (identifier) @variable.special)
+(conjunctive_expression "and" @keyword)
+(conjunctive_expression "∧" @operator)
 
-(expression [ "(" ")" ] @punctuation.bracket)
+(local_binding name: (identifier) @variable.special)
 
-(expression_negation "not" @keyword)
-(expression_negation "¬" @operator)
-
-(expression_conjunction "and" @keyword)
-(expression_conjunction "∧" @operator)
-
-(expression_disjunction "or" @keyword)
-(expression_disjunction "∨" @operator)
-
-(expression_exclusive_disjunction "xor" @keyword)
-(expression_exclusive_disjunction "⊻" @operator)
-
-(return_values (identifier) @variable)
-
-(return_values [ "[" "]" ] @punctuation.bracket)
+(returned_value (identifier) @variable)
+(returned_value [ "[" "]" ] @punctuation.bracket)
 
 (list_of_predicate_values [ "[" "]" ] @punctuation.bracket)
 

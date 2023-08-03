@@ -386,8 +386,6 @@ BuiltinCollectionType ::=
     "Bag" | "List" | "Maybe" | "OrderedSet" | "Sequence" | "Set"
 #+END_SRC
 
-[[./ebnf-diagram/AnyType.svg]]
-
 [[./ebnf-diagram/CollectionType.svg]]
 
 [[./ebnf-diagram/BuiltinCollectionType.svg]]
@@ -421,8 +419,6 @@ module labelled is
 end
 #+END_SRC
 
-Environment & Definitions
-
 ** Constraint Semantics
 
 The embedded constraint language is purely functional and constraint assertions MUST return a single boolean value
@@ -434,7 +430,7 @@ corresponds to a Common Logic /sentence/ which may be one of the following forms
 An /atomic sentence/ takes the form of a predicate with a set of zero or more arguments.
 
 #+BEGIN_EXAMPLE
-predicate(t1, ..., tn)
+predicate(a_1, ..., a_n)
 #+END_EXAMPLE
 
 An /equation/ sentence asserts the equality of two terms.
@@ -490,14 +486,14 @@ $$L \iff R \equiv L \implies R \land R \implies L$$
     
 *** Quantified Sentences
 
-The /universal quantification/ over a type says that "for all values of type $T$ the sentence $s$ must hold true".
+The /universal quantification/ over a type says that "for all values $v$ of type $T$ the sentence $s$ must hold true".
 
 #+BEGIN_EXAMPLE
 forall v -> Type (s)
      ∀ v -> Type (s)
 #+END_EXAMPLE
 
-The /universal quantification/ over a sequence says that "for all elements in the sequence $S$ the sentence $s$ must hold
+The /universal quantification/ over a sequence says that "for all elements $e$ in the sequence $S$ the sentence $s$ must hold
 true".
 
 #+BEGIN_EXAMPLE
@@ -505,7 +501,7 @@ forall e in Sequence (s)
      ∀ e ∈  Sequence (s)
 #+END_EXAMPLE
 
-The /existential quantification/ over a type says that "there exists a value of type $T$ where the sentence $s$ holds
+The /existential quantification/ over a type says that "there exists a value $v$ of type $T$ where the sentence $s$ holds
 true".
 
 #+BEGIN_EXAMPLE
@@ -513,14 +509,14 @@ exists v -> Type (s)
      ∃ v -> Type (s)
 #+END_EXAMPLE
 
-The /existential quantification/ over a sequence says that "there exists an element in the sequence $S$ where the sentence
+The /existential quantification/ over a sequence says that "there exists an element $e$ in the sequence $S$ where the sentence
 $s$ holds true".
 
 #+BEGIN_EXAMPLE
 exists e in Sequence (s)
      ∃ e ∈  Sequence (s)
 #+END_EXAMPLE
-     
+    
 *** Sequence Comprehensions
 
 The structure consists of...
@@ -568,6 +564,37 @@ def constraints(anns - > Bag of Annotation) -> Bag of Constraint
     ≔ {a | a ∈ anns ∧ Constraint(a)}
 #+END_EXAMPLE
 
+*** Quantified Sentences as Comprehensions
+
+The existential qualifier specifically determines that there is /at least one/ element in the type or sequence where the
+sentence provided holds true. If you need to ensure a specific cardinality, for example that /exactly three/ elements in
+type or sequence are selected, use a sequence comprehension.
+
+#+BEGIN_EXAMPLE
+count({ e | e in Sequence ∧ s}) = 3
+#+END_EXAMPLE
+
+By this definition we can show that the following are equivalent.
+
+#+BEGIN_EXAMPLE
+exists e in Sequence (s)
+not is_empty({ e | e in Sequence ∧ s})
+#+END_EXAMPLE
+
+More formally, if we treat the sentence $s$ as a predicate, the following equivalence holds true.
+
+$$∃ e \in S (s(e)) ≡ ¬\{e | e \in S ∧ s(e)\}=∅$$
+
+We can also show that the following are equivalent for universal quantification.
+
+#+BEGIN_EXAMPLE
+forall e in Sequence (s)
+is_empty({ e | e in Sequence ∧ not s}
+#+END_EXAMPLE
+
+$$∀ e \in S (s(e)) ≡ \{e | e \in S ∧ ¬s(e)\}=∅$$
+
+In this manner we can treat the quantified sentences as syntactic sugar over specific forms of sequence comprehensions.
 
 # ----- Footnotes
 

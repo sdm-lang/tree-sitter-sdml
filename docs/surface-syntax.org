@@ -697,25 +697,34 @@ BuiltinSimpleType   ::=
 | ~iri~          | ~sdml:iri~             | ~xsd:anyURI~                     |
 | ~string~       | ~sdml:string~          | ~xsd:string~ or ~rdf:langString~   |
 
-*** Sequence Types
+*** <<sec:sequence-types>>Sequence Types
 
+When a structure member has a cardinality other than ~1..1~ it has to be represented by a /sequence type/, or collection
+type. SDML bases it's sequence types on /cardinality constraints/ rather than the direct specification of a collection
+type. This allows you to specify the semantic intent of a member rather than picking a type and then worrying about the
+mapping of that to a programming language types.
 
-A cardinality specification may include /cardinality constraints/, ...
+The current SDML cardinality constraints are:
 
-- Ordering :: one of ~ordered~ or ~unordered~ (default).
-- Uniqueness :: one of ~ordered~ or ~nonunique~ (default).
+- Ordering :: determines whether the sequence maintains the order of it's elements; one of ~ordered~ or ~unordered~ (default).
+- Uniqueness :: determines whether the sequence allows duplicate elements or not; one of ~ordered~ or ~nonunique~ (default).
+
+Table [[tbl:builtin-sequence-types]] shows how these constraints are combined to determine the corresponding SDML sequence
+type. See also section [[seq:library-sequence-types]] which describes the standard library operations on sequence types.
 
 #+NAME: tbl:builtin-sequence-types
 #+CAPTION: Built-in Sequence Types
-| Type          | Ordered | Unique | Cardinality Expression |
-|---------------+---------+--------+------------------------|
-| ~Bag~ (default) | No      | No     | ~{0..}~                  |
-| ~List~          | Yes     | No     | ~{ordered 0..}~          |
-| ~Maybe~         | N/A     | N/A    | ~{0..1}~                 |
-| ~OrderedSet~    | Yes     | Yes    | ~{ordered unique 0..}~   |
-| ~Set~           | No      | Yes    | ~{unique 0..}~           |
+| Ordering  | Uniqueness | Type          | Example Specification |
+|-----------+------------+---------------+-----------------------|
+| ~unordered~ | ~nonunique~  | ~Bag~ (default) | ~{0..}~                 |
+| ~ordered~   | ~nonunique~  | ~List~          | ~{ordered 0..}~         |
+| N/A       | N/A        | ~Maybe~         | ~{0..1}~ [1]             |
+| ~ordered~   | ~unique~     | ~OrderedSet~    | ~{ordered unique 0..}~  |
+| ~unordered~ | ~unique~     | ~Set~           | ~{unique 0..}~          |
 
-See also section [[seq:library-sequence-types]] which describes the standard library operations on sequence types.
+Notes:
+
+1. Any ordering or uniqueness constraint on the cardinality ~0..1~ is effectively ignored.
 
 ** <<sec:annotations>>Annotations
 
@@ -1005,8 +1014,9 @@ UnknownType         ::= "unknown"
 
 [[./ebnf-diagram/TypeReference.svg]]
 
-The cardinality of a member is specified as a range operation with a minimum and maximum number of occurrences
-specified.
+The *cardinality* of a member is specified as a range operation with a minimum and maximum number of occurrences
+specified. Additionally cardinality constraints determine the ordering and uniqueness of the collection of member values
+in a sequence type (see section [[sec:sequence-types]]).
 
 - The form ~{1..3}~ specifies a cardinality of 1 to 3 inclusive, or $[1,3]$ in interval notation.
 - The form ~{1..}~ specifies a minimum of 1 occurrences an unbounded maximum, or $[1,\infty]$ in interval notation.
@@ -1018,13 +1028,16 @@ specified.
 Cardinality         ::=
     "{" SequenceOrdering? SequenceUniqueness? Unsigned CardinalityRange? "}"
 CardinalityRange    ::= ".." Unsigned?
-SequenceOrdering    ::= ( "ordered" | "unordered" )
-SequenceUniqueness  ::= ( "unique" | "nonunique" )
 #+END_SRC
 
 [[./ebnf-diagram/Cardinality.svg]]
 
 [[./ebnf-diagram/CardinalityRange.svg]]
+
+#+BEGIN_SRC ebnf
+SequenceOrdering    ::= ( "ordered" | "unordered" )
+SequenceUniqueness  ::= ( "unique" | "nonunique" )
+#+END_SRC
 
 [[./ebnf-diagram/SequenceOrdering.svg]]
 

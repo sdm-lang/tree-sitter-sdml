@@ -20,7 +20,6 @@ div.content div:nth-of-type(3) h2 {
     page-break-before: avoid;
 }
 
-
 /* Figures/Images */
 
 img {
@@ -34,6 +33,20 @@ div.figure {
 
 div.figure p {
     text-align: center;
+}
+
+/* Tables */
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Captions */
+/* copied from `table caption` and `.figure p` */
+
+div.org-src-container label.org-src-name {
+    font: italic 85%/1 arial, sans-serif;
 }
 
 /* Admonitions */

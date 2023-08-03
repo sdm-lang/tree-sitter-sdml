@@ -482,7 +482,7 @@ lhs <==> rhs
 lhs  ⇔   rhs
 #+END_EXAMPLE
 
-$$L \iff R \equiv L \implies R \land R \implies L$$
+$$L \iff R \equiv (L \implies R) \land (R \implies L)$$
     
 *** Quantified Sentences
 
@@ -519,33 +519,37 @@ exists e in Sequence (s)
     
 *** Sequence Comprehensions
 
-The structure consists of...
+A sequence comprehension uses /set-builder/ notation to allow both specific selection of elements from sequences and
+values from types. 
 
+The following description is from Wikipedia.
+
+#+BEGIN_QUOTE
 Set-builder notation can be used to describe a set that is defined by a predicate, that is, a logical formula that
-evaluates to true for an element of the set, and false otherwise.[3] In this form, set-builder notation has three parts:
+evaluates to true for an element of the set, and false otherwise. In this form, set-builder notation has three parts:
 a variable, a colon or vertical bar separator, and a predicate. Thus there is a variable on the left of the separator,
 and a rule on the right of it. These three parts are contained within braces, as shown below.
 
 $$\{ x_1...x_n | \Phi(x_i)\}$$
+#+END_QUOTE
 
-Predicates may also be combined with the usual negation, conjunction, exclusive, and non-exclusive disjunction
-operations.
+Predicates may also be combined with the usual boolean operations.
 
-- $\{ x_1...x_n | ¬\Phi(x_i)\}$
-- $\{ x_1...x_n | \Phi(x_i)\land\Phi(x_{i+1})\}$
-- $\{ x_1...x_n | \Phi(x_i)\lor\Phi(x_{i+1})\}$
-- $\{ x_1...x_n | \Phi(x_i)\veebar\Phi(x_{i+1})\}$
+- negation :: $\{ x_1...x_n | ¬\Phi(x_i)\}$
+- conjunction :: $\{ x_1...x_n | \Phi(x_i)\land\Phi(x_{i+1})\}$
+- disjunction :: $\{ x_1...x_n | \Phi(x_i)\lor\Phi(x_{i+1})\}$
+- exclusive disjunction :: $\{ x_1...x_n | \Phi(x_i)\veebar\Phi(x_{i+1})\}$
 
-The domain $\mathcal{D}$ for each variable $x$ may either be described as the set of all elements in a sequence type
-$\mathcal{V}$, or the set of all values for a type $\mathcal{T}$.
+The domain $\mathcal{D}$ for each variable $x$ may either be described as the set of all elements in a sequence value
+$\mathcal{S}$, or the set of all values for a type $\mathcal{T}$.
 
-1. $\{ x | x \in \mathcal{V} \land \Phi(x)\}$ returns a sequence of all values $x$ in the collection $\mathcal{V}$ for which the
+1. $\{ x | x \in \mathcal{S} \land \Phi(x)\}$ returns a sequence of all values $x$ in the collection $\mathcal{S}$ for which the
    predicate $\Phi$ holds (evaluates to ~true~).
    - Example: $\{ m | x \in self.members \land optional(m)\}$
 1. $\{ x | x \in \mathcal{T} \land \Phi(x)\}$ returns a sequence of all values $x$ in the type $\mathcal{T}$ for which the
    predicate $\Phi$ holds (evaluates to ~true~).
-   - Example: $\{ v | v \in FutureDate \land gt(v today)\}$.
-   - Example: $\{ v | v → FutureDate \land gt(v today)\}$.
+   - Example: $\{ v | v \in FutureDate \land gt(v, today)\}$.
+   - Example: $\{ v | v → FutureDate \land gt(v, today)\}$.
 
 It can be shown that this is a universal quantification, /all/ values from the type $\mathcal{T}$ or sequence
 $\mathcal{V}$ will be considered. A variable can be identified as existentially quantified by prefacing it's definition

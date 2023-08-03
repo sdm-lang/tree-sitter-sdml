@@ -50,6 +50,11 @@ end
 
 # Changes
 
+**Version: 0.1.27**
+
+* Added ordering and uniqueness constraints into the cardinality expression. Used to constrain the sequence type of a
+  member.
+
 **Version: 0.1.26**
 
 * Applied same change as 0.1.25 but for property roles as well.

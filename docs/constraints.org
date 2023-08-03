@@ -21,8 +21,9 @@ Constraint          ::=
 
 [[./ebnf-diagram/Constraint.svg]]
 
-Informal constraints are free-form strings, these are a common place to start even if you intend to make a formal
-version later. An example informal constraint is shown in listing [[lst:ex-informal-constraint]].
+Informal constraints may be simple free-form strings, these are a common place to start even if you intend to make a
+formal version later. An example informal constraint is shown in listing [[lst:ex-informal-constraint]]. However, they may
+also be written using controlled natural languages for an additional level of specificity.
 
 #+NAME: lst:ex-informal-constraint
 #+CAPTION: Example Informal Constraint
@@ -38,7 +39,8 @@ end
 ** Informal Constraints
 
 Informal constraints, much like regular string values, have an optional language specifier. However, unlike regular
-strings this specifier has a more limited range as it's purpose is to identify the /controlled natural language/ being used.
+strings this specifier has a more limited range as it's purpose is to identify a /controlled natural language/ used for
+specification.
 
 #+NAME: lst:grammar-informal-constraint
 #+BEGIN_SRC ebnf
@@ -46,6 +48,9 @@ InformalConstraint  ::= "=" QuotedString ControlledLanguageTag?
 #+END_SRC
 
 [[./ebnf-diagram/InformalConstraint.svg]]
+
+The controlled language tag only includes the primary language component of a regular SDML string but adds a scheme
+identifier.
 
 #+BEGIN_SRC ebnf
 ControlledLanguageTag ::=
@@ -60,7 +65,7 @@ ControlledLanguageScheme ::=
 
 [[./ebnf-diagram/ControlledLanguageScheme.svg]]
 
-#+CAPTION: Informal Constraint with Controlled Language
+#+CAPTION: Informal Constraint with Natural Language
 #+BEGIN_SRC sdml :noeval :exports code
 module example is
 
@@ -70,9 +75,10 @@ module example is
 end
 #+END_SRC
 
-For example, Common Logic Controlled English[fn:clce] (or Attempto Controlled English[fn:ace]) are ...
+For example, Common Logic Controlled English[fn:clce] (or Attempto Controlled English[fn:ace]) are well-known controlled
+forms of English with formal structure and defined transformations into logical forms.  
 
-#+CAPTION: Informal Constraint with Controlled Language Dialect
+#+CAPTION: Informal Constraint with Controlled Language
 #+BEGIN_SRC sdml :noeval :exports code
 module example is
 
@@ -81,6 +87,16 @@ module example is
 
 end
 #+END_SRC
+
+While no registry exists for scheme identifiers, the following identifiers *must* be used for the schemes listed in
+table [[tbl:informal-constraint-schemes]].
+
+#+NAME: tbl:informal-constraint-schemes
+#+CAPTION: Informal Constraint Schemes
+| Name                            | Identifier | Alternate | Formalism        |
+|---------------------------------+------------+-----------+------------------|
+| Attempto Controlled English     | ~ACE~        | ~Attempto~  |                  |
+| Common Logic Controlled English | ~CLCE~       |           | ISO Common Logic |
 
 ** Formal Constraints
 
@@ -137,6 +153,11 @@ module tagged is
 end
 #+END_SRC
 
+Using the terminology of Common Logic a formal constraint consists of a constraint /sentence/ which is evaluated in the
+context of the model element the constraint is attached to. This contextual element is bound to the identifier ~self~ and
+the type of ~self~ is bound to the identifier ~Self~. Additionally, an optional /environment/ allows for the definition of
+temporary values and functions for use in the constraint sentence.
+
 #+NAME: lst:grammar-constraint-sentence
 #+BEGIN_SRC ebnf
 ConstraintSentence  ::=
@@ -163,6 +184,8 @@ Equation            ::= Term "=" Term
 
 *** Boolean Sentences
 
+Boolean sentences allow for the logical composition of sentences. 
+
 #+NAME: lst:grammar-boolean-sentence
 #+BEGIN_SRC ebnf
 BooleanSentence     ::=
@@ -175,6 +198,8 @@ BooleanSentence     ::=
 #+END_SRC
 
 [[./ebnf-diagram/BooleanSentence.svg]]
+
+The usual operators for negation, conjunction, disjunction, and exclusive disjunction are as expected.
 
 #+NAME: lst:grammar-boolean-sentence-cons
 #+BEGIN_SRC ebnf
@@ -431,7 +456,7 @@ module labelled is
 
   assert must_have_preferred_label is
     def has_pref_label(anns -> Bag of Annotation) ≔
-      ∃ a ∈ anns ( a.name = skos:prefLabel ∧ ¬empty(a.value )
+      ∃ a ∈ anns ( a.name = skos:prefLabel ∧ ¬a.value.is_empty )
   in
     has_pref_label(self.annotations)
     ∧ ∀ d ∈ self.definitions (

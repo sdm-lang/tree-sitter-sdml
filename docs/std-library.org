@@ -875,7 +875,7 @@ Returns ~true~ if the passed value is of type ~unsigned~, else ~false~.
 def into_integer(unsigned) -> integer
 #+END_EXAMPLE
 
-*** Sequence Types
+*** <<seq:library-sequence-types>>Sequence Types
 
 *Class: Sequence*
 
@@ -898,6 +898,12 @@ def count(Sequence of _) → unsigned
 #+END_EXAMPLE
 
 Returns the number of elements in the sequence.
+
+#+BEGIN_EXAMPLE
+def element_type(Sequence of _) → Type
+#+END_EXAMPLE
+
+Returns the type of the members within this sequence.
 
 #+BEGIN_EXAMPLE
 def into_bag(seq → Sequence of _) → Bag of _

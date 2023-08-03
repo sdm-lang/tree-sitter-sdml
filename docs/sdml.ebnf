@@ -92,9 +92,14 @@ TypeReference       ::=  UnknownType | IdentifierReference | BuiltinSimpleType
 
 UnknownType         ::= "unknown"
 
-Cardinality         ::= "{" Unsigned CardinalityRange? "}"
+Cardinality         ::=
+    "{" SequenceOrdering? SequenceUniqueness? Unsigned CardinalityRange? "}"
 
 CardinalityRange    ::= ".." Unsigned?
+
+SequenceOrdering    ::= ( "ordered" | "unordered" )
+
+SequenceUniqueness  ::= ( "unique" | "nonunique" )
 
 InverseName         ::= "(" Identifier ")"
 

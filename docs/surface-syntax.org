@@ -697,6 +697,26 @@ BuiltinSimpleType   ::=
 | ~iri~          | ~sdml:iri~             | ~xsd:anyURI~                     |
 | ~string~       | ~sdml:string~          | ~xsd:string~ or ~rdf:langString~   |
 
+*** Sequence Types
+
+
+A cardinality specification may include /cardinality constraints/, ...
+
+- Ordering :: one of ~ordered~ or ~unordered~ (default).
+- Uniqueness :: one of ~ordered~ or ~nonunique~ (default).
+
+#+NAME: tbl:builtin-sequence-types
+#+CAPTION: Built-in Sequence Types
+| Type          | Ordered | Unique | Cardinality Expression |
+|---------------+---------+--------+------------------------|
+| ~Bag~ (default) | No      | No     | ~{0..}~                  |
+| ~List~          | Yes     | No     | ~{ordered 0..}~          |
+| ~Maybe~         | N/A     | N/A    | ~{0..1}~                 |
+| ~OrderedSet~    | Yes     | Yes    | ~{ordered unique 0..}~   |
+| ~Set~           | No      | Yes    | ~{unique 0..}~           |
+
+See also section [[seq:library-sequence-types]] which describes the standard library operations on sequence types.
+
 ** <<sec:annotations>>Annotations
 
 Annotations allow for the assertion of facts attached to model elements that go beyond what is possible to describe in
@@ -941,6 +961,21 @@ PropertyMember      ::= "as" Identifier
 
 [[./ebnf-diagram/PropertyMember.svg]]
 
+*Example*:
+
+#+NAME: lst:sdml-ex-members
+#+CAPTION: Members in a Structure
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  structure Account is
+    accountId as default
+    name -> string
+  end
+
+end
+#+END_SRC
+
 For identity, by-value, and by-reference members the general syntax uses the /type reference/ operator, /name/ ~->~ /type/, with
 additional keywords and cardinality included as follows.
 
@@ -980,28 +1015,20 @@ specified.
 
 #+NAME: lst:grammar-cardinality
 #+BEGIN_SRC ebnf
-Cardinality         ::= "{" Unsigned CardinalityRange? "}"
+Cardinality         ::=
+    "{" SequenceOrdering? SequenceUniqueness? Unsigned CardinalityRange? "}"
 CardinalityRange    ::= ".." Unsigned?
+SequenceOrdering    ::= ( "ordered" | "unordered" )
+SequenceUniqueness  ::= ( "unique" | "nonunique" )
 #+END_SRC
 
 [[./ebnf-diagram/Cardinality.svg]]
 
 [[./ebnf-diagram/CardinalityRange.svg]]
 
-*Example*:
+[[./ebnf-diagram/SequenceOrdering.svg]]
 
-#+NAME: lst:sdml-ex-members
-#+CAPTION: Members in a Structure
-#+BEGIN_SRC sdml :exports code :noeval
-module example is
-
-  structure Account is
-    accountId as default
-    name -> string
-  end
-
-end
-#+END_SRC
+[[./ebnf-diagram/SequenceUniqueness.svg]]
 
 *** Variants
 

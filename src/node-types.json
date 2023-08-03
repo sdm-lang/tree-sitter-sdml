@@ -243,12 +243,32 @@
           }
         ]
       },
+      "ordering": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "sequence_ordering",
+            "named": true
+          }
+        ]
+      },
       "range": {
         "multiple": false,
         "required": false,
         "types": [
           {
             "type": "cardinality_range",
+            "named": true
+          }
+        ]
+      },
+      "uniqueness": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "sequence_uniqueness",
             "named": true
           }
         ]
@@ -1708,6 +1728,16 @@
     }
   },
   {
+    "type": "sequence_ordering",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "sequence_uniqueness",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "simple_sentence",
     "named": true,
     "fields": {},
@@ -2227,11 +2257,11 @@
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "def",
@@ -2330,6 +2360,10 @@
     "named": false
   },
   {
+    "type": "nonunique",
+    "named": false
+  },
+  {
     "type": "not",
     "named": false
   },
@@ -2339,6 +2373,10 @@
   },
   {
     "type": "or",
+    "named": false
+  },
+  {
+    "type": "ordered",
     "named": false
   },
   {
@@ -2382,8 +2420,16 @@
     "named": false
   },
   {
+    "type": "unique",
+    "named": false
+  },
+  {
     "type": "unknown_type",
     "named": true
+  },
+  {
+    "type": "unordered",
+    "named": false
   },
   {
     "type": "unsigned",

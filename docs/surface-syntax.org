@@ -796,33 +796,6 @@ This section will only briefly introduce constraints as section [[sec:model-cons
 The first example, in listing [[lst:sdml-ex-constrained-module]], provides an informal constraint in that it is simply a
 string which is useful to readers but cannot be verified.
 
-#+NAME: lst:grammar-constraint
-#+BEGIN_SRC ebnf
-Constraint          ::= InformalConstraint | FormalConstraint
-#+END_SRC
-
-[[./ebnf-diagram/Constraint.svg]]
-
-#+NAME: lst:grammar-informal-constraint
-#+BEGIN_SRC ebnf
-InformalConstraint  ::= "=" QuotedString ControlledLanguageTag?
-#+END_SRC
-
-[[./ebnf-diagram/InformalConstraint.svg]]
-
-#+BEGIN_SRC ebnf
-ControlledLanguageTag ::=
-    "@" LanguageTagPrimary ControlledLanguageScheme?
-ControlledLanguageScheme ::=
-    "-" ASCII_LETTER ASCII_LETTER ASCII_LETTER
-        ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
-        ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
-#+END_SRC
-
-[[./ebnf-diagram/ControlledLanguageTag.svg]]
-
-[[./ebnf-diagram/ControlledLanguageScheme.svg]]
-
 #+NAME: lst:sdml-ex-constrained-module
 #+CAPTION: Informal Constraint on Module
 #+BEGIN_SRC sdml :exports code :noeval

@@ -10,10 +10,19 @@ is true, that attribute must be false), or setting cardinality on transitive ass
 Object Constraint Language[fn:ocl1][fn:ocl2], and similar languages have been proposed for parametric modeling
 languages.
 
-SDML allows constraints to be added to any model element where annotations are also allowed. A constraints MAY be named,
-and MAY be either /informally/, or /formally/ specified. Informal constraints are free-form strings, these are a common
-place to start even if you intend to make a formal version later. An example informal constraint is shown in listing
-[[lst:ex-informal-constraint]].
+SDML allows constraints to be added to any model element where annotations are also allowed. Constraints are named,
+and MAY be either /informally/, or /formally/ specified.
+
+#+NAME: lst:grammar-constraint
+#+BEGIN_SRC ebnf
+Constraint          ::=
+    "assert" Identifier ( InformalConstraint | FormalConstraint )
+#+END_SRC
+
+[[./ebnf-diagram/Constraint.svg]]
+
+Informal constraints are free-form strings, these are a common place to start even if you intend to make a formal
+version later. An example informal constraint is shown in listing [[lst:ex-informal-constraint]].
 
 #+NAME: lst:ex-informal-constraint
 #+CAPTION: Example Informal Constraint
@@ -30,6 +39,26 @@ end
 
 Informal constraints, much like regular string values, have an optional language specifier. However, unlike regular
 strings this specifier has a more limited range as it's purpose is to identify the /controlled natural language/ being used.
+
+#+NAME: lst:grammar-informal-constraint
+#+BEGIN_SRC ebnf
+InformalConstraint  ::= "=" QuotedString ControlledLanguageTag?
+#+END_SRC
+
+[[./ebnf-diagram/InformalConstraint.svg]]
+
+#+BEGIN_SRC ebnf
+ControlledLanguageTag ::=
+    "@" LanguageTagPrimary ControlledLanguageScheme?
+ControlledLanguageScheme ::=
+    "-" ASCII_LETTER ASCII_LETTER ASCII_LETTER
+        ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
+        ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
+#+END_SRC
+
+[[./ebnf-diagram/ControlledLanguageTag.svg]]
+
+[[./ebnf-diagram/ControlledLanguageScheme.svg]]
 
 #+CAPTION: Informal Constraint with Controlled Language
 #+BEGIN_SRC sdml :noeval :exports code

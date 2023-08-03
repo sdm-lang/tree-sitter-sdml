@@ -16,7 +16,8 @@ Annotation          ::= AnnotationProperty | Constraint
 
 AnnotationProperty  ::= "@" IdentiferReference "=" Value
 
-Constraint          ::= InformalConstraint | FormalConstraint
+Constraint          ::=
+    "assert" Identifier ( InformalConstraint | FormalConstraint )
 
 Definition          ::=
     DataTypeDef | EntityDef | EnumDef | EventDef | StructureDef | UnionDef | PropertyDef

@@ -42,6 +42,8 @@
  (builtin_simple_type)
  (reserved_self)
  (reserved_self_type)
+ (sequence_ordering)
+ (sequence_uniqueness)
  ] @keyword
 
 ;; ---------------------------------------------------------------------------

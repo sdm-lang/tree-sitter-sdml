@@ -580,6 +580,7 @@ module.exports = grammar({
             $.simple_value,
             $.value_constructor,
             $.identifier_reference,
+            $.mapping_value,
             $.list_of_values,
         ),
 
@@ -590,6 +591,7 @@ module.exports = grammar({
                     $.simple_value,
                     $.value_constructor,
                     $.identifier_reference,
+                    $.mapping_value,
                 )
             ),
             ']'
@@ -597,9 +599,19 @@ module.exports = grammar({
 
         value_constructor: $ => seq(
             field('name', $.identifier_reference),
-            '(',
-            field('value', $.simple_value),
+           '(',
+            field('value', $.value),
             ')'
+        ),
+
+        mapping_value: $ => seq(
+           field('key', $.simple_value),
+            prec.right(
+                seq(
+                    operator('->'),
+                    field('value', $.value)
+                )
+            )
         ),
 
         builtin_simple_type: $ => choice(
@@ -946,7 +958,20 @@ module.exports = grammar({
         type_reference: $ => choice(
             $.unknown_type,
             $.identifier_reference,
-            $.builtin_simple_type
+            $.builtin_simple_type,
+            $.mapping_type
+        ),
+
+        mapping_type: $ => seq(
+            "(",
+            $.type_reference,
+            prec.right(
+                seq(
+                    operator('->'),
+                    $.type_reference
+                )
+            ),
+            ")"
         ),
 
         unknown_type: $ => keyword('unknown'),

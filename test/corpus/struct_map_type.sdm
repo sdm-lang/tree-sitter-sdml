@@ -1,0 +1,33 @@
+==========================
+Structure, Map Type Member
+==========================
+
+module Campaign is
+
+  structure Thing is
+    properties -> {unique 1..} (string -> integer)
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (structure_def
+        name: (identifier)
+        body: (structure_body
+          (member_by_value
+            name: (identifier)
+            target_cardinality: (cardinality_expression
+              uniqueness: (sequence_uniqueness)
+              min: (unsigned)
+              range: (cardinality_range))
+            target: (type_reference
+              (mapping_type
+                (type_reference
+                  (builtin_simple_type))
+                (type_reference
+                  (builtin_simple_type))))))))))

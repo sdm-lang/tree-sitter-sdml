@@ -49,7 +49,7 @@
       "tags": [
         "queries/tags.scm"
       ],
-      "injection-regex": "^smdl$"
+      "injection-regex": "^sdml$"
     }
   ]
 }

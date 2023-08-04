@@ -1862,6 +1862,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "mapping_value"
+        },
+        {
+          "type": "SYMBOL",
           "name": "list_of_values"
         }
       ]
@@ -1889,6 +1893,10 @@
               {
                 "type": "SYMBOL",
                 "name": "identifier_reference"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "mapping_value"
               }
             ]
           }
@@ -1919,12 +1927,53 @@
           "name": "value",
           "content": {
             "type": "SYMBOL",
-            "name": "simple_value"
+            "name": "value"
           }
         },
         {
           "type": "STRING",
           "value": ")"
+        }
+      ]
+    },
+    "mapping_value": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "key",
+          "content": {
+            "type": "SYMBOL",
+            "name": "simple_value"
+          }
+        },
+        {
+          "type": "PREC_RIGHT",
+          "value": 0,
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "TOKEN",
+                "content": {
+                  "type": "PREC",
+                  "value": 1,
+                  "content": {
+                    "type": "STRING",
+                    "value": "->"
+                  }
+                }
+              },
+              {
+                "type": "FIELD",
+                "name": "value",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "value"
+                }
+              }
+            ]
+          }
         }
       ]
     },
@@ -3419,6 +3468,51 @@
         {
           "type": "SYMBOL",
           "name": "builtin_simple_type"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "mapping_type"
+        }
+      ]
+    },
+    "mapping_type": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "SYMBOL",
+          "name": "type_reference"
+        },
+        {
+          "type": "PREC_RIGHT",
+          "value": 0,
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "TOKEN",
+                "content": {
+                  "type": "PREC",
+                  "value": 1,
+                  "content": {
+                    "type": "STRING",
+                    "value": "->"
+                  }
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "type_reference"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ")"
         }
       ]
     },

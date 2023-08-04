@@ -318,7 +318,7 @@ A data /value/ is either a simple value, a value constructor expression, an iden
 #+NAME: lst:grammar-value
 #+BEGIN_SRC ebnf
 Value               ::=
-    SimpleValue | ValueConstructor | IdentifierReference | ListOfValues
+    SimpleValue | ValueConstructor | IdentifierReference | MappingValue | ListOfValues
 #+END_SRC
 
 [[./ebnf-diagram/Value.svg]]
@@ -579,6 +579,17 @@ end
 You can ignore the syntax of ~@ex:thing~ which is an annotation, see section [[sec:annotations]], used to ensure the syntax is
 complete for all examples.
 
+*** <<sec:mapping-values>>Mapping Values
+
+TBD
+
+#+NAME: lst:grammar-mapping-value
+#+BEGIN_SRC ebnf
+MappingValue        ::= SimpleValue  "->" Value
+#+END_SRC
+
+[[./ebnf-diagram/MappingValue.svg]]
+
 *** Value Lists
 
 As stated in section [[sec:modules-and-imports]], lists in SDML start with the Left Square Bracket ("[", =U+005B=)
@@ -605,6 +616,8 @@ module example is
 
 end
 #+END_SRC
+
+The 
 
 *** Defining Data Types
 
@@ -718,13 +731,16 @@ type. See also section [[seq:library-sequence-types]] which describes the standa
 |-----------+------------+---------------+-----------------------|
 | ~unordered~ | ~nonunique~  | ~Bag~ (default) | ~{0..}~                 |
 | ~ordered~   | ~nonunique~  | ~List~          | ~{ordered 0..}~         |
-| N/A       | N/A        | ~Maybe~         | ~{0..1}~ [1]             |
+| n/a       | n/a        | ~Maybe~         | ~{0..1}~                 |
 | ~ordered~   | ~unique~     | ~OrderedSet~    | ~{ordered unique 0..}~  |
 | ~unordered~ | ~unique~     | ~Set~           | ~{unique 0..}~          |
 
-Notes:
+Any ordering or uniqueness constraint on the cardinality ~0..1~ is effectively ignored.
 
-1. Any ordering or uniqueness constraint on the cardinality ~0..1~ is effectively ignored.
+A /dictionary/ or /map/ structure can be described in SDML as a sequence of mapping values (see section [[sec:mapping-values]]).
+Specifically the type ~{unique 0..} {string -> string}~ is mapping from string values to other strings where each mapping
+is unique, and for mapping types only the keys are considered in comparisons. The type ~{0..} {string -> string}~ does not
+enforce uniqueness and thus is a /multi-map/.
 
 ** <<sec:annotations>>Annotations
 
@@ -1004,7 +1020,7 @@ target type to be replaced with the keyword ~unknown~. This marks the member, an
 #+BEGIN_SRC ebnf
 TypeExpression      ::= "->" TypeReference
 TypeExpressionTo    ::= "->" Cardinality? TypeReference
-TypeReference       ::=  UnknownType | IdentifierReference | BuiltinSimpleType
+TypeReference       ::=  UnknownType | IdentifierReference | BuiltinSimpleType | MappingType
 UnknownType         ::= "unknown"
 #+END_SRC
 
@@ -1013,6 +1029,14 @@ UnknownType         ::= "unknown"
 [[./ebnf-diagram/TypeExpressionTo.svg]]
 
 [[./ebnf-diagram/TypeReference.svg]]
+
+Mapping types ... TBD values: [[sec:mapping-values]]
+
+#+BEGIN_SRC ebnf
+MappingType         ::= "(" TypeReference "->" TypeReferece ")"
+#+END_SRC
+
+[[./ebnf-diagram/MappingType.svg]]
 
 The *cardinality* of a member is specified as a range operation with a minimum and maximum number of occurrences
 specified. Additionally cardinality constraints determine the ordering and uniqueness of the collection of member values
@@ -1643,9 +1667,11 @@ TypeExpression      ::= "->" TypeReference
 
 TypeExpressionTo    ::= "->" Cardinality? TypeReference
 
-TypeReference       ::=  UnknownType | IdentifierReference | BuiltinSimpleType
+TypeReference       ::=  UnknownType | IdentifierReference | BuiltinSimpleType | MappingType
 
 UnknownType         ::= "unknown"
+
+MappingType         ::= "(" TypeReference "->" TypeReference ")"
 
 Cardinality         ::=
     "{" SequenceOrdering? SequenceUniqueness? Unsigned CardinalityRange? "}"
@@ -1659,7 +1685,7 @@ SequenceUniqueness  ::= ( "unique" | "nonunique" )
 InverseName         ::= "(" Identifier ")"
 
 Value               ::=
-    SimpleValue | ValueConstructor | IdentifierReference | ListOfValues
+    SimpleValue | ValueConstructor | IdentifierReference | MappingValue | ListOfValues
 
 BuiltinSimpleType   ::= 
     "string" | "double" | "decimal" | "integer" | "boolean" | "iri"
@@ -1728,6 +1754,8 @@ IriReference        ::=
     ">"
 
 ValueConstructor    ::= IdentifierReference "(" SimpleValue ")"
+
+MappingValue        ::= SimpleValue  "->" Value
 
 ListOfValues        ::=
     "[" ( SimpleValue | ValueConstructor | IdentifierReference )+ "]"

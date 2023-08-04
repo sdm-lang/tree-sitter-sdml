@@ -1158,6 +1158,10 @@
           "named": true
         },
         {
+          "type": "mapping_value",
+          "named": true
+        },
+        {
           "type": "simple_value",
           "named": true
         },
@@ -1196,6 +1200,47 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "mapping_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "type_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "mapping_value",
+    "named": true,
+    "fields": {
+      "key": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "simple_value",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "value",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -1933,6 +1978,10 @@
           "named": true
         },
         {
+          "type": "mapping_type",
+          "named": true
+        },
+        {
           "type": "unknown_type",
           "named": true
         }
@@ -2063,6 +2112,10 @@
           "named": true
         },
         {
+          "type": "mapping_value",
+          "named": true
+        },
+        {
           "type": "simple_value",
           "named": true
         },
@@ -2092,7 +2145,7 @@
         "required": true,
         "types": [
           {
-            "type": "simple_value",
+            "type": "value",
             "named": true
           }
         ]

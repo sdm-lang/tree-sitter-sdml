@@ -88,9 +88,11 @@ TypeExpression      ::= "->" TypeReference
 
 TypeExpressionTo    ::= "->" Cardinality? TypeReference
 
-TypeReference       ::=  UnknownType | IdentifierReference | BuiltinSimpleType
+TypeReference       ::=  UnknownType | IdentifierReference | BuiltinSimpleType | MappingType
 
 UnknownType         ::= "unknown"
+
+MappingType         ::= "(" TypeReference "->" TypeReference ")"
 
 Cardinality         ::=
     "{" SequenceOrdering? SequenceUniqueness? Unsigned CardinalityRange? "}"
@@ -104,7 +106,7 @@ SequenceUniqueness  ::= ( "unique" | "nonunique" )
 InverseName         ::= "(" Identifier ")"
 
 Value               ::=
-    SimpleValue | ValueConstructor | IdentifierReference | ListOfValues
+    SimpleValue | ValueConstructor | IdentifierReference | MappingValue | ListOfValues
 
 BuiltinSimpleType   ::=
     "string" | "double" | "decimal" | "integer" | "boolean" | "iri"
@@ -174,6 +176,8 @@ IriReference        ::=
     ">"
 
 ValueConstructor    ::= IdentifierReference "(" SimpleValue ")"
+
+MappingValue        ::= SimpleValue  "->" Value
 
 ListOfValues        ::=
     "[" ( SimpleValue | ValueConstructor | IdentifierReference )+ "]"

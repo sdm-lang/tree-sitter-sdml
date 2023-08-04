@@ -9,28 +9,64 @@
 ;; ---------------------------------------------------------------------------
 
 [
+ "and"
  "as"
  "assert"
  "base"
  "datatype"
+ "def"
  "end"
  "entity"
  "enum"
  "event"
+ "exists"
+ "forall"
  "group"
  "identity"
+ "iff"
+ "implies"
  "import"
+ "in"
  "is"
  "module"
+ "not"
  "of"
+ "or"
  "property"
  "ref"
  "source"
  "structure"
  "union"
+ "xor"
  (unknown_type)
  (builtin_simple_type)
+ (reserved_self)
+ (reserved_self_type)
  ] @keyword
+
+;; ---------------------------------------------------------------------------
+;; Operators
+;; ---------------------------------------------------------------------------
+
+[
+ "="
+ ":="
+ "≔"
+ "¬"
+ "∧"
+ "∨"
+ "⊻"
+ "==>"
+ "⇒"
+ "<==>"
+ "⇔"
+ "∀"
+ "∃"
+ "∈"
+ "->"
+ "<-"
+ ".."
+ ] @operator
 
 ;; ---------------------------------------------------------------------------
 ;; Module & Imports
@@ -50,36 +86,28 @@
 
 (annotation_property
  "@" @property
- name: (identifier_reference) @property
- "=" @operator)
+ name: (identifier_reference) @property)
 
 (annotation_property value: (value (identifier_reference) @type))
 
 (constraint name: (identifier) @property)
 
-(informal_constraint
- "=" @operator
- (quoted_string) @embedded)
+(informal_constraint (quoted_string) @embedded)
 
 (informal_constraint language: (controlled_language_tag) @property)
 
-(environment_definition
- "def" @keyword
- name: (identifier) @function.definition
- [ ":=" "≔" ] @operator)
+(environment_definition name: (identifier) @function.definition)
 
 (constraint_environment (constraint_environment_end) @keyword)
 
 (constraint_sentence [ "(" ")" ] @punctuation.bracket)
 
 (name_path
- subject: [ (reserved_self) (reserved_self_type) ] @keyword
  "." @punctuation.delimiter
  path: (identifier) @function.call)
 
 (term (name_path subject: (identifier) @variable))
 (equation (term (identifier_reference) @variable))
-(equation "=" @operator)
 
 (functional_term
  function: (_) @function.call
@@ -93,57 +121,25 @@
 
 (atomic_sentence arguments: (term (identifier_reference) @variable))
 
-(negation "not" @keyword)
-(negation "¬" @operator)
-
-(conjunction "and" @keyword)
-(conjunction "∧" @operator)
-
-(disjunction "or" @keyword)
-(disjunction "∨" @operator)
-
-(exclusive_disjunction "xor" @keyword)
-(exclusive_disjunction "⊻" @operator)
-
-(implication "implies" @keyword)
-(implication [ "==>" "⇒" ] @operator)
-
-(biconditional "iff" @keyword)
-(biconditional [ "<==>" "⇔" ] @operator)
-
-(universal "forall" @keyword)
-(universal "∀" @operator)
-
-(existential "exists" @keyword)
-(existential "∃" @operator)
-
 (quantified_body [ "(" ")" ] @punctuation.bracket)
 
 (quantifier_binding (reserved_self) @keyword)
 (quantifier_binding name: (identifier) @variable)
 
-(binding_type_reference "->" @operator)
 (binding_type_reference from_type: (reserved_self_type) @keyword)
 (binding_type_reference from_type: (identifier_reference) @type)
 
-(binding_seq_iterator "in" @keyword)
-(binding_seq_iterator "∈" @operator)
 (binding_seq_iterator from_collection: (identifier_reference) @variable)
 (binding_seq_iterator from_collection: (name_path subject: (identifier) @variable))
 (binding_seq_iterator from_collection: (name_path path: (identifier) @function.call))
 
-(function_signature "->" @operator)
-
-(fn_parameter
- name: (identifier) @variable.parameter
- "->" @operator)
+(fn_parameter name: (identifier) @variable.parameter)
 
 (fn_type (any_type) @type)
 (fn_type (type_reference (identifier_reference) @type))
 
 (collection_type
  collection: (builtin_collection_type) @type
- "of" @keyword
  element: (_) @type)
 
 (list_of_predicate_values [ "[" "]" ] @punctuation.bracket)
@@ -152,9 +148,6 @@
  "{" @punctuation.bracket
  "|" @punctuation.separator
  "}" @punctuation.bracket)
-
-(conjunctive_expression "and" @keyword)
-(conjunctive_expression "∧" @operator)
 
 (local_binding name: (identifier) @variable.special)
 
@@ -169,7 +162,6 @@
 
 (data_type_def
  name: (identifier) @type.definition
- "<-" @operator
  base: (data_type_base (identifier_reference) @type))
 
 (entity_def name: (identifier) @type.definition)
@@ -188,33 +180,24 @@
 ;; Members
 ;; ---------------------------------------------------------------------------
 
-
 (identity_member name: (identifier) @variable.field)
 (identity_member role: (identifier) @variable.special)
-(identity_member
- "->" @operator
- target: (type_reference) @type)
+(identity_member target: (type_reference) @type)
 
 (member_by_value name: (identifier) @variable.field)
 (member_by_value role: (identifier) @variable.special)
-(member_by_value
- "->" @operator
- target: (type_reference) @type)
+(member_by_value target: (type_reference) @type)
 
 (member_by_reference name: (identifier) @variable.field)
 (member_by_reference role: (identifier) @variable.special)
-(member_by_reference
- "->" @operator
- target: (type_reference) @type)
+(member_by_reference target: (type_reference) @type)
 
 (member_inverse_name
  "(" @punctuation.bracket
  (identifier) @variable.field
  ")" @punctuation.bracket)
 
-(value_variant
- name: (identifier) @constant
- "=" @operator)
+(value_variant name: (identifier) @constant)
 
 (type_variant (identifier_reference) @type)
 
@@ -222,13 +205,12 @@
 
 (cardinality_expression [ "{" "}" ] @punctuation.bracket)
 
-(cardinality_range ".." @operator)
+(mapping_type [ "(" ")" ] @punctuation.bracket)
 
 (property_def name: (identifier) @variable.field)
 
 (property_role
  name: (identifier) @variable.field
- "->" @operator
  target: (type_reference) @type)
 
 ;; ---------------------------------------------------------------------------

@@ -1,0 +1,36 @@
+==========================
+Annotation, Single Mapping
+==========================
+
+module Campaign is
+
+  @dc:published = "date" -> xsd:date("2023-08-04")
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (annotation
+      (annotation_property
+        name: (identifier_reference
+        (qualified_identifier
+          module: (identifier)
+          member: (identifier)))
+          value: (value
+            (mapping_value
+              key: (simple_value
+                (string
+                  (quoted_string)))
+              value: (value
+                (value_constructor
+                  name: (identifier_reference
+                    (qualified_identifier
+                      module: (identifier)
+                      member: (identifier)))
+                  value: (value
+                    (simple_value
+                      (string
+                        (quoted_string))))))))))))

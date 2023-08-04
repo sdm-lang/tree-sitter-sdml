@@ -5,15 +5,17 @@
  (event_def)
  (structure_def)
  (union_def)
+ (property_def)
  ;; ----------------
  (annotation_only_body)
  (entity_body)
- (entity_group)
  (enum_body)
  (structure_body)
- (structure_group)
  (union_body)
  (property_body)
+ ;; ----------------
+ (entity_group)
+ (structure_group)
  ;; ----------------
  (formal_constraint)
  (constraint_sentence)

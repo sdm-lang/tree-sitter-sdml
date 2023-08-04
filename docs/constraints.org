@@ -395,6 +395,7 @@ module tagged is
       assert tag_subset is
         ∀ self ( is_subset( into_set(self.tags) into_set(self.container.tags)) )
       end
+    end
   end
 end
 #+END_SRC

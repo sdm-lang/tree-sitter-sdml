@@ -2145,7 +2145,7 @@
         "required": true,
         "types": [
           {
-            "type": "value",
+            "type": "simple_value",
             "named": true
           }
         ]

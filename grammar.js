@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.28
+// Version:    0.1.29
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -600,7 +600,7 @@ module.exports = grammar({
         value_constructor: $ => seq(
             field('name', $.identifier_reference),
            '(',
-            field('value', $.value),
+            field('value', $.simple_value),
             ')'
         ),
 

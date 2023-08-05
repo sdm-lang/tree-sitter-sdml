@@ -25,7 +25,6 @@ end
                (qualified_identifier
                  module: (identifier)
                  member: (identifier)))
-             value: (value
-               (simple_value
-                 (integer)))))))))
+             value: (simple_value
+               (integer))))))))
 

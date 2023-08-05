@@ -50,6 +50,10 @@ end
 
 # Changes
 
+**Version: 0.1.29**
+
+* Fixed an apparent regression, the value for a constructor changed from `simple_value` to `value`. This changes it back.
+
 **Version: 0.1.28**
 
 * Added a mapping type and corresponding value syntax.

@@ -50,6 +50,10 @@ end
 
 # Changes
 
+**Version: 0.1.28**
+
+* Added a mapping type and corresponding value syntax.
+
 **Version: 0.1.27**
 
 * Added ordering and uniqueness constraints into the cardinality expression. Used to constrain the sequence type of a

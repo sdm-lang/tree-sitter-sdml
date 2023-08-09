@@ -1232,7 +1232,7 @@
     "type": "mapping_value",
     "named": true,
     "fields": {
-      "key": {
+      "domain": {
         "multiple": false,
         "required": true,
         "types": [
@@ -1242,7 +1242,7 @@
           }
         ]
       },
-      "value": {
+      "range": {
         "multiple": false,
         "required": true,
         "types": [

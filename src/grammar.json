@@ -1941,7 +1941,7 @@
       "members": [
         {
           "type": "FIELD",
-          "name": "key",
+          "name": "domain",
           "content": {
             "type": "SYMBOL",
             "name": "simple_value"
@@ -1966,7 +1966,7 @@
               },
               {
                 "type": "FIELD",
-                "name": "value",
+                "name": "range",
                 "content": {
                   "type": "SYMBOL",
                   "name": "value"

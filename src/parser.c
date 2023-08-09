@@ -12,7 +12,7 @@
 #define ALIAS_COUNT 0
 #define TOKEN_COUNT 93
 #define EXTERNAL_TOKEN_COUNT 0
-#define FIELD_COUNT 36
+#define FIELD_COUNT 35
 #define MAX_ALIAS_SEQUENCE_LENGTH 6
 #define PRODUCTION_ID_COUNT 67
 
@@ -1489,30 +1489,29 @@ enum {
   field_function = 10,
   field_identity = 11,
   field_inverse = 12,
-  field_key = 13,
-  field_language = 14,
-  field_lhs = 15,
-  field_max = 16,
-  field_member = 17,
-  field_min = 18,
-  field_module = 19,
-  field_name = 20,
-  field_ordering = 21,
-  field_path = 22,
-  field_predicate = 23,
-  field_range = 24,
-  field_rename = 25,
-  field_return = 26,
-  field_rhs = 27,
-  field_role = 28,
-  field_signature = 29,
-  field_source = 30,
-  field_subject = 31,
-  field_target = 32,
-  field_target_cardinality = 33,
-  field_target_type = 34,
-  field_uniqueness = 35,
-  field_value = 36,
+  field_language = 13,
+  field_lhs = 14,
+  field_max = 15,
+  field_member = 16,
+  field_min = 17,
+  field_module = 18,
+  field_name = 19,
+  field_ordering = 20,
+  field_path = 21,
+  field_predicate = 22,
+  field_range = 23,
+  field_rename = 24,
+  field_return = 25,
+  field_rhs = 26,
+  field_role = 27,
+  field_signature = 28,
+  field_source = 29,
+  field_subject = 30,
+  field_target = 31,
+  field_target_cardinality = 32,
+  field_target_type = 33,
+  field_uniqueness = 34,
+  field_value = 35,
 };
 
 static const char * const ts_field_names[] = {
@@ -1529,7 +1528,6 @@ static const char * const ts_field_names[] = {
   [field_function] = "function",
   [field_identity] = "identity",
   [field_inverse] = "inverse",
-  [field_key] = "key",
   [field_language] = "language",
   [field_lhs] = "lhs",
   [field_max] = "max",
@@ -1679,8 +1677,8 @@ static const TSFieldMapEntry ts_field_map_entries[] = {
     {field_body, 1},
     {field_name, 0},
   [34] =
-    {field_key, 0},
-    {field_value, 2},
+    {field_domain, 0},
+    {field_range, 2},
   [36] =
     {field_body, 2},
   [37] =

@@ -46,9 +46,8 @@ module.exports = grammar({
     // -----------------------------------------------------------------------
 
     extras: $ => [
-        // One or more spaces or tabs
         /\s/,
-        $.line_comment
+        $._line_comment
     ],
 
     rules: {
@@ -1010,7 +1009,7 @@ module.exports = grammar({
         // Comments
         // -----------------------------------------------------------------------
 
-        line_comment: $ => token(
+        _line_comment: $ => token(
             prec(
                 0,
                 seq(

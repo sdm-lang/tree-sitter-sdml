@@ -47,7 +47,7 @@ module.exports = grammar({
 
     extras: $ => [
         /\s/,
-        $._line_comment
+        $.line_comment
     ],
 
     rules: {
@@ -963,11 +963,11 @@ module.exports = grammar({
 
         mapping_type: $ => seq(
             "(",
-            $.type_reference,
+            field('domain', $.type_reference),
             prec.right(
                 seq(
                     operator('->'),
-                    $.type_reference
+                    field('range', $.type_reference)
                 )
             ),
             ")"
@@ -1009,7 +1009,7 @@ module.exports = grammar({
         // Comments
         // -----------------------------------------------------------------------
 
-        _line_comment: $ => token(
+        line_comment: $ => token(
             prec(
                 0,
                 seq(

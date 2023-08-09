@@ -3483,8 +3483,12 @@
           "value": "("
         },
         {
-          "type": "SYMBOL",
-          "name": "type_reference"
+          "type": "FIELD",
+          "name": "domain",
+          "content": {
+            "type": "SYMBOL",
+            "name": "type_reference"
+          }
         },
         {
           "type": "PREC_RIGHT",
@@ -3504,8 +3508,12 @@
                 }
               },
               {
-                "type": "SYMBOL",
-                "name": "type_reference"
+                "type": "FIELD",
+                "name": "range",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "type_reference"
+                }
               }
             ]
           }

@@ -27,7 +27,7 @@ end
               range: (cardinality_range))
             target: (type_reference
               (mapping_type
-                (type_reference
+                domain: (type_reference
                   (builtin_simple_type))
-                (type_reference
+                range: (type_reference
                   (builtin_simple_type))))))))))

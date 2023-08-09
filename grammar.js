@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.29
+// Version:    0.1.30
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -604,11 +604,11 @@ module.exports = grammar({
         ),
 
         mapping_value: $ => seq(
-           field('key', $.simple_value),
+           field('domain', $.simple_value),
             prec.right(
                 seq(
                     operator('->'),
-                    field('value', $.value)
+                    field('range', $.value)
                 )
             )
         ),

@@ -50,6 +50,10 @@ end
 
 # Changes
 
+**Version: 0.1.30**
+
+* Minor: Added field names for the domain and range of mapping types and values.
+
 **Version: 0.1.29**
 
 * Fixed an apparent regression, the value for a constructor changed from `simple_value` to `value`. This changes it back.

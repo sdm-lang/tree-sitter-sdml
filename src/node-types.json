@@ -1139,6 +1139,10 @@
       "required": false,
       "types": [
         {
+          "type": "identifier_reference",
+          "named": true
+        },
+        {
           "type": "simple_value",
           "named": true
         }
@@ -2333,11 +2337,11 @@
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "end",
@@ -2533,6 +2537,10 @@
   },
   {
     "type": "∃",
+    "named": false
+  },
+  {
+    "type": "∅",
     "named": false
   },
   {

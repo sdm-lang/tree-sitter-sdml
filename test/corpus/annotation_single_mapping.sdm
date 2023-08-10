@@ -21,10 +21,10 @@ end
           member: (identifier)))
           value: (value
             (mapping_value
-              key: (simple_value
+              domain: (simple_value
                 (string
                   (quoted_string)))
-              value: (value
+              range: (value
                 (value_constructor
                   name: (identifier_reference
                     (qualified_identifier

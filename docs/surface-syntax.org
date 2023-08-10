@@ -1526,7 +1526,28 @@ end
 
 ** Common Questions
 
-*** Why are Enumerations and Unions distinct?
+*** Why are Enumerations and Unions distinct
+
+TBD
+
+*** How to model Polymorphism
+
+The term /polymorphism/ is, in itself, polymorphic; the intent in software to create a structure that may be of more than
+one /type/ is useful enough that it has been invented a number of times.
+
+#+BEGIN_QUOTE
+/In programming language theory and type theory, polymorphism is the provision of a single interface to entities of
+different types or the use of a single symbol to represent multiple different types./
+--- /Wikipedia/[fn::https://en.wikipedia.org/wiki/Polymorphism_(computer_science)]
+#+END_QUOTE
+
+1. Pointers, and especially the C ~void*~
+2. Operator overloading or dispatching, including methods and multi-methods
+3. Discriminated Unions, also known as disjoint unions, variant records (Pascal family), tagged types (Ada)
+4. Inheritance, of both interface and implementation
+5. Interface, or protocol, implementation
+
+As SDML does not support pointers, inheritance, or interface definitions, polymorphism is provided *only* via union types.
 
 *** When to use Property Definitions
 
@@ -1868,7 +1889,7 @@ NamePath            ::= ( "self" | "Self" | Identifier ) ( "." Identifier )+
 PredicateValue      ::=
     SimpleValue | ListOfPredicateValues
 
-ListOfPredicateValues ::= "[" SimpleValue* "]"
+ListOfPredicateValues ::= "∅" | ( "[" SimpleValue* "]" )
 
 FunctionalTerm      ::= Term "(" Term* ")"
 #+END_SRC

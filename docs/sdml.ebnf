@@ -267,7 +267,7 @@ PathSubject         ::= ( "self" | "Self" | Identifier )
 PredicateValue      ::=
     SimpleValue | ListOfPredicateValues
 
-ListOfPredicateValues ::= "[" SimpleValue* "]"
+ListOfPredicateValues ::= "∅" | ( "[" SimpleValue* "]" )
 
 FunctionalTerm      ::= Term "(" Term* ")"
 

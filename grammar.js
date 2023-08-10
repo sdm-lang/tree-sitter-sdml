@@ -404,12 +404,15 @@ module.exports = grammar({
             $.list_of_predicate_values,
         ),
 
-        list_of_predicate_values: $ => seq(
-            '[',
-            repeat(
-                $.simple_value
-            ),
-            ']'
+        list_of_predicate_values: $ => choice(
+            keyword('∅'),
+            seq(
+                '[',
+                repeat(
+                    $.simple_value
+                ),
+                ']'
+            )
         ),
 
         reserved_self: $ =>  keyword('self'),

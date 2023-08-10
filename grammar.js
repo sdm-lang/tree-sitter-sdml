@@ -201,7 +201,7 @@ module.exports = grammar({
 
         atomic_sentence: $ => seq(
             field('predicate', $.term),
-            '(',
+           '(',
             field('arguments', repeat($.term)),
             ')',
         ),
@@ -409,7 +409,10 @@ module.exports = grammar({
             seq(
                 '[',
                 repeat(
-                    $.simple_value
+                    choice(
+                        $.simple_value,
+                        $.identifier_reference
+                    )
                 ),
                 ']'
             )

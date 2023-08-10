@@ -60,7 +60,7 @@ module Campaign is
         ;                                    ^ punctuation.bracket
       end
       ; <- keyword
-      
+
     end
     ; <- keyword
 
@@ -81,10 +81,10 @@ module Campaign is
         ;   ^ function.definition
         ;       ^ operator
         ;          ^ string
-        
+
         in
         ; <- keyword
-        
+
         ∀ self ( self.tags.contains(foo) )
         ; <- operator
         ;   ^ keyword
@@ -98,10 +98,10 @@ module Campaign is
         ;                             ^ variable
         ;                                ^ punctuation.bracket
         ;                                  ^ punctuation.bracket
-        
+
       end
       ; <- keyword
-      
+
     end
     ; <- keyword
 
@@ -121,12 +121,12 @@ module Campaign is
         ; <- operator
         ;   ^ keyword
         ;        ^ punctuation.bracket
-        
+
           ¬is_empty(
           ; <- operator
           ; ^ function.call
           ;         ^ punctuation.bracket
-          
+
             {t | t in self.tags and t = "foo"}
             ; <- punctuation.bracket
             ;^ variable

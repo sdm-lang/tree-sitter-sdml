@@ -18,8 +18,7 @@ module Campaign is
 
     ref d -> Target is
       assert tagged_with_foo_path is
-        def foo := "foo"
-        in
+        def foo := "foo" in
         ∀ self (self.tags.contains(foo))
       end
     end

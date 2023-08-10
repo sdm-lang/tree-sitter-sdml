@@ -100,6 +100,11 @@
 
 (environment_definition name: (identifier) @function.definition)
 
+(fn_parameter name: (identifier) @variable.parameter)
+
+(fn_type (any_type) @type)
+(fn_type (type_reference (identifier_reference) @type))
+
 (constraint_environment (constraint_environment_end) @keyword)
 
 (constraint_sentence [ "(" ")" ] @punctuation.bracket)
@@ -108,20 +113,25 @@
  "." @punctuation.delimiter
  path: (identifier) @function.call)
 
-(term (name_path subject: (identifier) @variable))
-(equation (term (identifier_reference) @variable))
+((term (name_path subject: (identifier) @variable))
+ (#is-not? local))
+
+((equation (term (identifier_reference) @variable))
+ (#is-not? local))
 
 (functional_term
  function: (_) @function.call
  [ "(" ")" ] @punctuation.bracket)
 
-(functional_term arguments: (term (identifier_reference) @variable))
+((functional_term arguments: (term (identifier_reference) @variable))
+ (#is-not? local))
 
 (atomic_sentence
  predicate: (_) @function.call
  [ "(" ")" ] @punctuation.bracket)
 
-(atomic_sentence arguments: (term (identifier_reference) @variable))
+((atomic_sentence arguments: (term (identifier_reference) @variable))
+ (#is-not? local))
 
 (quantified_body [ "(" ")" ] @punctuation.bracket)
 
@@ -131,14 +141,13 @@
 (binding_type_reference from_type: (reserved_self_type) @keyword)
 (binding_type_reference from_type: (identifier_reference) @type)
 
-(binding_seq_iterator from_collection: (identifier_reference) @variable)
-(binding_seq_iterator from_collection: (name_path subject: (identifier) @variable))
+((binding_seq_iterator from_collection: (identifier_reference) @variable)
+ (#is-not? local))
+
+((binding_seq_iterator from_collection: (name_path subject: (identifier) @variable))
+ (#is-not? local))
+
 (binding_seq_iterator from_collection: (name_path path: (identifier) @function.call))
-
-(fn_parameter name: (identifier) @variable.parameter)
-
-(fn_type (any_type) @type)
-(fn_type (type_reference (identifier_reference) @type))
 
 (collection_type
  collection: (builtin_collection_type) @type

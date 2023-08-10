@@ -50,41 +50,49 @@ end
 
 # Changes
 
+**Version: 0.1.31**
+
+* Feature: Update highlighting queries for constraints with support for locals.
+* Feature: Add a `locals.scm` file with scopes for formal constraints.
+* Feature: Add `∅` (empty set) as a synonym for `[]` in constraints.
+* Fix: Update the mapping value test case to use domain/range field names.
+
 **Version: 0.1.30**
 
-* Minor: Added field names for the domain and range of mapping types and values.
+* Feature (minor): Added field names for the domain and range of mapping types and values.
 
 **Version: 0.1.29**
 
-* Fixed an apparent regression, the value for a constructor changed from `simple_value` to `value`. This changes it back.
+* Fix: An apparent regression, the value for a constructor changed from `simple_value` to `value`. This changes it back.
 
 **Version: 0.1.28**
 
-* Added a mapping type and corresponding value syntax.
+* Feature: Added a mapping type and corresponding value syntax.
 
 **Version: 0.1.27**
 
-* Added ordering and uniqueness constraints into the cardinality expression. Used to constrain the sequence type of a
-  member.
+* Feature: Added ordering and uniqueness constraints into the cardinality expression. Used to constrain the sequence
+  type of a member.
 
 **Version: 0.1.26**
 
-* Applied same change as 0.1.25 but for property roles as well.
+* Feature: Applied same change as 0.1.25 but for property roles as well.
 
 **Version: 0.1.25**
 
-* Changed grammar for reference members:
+* Feature: Changed grammar for reference members:
   * The production `source_cardinality` has been removed.
   * The production `member_inverse_name` has been added.
 
 **Version: 0.1.24**
 
-* Added a language-tag to informal constraints.
-* Implemented a wildcard type for the constraint language.
+* Feature: Constraint changes
+  * Added a language-tag to informal constraints.
+  * Implemented a wildcard type for the constraint language.
 
 **Version: 0.1.23**
 
-* Added highlighting test for constraints, had to tweak a few things.
+* Feature: Added highlighting test for constraints, had to tweak a few things.
 
 **Version: 0.1.22**
 

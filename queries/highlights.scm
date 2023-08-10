@@ -100,10 +100,9 @@
 
 (environment_definition name: (identifier) @function.definition)
 
+(function_signature target_type: (_) @type)
 (fn_parameter name: (identifier) @variable.parameter)
-
-(fn_type (any_type) @type)
-(fn_type (type_reference (identifier_reference) @type))
+(fn_parameter target_type: (_) @type)
 
 (constraint_environment (constraint_environment_end) @keyword)
 
@@ -140,11 +139,7 @@
 (binding_type_reference from_type: (reserved_self_type) @keyword)
 (binding_type_reference from_type: (identifier_reference) @type)
 
-((binding_seq_iterator from_collection: (identifier) @variable) (#is-not? local))
-
-(collection_type
- collection: (builtin_collection_type) @type
- element: (_) @type)
+((binding_seq_iterator from_sequence: (identifier) @variable) (#is-not? local))
 
 (list_of_predicate_values [ "[" "]" ] @punctuation.bracket)
 

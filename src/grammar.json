@@ -418,7 +418,7 @@
         },
         {
           "type": "FIELD",
-          "name": "value",
+          "name": "body",
           "content": {
             "type": "SYMBOL",
             "name": "constraint_sentence"
@@ -1121,7 +1121,7 @@
         },
         {
           "type": "FIELD",
-          "name": "from_collection",
+          "name": "from_sequence",
           "content": {
             "type": "CHOICE",
             "members": [
@@ -1490,12 +1490,8 @@
           }
         },
         {
-          "type": "FIELD",
-          "name": "target_type",
-          "content": {
-            "type": "SYMBOL",
-            "name": "fn_type"
-          }
+          "type": "SYMBOL",
+          "name": "_fn_type"
         }
       ]
     },
@@ -1535,16 +1531,12 @@
           ]
         },
         {
-          "type": "FIELD",
-          "name": "target_type",
-          "content": {
-            "type": "SYMBOL",
-            "name": "fn_type"
-          }
+          "type": "SYMBOL",
+          "name": "_fn_type"
         }
       ]
     },
-    "fn_type": {
+    "_fn_type": {
       "type": "CHOICE",
       "members": [
         {
@@ -1552,53 +1544,33 @@
           "name": "any_type"
         },
         {
-          "type": "SYMBOL",
-          "name": "collection_type"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "type_reference"
-        }
-      ]
-    },
-    "collection_type": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "collection",
-          "content": {
-            "type": "SYMBOL",
-            "name": "builtin_collection_type"
-          }
-        },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "of"
-            }
-          }
-        },
-        {
-          "type": "FIELD",
-          "name": "element",
-          "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "any_type"
-              },
-              {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "FIELD",
+                  "name": "target_cardinality",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "cardinality_expression"
+                  }
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
+              "type": "FIELD",
+              "name": "target_type",
+              "content": {
                 "type": "SYMBOL",
                 "name": "type_reference"
               }
-            ]
-          }
+            }
+          ]
         }
       ]
     },
@@ -1612,77 +1584,6 @@
           "value": "_"
         }
       }
-    },
-    "builtin_collection_type": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "Bag"
-            }
-          }
-        },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "List"
-            }
-          }
-        },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "Maybe"
-            }
-          }
-        },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "OrderedSet"
-            }
-          }
-        },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "Sequence"
-            }
-          }
-        },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "Set"
-            }
-          }
-        }
-      ]
     },
     "sequence_comprehension": {
       "type": "SEQ",

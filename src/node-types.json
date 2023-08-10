@@ -105,7 +105,7 @@
     "type": "binding_seq_iterator",
     "named": true,
     "fields": {
-      "from_collection": {
+      "from_sequence": {
         "multiple": false,
         "required": true,
         "types": [
@@ -220,11 +220,6 @@
     }
   },
   {
-    "type": "builtin_collection_type",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "builtin_simple_type",
     "named": true,
     "fields": {}
@@ -285,36 +280,6 @@
         "types": [
           {
             "type": "unsigned",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "collection_type",
-    "named": true,
-    "fields": {
-      "collection": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "builtin_collection_type",
-            "named": true
-          }
-        ]
-      },
-      "element": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "any_type",
-            "named": true
-          },
-          {
-            "type": "type_reference",
             "named": true
           }
         ]
@@ -871,36 +836,33 @@
           }
         ]
       },
-      "target_type": {
+      "target_cardinality": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
-            "type": "fn_type",
+            "type": "cardinality_expression",
+            "named": true
+          }
+        ]
+      },
+      "target_type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type_reference",
             "named": true
           }
         ]
       }
-    }
-  },
-  {
-    "type": "fn_type",
-    "named": true,
-    "fields": {},
+    },
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "any_type",
-          "named": true
-        },
-        {
-          "type": "collection_type",
-          "named": true
-        },
-        {
-          "type": "type_reference",
           "named": true
         }
       ]
@@ -910,7 +872,7 @@
     "type": "formal_constraint",
     "named": true,
     "fields": {
-      "value": {
+      "body": {
         "multiple": false,
         "required": true,
         "types": [
@@ -936,12 +898,22 @@
     "type": "function_signature",
     "named": true,
     "fields": {
-      "target_type": {
+      "target_cardinality": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
-            "type": "fn_type",
+            "type": "cardinality_expression",
+            "named": true
+          }
+        ]
+      },
+      "target_type": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type_reference",
             "named": true
           }
         ]
@@ -951,6 +923,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "any_type",
+          "named": true
+        },
         {
           "type": "fn_parameter",
           "named": true
@@ -2260,30 +2236,6 @@
     "named": false
   },
   {
-    "type": "Bag",
-    "named": false
-  },
-  {
-    "type": "List",
-    "named": false
-  },
-  {
-    "type": "Maybe",
-    "named": false
-  },
-  {
-    "type": "OrderedSet",
-    "named": false
-  },
-  {
-    "type": "Sequence",
-    "named": false
-  },
-  {
-    "type": "Set",
-    "named": false
-  },
-  {
     "type": "[",
     "named": false
   },
@@ -2325,11 +2277,11 @@
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "def",
@@ -2401,11 +2353,11 @@
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "iri",

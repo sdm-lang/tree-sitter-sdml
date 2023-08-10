@@ -168,7 +168,7 @@ module.exports = grammar({
         formal_constraint: $ => seq(
             keyword('is'),
             optional($.constraint_environment),
-            field('value', $.constraint_sentence),
+            field('body', $.constraint_sentence),
             keyword('end'),
         ),
 
@@ -352,7 +352,7 @@ module.exports = grammar({
                 operator('∈')
             ),
             field(
-                'from_collection',
+                'from_sequence',
                 choice(
                     $.name_path,
                     $.identifier, // variable
@@ -470,7 +470,7 @@ module.exports = grammar({
             repeat1($.fn_parameter),
             ')',
             operator('->'),
-            field('target_type', $.fn_type)
+            $._fn_type
         ),
 
         fn_parameter: $ => seq(
@@ -480,40 +480,20 @@ module.exports = grammar({
                     operator('->'),
                 )
             ),
-            field('target_type', $.fn_type)
+            $._fn_type
         ),
 
-        fn_type: $ => choice(
+        _fn_type: $ => choice(
             $.any_type,
-            $.collection_type,
-            $.type_reference
-        ),
-
-        collection_type: $ => seq(
-            field(
-                'collection',
-                $.builtin_collection_type
-            ),
-            keyword('of'),
-            field(
-                'element',
-                choice(
-                    $.any_type,
-                    $.type_reference
-                )
+            seq(
+                optional(
+                    field('target_cardinality', $.cardinality_expression)
+                ),
+                field('target_type', $.type_reference)
             )
         ),
 
         any_type: $ => operator('_'),
-
-        builtin_collection_type: $ => choice(
-            keyword('Bag'),
-            keyword('List'),
-            keyword('Maybe'),
-            keyword('OrderedSet'),
-            keyword('Sequence'),
-            keyword('Set'),
-        ),
 
         // -----------------------------------------------------------------------
 

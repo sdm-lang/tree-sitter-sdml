@@ -84,8 +84,6 @@
 
 (environment_definition name: (identifier) @definition.function)
 
-(builtin_collection_type) @reference.class
-
 ;; ---------------------------------------------------------------------------
 ;; Field Names
 ;; ---------------------------------------------------------------------------

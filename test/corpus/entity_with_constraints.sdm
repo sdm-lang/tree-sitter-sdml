@@ -70,8 +70,7 @@ end
                               (simple_sentence
                                 (atomic_sentence
                                   (term
-                                    (identifier_reference
-                                      (identifier)))
+                                    (identifier))
                                   (term
                                     (name_path
                                       (reserved_self)

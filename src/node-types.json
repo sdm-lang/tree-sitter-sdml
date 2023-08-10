@@ -110,7 +110,7 @@
         "required": true,
         "types": [
           {
-            "type": "identifier_reference",
+            "type": "identifier",
             "named": true
           },
           {
@@ -1511,10 +1511,6 @@
           {
             "type": "reserved_self",
             "named": true
-          },
-          {
-            "type": "reserved_self_type",
-            "named": true
           }
         ]
       }
@@ -1958,7 +1954,7 @@
           "named": true
         },
         {
-          "type": "identifier_reference",
+          "type": "identifier",
           "named": true
         },
         {
@@ -1967,6 +1963,10 @@
         },
         {
           "type": "predicate_value",
+          "named": true
+        },
+        {
+          "type": "qualified_identifier",
           "named": true
         },
         {

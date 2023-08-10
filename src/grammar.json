@@ -1131,7 +1131,7 @@
               },
               {
                 "type": "SYMBOL",
-                "name": "identifier_reference"
+                "name": "identifier"
               },
               {
                 "type": "SYMBOL",
@@ -1168,7 +1168,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "identifier_reference"
+          "name": "identifier"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "qualified_identifier"
         },
         {
           "type": "SYMBOL",
@@ -1226,10 +1230,6 @@
         {
           "type": "SYMBOL",
           "name": "reserved_self"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "reserved_self_type"
         },
         {
           "type": "SYMBOL",

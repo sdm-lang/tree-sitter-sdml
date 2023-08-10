@@ -109,29 +109,28 @@
 
 (constraint_sentence [ "(" ")" ] @punctuation.bracket)
 
-(name_path
- "." @punctuation.delimiter
- path: (identifier) @function.call)
+(name_path subject: (reserved_self) @keyword)
+((name_path subject: (identifier) @function.call) (#is-not? local))
+(name_path path: (identifier) @function.call)
+(name_path "." @punctuation.delimiter)
 
-((term (name_path subject: (identifier) @variable))
- (#is-not? local))
+(term (qualified_identifier) @type)
 
-((equation (term (identifier_reference) @variable))
- (#is-not? local))
+((functional_term function: (term (identifier) @function.call)) (#is-not? local))
 
-(functional_term
- function: (_) @function.call
- [ "(" ")" ] @punctuation.bracket)
+((functional_term arguments: (term (identifier) @variable)) (#is-not? local))
 
-((functional_term arguments: (term (identifier_reference) @variable))
- (#is-not? local))
+(functional_term [ "(" ")" ] @punctuation.bracket)
 
-(atomic_sentence
- predicate: (_) @function.call
- [ "(" ")" ] @punctuation.bracket)
+((atomic_sentence predicate: (term (identifier) @function.call)) (#is-not? local))
 
-((atomic_sentence arguments: (term (identifier_reference) @variable))
- (#is-not? local))
+((atomic_sentence arguments: (term (identifier) @variable)) (#is-not? local))
+
+(atomic_sentence [ "(" ")" ] @punctuation.bracket)
+
+((equation lhs: (term (identifier) @variable)) (#is-not? local))
+
+((equation rhs: (term (identifier) @variable)) (#is-not? local))
 
 (quantified_body [ "(" ")" ] @punctuation.bracket)
 
@@ -141,13 +140,7 @@
 (binding_type_reference from_type: (reserved_self_type) @keyword)
 (binding_type_reference from_type: (identifier_reference) @type)
 
-((binding_seq_iterator from_collection: (identifier_reference) @variable)
- (#is-not? local))
-
-((binding_seq_iterator from_collection: (name_path subject: (identifier) @variable))
- (#is-not? local))
-
-(binding_seq_iterator from_collection: (name_path path: (identifier) @function.call))
+((binding_seq_iterator from_collection: (identifier) @variable) (#is-not? local))
 
 (collection_type
  collection: (builtin_collection_type) @type
@@ -166,6 +159,7 @@
 (returned_value [ "[" "]" ] @punctuation.bracket)
 
 (list_of_predicate_values [ "[" "]" ] @punctuation.bracket)
+(list_of_predicate_values (identifier_reference) @type)
 
 ;; ---------------------------------------------------------------------------
 ;; Types

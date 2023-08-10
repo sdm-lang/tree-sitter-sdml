@@ -355,7 +355,7 @@ module.exports = grammar({
                 'from_collection',
                 choice(
                     $.name_path,
-                    $.identifier_reference,
+                    $.identifier, // variable
                     $.sequence_comprehension
                 )
             )
@@ -370,8 +370,9 @@ module.exports = grammar({
         // -----------------------------------------------------------------------
 
         term: $ => choice(
-            $.name_path,
-            $.identifier_reference,
+            $.name_path,            // function call sugar
+            $.identifier,           // variable
+            $.qualified_identifier, // type
             $.predicate_value,
             $.functional_term,
             $.sequence_comprehension,
@@ -395,7 +396,6 @@ module.exports = grammar({
 
         _path_subject: $ => choice(
             $.reserved_self,
-            $.reserved_self_type,
             $.identifier,
         ),
 

@@ -50,6 +50,10 @@ end
 
 # Changes
 
+**Version: 0.1.32**
+
+* Feature: Updated environment definition sequence types to use the same syntax as member type and cardinality.
+
 **Version: 0.1.31**
 
 * Feature: Update highlighting queries for constraints with support for locals.

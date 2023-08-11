@@ -241,9 +241,9 @@ Biconditional       ::= ( "iff" | "⇔" ) ConstraintSentence
 
 QuantifiedSentence  ::= Universal | Existential
 
-Universal           ::= ( "forall" | "∀" ) QuantifierBinding* QuantifiedBody
+Universal           ::= ( "forall" | "∀" ) QuantifierBinding+ QuantifiedBody
 
-Existential         ::= ( "exists" | "∃" ) QuantifierBinding* QuantifiedBody
+Existential         ::= ( "exists" | "∃" ) QuantifierBinding+ QuantifiedBody
 
 QuantifierBinding   ::= "self" | ( Identifer BindingTarget )
 
@@ -253,21 +253,22 @@ BindingTarget       ::=
 BindingFromType     ::= "->" ( "Self" | IdentifierReference )
 
 BindingFromSequence ::=
-    ( "in" | "∈" ) ( NamePath | IdentifierReference | SequenceComprehension )
+    ( "in" | "∈" ) ( NamePath | Identifier | SequenceComprehension )
 
 QuantifiedBody      ::= "(" ConstraintSentence ")"
 
 Term                ::=
-    NamePath | IdentifierReference | PredicateValue | FunctionalTerm | SequenceComprehension
+    NamePath | Identifier | QualifiedIdentifier
+    | PredicateValue | FunctionalTerm | SequenceComprehension
 
 NamePath            ::= PathSubject ( "." Identifier )+
 
-PathSubject         ::= ( "self" | "Self" | Identifier )
+PathSubject         ::= ( "self" | Identifier )
 
 PredicateValue      ::=
     SimpleValue | ListOfPredicateValues
 
-ListOfPredicateValues ::= "∅" | ( "[" SimpleValue* "]" )
+ListOfPredicateValues ::= "∅" | ( "[" ( SimpleValue | IdentifierReference )* "]" )
 
 FunctionalTerm      ::= Term "(" Term* ")"
 
@@ -281,14 +282,11 @@ FunctionSignature   ::= "(" FunctionParameter+ ")" "->" FunctionType
 
 FunctionParameter   ::= ( Identifier "->" )? FunctionType
 
-FunctionType        ::=  AnyType | CollectionType | TypeReference
-
-CollectionType      ::= BuiltinCollectionType "of" ( AnyType | TypeReference )
-
-BuiltinCollectionType ::=
-    "Bag" | "List" | "Maybe" | "OrderedSet" | "Sequence" | "Set"
+FunctionType        ::=  AnySequenceType | ( Cardinality? ( AnyType | TypeReference ) )
 
 AnyType             ::= "_"
+
+AnySequenceType     ::= "{_}"
 
 SequenceComprehension ::= "{" ReturnedValue "|" Expression "}"
 

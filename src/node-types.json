@@ -851,6 +851,10 @@
         "required": false,
         "types": [
           {
+            "type": "any_type",
+            "named": true
+          },
+          {
             "type": "type_reference",
             "named": true
           }
@@ -862,7 +866,7 @@
       "required": false,
       "types": [
         {
-          "type": "any_type",
+          "type": "any_sequence_type",
           "named": true
         }
       ]
@@ -913,6 +917,10 @@
         "required": false,
         "types": [
           {
+            "type": "any_type",
+            "named": true
+          },
+          {
             "type": "type_reference",
             "named": true
           }
@@ -924,7 +932,7 @@
       "required": true,
       "types": [
         {
-          "type": "any_type",
+          "type": "any_sequence_type",
           "named": true
         },
         {
@@ -2248,6 +2256,10 @@
     "named": false
   },
   {
+    "type": "any_sequence_type",
+    "named": true
+  },
+  {
     "type": "any_type",
     "named": true
   },
@@ -2277,11 +2289,11 @@
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "def",
@@ -2289,11 +2301,11 @@
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "end",

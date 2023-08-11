@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="483" height="115">
+<svg xmlns="http://www.w3.org/2000/svg" width="483" height="97">
    <defs>
       <style type="text/css">
     @namespace "http://www.w3.org/2000/svg";
@@ -29,40 +29,40 @@
     polygon.regexp        {fill: #FFF4C7; stroke: #332900; stroke-width: 1;}
   </style>
    </defs>
-   <polygon points="9 51 1 47 1 55"/>
-   <polygon points="17 51 9 47 9 55"/>
-   <rect x="51" y="37" width="60" height="32" rx="10"/>
+   <polygon points="9 33 1 29 1 37"/>
+   <polygon points="17 33 9 29 9 37"/>
+   <rect x="51" y="19" width="60" height="32" rx="10"/>
    <rect x="49"
-          y="35"
+          y="17"
           width="60"
           height="32"
           class="terminal"
           rx="10"/>
-   <text class="terminal" x="59" y="55">exists</text>
-   <rect x="51" y="81" width="28" height="32" rx="10"/>
+   <text class="terminal" x="59" y="37">exists</text>
+   <rect x="51" y="63" width="28" height="32" rx="10"/>
    <rect x="49"
-          y="79"
+          y="61"
           width="28"
           height="32"
           class="terminal"
           rx="10"/>
-   <text class="terminal" x="59" y="99">∃</text>
+   <text class="terminal" x="59" y="81">∃</text>
    <a xmlns:xlink="http://www.w3.org/1999/xlink"
        xlink:href="#QuantifierBinding"
        xlink:title="QuantifierBinding">
-      <rect x="171" y="3" width="128" height="32"/>
-      <rect x="169" y="1" width="128" height="32" class="nonterminal"/>
-      <text class="nonterminal" x="179" y="21">QuantifierBinding</text>
+      <rect x="171" y="19" width="128" height="32"/>
+      <rect x="169" y="17" width="128" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="179" y="37">QuantifierBinding</text>
    </a>
    <a xmlns:xlink="http://www.w3.org/1999/xlink"
        xlink:href="#QuantifiedBody"
        xlink:title="QuantifiedBody">
-      <rect x="339" y="37" width="116" height="32"/>
-      <rect x="337" y="35" width="116" height="32" class="nonterminal"/>
-      <text class="nonterminal" x="347" y="55">QuantifiedBody</text>
+      <rect x="339" y="19" width="116" height="32"/>
+      <rect x="337" y="17" width="116" height="32" class="nonterminal"/>
+      <text class="nonterminal" x="347" y="37">QuantifiedBody</text>
    </a>
    <path class="line"
-          d="m17 51 h2 m20 0 h10 m60 0 h10 m-100 0 h20 m80 0 h20 m-120 0 q10 0 10 10 m100 0 q0 -10 10 -10 m-110 10 v24 m100 0 v-24 m-100 24 q0 10 10 10 m80 0 q10 0 10 -10 m-90 10 h10 m28 0 h10 m0 0 h32 m40 -44 h10 m0 0 h138 m-168 0 l20 0 m-1 0 q-9 0 -9 -10 l0 -14 q0 -10 10 -10 m148 34 l20 0 m-20 0 q10 0 10 -10 l0 -14 q0 -10 -10 -10 m-148 0 h10 m128 0 h10 m20 34 h10 m116 0 h10 m3 0 h-3"/>
-   <polygon points="473 51 481 47 481 55"/>
-   <polygon points="473 51 465 47 465 55"/>
+          d="m17 33 h2 m20 0 h10 m60 0 h10 m-100 0 h20 m80 0 h20 m-120 0 q10 0 10 10 m100 0 q0 -10 10 -10 m-110 10 v24 m100 0 v-24 m-100 24 q0 10 10 10 m80 0 q10 0 10 -10 m-90 10 h10 m28 0 h10 m0 0 h32 m40 -44 h10 m128 0 h10 m-168 0 l20 0 m-1 0 q-9 0 -9 -10 l0 -12 q0 -10 10 -10 m148 32 l20 0 m-20 0 q10 0 10 -10 l0 -12 q0 -10 -10 -10 m-148 0 h10 m0 0 h138 m20 32 h10 m116 0 h10 m3 0 h-3"/>
+   <polygon points="473 33 481 29 481 37"/>
+   <polygon points="473 33 465 29 465 37"/>
 </svg>

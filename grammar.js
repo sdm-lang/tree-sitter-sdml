@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.31
+// Version:    0.1.32
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -484,14 +484,22 @@ module.exports = grammar({
         ),
 
         _fn_type: $ => choice(
-            $.any_type,
+            $.any_sequence_type,
             seq(
                 optional(
                     field('target_cardinality', $.cardinality_expression)
                 ),
-                field('target_type', $.type_reference)
+                field(
+                    'target_type',
+                    choice(
+                        $.any_type,
+                        $.type_reference
+                    )
+                )
             )
         ),
+
+        any_sequence_type: $ => operator('{_}'),
 
         any_type: $ => operator('_'),
 

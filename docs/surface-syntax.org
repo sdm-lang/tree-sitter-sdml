@@ -742,8 +742,8 @@ Table [[tbl:builtin-sequence-types]] shows how these constraints are combined to
 type. See also section [[seq:library-sequence-types]] which describes the standard library operations on sequence types.
 
 #+NAME: tbl:builtin-sequence-types
-#+CAPTION: Built-in Sequence Types
-| Ordering  | Uniqueness | Type          | Example Specification |
+#+CAPTION: Logical Sequence Types
+| Ordering  | Uniqueness | /Logical Type/ | Example Specification |
 |-----------+------------+---------------+-----------------------|
 | ~unordered~ | ~nonunique~  | ~Bag~ (default) | ~{0..}~                 |
 | ~ordered~   | ~nonunique~  | ~List~          | ~{ordered 0..}~         |
@@ -1877,19 +1877,22 @@ BindingTarget       ::=
 BindingFromType     ::= "->" ( "Self" | IdentifierReference )
 
 BindingFromSequence ::=
-    ( "in" | "∈" ) ( NamePath | IdentifierReference | SequenceComprehension )
+    ( "in" | "∈" ) ( NamePath | Identifier | SequenceComprehension )
 
 QuantifiedBody      ::= "(" ConstraintSentence ")"
 
 Term                ::=
-    NamePath | IdentifierReference | PredicateValue | FunctionalTerm | SequenceComprehension
+    NamePath | Identifier | QuantifiedIdentifier
+    | PredicateValue | FunctionalTerm | SequenceComprehension
 
-NamePath            ::= ( "self" | "Self" | Identifier ) ( "." Identifier )+
+NamePath            ::= PathSubject ( "." Identifier )+
+
+PathSubject         ::= "self" | Identifier
 
 PredicateValue      ::=
     SimpleValue | ListOfPredicateValues
 
-ListOfPredicateValues ::= "∅" | ( "[" SimpleValue* "]" )
+ListOfPredicateValues ::= "∅" | ( "[" ( SimpleValue | IdentifierReference )* "]" )
 
 FunctionalTerm      ::= Term "(" Term* ")"
 #+END_SRC
@@ -1907,14 +1910,11 @@ FunctionSignature   ::= "(" FunctionParameter+ ")" "->" FunctionType
 
 FunctionParameter   ::= ( Identifier "->" )? FunctionType
 
-FunctionType        ::=  AnyType | CollectionType | TypeReference
-
-CollectionType      ::= BuiltinCollectionType "of" ( AnyType | TypeReference )
-
-BuiltinCollectionType ::=
-    "Bag" | "List" | "Maybe" | "OrderedSet" | "Sequence" | "Set"
+FunctionType        ::=  AnySequenceType | ( Cardinality? ( AnyType | TypeReference ) )
 
 AnyType             ::= "_"
+
+AnySequenceType     ::= "{_}"
 #+END_SRC
 
 *** Sequence Comprehensions

@@ -1541,7 +1541,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "any_type"
+          "name": "any_sequence_type"
         },
         {
           "type": "SEQ",
@@ -1566,13 +1566,33 @@
               "type": "FIELD",
               "name": "target_type",
               "content": {
-                "type": "SYMBOL",
-                "name": "type_reference"
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "any_type"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "type_reference"
+                  }
+                ]
               }
             }
           ]
         }
       ]
+    },
+    "any_sequence_type": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "STRING",
+          "value": "{_}"
+        }
+      }
     },
     "any_type": {
       "type": "TOKEN",

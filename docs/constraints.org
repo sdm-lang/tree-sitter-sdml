@@ -235,8 +235,8 @@ or existential ($\exists$) quantifier.
 #+NAME: lst:grammar-quantified-sentence
 #+BEGIN_SRC ebnf
 QuantifiedSentence  ::= Universal | Existential
-Universal           ::= ( "forall" | "∀" ) QuantifierBinding* QuantifiedBody
-Existential         ::= ( "exists" | "∃" ) QuantifierBinding* QuantifiedBody
+Universal           ::= ( "forall" | "∀" ) QuantifierBinding+ QuantifiedBody
+Existential         ::= ( "exists" | "∃" ) QuantifierBinding+ QuantifiedBody
 #+END_SRC
 
 [[./ebnf-diagram/QuantifiedSentence.svg]]
@@ -252,7 +252,7 @@ BindingTarget       ::=
     BindingFromType | BindingFromSequence | "(" BindingTarget ")"
 BindingFromType     ::= "->" ( "Self" | IdentifierReference )
 BindingFromSequence ::=
-    ( "in" | "∈" ) ( NamePath | IdentifierReference | SequenceComprehension )
+    ( "in" | "∈" ) ( NamePath | Identifier | SequenceComprehension )
 #+END_SRC
 
 [[./ebnf-diagram/QuantifierBinding.svg]]
@@ -278,7 +278,8 @@ More TBD
 #+BEGIN_SRC ebnf
 Term                ::=
     NamePath
-    | IdentifierReference
+    | Identifier
+    | QualifiedIdentifier
     | PredicateValue
     | FunctionalTerm
     | SequenceComprehension
@@ -289,7 +290,7 @@ Term                ::=
 #+NAME: lst:grammar-name-path
 #+BEGIN_SRC ebnf
 NamePath            ::= PathSubject ( "." Identifier )+
-PathSubject         ::= ( "self" | "Self" | Identifier )
+PathSubject         ::= ( "self" | Identifier )
 #+END_SRC
 
 [[./ebnf-diagram/NamePath.svg]]
@@ -313,7 +314,7 @@ Similarly the quantifier collection ~self.definitions~ becomes ~definitions(self
 #+BEGIN_SRC ebnf
 PredicateValue      ::=
     SimpleValue | ListOfPredicateValues
-ListOfPredicateValues ::= "[" SimpleValue* "]"
+ListOfPredicateValues ::= "∅" | ( "[" ( SimpleValue | IdentifierReference )* "]" )
 #+END_SRC
 
 [[./ebnf-diagram/PredicateValue.svg]]
@@ -424,7 +425,7 @@ EnvironmentDef      ::=
 #+BEGIN_SRC ebnf
 FunctionSignature   ::= "(" FunctionParameter+ ")" "->" FunctionType
 FunctionParameter   ::= ( Identifier "->" )? FunctionType
-FunctionType        ::=  AnyType | CollectionType | TypeReference
+FunctionType        ::=  AnySequenceType | ( Cardinality? ( AnyType | TypeReference ) )
 #+END_SRC
 
 [[./ebnf-diagram/FunctionSignature.svg]]
@@ -436,9 +437,7 @@ FunctionType        ::=  AnyType | CollectionType | TypeReference
 #+NAME: lst:grammar-function-types
 #+BEGIN_SRC ebnf
 AnyType             ::= "_"
-CollectionType      ::= BuiltinCollectionType "of" ( AnyType | TypeReference )
-BuiltinCollectionType ::=
-    "Bag" | "List" | "Maybe" | "OrderedSet" | "Sequence" | "Set"
+AnySequenceType     ::= "{_}"
 #+END_SRC
 
 [[./ebnf-diagram/CollectionType.svg]]
@@ -456,7 +455,7 @@ members of that definition. Note that this example also demonstrates the ability
 module labelled is
 
   assert must_have_preferred_label is
-    def has_pref_label(anns -> Bag of Annotation) ≔
+    def has_pref_label(anns -> {0..} Annotation) ≔
       ∃ a ∈ anns ( a.name = skos:prefLabel ∧ ¬a.value.is_empty )
   in
     has_pref_label(self.annotations)

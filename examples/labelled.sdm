@@ -1,7 +1,7 @@
 module labelled is
 
   assert must_have_preferred_label is
-    def has_pref_label(anns -> Bag of Annotation) -> boolean ≔
+    def has_pref_label(anns -> {0..} Annotation) -> boolean ≔
       ∃ a ∈ anns ( name(a) = skos:prefLabel ∧ ¬empty(value(a)) )
   in
     has_pref_label(self.annotations)

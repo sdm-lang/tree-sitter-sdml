@@ -50,6 +50,14 @@ end
 
 # Changes
 
+**Version: 0.1.34**
+
+* Feature: Update property definitions to look more like members.
+  * Update rule `property_role` to be a choice of three new rules.
+  * Add rule `identity_role` which is a subset of `identity_member`.
+  * Add rule `role_by_value` which is a subset of `member_by_value`.
+  * Add rule `role_by_reference` which is a subset of `member_by_reference`.
+
 **Version: 0.1.33**
 
 * Feature: Renamed quantifier binding targets to be more consistent.

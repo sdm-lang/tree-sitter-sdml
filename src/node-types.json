@@ -1019,6 +1019,42 @@
     }
   },
   {
+    "type": "identity_role",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "annotation_only_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_reference",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "implication",
     "named": true,
     "fields": {
@@ -1591,57 +1627,24 @@
   {
     "type": "property_role",
     "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "annotation_only_body",
-            "named": true
-          }
-        ]
-      },
-      "cardinality": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "cardinality_expression",
-            "named": true
-          }
-        ]
-      },
-      "inverse": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "member_inverse_name",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "target": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "type_reference",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identity_role",
+          "named": true
+        },
+        {
+          "type": "role_by_reference",
+          "named": true
+        },
+        {
+          "type": "role_by_value",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1747,6 +1750,108 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "role_by_reference",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "annotation_only_body",
+            "named": true
+          }
+        ]
+      },
+      "cardinality": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "cardinality_expression",
+            "named": true
+          }
+        ]
+      },
+      "inverse": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "member_inverse_name",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_reference",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "role_by_value",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "annotation_only_body",
+            "named": true
+          }
+        ]
+      },
+      "cardinality": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "cardinality_expression",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_reference",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {

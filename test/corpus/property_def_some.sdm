@@ -7,7 +7,7 @@ module ddict is
     identifier -> {1} account:AccountId is
       @skos:definition = "a"@en
     end
-    reference ref (inverse_ref) -> {1} account:AccountId
+    ref reference (inverse_ref) -> {1} account:AccountId
   end
 end
 
@@ -21,34 +21,36 @@ end
         (identifier)
         (property_body
           (property_role
-            (identifier)
-            (cardinality_expression
-              (unsigned))
-            (type_reference
-              (identifier_reference
-                (qualified_identifier
-                  (identifier)
-                  (identifier))))
-            (annotation_only_body
-              (annotation
-                (annotation_property
-                  (identifier_reference
-                    (qualified_identifier
-                      (identifier)
-                      (identifier)))
-                  (value
-                    (simple_value
-                      (string
-                        (quoted_string)
-                        (language_tag))))))))
+            (role_by_value
+              (identifier)
+              (cardinality_expression
+                (unsigned))
+              (type_reference
+                (identifier_reference
+                  (qualified_identifier
+                    (identifier)
+                    (identifier))))
+              (annotation_only_body
+                (annotation
+                  (annotation_property
+                    (identifier_reference
+                      (qualified_identifier
+                        (identifier)
+                        (identifier)))
+                    (value
+                      (simple_value
+                        (string
+                          (quoted_string)
+                          (language_tag)))))))))
           (property_role
-            (identifier)
-            (member_inverse_name
-              (identifier))
-            (cardinality_expression
-              (unsigned))
-            (type_reference
-              (identifier_reference
-                (qualified_identifier
-                  (identifier)
-                  (identifier))))))))))
+            (role_by_reference
+              (identifier)
+              (member_inverse_name
+                (identifier))
+              (cardinality_expression
+                (unsigned))
+              (type_reference
+                (identifier_reference
+                  (qualified_identifier
+                    (identifier)
+                    (identifier)))))))))))

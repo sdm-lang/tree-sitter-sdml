@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.33
+// Version:    0.1.34
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -869,15 +869,32 @@ module.exports = grammar({
             keyword('end')
         ),
 
-        property_role: $ => seq(
+        property_role: $ => choice(
+            $.identity_role,
+            $.role_by_value,
+            $.role_by_reference
+        ),
+
+        identity_role: $ => seq(
+            keyword('identity'),
+            field('name', $.identifier),
+            $._type_expression,
+            optional(field('body', $.annotation_only_body))
+        ),
+
+        role_by_value: $ => seq(
+            field('name', $.identifier),
+            $._type_expression_to,
+            optional(field('body', $.annotation_only_body))
+        ),
+
+        role_by_reference: $ => seq(
+            keyword('ref'),
             field('name', $.identifier),
             optional(
-                seq(
-                    keyword('ref'),
-                    field(
-                        'inverse',
-                        $.member_inverse_name
-                    )
+                field(
+                    'inverse',
+                    $.member_inverse_name
                 )
             ),
             $._type_expression_to,

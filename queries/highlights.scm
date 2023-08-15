@@ -209,7 +209,15 @@
 
 (property_def name: (identifier) @variable.field)
 
-(property_role
+(identity_role
+ name: (identifier) @variable.field
+ target: (type_reference) @type)
+
+(role_by_value
+ name: (identifier) @variable.field
+ target: (type_reference) @type)
+
+(role_by_reference
  name: (identifier) @variable.field
  target: (type_reference) @type)
 

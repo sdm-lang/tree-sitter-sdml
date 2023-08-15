@@ -48,12 +48,15 @@
 ;; ---------------------------------------------------------------------------
 
 (identity_member
+ name: (identifier) @definition.field
  target: (type_reference (identifier_reference) @reference.class))
 
 (member_by_value
+ name: (identifier) @definition.field
  target: (type_reference (identifier_reference) @reference.class))
 
 (member_by_reference
+ name: (identifier) @definition.field
  target: (type_reference (identifier_reference) @reference.class))
 
 (type_variant (identifier_reference) @reference.class)
@@ -63,7 +66,16 @@
 (value_variant
  name: (identifier) @definition.constant)
 
-(property_role
+(identity_role
+ name: (identifier) @definition.field
+ target: (type_reference) @reference.class)
+
+(role_by_value
+ name: (identifier) @definition.field
+ target: (type_reference) @reference.class)
+
+(role_by_reference
+ name: (identifier) @definition.field
  target: (type_reference) @reference.class)
 
 ;; ---------------------------------------------------------------------------
@@ -83,19 +95,3 @@
 (name_path (identifier) @name)
 
 (environment_definition name: (identifier) @definition.function)
-
-;; ---------------------------------------------------------------------------
-;; Field Names
-;; ---------------------------------------------------------------------------
-
-(identity_member
- name: (identifier) @definition.field)
-
-(member_by_value
- name: (identifier) @definition.field)
-
-(member_by_reference
- name: (identifier) @definition.field)
-
-(property_def
- name: (identifier) @definition.field)

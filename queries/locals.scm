@@ -6,7 +6,7 @@
 (environment_definition name: (identifier) @local.definition)
 
 (environment_definition) @local.scope
-(fn_parameter name: (identifier) @local.definition)
+(function_parameter name: (identifier) @local.definition)
 
 (quantified_sentence) @local.scope
 (quantifier_binding name: (identifier) @local.definition)

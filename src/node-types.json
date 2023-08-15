@@ -102,73 +102,6 @@
     }
   },
   {
-    "type": "binding_seq_iterator",
-    "named": true,
-    "fields": {
-      "from_sequence": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "name_path",
-            "named": true
-          },
-          {
-            "type": "sequence_comprehension",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "binding_target",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "binding_seq_iterator",
-          "named": true
-        },
-        {
-          "type": "binding_target",
-          "named": true
-        },
-        {
-          "type": "binding_type_reference",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "binding_type_reference",
-    "named": true,
-    "fields": {
-      "from_type": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier_reference",
-            "named": true
-          },
-          {
-            "type": "reserved_self_type",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "boolean",
     "named": true,
     "fields": {}
@@ -655,36 +588,38 @@
     "type": "environment_definition",
     "named": true,
     "fields": {
+      "body": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": ":=",
+            "named": false
+          },
+          {
+            "type": "constraint_sentence",
+            "named": true
+          },
+          {
+            "type": "function_def",
+            "named": true
+          },
+          {
+            "type": "predicate_value",
+            "named": true
+          },
+          {
+            "type": "≔",
+            "named": false
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,
         "types": [
           {
             "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "constraint_sentence",
-            "named": true
-          },
-          {
-            "type": "predicate_value",
-            "named": true
-          }
-        ]
-      },
-      "signature": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "function_signature",
             "named": true
           }
         ]
@@ -823,56 +758,6 @@
     }
   },
   {
-    "type": "fn_parameter",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "target_cardinality": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "cardinality_expression",
-            "named": true
-          }
-        ]
-      },
-      "target_type": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "any_type",
-            "named": true
-          },
-          {
-            "type": "type_reference",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "any_sequence_type",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "formal_constraint",
     "named": true,
     "fields": {
@@ -899,29 +784,106 @@
     }
   },
   {
-    "type": "function_signature",
+    "type": "function_cardinality_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "any_cardinality",
+          "named": true
+        },
+        {
+          "type": "cardinality_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "function_def",
     "named": true,
     "fields": {
-      "target_cardinality": {
+      "body": {
         "multiple": false,
-        "required": false,
+        "required": true,
         "types": [
           {
-            "type": "cardinality_expression",
+            "type": "constraint_sentence",
             "named": true
           }
         ]
       },
-      "target_type": {
+      "signature": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "function_signature",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "function_parameter",
+    "named": true,
+    "fields": {
+      "cardinality": {
         "multiple": false,
         "required": false,
         "types": [
           {
-            "type": "any_type",
+            "type": "function_cardinality_expression",
             "named": true
-          },
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
           {
-            "type": "type_reference",
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "function_type_reference",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "function_signature",
+    "named": true,
+    "fields": {
+      "cardinality": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "function_cardinality_expression",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "function_type_reference",
             "named": true
           }
         ]
@@ -932,11 +894,34 @@
       "required": true,
       "types": [
         {
-          "type": "any_sequence_type",
+          "type": "function_parameter",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "function_type_reference",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "any_type",
           "named": true
         },
         {
-          "type": "fn_parameter",
+          "type": "builtin_simple_type",
+          "named": true
+        },
+        {
+          "type": "identifier_reference",
+          "named": true
+        },
+        {
+          "type": "mapping_type",
           "named": true
         }
       ]
@@ -1115,6 +1100,29 @@
     "fields": {}
   },
   {
+    "type": "iterator_target",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "iterator_target",
+          "named": true
+        },
+        {
+          "type": "sequence_iterator",
+          "named": true
+        },
+        {
+          "type": "type_iterator",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "list_of_predicate_values",
     "named": true,
     "fields": {},
@@ -1180,11 +1188,11 @@
       "required": true,
       "types": [
         {
-          "type": "binding_seq_iterator",
+          "type": "sequence_iterator",
           "named": true
         },
         {
-          "type": "binding_type_reference",
+          "type": "type_iterator",
           "named": true
         }
       ]
@@ -1256,6 +1264,16 @@
           }
         ]
       },
+      "cardinality": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "cardinality_expression",
+            "named": true
+          }
+        ]
+      },
       "inverse": {
         "multiple": false,
         "required": false,
@@ -1295,16 +1313,6 @@
             "named": true
           }
         ]
-      },
-      "target_cardinality": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "cardinality_expression",
-            "named": true
-          }
-        ]
       }
     }
   },
@@ -1318,6 +1326,16 @@
         "types": [
           {
             "type": "annotation_only_body",
+            "named": true
+          }
+        ]
+      },
+      "cardinality": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "cardinality_expression",
             "named": true
           }
         ]
@@ -1348,16 +1366,6 @@
         "types": [
           {
             "type": "type_reference",
-            "named": true
-          }
-        ]
-      },
-      "target_cardinality": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "cardinality_expression",
             "named": true
           }
         ]
@@ -1594,6 +1602,16 @@
           }
         ]
       },
+      "cardinality": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "cardinality_expression",
+            "named": true
+          }
+        ]
+      },
       "inverse": {
         "multiple": false,
         "required": false,
@@ -1620,16 +1638,6 @@
         "types": [
           {
             "type": "type_reference",
-            "named": true
-          }
-        ]
-      },
-      "target_cardinality": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "cardinality_expression",
             "named": true
           }
         ]
@@ -1716,7 +1724,7 @@
       "required": true,
       "types": [
         {
-          "type": "binding_target",
+          "type": "iterator_target",
           "named": true
         },
         {
@@ -1761,6 +1769,30 @@
         "types": [
           {
             "type": "returned_value",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "sequence_iterator",
+    "named": true,
+    "fields": {
+      "from": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "name_path",
+            "named": true
+          },
+          {
+            "type": "sequence_comprehension",
             "named": true
           }
         ]
@@ -1958,6 +1990,26 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "type_iterator",
+    "named": true,
+    "fields": {
+      "from": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          },
+          {
+            "type": "reserved_self_type",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -2256,7 +2308,7 @@
     "named": false
   },
   {
-    "type": "any_sequence_type",
+    "type": "any_cardinality",
     "named": true
   },
   {
@@ -2289,11 +2341,11 @@
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "def",

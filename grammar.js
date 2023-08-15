@@ -321,24 +321,24 @@ module.exports = grammar({
             $.reserved_self,
             seq(
                 field('name', $.identifier),
-                $.binding_target
+                $.iterator_target
             )
         ),
 
-        binding_target: $ => choice(
-            $.binding_type_reference,
-            $.binding_seq_iterator,
+        iterator_target: $ => choice(
+            $.type_iterator,
+            $.sequence_iterator,
             seq(
                 '(',
-                $.binding_target,
+                $.iterator_target,
                 ')'
             )
         ),
 
-        binding_type_reference: $ => seq(
+        type_iterator: $ => seq(
             operator('->'),
             field(
-                'from_type',
+                'from',
                 choice(
                     $.reserved_self_type,
                     $.identifier_reference,
@@ -346,15 +346,15 @@ module.exports = grammar({
             )
         ),
 
-        binding_seq_iterator: $ => seq(
+        sequence_iterator: $ => seq(
             choice(
                 keyword('in'),
                 operator('∈')
             ),
             field(
-                'from_sequence',
+                'from',
                 choice(
-                    $.name_path,
+                    $.name_path,  // function call sugar
                     $.identifier, // variable
                     $.sequence_comprehension
                 )
@@ -440,68 +440,76 @@ module.exports = grammar({
 
         environment_definition: $ => seq(
             keyword('def'),
+            field('name', $.identifier),
             field(
-                'name',
-                $.identifier
-            ),
-            optional(
-                field(
-                    'signature',
-                    $.function_signature
-                )
-            ),
-            choice(
-                operator(':='),
-                operator('≔'),
-            ),
-            field(
-                'rhs',
+                'body',
                 choice(
-                    $.predicate_value,
-                    $.constraint_sentence
+                    $.function_def,
+                    $._value_def
                 )
             )
         ),
 
         constraint_environment_end: $ => keyword('in'),
 
+        function_def: $ => seq(
+            field('signature', $.function_signature),
+            choice(
+                operator(':='),
+                operator('≔'),
+            ),
+            field('body', $.constraint_sentence)
+        ),
+
         function_signature: $ => seq(
             '(',
-            repeat1($.fn_parameter),
+            repeat1($.function_parameter),
             ')',
+            $._function_type_expression_to
+        ),
+
+        function_parameter: $ => seq(
+            field('name', $.identifier),
+            $._function_type_expression_to
+        ),
+
+        _function_type_expression_to: $ => seq(
             operator('->'),
-            $._fn_type
-        ),
-
-        fn_parameter: $ => seq(
             optional(
-                seq(
-                    field('name', $.identifier),
-                    operator('->'),
-                )
+                field('cardinality', $.function_cardinality_expression)
             ),
-            $._fn_type
+            field('target', $.function_type_reference)
         ),
 
-        _fn_type: $ => choice(
-            $.any_sequence_type,
-            seq(
-                optional(
-                    field('target_cardinality', $.cardinality_expression)
-                ),
-                field(
-                    'target_type',
-                    choice(
-                        $.any_type,
-                        $.type_reference
-                    )
+        function_cardinality_expression: $ => choice(
+            $.any_cardinality,
+            $.cardinality_expression
+        ),
+
+        function_type_reference: $ => choice(
+            $.any_type,
+            $.identifier_reference,
+            $.builtin_simple_type,
+            $.mapping_type
+        ),
+
+        any_cardinality: $ => operator('{}'),
+
+        any_type: $ => operator('_'),
+
+        _value_def: $ => seq(
+            choice(
+                operator(':='),
+                operator('≔'),
+            ),
+            field(
+                'body',
+                choice(
+                    $.predicate_value,
+                    $.constraint_sentence
                 )
             )
         ),
-
-        any_sequence_type: $ => operator('{_}'),
-
-        any_type: $ => operator('_'),
 
         // -----------------------------------------------------------------------
 
@@ -551,8 +559,8 @@ module.exports = grammar({
                 $.identifier
             ),
             choice(
-                $.binding_type_reference,
-                $.binding_seq_iterator,
+                $.type_iterator,
+                $.sequence_iterator,
             )
         ),
 
@@ -943,7 +951,7 @@ module.exports = grammar({
         _type_expression_to: $ => seq(
             operator('->'),
             optional(
-                field('target_cardinality', $.cardinality_expression)
+                field('cardinality', $.cardinality_expression)
             ),
             field('target', $.type_reference)
         ),

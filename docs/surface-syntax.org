@@ -1902,19 +1902,21 @@ FunctionalTerm      ::= Term "(" Term* ")"
 #+BEGIN_SRC ebnf
 ConstraintEnvironment ::= EnvironmentDef+ "in"
 
-EnvironmentDef      ::=
-    "def" Identifier FunctionSignature?
-        ( ":=" | "≔" ) ( PredicateValue | ConstraintSentence )
+EnvironmentDef      ::= "def" Identifier ( FunctionDef | ValueDef )
+
+FunctionDef         ::= FunctionSignature ( ":=" | "≔" ) ConstraintSentence
 
 FunctionSignature   ::= "(" FunctionParameter+ ")" "->" FunctionType
 
-FunctionParameter   ::= ( Identifier "->" )? FunctionType
+FunctionParameter   ::= Identifier "->" FunctionType
 
-FunctionType        ::=  AnySequenceType | ( Cardinality? ( AnyType | TypeReference ) )
+FunctionType        ::=  FunctionCardinality? FunctionTypeRef
 
-AnyType             ::= "_"
+FunctionCardinality ::= "{}" | Cardinality
 
-AnySequenceType     ::= "{_}"
+FunctionTypeRef     ::= "_" | IdentiferReference | BuiltinSimpleType | MappingType
+
+ValueDef            ::= ( ":=" | "≔" ) ( PredicateValue | ConstraintSentence )
 #+END_SRC
 
 *** Sequence Comprehensions

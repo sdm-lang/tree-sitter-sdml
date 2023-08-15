@@ -21,7 +21,7 @@ end
         body: (structure_body
           (member_by_value
             name: (identifier)
-            target_cardinality: (cardinality_expression
+            cardinality: (cardinality_expression
               uniqueness: (sequence_uniqueness)
               min: (unsigned)
               range: (cardinality_range))

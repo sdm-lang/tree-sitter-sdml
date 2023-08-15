@@ -50,6 +50,24 @@ end
 
 # Changes
 
+**Version: 0.1.33**
+
+* Feature: Renamed quantifier binding targets to be more consistent.
+  * Renamed rule `binding_target` to `iterator_target`.
+  * Renamed rule `binding_type_reference` to `type_iterator` and field name `from_type` to `from`.
+  * Renamed rule `binding_seq_iterator` to `sequence_iterator` and field name `from_sequence` to `from`.
+* Feature: Simplified the rule `environment_definition` and made naming more consistent.
+  * Remove optional `signature` field
+  * Remove assignment operators
+  * Rename field name `rhs` to `body` and change to a choice of `function_def` or `_value_def`.
+  * Add rule `function_def` to hold the signature and operators removed from the environment definition.
+  * Renamed rule `fn_parameter` to `function_parameter`.
+  * Renamed rule `_fn_type` to `_function_type_expression_to`.
+  * Add rules `function_cardinality_expression` and `any_cardinality` to capture cardinality or wildcard.
+  * Add rule `function_type_reference` to allow wildcards.
+* Feature: Update queries `highlights`, `locals`, and `tags` for all changes above.
+* Docs: Update BNF syntax and diagrams for all changes above.
+  
 **Version: 0.1.32**
 
 * Feature: Updated environment definition sequence types to use the same syntax as member type and cardinality.
@@ -302,7 +320,7 @@ This allows the use of the same type as a variant more than once if the new iden
 
 * Made `_simple_value` into `simple_value` named rule.
 * Made `_type_reference` into `type_reference` named rule.
-
+  
 # Additional Links
 
 * Node bindings -- [npm.js](https://www.npmjs.com/package/tree-sitter-sdml)

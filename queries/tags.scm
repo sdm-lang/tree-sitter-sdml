@@ -78,7 +78,7 @@
 
 (constraint name: (identifier) @name)
 
-(binding_type_reference from_type: (identifier_reference) @reference.class)
+(type_iterator from: (identifier_reference) @reference.class)
 
 (name_path (identifier) @name)
 

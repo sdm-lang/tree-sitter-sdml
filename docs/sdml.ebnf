@@ -67,14 +67,19 @@ PropertyDef         ::= "property" Identifier PropertyBody?
 
 PropertyBody        ::= "is" Annotation* PropertyRole+ "end"
 
-PropertyRole        ::=
-    Identifier ( "ref" Cardinality )? TypeExpressionTo AnnotationOnlyBody?
+PropertyRole        ::= IdentityRole | RoleByValue | RoleByReference
 
-PropertyMember      ::= "as" Identifier
+IdentityRole        ::= "identity" Identifier TypeExpression AnnotationOnlyBody?
+
+RoleByValue         ::= Identifier TypeExpressionTo AnnotationOnlyBody?
+
+RoleByReference     ::= "ref" Identifier InverseName? TypeExpressionTo AnnotationOnlyBody?
+
+PropertyMember      ::= "in" IdentifierReference
 
 IdentityMember      ::=
     "identity" Identifier
-        ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
+        ( PropertyMember | ( TypeExpression AnnotationOnlyBody? ) )
 
 MemberByValue       ::=
     Identifier
@@ -245,21 +250,21 @@ Universal           ::= ( "forall" | "∀" ) QuantifierBinding+ QuantifiedBody
 
 Existential         ::= ( "exists" | "∃" ) QuantifierBinding+ QuantifiedBody
 
-QuantifierBinding   ::= "self" | ( Identifer BindingTarget )
+QuantifierBinding   ::= "self" | ( Identifer IteratorTarget )
 
-BindingTarget       ::=
-    BindingFromType | BindingFromSequence | "(" BindingTarget ")"
+IteratorTarget      ::=
+    TypeIterator | SequenceIterator | "(" IteratorTarget ")"
 
-BindingFromType     ::= "->" ( "Self" | IdentifierReference )
+TypeIterator        ::= "->" ( "Self" | IdentifierReference )
 
-BindingFromSequence ::=
-    ( "in" | "∈" ) ( NamePath | Identifier | SequenceComprehension )
+SequenceIterator    ::=
+    ( "in" | "∈" ) ( NamePath | Identifier | SequenceBuilder )
 
 QuantifiedBody      ::= "(" ConstraintSentence ")"
 
 Term                ::=
     NamePath | Identifier | QualifiedIdentifier
-    | PredicateValue | FunctionalTerm | SequenceComprehension
+    | PredicateValue | FunctionalTerm | SequenceBuilder
 
 NamePath            ::= PathSubject ( "." Identifier )+
 
@@ -290,9 +295,15 @@ FunctionTypeRef     ::= "_" | IdentiferReference | BuiltinSimpleType | MappingTy
 
 ValueDef            ::= ( ":=" | "≔" ) ( PredicateValue | ConstraintSentence )
 
-SequenceComprehension ::= "{" ReturnedValue "|" Expression "}"
+SequenceBuilder     ::= "{" Variables "|" Expression "}"
 
-ReturnedValue       ::= Identifier | ( "[" Identifier+ "]" )
+Variables           ::= TupleVariable | SequenceVariable | MappingVariable
+
+TupleVariable       ::= Identifier+
+
+SequenceVariable    ::= "[" Identifier+ "]"
+
+MappingVariable     ::= "(" Identifier "->" Identifier ")"
 
 Expression          ::=
     ConjunctiveExpression | LocalBinding | ConstraintSentence | "(" Expression ")"
@@ -301,4 +312,4 @@ ConjunctiveExpression ::=
     Expression ( "and" | "∧" ) Expression
 
 LocalBinding        ::=
-    Identifier ( BindingFromType | BindingFromSequence )
+    Identifier ( TypeIterator | SequenceIterator )

@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.35
+// Version:    0.1.36
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -356,7 +356,7 @@ module.exports = grammar({
                 choice(
                     $.name_path,  // function call sugar
                     $.identifier, // variable
-                    $.sequence_comprehension
+                    $.sequence_builder
                 )
             )
         ),
@@ -375,7 +375,7 @@ module.exports = grammar({
             $.qualified_identifier, // type
             $.predicate_value,
             $.functional_term,
-            $.sequence_comprehension,
+            $.sequence_builder,
         ),
 
         name_path: $ => seq(
@@ -513,12 +513,37 @@ module.exports = grammar({
 
         // -----------------------------------------------------------------------
 
-        sequence_comprehension: $ => seq(
+        sequence_builder: $ => seq(
             '{',
-            field('return', $.returned_value),
+            field(
+                'variable',
+                $.variables
+            ),
             '|',
             field('expression', $.expression),
             '}',
+        ),
+
+        variables: $ => choice(
+            $.tuple_variable,
+            $.sequence_variable,
+            $.mapping_variable
+        ),
+
+        tuple_variable: $ => repeat1($.identifier),
+
+        sequence_variable: $ => seq(
+            "[",
+            repeat1($.identifier),
+            "]"
+        ),
+
+        mapping_variable: $ => seq(
+            "(",
+            field('domain', $.identifier),
+            operator('->'),
+            field('range', $.identifier),
+            ")"
         ),
 
         expression: $ => choice(
@@ -561,15 +586,6 @@ module.exports = grammar({
             choice(
                 $.type_iterator,
                 $.sequence_iterator,
-            )
-        ),
-
-        returned_value: $ => choice(
-            $.identifier,
-            seq(
-                '[',
-                repeat1($.identifier),
-                ']'
             )
         ),
 

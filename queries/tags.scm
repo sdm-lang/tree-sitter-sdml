@@ -95,3 +95,7 @@
 (name_path (identifier) @name)
 
 (environment_definition name: (identifier) @definition.function)
+
+(tuple_variable (identifier) @variable)
+(sequence_variable (identifier) @variable)
+(mapping_variable domain: (identifier) range: (identifier) @variable)

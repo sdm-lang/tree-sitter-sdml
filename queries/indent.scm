@@ -17,7 +17,7 @@
 
 (quantified_body "(" @indent ")" @indent.end)
 
-(sequence_comprehension "{" @indent "}" @indent.end)
+(sequence_builder "{" @indent "}" @indent.end)
 
 (functional_term "(" @indent ")" @indent.end)
 

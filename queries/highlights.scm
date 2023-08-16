@@ -143,15 +143,16 @@
 
 (list_of_predicate_values [ "[" "]" ] @punctuation.bracket)
 
-(sequence_comprehension
+(sequence_builder
  "{" @punctuation.bracket
  "|" @punctuation.separator
  "}" @punctuation.bracket)
 
 (local_binding name: (identifier) @variable.special)
 
-(returned_value (identifier) @variable)
-(returned_value [ "[" "]" ] @punctuation.bracket)
+(tuple_variable (identifier) @variable)
+(sequence_variable (identifier) @variable)
+(mapping_variable domain: (identifier) range: (identifier) @variable)
 
 (list_of_predicate_values [ "[" "]" ] @punctuation.bracket)
 (list_of_predicate_values (identifier_reference) @type)

@@ -11,7 +11,9 @@
 (quantified_sentence) @local.scope
 (quantifier_binding name: (identifier) @local.definition)
 
-(sequence_comprehension) @local.scope
+(sequence_builder) @local.scope
 
-(returned_value (identifier) @local.definition)
+(tuple_variable (identifier) @local.definition)
+(sequence_variable (identifier) @local.definition)
+(mapping_variable domain: (identifier) range: (identifier) @local.definition)
 (local_binding (identifier) @local.definition)

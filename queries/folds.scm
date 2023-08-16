@@ -19,5 +19,5 @@
  ;; ----------------
  (formal_constraint)
  (constraint_sentence)
- (sequence_comprehension)
+ (sequence_builder)
  ] @fold

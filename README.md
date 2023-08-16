@@ -50,6 +50,15 @@ end
 
 # Changes
 
+**Version: 0.1.36**
+
+* Feature: Alter the rule `sequence_comprehension` to be more flexible.
+  * Rename rule `sequence_comprehension` to  `sequence_builder`.
+  * Rename rule `returned_value` to `variables` and re-write as a choice of:
+  * Add rule `tuple_variable` to return distinct variables.
+  * Add rule `sequence_variable` to return distinct variables as a sequence.
+  * Add rule `mapping_variable` to return two variables as a mapping.
+
 **Version: 0.1.35**
 
 * Feature: Alter the rule `_property_member` to allow property names to be `identifier_reference`.

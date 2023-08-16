@@ -1858,6 +1858,10 @@ def predicate(AtomicSentence) -> Term
 def arguments(AtomicSentence) -> {ordered 0..} Term
 #+END_EXAMPLE
 
+#+BEGIN_EXAMPLE
+def arity(AtomicSentence) -> unsigned
+#+END_EXAMPLE
+
 *Union: BindingFromSequence*
 
 TBD
@@ -1970,6 +1974,11 @@ TBD
 
 TBD
 
+#+BEGIN_EXAMPLE
+def arity(FunctionalTerm) -> unsigned
+#+END_EXAMPLE
+
+
 *Class: ListOfPredicateValues*
 
 TBD
@@ -2036,6 +2045,10 @@ def EnvironmentBinding(_) -> boolean
 Returns ~true~ if the passed value is of type ~EnvironmentBinding~, else ~false~.
 
 #+BEGIN_EXAMPLE
+def arity(EnvironmentBinding) -> unsigned
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
 def name(EnvironmentBinding) -> Identifer
 #+END_EXAMPLE
 
@@ -2083,6 +2096,10 @@ def FunctionSignature(_) -> boolean
 #+END_EXAMPLE
 
 Returns ~true~ if the passed value is of type ~FunctionSignature~, else ~false~.
+
+#+BEGIN_EXAMPLE
+def arity(FunctionSignature) -> unsigned
+#+END_EXAMPLE
 
 #+BEGIN_EXAMPLE
 def parameters(FunctionSignature) -> {ordered 1..} FunctionParameter

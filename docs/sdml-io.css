@@ -64,6 +64,12 @@ div.NOTE > p::before {
     content: 'ⓘ ';
 }
 
+/* MathJax */
+
+mjx-container[jax="CHTML"] {
+    font-size: 1.1em !important;
+}
+
 /* TOC */
 
 div#list-of-tables > h2 {

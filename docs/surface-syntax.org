@@ -950,7 +950,7 @@ Structured types fall into two primary categories, /Product/ types and /Sum/ typ
 these are enumerations and disjoint unions. In the surface syntax product type bodies are introduced by the keyword ~is~
 whereas sum type bodies are introduced by the keyword ~of~.
 
-*** Members
+*** <<sec:members>>Members
 
 Product type members fall into the following categories.
 
@@ -997,7 +997,7 @@ InverseName         ::= "(" Identifier ")"
 
 #+NAME: lst:grammar-property-member
 #+BEGIN_SRC ebnf
-PropertyMember      ::= "as" Identifier
+PropertyMember      ::= "in" IdentifierReference
 #+END_SRC
 
 [[./ebnf-diagram/PropertyMember.svg]]
@@ -1010,7 +1010,7 @@ PropertyMember      ::= "as" Identifier
 module example is
 
   structure Account is
-    accountId as default
+    default in accountId
     name -> string
   end
 
@@ -1473,16 +1473,10 @@ PropertyDef         ::= "property" Identifier PropertyBody?
 
 [[./ebnf-diagram/PropertyDef.svg]]
 
-#+BEGIN_SRC ebnf
-PropertyBody        ::= "is" Annotation* PropertyRole+ "end"
-#+END_SRC
-
-[[./ebnf-diagram/PropertyBody.svg]]
-
 *Example*:
 
 #+NAME: lst:sdml-ex-empty-property
-#+CAPTION: Empty Property
+#+CAPTION: Empty Property Definition
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
 
@@ -1494,30 +1488,57 @@ end
 The property ~account_id~ in [[lst:sdml-ex-empty-property]] is valid but incomplete. Completion of the property requires the
 addition of a body with roles defined.
 
-#+NAME: lst:grammar-property-role
+#+NAME: lst:grammar-property-body
 #+BEGIN_SRC ebnf
-PropertyRole        ::=
-    Identifier ( "ref" Cardinality )? TypeExpressionTo AnnotationOnlyBody?
+PropertyBody        ::= "is" Annotation* PropertyRole+ "end"
+PropertyRole        ::= IdentityRole | RoleByValue | RoleByReference
 #+END_SRC
 
+[[./ebnf-diagram/PropertyBody.svg]]
+
 [[./ebnf-diagram/PropertyRole.svg]]
+
+Note that the syntax of role definitions is a subset of the syntax for members (see section [[sec:members]]). In each case
+the choice between a property reference and a member definition is removed and only the definition part remains.
+
+#+BEGIN_SRC ebnf
+IdentityRole        ::= "identity" Identifier TypeExpression AnnotationOnlyBody?
+#+END_SRC
+
+[[./ebnf-diagram/IdentityRole.svg]]
+
+#+BEGIN_SRC ebnf
+RoleByValue         ::= Identifier TypeExpressionTo AnnotationOnlyBody?
+#+END_SRC
+
+[[./ebnf-diagram/RoleByValue.svg]]
+
+#+BEGIN_SRC ebnf
+RoleByReference     ::= "ref" Identifier InverseName? TypeExpressionTo AnnotationOnlyBody?
+#+END_SRC
+
+[[./ebnf-diagram/RoleByReference.svg]]
 
 *Example*:
 
 The following is a valid /and/ complete example.
 
 #+NAME: lst:sdml-ex-property-role
-#+CAPTION: Property with Roles
+#+CAPTION: Property Definition with Roles
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
 
   property accountId is
 
-    identifier -> {1} account:AccountId is
-      @skos:definition = "a"@en
+    identity identifier -> {1} account:AccountId is
+      @skos:definition =
+        "The identifier that denotes that this entity has a one-to-one relationship with a customer account."@en
     end
 
-    reference ref {1} -> {1} account:AccountId
+    ref reference -> {1} account:AccountId is
+      @skos:definition =
+        "Refers to an entity that has a one-to-one relationship with a customer account."@en
+    end
 
   end
 
@@ -1869,14 +1890,14 @@ Universal           ::= ( "forall" | "∀" ) QuantifierBinding* QuantifiedBody
 
 Existential         ::= ( "exists" | "∃" ) QuantifierBinding* QuantifiedBody
 
-QuantifierBinding   ::= "self" | ( Identifer BindingTarget )
+QuantifierBinding   ::= "self" | ( Identifer IteratorTarget )
 
-BindingTarget       ::=
-    BindingFromType | BindingFromSequence | "(" BindingTarget ")"
+IteratorTarget      ::=
+    TypeIterator | SequenceIterator | "(" IteratorTarget ")"
 
-BindingFromType     ::= "->" ( "Self" | IdentifierReference )
+TypeIterator        ::= "->" ( "Self" | IdentifierReference )
 
-BindingFromSequence ::=
+SequenceIterator    ::=
     ( "in" | "∈" ) ( NamePath | Identifier | SequenceComprehension )
 
 QuantifiedBody      ::= "(" ConstraintSentence ")"
@@ -1933,7 +1954,7 @@ ConjunctiveExpression ::=
     Expression ( "and" | "∧" ) Expression
 
 LocalBinding        ::=
-    Identifier ( BindingFromType | BindingFromSequence )
+    Identifier ( TypeIterator | SequenceIterator )
 #+END_SRC
 
 *** Acknowledgements

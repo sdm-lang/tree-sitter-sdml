@@ -4,7 +4,7 @@ Property Referenced as Member
 
 module ddict is
   structure Account is
-    accountId as default
+    default in accountId
   end
 end
 
@@ -19,4 +19,5 @@ end
         body: (structure_body
           (member_by_value
             name: (identifier)
-            role: (identifier)))))))
+            property: (identifier_reference
+              (identifier))))))))

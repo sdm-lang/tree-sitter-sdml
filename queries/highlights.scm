@@ -181,15 +181,15 @@
 ;; ---------------------------------------------------------------------------
 
 (identity_member name: (identifier) @variable.field)
-(identity_member role: (identifier) @variable.special)
+(identity_member property: (identifier_reference) @variable.special)
 (identity_member target: (type_reference) @type)
 
 (member_by_value name: (identifier) @variable.field)
-(member_by_value role: (identifier) @variable.special)
+(member_by_value property: (identifier_reference) @variable.special)
 (member_by_value target: (type_reference) @type)
 
 (member_by_reference name: (identifier) @variable.field)
-(member_by_reference role: (identifier) @variable.special)
+(member_by_reference property: (identifier_reference) @variable.special)
 (member_by_reference target: (type_reference) @type)
 
 (member_inverse_name

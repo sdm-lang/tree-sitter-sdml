@@ -3261,16 +3261,16 @@
             "value": 2,
             "content": {
               "type": "STRING",
-              "value": "as"
+              "value": "in"
             }
           }
         },
         {
           "type": "FIELD",
-          "name": "role",
+          "name": "property",
           "content": {
             "type": "SYMBOL",
-            "name": "identifier"
+            "name": "identifier_reference"
           }
         }
       ]

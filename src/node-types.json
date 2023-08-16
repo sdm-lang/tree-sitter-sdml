@@ -996,12 +996,12 @@
           }
         ]
       },
-      "role": {
+      "property": {
         "multiple": false,
         "required": false,
         "types": [
           {
-            "type": "identifier",
+            "type": "identifier_reference",
             "named": true
           }
         ]
@@ -1330,12 +1330,12 @@
           }
         ]
       },
-      "role": {
+      "property": {
         "multiple": false,
         "required": false,
         "types": [
           {
-            "type": "identifier",
+            "type": "identifier_reference",
             "named": true
           }
         ]
@@ -1386,12 +1386,12 @@
           }
         ]
       },
-      "role": {
+      "property": {
         "multiple": false,
         "required": false,
         "types": [
           {
-            "type": "identifier",
+            "type": "identifier_reference",
             "named": true
           }
         ]

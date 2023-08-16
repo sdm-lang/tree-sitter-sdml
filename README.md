@@ -50,6 +50,13 @@ end
 
 # Changes
 
+**Version: 0.1.35**
+
+* Feature: Alter the rule `_property_member` to allow property names to be `identifier_reference`.
+  * New interpretation, field `name` in a member will be the name of a role.
+  * Renamed keyword `in`, not `as`.
+  * Renamed field `role` to `property` and made it's type `identifier_reference`.
+
 **Version: 0.1.34**
 
 * Feature: Update property definitions to look more like members.

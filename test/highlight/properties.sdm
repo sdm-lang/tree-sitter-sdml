@@ -54,10 +54,10 @@ module properties is
   ;         ^ type.definition
   ;                 ^ keyword
 
-    accountId as identitifer
+    identifier in accountId
     ; <- variable.field
-    ;         ^ keyword
-    ;            ^ variable.special
+    ;          ^ keyword
+    ;             ^ variable.special
 
     name -> string
     ; <- variable.field

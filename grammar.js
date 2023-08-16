@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.34
+// Version:    0.1.35
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -906,8 +906,8 @@ module.exports = grammar({
         // -----------------------------------------------------------------------
 
         _property_member: $ => seq(
-            keyword('as'),
-            field('role', $.identifier),
+            keyword('in'),
+            field('property', $.identifier_reference),
         ),
 
         // Default cardinality: !{1..1} -> !{1..1}

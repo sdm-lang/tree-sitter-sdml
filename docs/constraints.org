@@ -373,7 +373,7 @@ identified values.
 
 Finally, a /mapping variable/ returns a sequence of mapping values which may comprise a lookup table.
 
-$$t ≔ \bigl{ \left(d -> r\right) \mid \forall d \in D \land \exists r \in R \land d.id = r.id \bigr}$$
+$$t ≔ \bigl\{ \left(d \rightarrow r\right) \mid \forall d \in D \land \exists r \in R \land id_{D}(d) = id_{R}(r) \bigr\}$$
 
 [[./ebnf-diagram/MappingVariable.svg]]
 

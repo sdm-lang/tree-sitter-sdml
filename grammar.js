@@ -407,6 +407,7 @@ module.exports = grammar({
         sequence_of_predicate_values: $ => choice(
             keyword('∅'),
             seq(
+                optional($._sequence_value_constraints),
                 '[',
                 repeat(
                     choice(
@@ -610,6 +611,7 @@ module.exports = grammar({
         ),
 
         sequence_of_values: $ => seq(
+            optional($._sequence_value_constraints),
             '[',
             repeat1(
                 choice(
@@ -620,6 +622,19 @@ module.exports = grammar({
                 )
             ),
             ']'
+        ),
+
+        _sequence_value_constraints: $ => seq(
+            '{',
+            choice(
+                field('ordering', $.sequence_ordering),
+                field('uniqueness', $.sequence_uniqueness),
+                seq(
+                    field('ordering', $.sequence_ordering),
+                    field('uniqueness', $.sequence_uniqueness)
+                )
+            ),
+            '}'
         ),
 
         value_constructor: $ => seq(

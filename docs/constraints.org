@@ -319,15 +319,19 @@ Similarly the quantifier collection ~self.definitions~ becomes ~definitions(self
 #+NAME: lst:grammar-predicate-values
 #+BEGIN_SRC ebnf
 PredicateValue      ::=
-    SimpleValue | ListOfPredicateValues
-ListOfPredicateValues ::= "∅" | ( "[" ( SimpleValue | IdentifierReference )* "]" )
+    SimpleValue | SequenceOfPredicateValues
+SequenceOfPredicateValues
+    ::= "∅"
+        | SequenceValueConstraint?
+          "[" ( SimpleValue | IdentifierReference )* "]"
 #+END_SRC
 
 [[./ebnf-diagram/PredicateValue.svg]]
 
-Note that the keyword ~∅~ denotes the empty set, or an empty sequence ~[]~ that is unique.
+Note that the keyword ~∅~ denotes the empty set, or an empty sequence ~[]~ that is unique. Note that, like a normal sequence
+of values, sequence constraints may be included.
 
-[[./ebnf-diagram/ListOfPredicateValues.svg]]
+[[./ebnf-diagram/SequenceOfPredicateValues.svg]]
 
 #+NAME: lst:grammar-functional-term
 #+BEGIN_SRC ebnf

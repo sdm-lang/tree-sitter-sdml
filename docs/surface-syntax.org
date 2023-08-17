@@ -694,17 +694,23 @@ character and end with the Right Square Bracket ("]", =U+005D=) character with n
 the list. Sequence values are, as one might expect, sequences of values and specifically of simple values. Sequence
 value may also by heterogeneous and therefore contain elements of different types.
 
-#+NAME: lst:grammar-list-of-values
 #+BEGIN_SRC js :noeval
 SequenceOfValues
-    ::= "["
+    ::= SequenceValueConstraint? "["
         ( SimpleValue | ValueConstructor | IdentifierReference )+
         "]"
+SequenceValueConstraint
+    ::= "{"
+        ( SequenceOrdering? SequenceUniqueness? )
+        "}"
 #+END_SRC
 
-[[./ebnf-diagram/ListOfValues.svg]]
+[[./ebnf-diagram/SequenceOfValues.svg]]
 
-#+NAME: lst:sdml-ex-value-lists
+[[./ebnf-diagram/SequenceValueConstraint.svg]]
+
+*Example*
+
 #+CAPTION: Sequence Value Example
 #+BEGIN_SRC sdml :exports code :noeval
 module example is
@@ -712,6 +718,19 @@ module example is
   import ex
 
   @ex:thing = [ "yes" "no" "maybe" ]
+
+end
+#+END_SRC
+
+*Example*
+
+#+CAPTION: Sequence Value Example
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  import ex
+
+  @ex:thing = {unique}[ "yes" "no" "maybe" ]
 
 end
 #+END_SRC
@@ -2053,9 +2072,14 @@ MappingValue
     ::= SimpleValue  "->" Value
 
 SequenceOfValues
-    ::= "["
+    ::= SequenceValueConstraint? "["
         ( SimpleValue | ValueConstructor | IdentifierReference )+
         "]"
+
+SequenceValueConstraint
+    ::= "{"
+        ( SequenceOrdering? SequenceUniqueness? )
+        "}"
 
 IdentifierInitial
     ::= UC_LETTER_UPPER | UC_LETTER_LOWER
@@ -2188,7 +2212,9 @@ PredicateValue
     ::= SimpleValue | SequenceOfPredicateValues
 
 SequenceOfPredicateValues
-    ::= "∅" | ( "[" ( SimpleValue | IdentifierReference )* "]" )
+    ::= "∅"
+        | SequenceValueConstraint?
+          "[" ( SimpleValue | IdentifierReference )* "]"
 
 FunctionalTerm
     ::= Term "(" Term* ")"

@@ -1894,7 +1894,28 @@
   {
     "type": "sequence_of_predicate_values",
     "named": true,
-    "fields": {},
+    "fields": {
+      "ordering": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "sequence_ordering",
+            "named": true
+          }
+        ]
+      },
+      "uniqueness": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "sequence_uniqueness",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
@@ -1913,7 +1934,28 @@
   {
     "type": "sequence_of_values",
     "named": true,
-    "fields": {},
+    "fields": {
+      "ordering": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "sequence_ordering",
+            "named": true
+          }
+        ]
+      },
+      "uniqueness": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "sequence_uniqueness",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": true,

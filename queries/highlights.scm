@@ -152,6 +152,7 @@
 (sequence_variable (identifier) @variable)
 (mapping_variable domain: (identifier) range: (identifier) @variable)
 
+(sequence_of_predicate_values [ "{" "}" ] @punctuation.bracket)
 (sequence_of_predicate_values [ "[" "]" ] @punctuation.bracket)
 (sequence_of_predicate_values (identifier_reference) @type)
 
@@ -249,6 +250,7 @@
 
 (sequence_of_values (identifier_reference) @type)
 
+(sequence_of_values [ "{" "}" ] @punctuation.bracket)
 (sequence_of_values [ "[" "]" ] @punctuation.bracket)
 
 ;; ---------------------------------------------------------------------------

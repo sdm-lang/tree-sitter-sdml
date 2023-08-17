@@ -1268,6 +1268,18 @@
           "type": "SEQ",
           "members": [
             {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "_sequence_value_constraints"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
               "type": "STRING",
               "value": "["
             },
@@ -1955,6 +1967,18 @@
       "type": "SEQ",
       "members": [
         {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_sequence_value_constraints"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
           "type": "STRING",
           "value": "["
         },
@@ -1985,6 +2009,61 @@
         {
           "type": "STRING",
           "value": "]"
+        }
+      ]
+    },
+    "_sequence_value_constraints": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "{"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "ordering",
+              "content": {
+                "type": "SYMBOL",
+                "name": "sequence_ordering"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "uniqueness",
+              "content": {
+                "type": "SYMBOL",
+                "name": "sequence_uniqueness"
+              }
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "FIELD",
+                  "name": "ordering",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "sequence_ordering"
+                  }
+                },
+                {
+                  "type": "FIELD",
+                  "name": "uniqueness",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "sequence_uniqueness"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "}"
         }
       ]
     },

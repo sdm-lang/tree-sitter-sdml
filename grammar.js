@@ -401,10 +401,10 @@ module.exports = grammar({
 
         predicate_value: $ => choice(
             $.simple_value,
-            $.list_of_predicate_values,
+            $.sequence_of_predicate_values,
         ),
 
-        list_of_predicate_values: $ => choice(
+        sequence_of_predicate_values: $ => choice(
             keyword('∅'),
             seq(
                 '[',
@@ -606,10 +606,10 @@ module.exports = grammar({
             $.value_constructor,
             $.identifier_reference,
             $.mapping_value,
-            $.list_of_values,
+            $.sequence_of_values,
         ),
 
-        list_of_values: $ => seq(
+        sequence_of_values: $ => seq(
             '[',
             repeat1(
                 choice(
@@ -630,13 +630,13 @@ module.exports = grammar({
         ),
 
         mapping_value: $ => seq(
-           field('domain', $.simple_value),
+            field('domain', $.simple_value),
             prec.right(
                 seq(
                     operator('->'),
                     field('range', $.value)
                 )
-            )
+            ),
         ),
 
         builtin_simple_type: $ => choice(
@@ -889,11 +889,11 @@ module.exports = grammar({
         property_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
-            repeat1($.property_role),
+            repeat1($._property_role),
             keyword('end')
         ),
 
-        property_role: $ => choice(
+        _property_role: $ => choice(
             $.identity_role,
             $.role_by_value,
             $.role_by_reference

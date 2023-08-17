@@ -23,7 +23,7 @@ end
             module: (identifier)
             member: (identifier)))
         value: (value
-          (list_of_values
+          (sequence_of_values
             (simple_value
               (iri_reference))
             (simple_value

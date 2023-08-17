@@ -141,8 +141,6 @@
 
 ((sequence_iterator from: (identifier) @variable) (#is-not? local))
 
-(list_of_predicate_values [ "[" "]" ] @punctuation.bracket)
-
 (sequence_builder
  "{" @punctuation.bracket
  "|" @punctuation.separator
@@ -154,8 +152,8 @@
 (sequence_variable (identifier) @variable)
 (mapping_variable domain: (identifier) range: (identifier) @variable)
 
-(list_of_predicate_values [ "[" "]" ] @punctuation.bracket)
-(list_of_predicate_values (identifier_reference) @type)
+(sequence_of_predicate_values [ "[" "]" ] @punctuation.bracket)
+(sequence_of_predicate_values (identifier_reference) @type)
 
 ;; ---------------------------------------------------------------------------
 ;; Types
@@ -249,9 +247,9 @@
 
 (value (identifier_reference) @type)
 
-(list_of_values (identifier_reference) @type)
+(sequence_of_values (identifier_reference) @type)
 
-(list_of_values [ "[" "]" ] @punctuation.bracket)
+(sequence_of_values [ "[" "]" ] @punctuation.bracket)
 
 ;; ---------------------------------------------------------------------------
 ;; Errors

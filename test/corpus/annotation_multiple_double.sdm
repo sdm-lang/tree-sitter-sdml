@@ -20,7 +20,7 @@ end
           module: (identifier)
           member: (identifier)))
           value: (value
-            (list_of_values
+            (sequence_of_values
               (simple_value (double))
               (simple_value (double))
               (simple_value (double))))))))

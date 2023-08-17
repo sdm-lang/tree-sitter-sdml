@@ -1196,52 +1196,6 @@
     }
   },
   {
-    "type": "list_of_predicate_values",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "identifier_reference",
-          "named": true
-        },
-        {
-          "type": "simple_value",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "list_of_values",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier_reference",
-          "named": true
-        },
-        {
-          "type": "mapping_value",
-          "named": true
-        },
-        {
-          "type": "simple_value",
-          "named": true
-        },
-        {
-          "type": "value_constructor",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "local_binding",
     "named": true,
     "fields": {
@@ -1632,7 +1586,7 @@
       "required": true,
       "types": [
         {
-          "type": "list_of_predicate_values",
+          "type": "sequence_of_predicate_values",
           "named": true
         },
         {
@@ -1655,7 +1609,15 @@
           "named": true
         },
         {
-          "type": "property_role",
+          "type": "identity_role",
+          "named": true
+        },
+        {
+          "type": "role_by_reference",
+          "named": true
+        },
+        {
+          "type": "role_by_value",
           "named": true
         }
       ]
@@ -1685,29 +1647,6 @@
           }
         ]
       }
-    }
-  },
-  {
-    "type": "property_role",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "identity_role",
-          "named": true
-        },
-        {
-          "type": "role_by_reference",
-          "named": true
-        },
-        {
-          "type": "role_by_value",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1950,6 +1889,52 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "sequence_of_predicate_values",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier_reference",
+          "named": true
+        },
+        {
+          "type": "simple_value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sequence_of_values",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier_reference",
+          "named": true
+        },
+        {
+          "type": "mapping_value",
+          "named": true
+        },
+        {
+          "type": "simple_value",
+          "named": true
+        },
+        {
+          "type": "value_constructor",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -2342,11 +2327,11 @@
           "named": true
         },
         {
-          "type": "list_of_values",
+          "type": "mapping_value",
           "named": true
         },
         {
-          "type": "mapping_value",
+          "type": "sequence_of_values",
           "named": true
         },
         {
@@ -2539,11 +2524,11 @@
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "def",
@@ -2615,11 +2600,11 @@
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "iri",

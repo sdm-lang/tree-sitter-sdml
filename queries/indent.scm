@@ -23,6 +23,6 @@
 
 (atomic_sentence "(" @indent ")" @indent.end)
 
-(list_of_predicate_values "[" @indent "]" @indent.end)
+(sequence_of_predicate_values "[" @indent "]" @indent.end)
 
-(list_of_values "[" @indent "]" @indent.end)
+(sequence_of_values "[" @indent "]" @indent.end)

@@ -1246,11 +1246,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "list_of_predicate_values"
+          "name": "sequence_of_predicate_values"
         }
       ]
     },
-    "list_of_predicate_values": {
+    "sequence_of_predicate_values": {
       "type": "CHOICE",
       "members": [
         {
@@ -1947,11 +1947,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "list_of_values"
+          "name": "sequence_of_values"
         }
       ]
     },
-    "list_of_values": {
+    "sequence_of_values": {
       "type": "SEQ",
       "members": [
         {
@@ -3170,7 +3170,7 @@
           "type": "REPEAT1",
           "content": {
             "type": "SYMBOL",
-            "name": "property_role"
+            "name": "_property_role"
           }
         },
         {
@@ -3186,7 +3186,7 @@
         }
       ]
     },
-    "property_role": {
+    "_property_role": {
       "type": "CHOICE",
       "members": [
         {

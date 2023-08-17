@@ -1,319 +1,467 @@
-Module              ::= "module" Identifier ModuleBase? ModuleBody
+Module
+    ::= "module" Identifier ModuleBase? ModuleBody
 
-ModuleBase          ::= "base" IriReference
+ModuleBase
+    ::= "base" IriReference
 
-ModuleBody          ::= "is" ImportStatement* Annotation* Definition* "end"
+ModuleBody
+    ::= "is"
+        ImportStatement* Annotation* Definition*
+        "end"
 
-MemberImport        ::= QualifiedIdentifier
+ImportStatement
+    ::= "import" ( Import | "[" Import+ "]" )
 
-ModuleImport        ::= Identifer
+Import
+    ::= MemberImport | ModuleImport
 
-Import              ::= MemberImport | ModuleImport
+ModuleImport
+    ::= Identifer
 
-ImportStatement     ::= "import" ( Import | "[" Import+ "]" )
+MemberImport
+    ::= QualifiedIdentifier
 
-Annotation          ::= AnnotationProperty | Constraint
+Annotation
+    ::= AnnotationProperty | Constraint
 
-AnnotationProperty  ::= "@" IdentiferReference "=" Value
+AnnotationProperty
+    ::= "@" IdentiferReference "=" Value
 
-Constraint          ::=
-    "assert" Identifier ( InformalConstraint | FormalConstraint )
+Definition
+    ::= DataTypeDef
+        | EntityDef
+        | EnumDef
+        | EvqentDef
+        | StructureDef
+        | UnionDef
+        | PropertyDef
 
-Definition          ::=
-    DataTypeDef | EntityDef | EnumDef | EventDef | StructureDef | UnionDef | PropertyDef
+DataTypeDef
+    ::= "datatype" Identifier "<-" DataTypeBase AnnotationOnlyBody?
 
-DataTypeDef         ::=
-    "datatype" Identifier "<-" DataTypeBase AnnotationOnlyBody?
+DataTypeBase
+    ::= IdentifierReference | BuiltinSimpleType
 
-DataTypeBase        ::= IdentifierReference | BuiltinSimpleType
+AnnotationOnlyBody
+    ::= "is" Annotation+ "end"
 
-AnnotationOnlyBody  ::= "is" Annotation+ "end"
+EntityDef
+    ::= "entity" Identifier EntityBody?
 
-EntityDef           ::= "entity" Identifier EntityBody?
+EntityBody
+    ::= "is"
+        Annotation* IdentityMember ( EntityMember | EntityGroup )*
+        "end"
 
-EntityBody          ::=
-    "is"
-    Annotation* IdentityMember ( EntityMember | EntityGroup )*
-    "end"
+EntityGroup
+    ::= "group" Annotation* EntityMember+ "end"
 
-EntityGroup         ::= "group" Annotation* EntityMember+ "end"
+EntityMember
+    ::= MemberByValue | MemberByReference
 
-EntityMember        ::= MemberByValue | MemberByReference
+EnumDef
+    ::= "enum" Identifier EnumBody?
 
-EnumDef             ::= "enum" Identifier EnumBody?
+EnumBody
+    ::= "of" Annotation* ValueVariant+ "end"
 
-EnumBody            ::= "of" Annotation* ValueVariant+ "end"
+ValueVariant
+    ::= Identifier "=" Unsigned AnnotationOnlyBody?
 
-ValueVariant        ::= Identifier "=" Unsigned AnnotationOnlyBody?
+EventDef
+    ::= "event" Identifier
+        "source" IdentifierReference
+        StructureBody?
 
-EventDef            ::=
-    "event" Identifier "source" IdentifierReference StructureBody?
+StructureDef
+    ::= "structure" Identifier StructureBody?
 
-StructureDef        ::= "structure" Identifier StructureBody?
+StructureBody
+    ::= "is" Annotation* ( MemberByValue | StructureGroup )* "end"
 
-StructureBody       ::= "is" Annotation* ( MemberByValue | StructureGroup )* "end"
+StructureGroup
+    ::= "group" Annotation* MemberByValue+ "end"
 
-StructureGroup      ::= "group" Annotation* MemberByValue+ "end"
+UnionDef
+    ::= "union" Identifier UnionBody?
 
-UnionDef            ::= "union" Identifier UnionBody?
+UnionBody
+    ::= "of"
+        Annotation* TypeVariant+
+        "end"
 
-UnionBody           ::= "of" Annotation* TypeVariant+ "end"
+TypeVariant
+    ::= IdentifierReference TypeVariantRename? AnnotationOnlyBody?
 
-TypeVariant         ::= IdentifierReference TypeVariantRename? AnnotationOnlyBody?
+TypeVariantRename
+    ::= "as" Identifier
 
-TypeVariantRename   ::= "as" Identifier
+PropertyDef
+    ::= "property" Identifier PropertyBody?
 
-PropertyDef         ::= "property" Identifier PropertyBody?
+PropertyBody
+    ::= "is" Annotation* PropertyRole+ "end"
 
-PropertyBody        ::= "is" Annotation* PropertyRole+ "end"
+PropertyRole
+    ::= IdentityRole | RoleByValue | RoleByReference
 
-PropertyRole        ::= IdentityRole | RoleByValue | RoleByReference
+IdentityRole
+    ::= "identity" Identifier TypeExpression AnnotationOnlyBody?
 
-IdentityRole        ::= "identity" Identifier TypeExpression AnnotationOnlyBody?
+RoleByValue
+    ::= Identifier TypeExpressionTo AnnotationOnlyBody?
 
-RoleByValue         ::= Identifier TypeExpressionTo AnnotationOnlyBody?
+RoleByReference
+    ::= "ref" Identifier InverseName? TypeExpressionTo AnnotationOnlyBody?
 
-RoleByReference     ::= "ref" Identifier InverseName? TypeExpressionTo AnnotationOnlyBody?
+PropertyMember
+    ::= "in" IdentifierReference
 
-PropertyMember      ::= "in" IdentifierReference
-
-IdentityMember      ::=
-    "identity" Identifier
+IdentityMember
+    ::= "identity" Identifier
         ( PropertyMember | ( TypeExpression AnnotationOnlyBody? ) )
 
-MemberByValue       ::=
-    Identifier
+MemberByValue
+    ::= Identifier
         ( PropertyMember | ( TypeExpressionTo AnnotationOnlyBody? ) )
 
-MemberByReference   ::=
-    "ref" Identifier
+MemberByReference
+    ::= "ref" Identifier
         ( PropertyMember | ( InverseName? TypeExpressionTo AnnotationOnlyBody? ) )
 
-TypeExpression      ::= "->" TypeReference
+TypeExpression
+    ::= "->" TypeReference
 
-TypeExpressionTo    ::= "->" Cardinality? TypeReference
+TypeExpressionTo
+    ::= "->" Cardinality? TypeReference
 
-TypeReference       ::=  UnknownType | IdentifierReference | BuiltinSimpleType | MappingType
+TypeReference
+    ::=  UnknownType | IdentifierReference | BuiltinSimpleType | MappingType
 
-UnknownType         ::= "unknown"
+UnknownType
+    ::= "unknown"
 
-MappingType         ::= "(" TypeReference "->" TypeReference ")"
+MappingType
+    ::= "(" TypeReference "->" TypeReference ")"
 
-Cardinality         ::= "{" SequenceOrdering? SequenceUniqueness? CardinalityInner"}"
+Cardinality
+    ::= "{" SequenceOrdering? SequenceUniqueness? CardinalityInner "}"
 
-CardinalityInner    ::= Unsigned CardinalityRange?
+CardinalityInner
+    ::= Unsigned CardinalityRange?
 
-CardinalityRange    ::= ".." Unsigned?
+CardinalityRange
+    ::= ".." Unsigned?
 
-SequenceOrdering    ::= ( "ordered" | "unordered" )
+SequenceOrdering
+    ::= ( "ordered" | "unordered" )
 
-SequenceUniqueness  ::= ( "unique" | "nonunique" )
+SequenceUniqueness
+    ::= ( "unique" | "nonunique" )
 
-InverseName         ::= "(" Identifier ")"
+InverseName
+    ::= "(" Identifier ")"
 
-Value               ::=
-    SimpleValue | ValueConstructor | IdentifierReference | MappingValue | ListOfValues
+Value
+    ::=  SimpleValue
+        | ValueConstructor
+        | IdentifierReference
+        | MappingValue
+        | SequenceOfValues
 
-BuiltinSimpleType   ::=
-    "string" | "double" | "decimal" | "integer" | "boolean" | "iri"
+SimpleValue
+    ::= String | Double | Decimal | Integer | Boolean | IriReference
 
-SimpleValue         ::=
-    String | Double | Decimal | Integer | Boolean | IriReference
+BuiltinSimpleType
+    ::= "string" | "double" | "decimal" | "integer" | "boolean" | "iri"
 
-Boolean             ::= Tautology | Contradiction
+Boolean
+    ::= Tautology | Contradiction
 
-Tautology           ::= ( "true" | "⊤" )
+Tautology
+    ::= ( "true" | "⊤" )
 
-Contradiction       ::= ( "false" | "⊥" )
+Contradiction
+    ::= ( "false" | "⊥" )
 
-NumericSign         ::= [+-]
+NumericSign
+    ::= [+-]
 
-Zero                ::= [0]
+Zero
+    ::= [0]
 
-NonZero             ::= [1-9]
+NonZero
+    ::= [1-9]
 
-Unsigned            ::= Zero | NonZero ASCII_DIGIT*
+Unsigned
+    ::= Zero | NonZero ASCII_DIGIT*
 
-Integer             ::= NumericSign? Unsigned
+Integer
+    ::= NumericSign? Unsigned
 
-Decimal             ::= Integer "." ASCII_DIGIT+
+Decimal
+    ::= Integer "." ASCII_DIGIT+
 
-ExponentChar        ::= [eE]
+ExponentChar
+    ::= [eE]
 
-Double              ::= Decimal ExponentChar NumericSign? Integer
+Double
+    ::= Decimal ExponentChar NumericSign? Integer
 
-HexPair             ::= ASCII_HEX_DIGIT ASCII_HEX_DIGIT
+String
+    ::= QuotedString LanguageTag?
 
-Escape              ::= "\\" ( CharacterEscape | UnicodeEscape )
+QuotedString
+    ::= '"' ( Escape | NotAllowed )* '"'
 
-CharacterEscape     ::= [\"\\/abefnrtv]
+NotAllowed
+    ::= [^\"\#x00-#x08#x0B-#x1F#x7F]
 
-UnicodeEscape       ::= "u{" HexPair ( HexPair ( HexPair )? )? "}"
+Escape
+    ::= "\\" ( CharacterEscape | UnicodeEscape )
 
-NotAllowed          ::= [^\"\#x00-#x08#x0B-#x1F#x7F]
+CharacterEscape
+    ::= [\"\\/abefnrtv]
 
-QuotedString        ::= '"' ( Escape | NotAllowed )* '"'
+UnicodeEscape
+    ::= "u{" HexPair ( HexPair ( HexPair )? )? "}"
 
-LanguageTag         ::=
-    "@" LanguageTagPrimary
+HexPair
+    ::= ASCII_HEX_DIGIT ASCII_HEX_DIGIT
+
+LanguageTag
+    ::= "@"
+        LanguageTagPrimary
         LanguageTagExtended?
         LanguageTagScript?
         LanguageTagRegion?
 
-LanguageTagPrimary  ::=
-    ASCII_LETTER_LOWER ASCII_LETTER_LOWER ASCII_LETTER_LOWER?
+LanguageTagPrimary
+    ::= ASCII_LETTER_LOWER ASCII_LETTER_LOWER ASCII_LETTER_LOWER?
 
-LanguageTagExtended ::=
-    "-" ASCII_LETTER_UPPER ASCII_LETTER_UPPER ASCII_LETTER_UPPER
+LanguageTagExtended
+    ::= "-"
+        ASCII_LETTER_UPPER ASCII_LETTER_UPPER ASCII_LETTER_UPPER
 
-LanguageTagScript   ::=
-    "-" ASCII_LETTER_UPPER ASCII_LETTER_LOWER
+LanguageTagScript
+    ::= "-"
+        ASCII_LETTER_UPPER ASCII_LETTER_LOWER
         ASCII_LETTER_LOWER ASCII_LETTER_LOWER
 
-LanguageTagRegion   ::=
-    "-" ( ( ASCII_LETTER_UPPER ASCII_LETTER_UPPER )
+LanguageTagRegion
+    ::= "-"
+        ( ( ASCII_LETTER_UPPER ASCII_LETTER_UPPER )
           | ( ASCII_DIGIT ASCII_DIGIT ASCII_DIGIT ) )
 
-String              ::= QuotedString LanguageTag?
-
-IriReference        ::=
+IriReference
+    ::=
     "<"
     ( [^<>\"{}|^`\#x00-#x20] | UnicodeEscape )*
     ">"
 
-ValueConstructor    ::= IdentifierReference "(" SimpleValue ")"
+ValueConstructor
+    ::= IdentifierReference "(" SimpleValue ")"
 
-MappingValue        ::= SimpleValue  "->" Value
+MappingValue
+    ::= SimpleValue  "->" Value
 
-ListOfValues        ::=
-    "[" ( SimpleValue | ValueConstructor | IdentifierReference )+ "]"
+SequenceOfValues
+    ::= "["
+        ( SimpleValue | ValueConstructor | IdentifierReference )+
+        "]"
 
-IdentifierInitial   ::= UC_LETTER_UPPER | UC_LETTER_LOWER
+IdentifierInitial
+    ::= UC_LETTER_UPPER | UC_LETTER_LOWER
 
-IdentifierChar      ::= IdentifierInitial | UC_NUMBER_DECIMAL
+IdentifierChar
+    ::= IdentifierInitial | UC_NUMBER_DECIMAL
 
-Identifier          ::= IdentifierInitial IdentifierChar* ( "_" IdentifierChar+ )*
+Identifier
+    ::= IdentifierInitial IdentifierChar* ( "_" IdentifierChar+ )*
 
-QualifiedIdentifier ::= Identifier ":" Identifier
+QualifiedIdentifier
+    ::= Identifier ":" Identifier
 
-IdentifierReference ::= QualifiedIdentifier | Identifier
+IdentifierReference
+    ::= QualifiedIdentifier | Identifier
 
-LineComment         ::= ";" [^\r\n]*
+LineComment
+    ::= ";" [^\r\n]*
 
-Whitespace          ::=
-    [^\f\n\r\t\v#x20#xa0#x1680#x2000#x200a#x2028#x2029#x202f#x205f#x3000#xfeff]
+Whitespace
+    ::= [^\f\n\r\t\v#x20#xa0#x1680#x2000#x200a#x2028#x2029#x202f#x205f#x3000#xfeff]
 
-InformalConstraint  ::= "=" QuotedString ControlledLanguageTag?
+/* --------------------------------------------------------------------------- */
 
-ControlledLanguageTag ::=
-    "@" LanguageTagPrimary ControlledLanguageScheme?
+Constraint
+    ::= "assert" Identifier ( InformalConstraint | FormalConstraint )
 
-ControlledLanguageScheme ::=
-    "-" ASCII_LETTER ASCII_LETTER ASCII_LETTER
+InformalConstraint
+    ::= "=" QuotedString ControlledLanguageTag?
+
+ControlledLanguageTag
+    ::= "@" LanguageTagPrimary ControlledLanguageScheme?
+
+ControlledLanguageScheme
+         "-"
+        ETTER ASCII_LETTER ASCII_LETTER
         ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
         ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
 
-FormalConstraint    ::= "is" ConstraintEnvironment? ConstraintSentence "end"
+FormalConstraint
+    ::= "is"
+        ConstraintEnvironment? ConstraintSentence
+        "end"
 
-ConstraintSentence  ::=
-    SimpleSentence | BooleanSentence | QuantifiedSentence |
-        "(" ConstraintSentence ")"
+ConstraintSentence
+    ::= SimpleSentence
+        | BooleanSentence
+        | QuantifiedSentence
+        | "(" ConstraintSentence ")"
 
-SimpleSentence      ::= Atomic | Equation
+SimpleSentence
+    ::= Atomic | Equation
 
-Atomic              ::= Term "(" Term* ")"
+Atomic
+    ::= Term "(" Term* ")"
 
-Equation            ::= Term "=" Term
+Equation
+    ::= Term "=" Term
 
-BooleanSentence     ::=
-    Negation |
-    ConstraintSentence
-        (
-          Conjunction | Disjunction | ExclusiveDisjunction |
-          Implication | Biconditional
-        )
+BooleanSentence
+    ::= Negation
+        | ConstraintSentence
+          (
+            Conjunction | Disjunction | ExclusiveDisjunction |
+            Implication | Biconditional
+          )
 
-Negation            ::= ( "not" | "¬" ) ConstraintSentence
+Negation
+    ::= ( "not" | "¬" ) ConstraintSentence
 
-Conjunction         ::= ( "and" | "∧" ) ConstraintSentence
+Conjunction
+    ::= ( "and" | "∧" ) ConstraintSentence
 
-Disjunction         ::= ( "or" | "∨" ) ConstraintSentence
+Disjunction
+    ::= ( "or" | "∨" ) ConstraintSentence
 
-ExclusiveDisjunction ::= ( "xor" | "⊻" ) ConstraintSentence
+ExclusiveDisjunction
+    ::= ( "xor" | "⊻" ) ConstraintSentence
 
-Implication         ::= ( "implies" | "⇒" ) ConstraintSentence
+Implication
+    ::= ( "implies" | "⇒" ) ConstraintSentence
 
-Biconditional       ::= ( "iff" | "⇔" ) ConstraintSentence
+Biconditional
+    ::= ( "iff" | "⇔" ) ConstraintSentence
 
-QuantifiedSentence  ::= Universal | Existential
+QuantifiedSentence
+    ::= Universal | Existential
 
-Universal           ::= ( "forall" | "∀" ) QuantifierBinding+ QuantifiedBody
+Universal
+    ::= ( "forall" | "∀" ) QuantifierBinding+ QuantifiedBody
 
-Existential         ::= ( "exists" | "∃" ) QuantifierBinding+ QuantifiedBody
+Existential
+    ::= ( "exists" | "∃" ) QuantifierBinding+ QuantifiedBody
 
-QuantifierBinding   ::= "self" | ( Identifer IteratorTarget )
+QuantifierBinding
+    ::= "self" | ( Identifer IteratorTarget )
 
-IteratorTarget      ::=
-    TypeIterator | SequenceIterator | "(" IteratorTarget ")"
+IteratorTarget
+    ::= TypeIterator | SequenceIterator | "(" IteratorTarget ")"
 
-TypeIterator        ::= "->" ( "Self" | IdentifierReference )
+TypeIterator
+    ::= "->" ( "Self" | IdentifierReference )
 
-SequenceIterator    ::=
-    ( "in" | "∈" ) ( NamePath | Identifier | SequenceBuilder )
+SequenceIterator
+    ::= ( "in" | "∈" ) ( NamePath | Identifier | SequenceBuilder )
 
-QuantifiedBody      ::= "(" ConstraintSentence ")"
+QuantifiedBody
+    ::= "(" ConstraintSentence ")"
 
-Term                ::=
-    NamePath | Identifier | QualifiedIdentifier
-    | PredicateValue | FunctionalTerm | SequenceBuilder
+Term
+    ::= NamePath
+        | Identifier
+        | QualifiedIdentifier
+        | PredicateValue
+        | FunctionalTerm
+        | SequenceBuilder
 
-NamePath            ::= PathSubject ( "." Identifier )+
+NamePath
+    ::= PathSubject ( "." Identifier )+
 
-PathSubject         ::= ( "self" | Identifier )
+PathSubject
+    ::= ( "self" | Identifier )
 
-PredicateValue      ::=
-    SimpleValue | ListOfPredicateValues
+PredicateValue
+    ::= SimpleValue | SequenceOfPredicateValues
 
-ListOfPredicateValues ::= "∅" | ( "[" ( SimpleValue | IdentifierReference )* "]" )
+SequenceOfPredicateValues
+    ::= "∅" | ( "[" ( SimpleValue | IdentifierReference )* "]" )
 
-FunctionalTerm      ::= Term "(" Term* ")"
+FunctionalTerm
+    ::= Term "(" Term* ")"
 
-ConstraintEnvironment ::= EnvironmentDef+ "in"
+/* --------------------------------------------------------------------------- */
 
-EnvironmentDef      ::= "def" Identifier ( FunctionDef | ConstantDef )
+ConstraintEnvironment
+    ::= EnvironmentDef+ "in"
 
-FunctionDef         ::= FunctionSignature ( ":=" | "≔" ) ConstraintSentence
+EnvironmentDef
+    ::= "def" Identifier ( FunctionDef | ConstantDef )
 
-FunctionSignature   ::= "(" FunctionParameter+ ")" "->" FunctionType
+FunctionDef
+    ::= FunctionSignature ( ":=" | "≔" ) ConstraintSentence
 
-FunctionParameter   ::= Identifier "->" FunctionType
+FunctionSignature
+    ::= "(" FunctionParameter+ ")" "->" FunctionType
 
-FunctionType        ::=  FunctionCardinality? FunctionTypeRef
+FunctionParameter
+    ::= Identifier "->" FunctionType
 
-FunctionCardinality ::=
-    "{" SequenceOrdering? SequenceUniqueness? ( Wildcard | CardinalityInner ) "}"
+FunctionType
+    ::=  FunctionCardinality? FunctionTypeRef
 
-FunctionTypeRef     ::= Wildcard | IdentiferReference | BuiltinSimpleType | MappingType
+FunctionCardinality
+    ::= "{"
+        SequenceOrdering? SequenceUniqueness? ( Wildcard | CardinalityInner )
+        "}"
 
-Wildcard            ::= "_"
+FunctionTypeRef
+    ::= Wildcard | IdentiferReference | BuiltinSimpleType | MappingType
 
-ConstantDef         ::= ( ":=" | "≔" ) ( PredicateValue | ConstraintSentence )
+Wildcard
+    ::= "_"
 
-SequenceBuilder     ::= "{" Variables "|" Expression "}"
+ConstantDef
+    ::= ( ":=" | "≔" ) ( PredicateValue | ConstraintSentence )
 
-Variables           ::= TupleVariable | SequenceVariable | MappingVariable
+/* --------------------------------------------------------------------------- */
 
-TupleVariable       ::= Identifier+
+SequenceBuilder
+    ::= "{" Variables "|" Expression "}"
 
-SequenceVariable    ::= "[" Identifier+ "]"
+Variables
+    ::= TupleVariable
+        | SequenceVariable
+        | MappingVariable
 
-MappingVariable     ::= "(" Identifier "->" Identifier ")"
+TupleVariable
+    ::= Identifier+
 
-Expression          ::=
-    ConjunctiveExpression | LocalBinding | ConstraintSentence | "(" Expression ")"
+SequenceVariable
+    ::= "[" Identifier+ "]"
 
-ConjunctiveExpression ::=
-    Expression ( "and" | "∧" ) Expression
+MappingVariable
+    ::= "(" Identifier "->" Identifier ")"
 
-LocalBinding        ::=
-    Identifier ( TypeIterator | SequenceIterator )
+Expression
+    ::= ConjunctiveExpression
+        | LocalBinding
+        | ConstraintSentence
+        | "(" Expression ")"
+
+ConjunctiveExpression
+    ::= Expression ( "and" | "∧" ) Expression
+
+LocalBinding
+    ::= Identifier ( TypeIterator | SequenceIterator )

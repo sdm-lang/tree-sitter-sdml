@@ -697,6 +697,12 @@ def container(Datatype) -> Module
 Returns the module that contains this model element's definition.
 
 #+BEGIN_EXAMPLE
+def is_ordinal(Datatype) -> boolean
+#+END_EXAMPLE
+
+Returns ~true~ if the passed type is an /ordinal type/, else ~false~.
+
+#+BEGIN_EXAMPLE
 def name(Datatype) -> IdentifierReference
 #+END_EXAMPLE
 

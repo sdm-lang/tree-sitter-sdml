@@ -279,7 +279,7 @@ FunctionalTerm      ::= Term "(" Term* ")"
 
 ConstraintEnvironment ::= EnvironmentDef+ "in"
 
-EnvironmentDef      ::= "def" Identifier ( FunctionDef | ValueDef )
+EnvironmentDef      ::= "def" Identifier ( FunctionDef | ConstantDef )
 
 FunctionDef         ::= FunctionSignature ( ":=" | "≔" ) ConstraintSentence
 
@@ -293,7 +293,7 @@ FunctionCardinality ::= "{}" | Cardinality
 
 FunctionTypeRef     ::= "_" | IdentiferReference | BuiltinSimpleType | MappingType
 
-ValueDef            ::= ( ":=" | "≔" ) ( PredicateValue | ConstraintSentence )
+ConstantDef         ::= ( ":=" | "≔" ) ( PredicateValue | ConstraintSentence )
 
 SequenceBuilder     ::= "{" Variables "|" Expression "}"
 

@@ -445,7 +445,7 @@ module.exports = grammar({
                 'body',
                 choice(
                     $.function_def,
-                    $._value_def
+                    $._constant_def
                 )
             )
         ),
@@ -497,7 +497,7 @@ module.exports = grammar({
 
         any_type: $ => operator('_'),
 
-        _value_def: $ => seq(
+        _constant_def: $ => seq(
             choice(
                 operator(':='),
                 operator('≔'),

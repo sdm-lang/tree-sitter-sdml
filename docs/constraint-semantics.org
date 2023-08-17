@@ -1,0 +1,244 @@
+#+LANGUAGE: en
+#+STARTUP: overview hidestars inlineimages entitiespretty
+
+* <<app:constraint-semantics>>Appendix: Constraint Semantics
+
+The embedded constraint language is purely functional and constraint assertions MUST return a single boolean value
+determining correctness. The constraint language follows the naming convention of Common Logic, and so a constraint
+corresponds to a Common Logic /sentence/ which may be one of the following forms.
+
+*Notation*
+
+- We use the letters $f, g, h, \cdots$, to denote /functions/, and the letters $P, Q, R, \cdots$ to denote /predicates/. Properly
+  these are function and predicate /symbols/, however this level of indirection is not useful in this description.
+- We use $A$ to denote the universe of concrete $values$
+- Functions map a /domain/ $\mathcal{d}$ to a /range/ $\mathcal{r}$ of values in $A$.
+- Predicates are functions over a domain of /relations/ and have a range of /boolean/ values.
+- We also associate with each function and predicate symbol a non-negative integer, called its arity which indicates the
+  number of arguments a function or relation takes.
+  - A function or predicate of arity 0 is called a constant.
+  - Sometimes we use superscripts to indicate the arity of a symbol, e.g., we may write $f^2$ for a binary function.
+- We use the letters $x, y, z, \cdots$ to denote (individual) variables, ranging over elements of a specified domain.
+- We use the symbol $\mathcal{D}$ to denote the domain of discourse.
+
+- Given the above, the relationship between /symbols/ and concrete functions and predicates is as follows.
+  - For each /n/-ary function symbol $f \in \mathcal{F}$, there exists an /n/-ary function $f^\mathcal{D}: A^n \rightarrow A$.
+  - For each /n/-ary predicate symbol $P \in \mathcal{P}$ there exists an /n/-ary predicate $P^\mathcal{D}: ⊆ A^n$.
+     
+*General Semantics*
+
+1. Let $\mathcal{F}$ and $\mathcal{P}$ be sets of functions and predicates respectively, and $\mathcal{X}$ be a set of
+   variables.
+1. The set $\mathcal{T} (\mathcal{F}, \mathcal{V})$ of terms (over $\mathcal{F}$ and $\mathcal{X}$) is defined inductively
+   by:
+   - every variable $x$ in $\mathcal{X}$ is a term, and
+   - if $f$ is a function in $\mathcal{F}$ of arity $n$, and $t_1, \cdots, t_n$ are terms, then $f(t_1,\cdots, t_n)$ is also a term.
+1. For example, if $f$ is a binary function, $a$ is a constant, and $x$ is a variable, then $a$, $f(a, x)$, and $f(a, a)$
+   are all terms.
+1. Similarly, we define:
+   - if $P$ is a predicate symbol in $\mathcal{P}$ of arity $n$, and $t1, \cdots, t_n$ are terms, then $P(t_1, \cdots, t_n)$ is an
+     atomic formula, or /atom/ for short.
+1. Thus, if $P$ is a binary predicate symbol, then $P(x, x)$ and $P(a, f(x, a))$ are atomic formulas.
+1. If a term or atom contains no variables, it is said to be variable-free or /ground/.
+1. The same variable may occur several times in a formula. We distinguish between free and bound occurrences of variables.
+1. Each occurrence of a variable $x$ that is in the scope of a quantifier expression $∀x$ or $∃x$ is said to be /bound/.
+   An occurrence of $x$ that is not bound is said to be /free/.
+1. For example, in $∀x∃y P(x, y)$ all variable occurrences are bound, whereas in $∃y P(x, y)$ the occurrence of $x$ is free.
+1. The same variable may have both free and bound occurrences in a formula, e.g., the variable $x$ in $Q(x) ∨ ∃x ¬R(x)$.
+1. Formulas without free occurrences of variables are called /sentences/. Thus, $∀x∃y P(x, y)$ is a sentence but $∃y P(x,
+   y)$ is not.
+
+Semantically, sentences are formulas that can be true or false, whereas the truth value of a formula with free
+occurrences of variables depends on the assignment of values to these variables.
+
+** Simple Sentences
+
+An /atomic sentence/ takes the form of a predicate with a set of zero or more arguments.
+
+#+BEGIN_EXAMPLE
+predicate(a1, ..., an)
+#+END_EXAMPLE
+
+An /equation/ sentence asserts the equality of two terms.
+
+#+BEGIN_EXAMPLE
+rhs = rhs
+#+END_EXAMPLE
+  
+** Boolean Sentences
+
+The /conjunction/ of two sentences takes the form of the application of the logical /and/ operation.
+
+#+BEGIN_EXAMPLE
+lhs and rhs
+lhs  ∧  rhs
+#+END_EXAMPLE
+
+The /disjunction/ of two sentences takes the form of the application of the logical /or/ operation.
+
+#+BEGIN_EXAMPLE
+lhs or rhs
+lhs ∧  rhs
+#+END_EXAMPLE
+
+The /exclusive disjunction/ of two sentences takes the form of the application of the logical /xor/ operation.
+
+#+BEGIN_EXAMPLE
+lhs xor rhs
+lhs  ⊻  rhs
+#+END_EXAMPLE
+
+An /implication/ relation between two sentences holds true when the right-hand proposition is a logical
+consequence of the left-hand. In effect it says that "if the left-hand side is true, then the right-hand side is also
+true"; however, it does not say what one can deduce if the left-hand side is not true, or under what other conditions
+the right-hand side may be true.
+
+Note that the left-hand side is often named the /antecedent/ and the right-hand side is the /consequent/. The entire
+expression is often termed a /conditional/.
+
+#+BEGIN_EXAMPLE
+lhs implies rhs
+lhs   ==>   rhs
+lhs    ⇒    rhs
+#+END_EXAMPLE
+
+A /biconditional/ relation between two sentences holds true when the both sides are either true or false. In effect, "the
+left-hand side implies the right-hand side and the right-hand side implies the left-hand-side".
+
+#+BEGIN_EXAMPLE
+lhs iff  rhs
+lhs <==> rhs
+lhs  ⇔   rhs
+#+END_EXAMPLE
+
+$$L \iff R \equiv (L \implies R) \land (R \implies L)$$
+    
+** Quantified Sentences
+
+The /universal quantification/ over a type says that "for all values $v$ of type $T$ the sentence $s$ must hold true".
+
+#+BEGIN_EXAMPLE
+forall v -> Type (s)
+     ∀ v -> Type (s)
+#+END_EXAMPLE
+
+The /universal quantification/ over a sequence says that "for all elements $e$ in the sequence $S$ the sentence $s$ must hold
+true".
+
+#+BEGIN_EXAMPLE
+forall e in Sequence (s)
+     ∀ e ∈  Sequence (s)
+#+END_EXAMPLE
+
+The /existential quantification/ over a type says that "there exists a value $v$ of type $T$ where the sentence $s$ holds
+true".
+
+#+BEGIN_EXAMPLE
+exists v -> Type (s)
+     ∃ v -> Type (s)
+#+END_EXAMPLE
+
+The /existential quantification/ over a sequence says that "there exists an element $e$ in the sequence $S$ where the sentence
+$s$ holds true".
+
+#+BEGIN_EXAMPLE
+exists e in Sequence (s)
+     ∃ e ∈  Sequence (s)
+#+END_EXAMPLE
+    
+** Sequence Builders
+
+*Notation*
+
+- We use the symbol $\mathbb{S}$ to denote an arbitrary sequence of values such that $\mathbb{S} ⊆ A$.
+- We use the type $\mathbb{T}$ to denote an arbitrary type which is a set of values such that $\mathbb{T} ⊆ A$.
+- We use the symbol $\tau_x$ to denote the type $\mathbb{T}$ of a value $x \in A$. Given that a function or predicate with an
+  arity of $0$ is a constant value:
+  - for functions the following equivalence holds $\forall f \in \mathcal{F} \left(arity(f) = 0 \implies \mathcal{r}_f =
+    \tau_f\right)$, and
+  - for predicates the following equivalence holds $\forall p \in \mathcal{P} \left(arity(p) = 0 \implies \mathcal{r}_p = \tau_p\right)$.
+  
+The value of a sequence builder of the form $t ≔ \bigl\{ x, y \mid \ldots\}$ provides a relation for each variable of
+the form $x(\tau_t) → \tau_x$ and $y(\tau_t) \rightarrow \tau_y$. This can be expressed in the following:
+
+$$t ≔ \bigl\{ x_1, \cdots, x_n \mid \ldots \bigr\} \implies \forall x \in x_1, \cdots, x_n, \exists f \in \mathcal{F} \bigl(arity(f) = 1 \land \mathcal{d}_f =
+\tau_t \land \mathcal{r}_f = \tau_x\bigr)$$
+
+The expression from section [[sec:sequence-builders]] does not provide a domain for the variable $x$ and so will take on all
+values from the domain of discourse, $\mathcal{D}$. We may then define a transform in the following manner.
+
+$$\bigl\{ x \mid P(x)\bigr\} \equiv \bigl\{ x \mid x \in \mathcal{D} \land P(x)\bigr\}$$
+
+In natural language this transformed expression read as follows "construct a sequence of values of $x$ *such that* $x$ is
+in the sequence $\mathcal{D}$ *and* the predicate $P$ holds true for $x$".
+
+Predicates may also be combined with the usual boolean operations; negation $\bigl\{ x \mid ¬P(x)\bigr\}$, conjunction
+$\bigl\{ x \mid P(x) \wedge Q(x)\bigr\}$, disjunction $\bigl\{ x \mid P(x) \vee Q(x)\bigr\}$, and exclusive disjunction $\{ x
+\mid P(x) \veebar Q(x)\bigr\}$.
+
+The domain for each variable $x$ may either be described as the set of all elements in a sequence value
+$\mathbb{S}$, or the set of all values for a type $\mathbb{T}$.
+
+1. $\bigl\{ x \mid x \in \mathbb{S} \land P(x)\bigr\}$ returns a sequence of all values $x$ in the collection $\mathbb{S}$ for which the
+   predicate $P$ holds (evaluates to ~true~).
+   - Example: $\bigl\{ m \mid x \in self.members \land optional(m)\bigr\}$
+1. $\bigl\{ x \mid x \in \mathbb{T} \land P(x)\bigr\}$ returns a sequence of all values $x$ in the type $\mathbb{T}$ for which the
+   predicate $P$ holds (evaluates to ~true~).
+   - Example: $\bigl\{ v \mid v \in FutureDate \land gt(v, today)\bigr\}$.
+   - Example: $\bigl\{ v \mid v → FutureDate \land gt(v, today)\bigr\}$.
+
+It can be shown that this is a universal quantification, /all/ values from the type $\mathbb{T}$ or sequence
+$\mathbb{S}$ will be considered. A variable can be identified as existentially quantified by prefacing it's definition
+with either the keyword ~exists~ or the operator ~∃~.
+
+$$\bigl\{ x \mid x \in self.tags \land ∃ y \in self.container.tags \land x = y\bigr\}$$
+
+The following definitions are taken from the standard library and act as filters over a sequence of ~Annotation~ union
+values to provide sequences which only contain one or other of the types in the union.
+
+#+BEGIN_EXAMPLE
+def annotation_properties(anns -> {} Annotation) -> {} AnnotationProperty
+    ≔ {a | a ∈ anns ∧ AnnotationProperty(a)}
+
+def constraints(anns - > {}  Annotation) -> {} Constraint
+    ≔ {a | a ∈ anns ∧ Constraint(a)}
+#+END_EXAMPLE
+
+** Quantified Sentences as Sequence Builders
+
+
+The existential qualifier specifically determines that there is /at least one/ element in the type or sequence where the
+sentence provided holds true. If you need to ensure a specific cardinality, for example that /exactly three/ elements in
+type or sequence are selected, use a sequence comprehension.
+
+#+BEGIN_EXAMPLE
+count({ e | e in Sequence ∧ s}) = 3
+#+END_EXAMPLE
+
+By this definition we can show that the following are equivalent.
+
+#+BEGIN_EXAMPLE
+exists e in Sequence (s)
+not is_empty({ e | e in Sequence ∧ s})
+#+END_EXAMPLE
+
+More formally, the following equivalence holds true.
+
+$$∃ e \in \mathbb{S} \bigl(P\left(e\right)\bigr) ≡ ¬\bigl\{e \mid e \in \mathbb{S} ∧ P\left(e\right)\bigr\}=∅$$
+
+We can also show that the following are equivalent for universal quantification.
+
+#+BEGIN_EXAMPLE
+forall e in Sequence (s)
+is_empty({ e | e in Sequence ∧ not s}
+#+END_EXAMPLE
+
+$$∀ e \in \mathbb{S} \bigl(P\left(e\right)\bigr) ≡ \bigl\{e \mid e \in \mathbb{S} ∧ ¬P(e)\bigr\}=∅$$
+
+In this manner we can treat the quantified sentences as syntactic sugar over specific forms of sequence comprehensions.
+
+** <<app:common-logic>>Constraints to ISO/IEC Common Logic
+
+This appendix describes the *normative* mapping from SDML/Constraints to the ISO/IEC Common Logic standard.
+
+TBD

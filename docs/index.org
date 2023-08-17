@@ -39,7 +39,7 @@
 #+INCLUDE: "./surface-to-rdf.org" :minlevel 1
 
 # Non-normative mapping
-#+INCLUDE: "./constraints-to-cl.org" :minlevel 1
+#+INCLUDE: "./constraint-semantics.org" :minlevel 1
 
 # Non-normative reference used by tooling
 #+INCLUDE: "./uml-profile.org" :minlevel 1

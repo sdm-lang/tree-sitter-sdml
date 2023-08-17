@@ -1068,11 +1068,14 @@ in a sequence type (see section [[sec:sequence-types]]).
 #+NAME: lst:grammar-cardinality
 #+BEGIN_SRC ebnf
 Cardinality         ::=
-    "{" SequenceOrdering? SequenceUniqueness? Unsigned CardinalityRange? "}"
+    "{" SequenceOrdering? SequenceUniqueness? CardinalityInner "}"
+CardinalityInner    ::= Unsigned CardinalityRange?
 CardinalityRange    ::= ".." Unsigned?
 #+END_SRC
 
 [[./ebnf-diagram/Cardinality.svg]]
+
+[[./ebnf-diagram/CardinalityInner.svg]]
 
 [[./ebnf-diagram/CardinalityRange.svg]]
 

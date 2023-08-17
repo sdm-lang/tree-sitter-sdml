@@ -99,8 +99,9 @@ UnknownType         ::= "unknown"
 
 MappingType         ::= "(" TypeReference "->" TypeReference ")"
 
-Cardinality         ::=
-    "{" SequenceOrdering? SequenceUniqueness? Unsigned CardinalityRange? "}"
+Cardinality         ::= "{" SequenceOrdering? SequenceUniqueness? CardinalityInner"}"
+
+CardinalityInner    ::= Unsigned CardinalityRange?
 
 CardinalityRange    ::= ".." Unsigned?
 
@@ -289,9 +290,12 @@ FunctionParameter   ::= Identifier "->" FunctionType
 
 FunctionType        ::=  FunctionCardinality? FunctionTypeRef
 
-FunctionCardinality ::= "{}" | Cardinality
+FunctionCardinality ::=
+    "{" SequenceOrdering? SequenceUniqueness? ( Wildcard | CardinalityInner ) "}"
 
-FunctionTypeRef     ::= "_" | IdentiferReference | BuiltinSimpleType | MappingType
+FunctionTypeRef     ::= Wildcard | IdentiferReference | BuiltinSimpleType | MappingType
+
+Wildcard            ::= "_"
 
 ConstantDef         ::= ( ":=" | "≔" ) ( PredicateValue | ConstraintSentence )
 

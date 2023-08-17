@@ -325,6 +325,8 @@ ListOfPredicateValues ::= "∅" | ( "[" ( SimpleValue | IdentifierReference )* "
 
 [[./ebnf-diagram/PredicateValue.svg]]
 
+Note that the keyword ~∅~ denotes the empty set, or an empty sequence ~[]~ that is unique.
+
 [[./ebnf-diagram/ListOfPredicateValues.svg]]
 
 #+NAME: lst:grammar-functional-term
@@ -436,7 +438,9 @@ end
 
 *** Constraint Environment
 
-TBD
+A formal constraint may start with an /environment/ that includes one or more /definitions/ that are then used in the
+constraint body. A definition introduces a new /function/ or /constant/ -- a constant is effectively a 0-arity function --
+although the function body may be a value or a constraint sentence and not specify side-effects.
 
 #+NAME: lst:grammar-constraint-environment
 #+BEGIN_SRC ebnf
@@ -452,12 +456,13 @@ EnvironmentDef      ::= "def" Identifier ( FunctionDef | ConstantDef )
 
 [[./ebnf-diagram/EnvironmentDef.svg]]
 
+A defined function has a signature that describes it's domain, or /parameters/, and it's range, or /return type/. 
+
 #+NAME: lst:grammar-environment-function
 #+BEGIN_SRC ebnf
 FunctionDef         ::= FunctionSignature ( ":=" | "≔" ) ConstraintSentence
 FunctionSignature   ::= "(" FunctionParameter+ ")" "->" FunctionType
 FunctionParameter   ::= Identifier "->" FunctionType
-FunctionType        ::=  FunctionCardinality? FunctionTypeRef
 #+END_SRC
 
 [[./ebnf-diagram/FunctionDef.svg]]
@@ -466,12 +471,16 @@ FunctionType        ::=  FunctionCardinality? FunctionTypeRef
 
 [[./ebnf-diagram/FunctionParameter.svg]]
 
-[[./ebnf-diagram/FunctionType.svg]]
+Function type specifications may use wildcard symbols to denote their application to undefined types.
 
 #+BEGIN_SRC ebnf
-FunctionCardinality ::= "{}" | Cardinality
-FunctionTypeRef     ::= "_" | IdentiferReference | BuiltinSimpleType | MappingType
+FunctionType        ::= FunctionCardinality? FunctionTypeRef
+FunctionCardinality ::= "{" SequenceOrdering? SequenceUniqueness? ( Wildcard | CardinalityInner ) "}"
+FunctionTypeRef     ::= Wildcard | IdentiferReference | BuiltinSimpleType | MappingType
+Wildcard            ::= "_"
 #+END_SRC
+
+[[./ebnf-diagram/FunctionType.svg]]
 
 [[./ebnf-diagram/FunctionCardinality.svg]]
 

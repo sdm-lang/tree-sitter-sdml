@@ -481,21 +481,29 @@ module.exports = grammar({
             field('target', $.function_type_reference)
         ),
 
-        function_cardinality_expression: $ => choice(
-            $.any_cardinality,
-            $.cardinality_expression
+        function_cardinality_expression: $ => seq(
+            '{',
+            optional(
+                field('ordering', $.sequence_ordering)
+            ),
+            optional(
+                field('uniqueness', $.sequence_uniqueness)
+            ),
+            choice(
+                $.wildcard,
+                $._cardinality_inner
+            ),
+            '}'
         ),
 
         function_type_reference: $ => choice(
-            $.any_type,
+            $.wildcard,
             $.identifier_reference,
             $.builtin_simple_type,
             $.mapping_type
         ),
 
-        any_cardinality: $ => operator('{}'),
-
-        any_type: $ => operator('_'),
+        wildcard: $ => operator('_'),
 
         _constant_def: $ => seq(
             choice(
@@ -1018,11 +1026,15 @@ module.exports = grammar({
             optional(
                 field('uniqueness', $.sequence_uniqueness)
             ),
+            $._cardinality_inner,
+            '}'
+        ),
+
+        _cardinality_inner: $ => seq(
             field('min', $.unsigned),
             optional(
                 field('range', $.cardinality_range)
             ),
-            '}'
         ),
 
         sequence_ordering: $ => choice(

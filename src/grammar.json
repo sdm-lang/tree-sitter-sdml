@@ -1399,7 +1399,7 @@
               },
               {
                 "type": "SYMBOL",
-                "name": "_value_def"
+                "name": "_constant_def"
               }
             ]
           }
@@ -1547,15 +1547,60 @@
       ]
     },
     "function_cardinality_expression": {
-      "type": "CHOICE",
+      "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "any_cardinality"
+          "type": "STRING",
+          "value": "{"
         },
         {
-          "type": "SYMBOL",
-          "name": "cardinality_expression"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "ordering",
+              "content": {
+                "type": "SYMBOL",
+                "name": "sequence_ordering"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "uniqueness",
+              "content": {
+                "type": "SYMBOL",
+                "name": "sequence_uniqueness"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "wildcard"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_cardinality_inner"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "}"
         }
       ]
     },
@@ -1564,7 +1609,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "any_type"
+          "name": "wildcard"
         },
         {
           "type": "SYMBOL",
@@ -1580,18 +1625,7 @@
         }
       ]
     },
-    "any_cardinality": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PREC",
-        "value": 1,
-        "content": {
-          "type": "STRING",
-          "value": "{}"
-        }
-      }
-    },
-    "any_type": {
+    "wildcard": {
       "type": "TOKEN",
       "content": {
         "type": "PREC",
@@ -1602,7 +1636,7 @@
         }
       }
     },
-    "_value_def": {
+    "_constant_def": {
       "type": "SEQ",
       "members": [
         {
@@ -3711,6 +3745,19 @@
           ]
         },
         {
+          "type": "SYMBOL",
+          "name": "_cardinality_inner"
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "_cardinality_inner": {
+      "type": "SEQ",
+      "members": [
+        {
           "type": "FIELD",
           "name": "min",
           "content": {
@@ -3733,10 +3780,6 @@
               "type": "BLANK"
             }
           ]
-        },
-        {
-          "type": "STRING",
-          "value": "}"
         }
       ]
     },

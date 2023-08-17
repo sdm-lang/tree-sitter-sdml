@@ -786,17 +786,54 @@
   {
     "type": "function_cardinality_expression",
     "named": true,
-    "fields": {},
+    "fields": {
+      "min": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "unsigned",
+            "named": true
+          }
+        ]
+      },
+      "ordering": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "sequence_ordering",
+            "named": true
+          }
+        ]
+      },
+      "range": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "cardinality_range",
+            "named": true
+          }
+        ]
+      },
+      "uniqueness": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "sequence_uniqueness",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
-          "type": "any_cardinality",
-          "named": true
-        },
-        {
-          "type": "cardinality_expression",
+          "type": "wildcard",
           "named": true
         }
       ]
@@ -909,10 +946,6 @@
       "required": true,
       "types": [
         {
-          "type": "any_type",
-          "named": true
-        },
-        {
           "type": "builtin_simple_type",
           "named": true
         },
@@ -922,6 +955,10 @@
         },
         {
           "type": "mapping_type",
+          "named": true
+        },
+        {
+          "type": "wildcard",
           "named": true
         }
       ]
@@ -2477,14 +2514,6 @@
     "named": false
   },
   {
-    "type": "any_cardinality",
-    "named": true
-  },
-  {
-    "type": "any_type",
-    "named": true
-  },
-  {
     "type": "as",
     "named": false
   },
@@ -2510,11 +2539,11 @@
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "def",
@@ -2522,11 +2551,11 @@
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "end",
@@ -2686,6 +2715,10 @@
   },
   {
     "type": "unsigned",
+    "named": true
+  },
+  {
+    "type": "wildcard",
     "named": true
   },
   {

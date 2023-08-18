@@ -35,12 +35,12 @@ module Campaign is
     identity campaignId -> CampaignId
 
     name -> Name is
-      @skos:definition = ""
+      @skos:definition = "the name of the campaign"@en
     end
 
     tag -> {0..} Tag
 
-    ref target {0..1} -> {0..} Target
+    ref target -> {0..} Target
   end
 
   entity Target
@@ -49,6 +49,20 @@ end
 ```
 
 # Changes
+
+**Version: 0.1.37**
+
+* Feature: Update rule `function_cardinality_expression` to allow sequence constraints.
+  * Rename rule `any_type` to `wildcard`.
+  * Remove rule `any_cardinality` and replace with `wildcard`.
+* Feature: Rename lists to sequences.
+  * Rename rule `list_of_predicate_values` to `sequence_of_predicate_values`.
+  * Rename rule `list_of_values` to `sequence_of_values`.
+* Feature: make rule `property_role` private as `_property_role`.
+* Feature: allow sequence constraints on sequence values.
+  * Add rule `_sequence_value_constraints`.
+  * Add optional `_sequence_value_constraints` to rule `sequence_of_predicate_values`.
+  * Add optional `_sequence_value_constraints` to rule `sequence_of_values`.
 
 **Version: 0.1.36**
 

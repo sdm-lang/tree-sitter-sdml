@@ -39,14 +39,15 @@ digraph G {
 #+RESULTS: fig:sdml-overview
 [[file:sdml-overview.svg]]
 
-The language uses some ideas from UML[fn:uml] which is often used in the construction of such models today. However, the goal is
-to keep the language as small as possible, taking away some options where they don't make sense or where their use may
-distract from the major purpose of the model. The model also takes some of the language from Domain-Driven Design (DDD)[fn:ddd],
-namely the separation of entities (/an object defined not by its attributes, but its identity/) from value objects (/an
-immutable object that contains attributes but has no conceptual identity/), simply termed structures in SDML. This model
-does not include the following DDD as first-class concepts: /aggregates/, /repositories/, /factories/, or /services/.
+The language uses some ideas from UML[fn:uml], a language which is often used in the construction of such models today.
+However, the goal is to keep the language as small as possible, taking away some options where they don't make sense or
+where their use may distract from the major purpose of the model. The model also takes some of the language from
+Domain-Driven Design (DDD)[fn:ddd], namely the separation of entities (/an object defined not by its attributes, but its
+identity/) from value objects (/an immutable object that contains attributes but has no conceptual identity/), simply
+termed structures in SDML. This model does not include the following DDD as first-class concepts: /aggregates/,
+/repositories/, /factories/, or /services/.
 
-** <<sec:domain-modeling>> Domain Modeling
+** <<sec:domain-modeling>>What is Domain Modeling?
 
 Domain modeling is the process by which we develop a model of our business domain. In particular, we model /what/ our
 business does and not /how/ it is done. 
@@ -211,7 +212,7 @@ digraph G {
 #+RESULTS: fig:sdml-foundation
 [[file:sdml-foundation.svg]]
 
-** <<sec:sdml-role>> Domain Modeling's Role in Development
+** <<sec:sdml-role>>Domain Modeling's Role in Development
 
 The software development process may be described as the management of abstraction; requirements are an abstraction
 representing actual needs of some group of individuals, a whiteboard drawing may be an (informal) abstraction of a
@@ -371,7 +372,8 @@ digraph G {
 #+RESULTS: fig:example-transform
 [[file:example-transform.svg]]
 
-** Goals
+** SDML as a Domain Modeling Language
+*** Goals
 
 The purpose of SDML is to be the source of truth concerning the enterprise's domain, and the root of the tree shown in
 figure [[fig:example-transform]]. It needs to provide an abstraction that is expressive enough to model the structure of
@@ -392,7 +394,7 @@ the surface syntax is the canonical authoring form.
 
 (*TODO*: Add vocabulary discussion)
 
-** Non-Goals
+*** Non-Goals
 
 (*TODO*: Complete this list)
 
@@ -400,6 +402,17 @@ the surface syntax is the canonical authoring form.
 2. Object Modeling
 3. Behavior Modeling
 4. Standardization
+
+** Acknowledgments
+
+Obviously this work relies on the decades of prior art in domain modeling and modeling languages in general; in
+particular, the many authors and contributors to the UML family of specifications. Similarly SDML relies heavily on the
+work done by the W3C on RDF and OWL and I owe thanks to the many authors and contributors of those specifications and
+the myriad examples of RDF usage and application that I have drawn from.
+
+The syntax diagrams generated for this document were generated from the BNF source by the /Railroad Diagram Generator/ tool,
+written by Gunther Rademacher, and hosted at [[https://www.bottlecaps.de/rr/ui.]]
+
 
 # ----- Footnotes
 
@@ -416,3 +429,5 @@ the surface syntax is the canonical authoring form.
 [fn:mdd] [[https://en.wikipedia.org/wiki/Model-driven_engineering][Model-Driven Development]], Wikipedia
 
 [fn:thrift] [[https://thrift.apache.org/docs/idl][Thrift interface description language]], Apache Software Foundation
+
+

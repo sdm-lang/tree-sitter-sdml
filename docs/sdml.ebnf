@@ -282,7 +282,8 @@ IdentifierChar
     ::= IdentifierInitial | UC_NUMBER_DECIMAL
 
 Identifier
-    ::= IdentifierInitial IdentifierChar* ( "_" IdentifierChar+ )*
+    ::= IdentifierInitial
+        IdentifierChar* ( "_" IdentifierChar+ )*
 
 QualifiedIdentifier
     ::= Identifier ":" Identifier

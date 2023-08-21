@@ -61,12 +61,15 @@ end
 An identifier is a string of characters corresponding to the Unicode General Category[fn:ucgc] *Lu* (an uppercase letter),
 *Ll* (a lowercase letter), *Nd* (decimal digit), or the Unicode Low Line (underscore, "_", =U+005F=) character. Specifically
 an identifer *must* start with and *must* begin and end with a letter such that the low line character may only appear
-/within/ the identifier. The following is the BNF description of the identifier syntax.
+/within/ the identifier.
+
+The following is the BNF description of the identifier syntax.
 
 #+NAME: lst:grammar-identifier
 #+BEGIN_SRC ebnf
 Identifier
-    ::= IdentifierInitial IdentifierChar* ( "_" IdentifierChar+ )*
+    ::= IdentifierInitial
+        IdentifierChar* ( "_" IdentifierChar+ )*
 #+END_SRC
 
 [[./ebnf-diagram/Identifier.svg]]
@@ -2289,10 +2292,6 @@ LocalBinding
     ::= Identifier ( TypeIterator | SequenceIterator )
 #+END_SRC
 
-*** Acknowledgements
-
-The diagrams generated for this document were generated from the BNF source by the /Railroad Diagram Generator/ tool,
-written by Gunther Rademacher, and hosted at [[https://www.bottlecaps.de/rr/ui.]]
 
 # ----- Footnotes
 

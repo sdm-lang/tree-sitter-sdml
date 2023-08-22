@@ -1020,13 +1020,13 @@
             },
             {
               "type": "SYMBOL",
-              "name": "iterator_target"
+              "name": "iterator_source"
             }
           ]
         }
       ]
     },
-    "iterator_target": {
+    "iterator_source": {
       "type": "CHOICE",
       "members": [
         {
@@ -1046,7 +1046,7 @@
             },
             {
               "type": "SYMBOL",
-              "name": "iterator_target"
+              "name": "iterator_source"
             },
             {
               "type": "STRING",
@@ -1072,7 +1072,7 @@
         },
         {
           "type": "FIELD",
-          "name": "from",
+          "name": "source",
           "content": {
             "type": "CHOICE",
             "members": [
@@ -1121,7 +1121,7 @@
         },
         {
           "type": "FIELD",
-          "name": "from",
+          "name": "source",
           "content": {
             "type": "CHOICE",
             "members": [

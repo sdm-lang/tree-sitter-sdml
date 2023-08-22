@@ -370,10 +370,10 @@ Existential
     ::= ( "exists" | "∃" ) QuantifierBinding+ QuantifiedBody
 
 QuantifierBinding
-    ::= "self" | ( Identifer IteratorTarget )
+    ::= "self" | ( Identifer IteratorSource )
 
-IteratorTarget
-    ::= TypeIterator | SequenceIterator | "(" IteratorTarget ")"
+IteratorSource
+    ::= TypeIterator | SequenceIterator | "(" IteratorSource ")"
 
 TypeIterator
     ::= "->" ( "Self" | IdentifierReference )

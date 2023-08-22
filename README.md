@@ -50,6 +50,13 @@ end
 
 # Changes
 
+**Version: 0.1.38**
+
+* Feature: Updated naming for iterators which seems more consistent.
+  * Rename rule `iterator_target` to `iterator_source`.
+  * Rename field `from` in `type_iterator` to `source`.
+  * Rename field `from` in `sequence_iterator` to `source`.
+
 **Version: 0.1.37**
 
 * Feature: Update rule `function_cardinality_expression` to allow sequence constraints.

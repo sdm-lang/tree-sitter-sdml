@@ -90,7 +90,7 @@
 
 (constraint name: (identifier) @name)
 
-(type_iterator from: (identifier_reference) @reference.class)
+(type_iterator source: (identifier_reference) @reference.class)
 
 (name_path (identifier) @name)
 

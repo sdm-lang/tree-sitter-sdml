@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.37
+// Version:    0.1.38
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -321,16 +321,16 @@ module.exports = grammar({
             $.reserved_self,
             seq(
                 field('name', $.identifier),
-                $.iterator_target
+                $.iterator_source
             )
         ),
 
-        iterator_target: $ => choice(
+        iterator_source: $ => choice(
             $.type_iterator,
             $.sequence_iterator,
             seq(
                 '(',
-                $.iterator_target,
+                $.iterator_source,
                 ')'
             )
         ),
@@ -338,7 +338,7 @@ module.exports = grammar({
         type_iterator: $ => seq(
             operator('->'),
             field(
-                'from',
+                'source',
                 choice(
                     $.reserved_self_type,
                     $.identifier_reference,
@@ -352,7 +352,7 @@ module.exports = grammar({
                 operator('∈')
             ),
             field(
-                'from',
+                'source',
                 choice(
                     $.name_path,  // function call sugar
                     $.identifier, // variable

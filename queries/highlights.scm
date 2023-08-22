@@ -136,10 +136,10 @@
 (quantifier_binding (reserved_self) @keyword)
 (quantifier_binding name: (identifier) @variable)
 
-(type_iterator from: (reserved_self_type) @keyword)
-(type_iterator from: (identifier_reference) @type)
+(type_iterator source: (reserved_self_type) @keyword)
+(type_iterator source: (identifier_reference) @type)
 
-((sequence_iterator from: (identifier) @variable) (#is-not? local))
+((sequence_iterator source: (identifier) @variable) (#is-not? local))
 
 (sequence_builder
  "{" @punctuation.bracket

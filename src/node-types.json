@@ -1173,7 +1173,7 @@
     "fields": {}
   },
   {
-    "type": "iterator_target",
+    "type": "iterator_source",
     "named": true,
     "fields": {},
     "children": {
@@ -1181,7 +1181,7 @@
       "required": true,
       "types": [
         {
-          "type": "iterator_target",
+          "type": "iterator_source",
           "named": true
         },
         {
@@ -1729,7 +1729,7 @@
       "required": true,
       "types": [
         {
-          "type": "iterator_target",
+          "type": "iterator_source",
           "named": true
         },
         {
@@ -1871,7 +1871,7 @@
     "type": "sequence_iterator",
     "named": true,
     "fields": {
-      "from": {
+      "source": {
         "multiple": false,
         "required": true,
         "types": [
@@ -2206,7 +2206,7 @@
     "type": "type_iterator",
     "named": true,
     "fields": {
-      "from": {
+      "source": {
         "multiple": false,
         "required": true,
         "types": [

@@ -77,7 +77,8 @@
  ")"
  "{"
  "}"
-  ] @punctuation.bracket
+ ] @punctuation.bracket
+
 ;; ---------------------------------------------------------------------------
 ;; Module & Imports
 ;; ---------------------------------------------------------------------------
@@ -181,7 +182,6 @@
 (member_by_reference property: (identifier_reference) @variable.field)
 (member_by_reference target: (type_reference) @type)
 
-
 (member_inverse_name
  "(" @punctuation.bracket
  name: (identifier) @variable.field
@@ -223,7 +223,7 @@
  (unsigned)
  ] @number
 
-(boolean) @boolean ;; or constant.builtin
+(boolean) @boolean
 
 (value_constructor name: (identifier_reference) @function.call)
 

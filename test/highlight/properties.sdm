@@ -57,12 +57,12 @@ module properties is
     identifier in accountId
     ; <- variable.field
     ;          ^ keyword
-    ;             ^ variable.special
+    ;             ^ variable.field
 
     name -> string
     ; <- variable.field
     ;    ^ operator
-    ;       ^ keyword
+    ;       ^ type.builtin
 
   end
   ; <- keyword

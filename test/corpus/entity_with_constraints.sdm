@@ -62,21 +62,20 @@ end
                   (formal_constraint
                     (constraint_sentence
                       (quantified_sentence
-                        (universal
-                          (quantifier_binding
-                            (reserved_self))
-                          (quantified_body
-                            (constraint_sentence
-                              (simple_sentence
-                                (atomic_sentence
-                                  (term
-                                    (identifier))
-                                  (term
-                                    (name_path
-                                      (reserved_self)
-                                      (identifier)))
-                                  (term
-                                    (predicate_value
-                                      (simple_value
-                                        (string
-                                          (quoted_string))))))))))))))))))))))
+                        (universal)
+                            (quantifier_binding
+                              (reserved_self))
+                        (constraint_sentence
+                          (simple_sentence
+                            (atomic_sentence
+                              (term
+                                (identifier))
+                              (term
+                                (function_composition
+                                  (reserved_self)
+                                  (identifier)))
+                              (term
+                                (predicate_value
+                                  (simple_value
+                                    (string
+                                      (quoted_string))))))))))))))))))))

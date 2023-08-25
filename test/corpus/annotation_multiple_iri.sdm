@@ -24,7 +24,7 @@ end
             member: (identifier)))
         value: (value
           (sequence_of_values
-            (simple_value
+            element: (simple_value
               (iri_reference))
-            (simple_value
+            element: (simple_value
               (iri_reference))))))))

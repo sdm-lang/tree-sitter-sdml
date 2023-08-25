@@ -38,10 +38,6 @@
  "structure"
  "union"
  "xor"
- (unknown_type)
- (builtin_simple_type)
- (reserved_self)
- (reserved_self_type)
  (sequence_ordering)
  (sequence_uniqueness)
  ] @keyword
@@ -71,12 +67,22 @@
  ] @operator
 
 ;; ---------------------------------------------------------------------------
+;; Brackets
+;; ---------------------------------------------------------------------------
+
+[
+ "["
+ "]"
+ "("
+ ")"
+ "{"
+ "}"
+  ] @punctuation.bracket
+;; ---------------------------------------------------------------------------
 ;; Module & Imports
 ;; ---------------------------------------------------------------------------
 
 (module name: (identifier) @module.definition)
-
-(import_statement [ "[" "]" ] @punctuation.bracket)
 
 (member_import name: (qualified_identifier) @type)
 
@@ -98,7 +104,8 @@
 
 (informal_constraint language: (controlled_language_tag) @property)
 
-(environment_definition name: (identifier) @function.definition)
+(environment_definition (identifier) @function.definition . (function_def))
+(environment_definition (identifier) @constant . (constant_def))
 
 (function_signature target: (_) @type)
 (function_parameter name: (identifier) @variable.parameter)
@@ -106,63 +113,45 @@
 
 (constraint_environment (constraint_environment_end) @keyword)
 
-(constraint_sentence [ "(" ")" ] @punctuation.bracket)
+(function_composition name: (identifier) @function.call)
+(function_composition "." @punctuation.delimiter)
 
-(name_path subject: (reserved_self) @keyword)
-((name_path subject: (identifier) @function.call) (#is-not? local))
-(name_path path: (identifier) @function.call)
-(name_path "." @punctuation.delimiter)
+(functional_term function: (term (identifier) @function.call))
 
 (term (qualified_identifier) @type)
 
-((functional_term function: (term (identifier) @function.call)) (#is-not? local))
-
-((functional_term arguments: (term (identifier) @variable)) (#is-not? local))
-
-(functional_term [ "(" ")" ] @punctuation.bracket)
-
-((atomic_sentence predicate: (term (identifier) @function.call)) (#is-not? local))
-
-((atomic_sentence arguments: (term (identifier) @variable)) (#is-not? local))
-
-(atomic_sentence [ "(" ")" ] @punctuation.bracket)
+(atomic_sentence predicate: (term (identifier) @function.call))
 
 ((equation lhs: (term (identifier) @variable)) (#is-not? local))
 
 ((equation rhs: (term (identifier) @variable)) (#is-not? local))
 
-(quantified_body [ "(" ")" ] @punctuation.bracket)
+(quantifier_binding name: (identifier) @variable.parameter)
+(quantifier_binding "," @punctuation.separator)
 
-(quantifier_binding (reserved_self) @keyword)
-(quantifier_binding name: (identifier) @variable)
-
-(type_iterator source: (reserved_self_type) @keyword)
 (type_iterator source: (identifier_reference) @type)
 
-((sequence_iterator source: (identifier) @variable) (#is-not? local))
+(sequence_builder [ "|" "," ] @punctuation.separator)
 
-(sequence_builder
- "{" @punctuation.bracket
- "|" @punctuation.separator
- "}" @punctuation.bracket)
-
-(local_binding name: (identifier) @variable.special)
-
-(tuple_variable (identifier) @variable)
-(sequence_variable (identifier) @variable)
-(mapping_variable domain: (identifier) range: (identifier) @variable)
-
-(sequence_of_predicate_values [ "{" "}" ] @punctuation.bracket)
-(sequence_of_predicate_values [ "[" "]" ] @punctuation.bracket)
 (sequence_of_predicate_values (identifier_reference) @type)
+
+[
+ (reserved_self)
+ (reserved_self_type)
+ ] @variable.builtin
 
 ;; ---------------------------------------------------------------------------
 ;; Types
 ;; ---------------------------------------------------------------------------
 
+[
+ (builtin_simple_type)
+ (unknown_type)
+ ] @type.builtin
+
 (data_type_def
  name: (identifier) @type.definition
- base: (data_type_base (identifier_reference) @type))
+ base: (identifier_reference) @type)
 
 (entity_def name: (identifier) @type.definition)
 
@@ -181,20 +170,21 @@
 ;; ---------------------------------------------------------------------------
 
 (identity_member name: (identifier) @variable.field)
-(identity_member property: (identifier_reference) @variable.special)
+(identity_member property: (identifier_reference) @variable.field)
 (identity_member target: (type_reference) @type)
 
 (member_by_value name: (identifier) @variable.field)
-(member_by_value property: (identifier_reference) @variable.special)
+(member_by_value property: (identifier_reference) @variable.field)
 (member_by_value target: (type_reference) @type)
 
 (member_by_reference name: (identifier) @variable.field)
-(member_by_reference property: (identifier_reference) @variable.special)
+(member_by_reference property: (identifier_reference) @variable.field)
 (member_by_reference target: (type_reference) @type)
+
 
 (member_inverse_name
  "(" @punctuation.bracket
- (identifier) @variable.field
+ name: (identifier) @variable.field
  ")" @punctuation.bracket)
 
 (value_variant name: (identifier) @constant)
@@ -202,10 +192,6 @@
 (type_variant (identifier_reference) @type)
 
 (type_variant rename: (identifier) @type)
-
-(cardinality_expression [ "{" "}" ] @punctuation.bracket)
-
-(mapping_type [ "(" ")" ] @punctuation.bracket)
 
 (property_def name: (identifier) @variable.field)
 
@@ -225,11 +211,8 @@
 ;; Values
 ;; ---------------------------------------------------------------------------
 
-(string
- (quoted_string) @string)
-
-(string
- language: (language_tag) @property)
+(string (quoted_string) @string)
+(string language: (language_tag) @property)
 
 (iri_reference) @string.special
 
@@ -240,18 +223,13 @@
  (unsigned)
  ] @number
 
-(boolean) @constant.builtin
+(boolean) @boolean ;; or constant.builtin
 
-(value_constructor
- name: (identifier_reference) @function.call
- [ "(" ")" ] @punctuation.bracket)
+(value_constructor name: (identifier_reference) @function.call)
 
 (value (identifier_reference) @type)
 
 (sequence_of_values (identifier_reference) @type)
-
-(sequence_of_values [ "{" "}" ] @punctuation.bracket)
-(sequence_of_values [ "[" "]" ] @punctuation.bracket)
 
 ;; ---------------------------------------------------------------------------
 ;; Errors

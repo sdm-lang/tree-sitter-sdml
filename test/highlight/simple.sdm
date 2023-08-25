@@ -128,7 +128,7 @@ module Campaign is
     ; <- keyword
     ;   ^ variable.field
     ;             ^ operator
-    ;                ^ keyword
+    ;                ^ type.builtin
 
     ref target (other_name) -> {1..} Target
     ; <- keyword

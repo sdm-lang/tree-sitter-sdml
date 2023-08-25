@@ -21,11 +21,11 @@ end
             member: (identifier)))
         value: (value
           (sequence_of_values
-            (simple_value
+            element: (simple_value
               (string
                 (quoted_string)
                 language: (language_tag)))
-            (simple_value
+            element: (simple_value
               (string
                 (quoted_string)
                 language: (language_tag)))))))))

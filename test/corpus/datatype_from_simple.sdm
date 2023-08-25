@@ -16,6 +16,5 @@ end
     (definition
       (data_type_def
         name: (identifier)
-        base: (data_type_base
-          (builtin_simple_type))))))
+        base: (builtin_simple_type)))))
 

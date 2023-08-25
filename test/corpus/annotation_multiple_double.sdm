@@ -21,6 +21,6 @@ end
           member: (identifier)))
           value: (value
             (sequence_of_values
-              (simple_value (double))
-              (simple_value (double))
-              (simple_value (double))))))))
+              element: (simple_value (double))
+              element: (simple_value (double))
+              element: (simple_value (double))))))))

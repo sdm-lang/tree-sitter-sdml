@@ -14,6 +14,5 @@ end
   name: (identifier)
   body: (module_body
     (import_statement
-      (import
-        (module_import
-          name: (identifier))))))
+      (module_import
+        name: (identifier)))))

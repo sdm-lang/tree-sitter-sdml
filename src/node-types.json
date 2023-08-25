@@ -63,7 +63,7 @@
     "type": "atomic_sentence",
     "named": true,
     "fields": {
-      "arguments": {
+      "argument": {
         "multiple": true,
         "required": false,
         "types": [
@@ -236,25 +236,19 @@
     }
   },
   {
-    "type": "conjunctive_expression",
+    "type": "constant_def",
     "named": true,
     "fields": {
-      "lhs": {
+      "body": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "expression",
+            "type": "constraint_sentence",
             "named": true
-          }
-        ]
-      },
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
+          },
           {
-            "type": "expression",
+            "type": "predicate_value",
             "named": true
           }
         ]
@@ -343,25 +337,6 @@
     }
   },
   {
-    "type": "data_type_base",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "builtin_simple_type",
-          "named": true
-        },
-        {
-          "type": "identifier_reference",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "data_type_def",
     "named": true,
     "fields": {
@@ -370,7 +345,11 @@
         "required": true,
         "types": [
           {
-            "type": "data_type_base",
+            "type": "builtin_simple_type",
+            "named": true
+          },
+          {
+            "type": "identifier_reference",
             "named": true
           }
         ]
@@ -589,28 +568,16 @@
     "named": true,
     "fields": {
       "body": {
-        "multiple": true,
+        "multiple": false,
         "required": true,
         "types": [
           {
-            "type": ":=",
-            "named": false
-          },
-          {
-            "type": "constraint_sentence",
+            "type": "constant_def",
             "named": true
           },
           {
             "type": "function_def",
             "named": true
-          },
-          {
-            "type": "predicate_value",
-            "named": true
-          },
-          {
-            "type": "≔",
-            "named": false
           }
         ]
       },
@@ -707,55 +674,7 @@
   {
     "type": "existential",
     "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "quantified_body",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "quantifier_binding",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "expression",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "conjunctive_expression",
-          "named": true
-        },
-        {
-          "type": "constraint_sentence",
-          "named": true
-        },
-        {
-          "type": "expression",
-          "named": true
-        },
-        {
-          "type": "local_binding",
-          "named": true
-        }
-      ]
-    }
+    "fields": {}
   },
   {
     "type": "formal_constraint",
@@ -770,17 +689,17 @@
             "named": true
           }
         ]
+      },
+      "environment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "constraint_environment",
+            "named": true
+          }
+        ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "constraint_environment",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -837,6 +756,36 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "function_composition",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "subject": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "reserved_self",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -968,7 +917,7 @@
     "type": "functional_term",
     "named": true,
     "fields": {
-      "arguments": {
+      "argument": {
         "multiple": true,
         "required": false,
         "types": [
@@ -1108,25 +1057,6 @@
     }
   },
   {
-    "type": "import",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "member_import",
-          "named": true
-        },
-        {
-          "type": "module_import",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "import_statement",
     "named": true,
     "fields": {},
@@ -1135,7 +1065,11 @@
       "required": true,
       "types": [
         {
-          "type": "import",
+          "type": "member_import",
+          "named": true
+        },
+        {
+          "type": "module_import",
           "named": true
         }
       ]
@@ -1171,59 +1105,6 @@
     "type": "iri_reference",
     "named": true,
     "fields": {}
-  },
-  {
-    "type": "iterator_source",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "iterator_source",
-          "named": true
-        },
-        {
-          "type": "sequence_iterator",
-          "named": true
-        },
-        {
-          "type": "type_iterator",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "local_binding",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "sequence_iterator",
-          "named": true
-        },
-        {
-          "type": "type_iterator",
-          "named": true
-        }
-      ]
-    }
   },
   {
     "type": "mapping_type",
@@ -1327,7 +1208,7 @@
           }
         ]
       },
-      "inverse": {
+      "inverse_name": {
         "multiple": false,
         "required": false,
         "types": [
@@ -1444,16 +1325,17 @@
   {
     "type": "member_inverse_name",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
-          "named": true
-        }
-      ]
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -1525,36 +1407,6 @@
         "types": [
           {
             "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "name_path",
-    "named": true,
-    "fields": {
-      "path": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "subject": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "reserved_self",
             "named": true
           }
         ]
@@ -1676,37 +1528,51 @@
     }
   },
   {
-    "type": "quantified_body",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "constraint_sentence",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "quantified_sentence",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "existential",
-          "named": true
-        },
-        {
-          "type": "universal",
-          "named": true
-        }
-      ]
+    "fields": {
+      "binding": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "quantifier_binding",
+            "named": true
+          }
+        ]
+      },
+      "body": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": ")",
+            "named": false
+          },
+          {
+            "type": "constraint_sentence",
+            "named": true
+          }
+        ]
+      },
+      "quantifier": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "existential",
+            "named": true
+          },
+          {
+            "type": "universal",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -1714,7 +1580,7 @@
     "named": true,
     "fields": {
       "name": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -1722,21 +1588,25 @@
             "named": true
           }
         ]
+      },
+      "source": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "reserved_self",
+            "named": true
+          },
+          {
+            "type": "sequence_iterator",
+            "named": true
+          },
+          {
+            "type": "type_iterator",
+            "named": true
+          }
+        ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "iterator_source",
-          "named": true
-        },
-        {
-          "type": "reserved_self",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1763,7 +1633,7 @@
           }
         ]
       },
-      "inverse": {
+      "inverse_name": {
         "multiple": false,
         "required": false,
         "types": [
@@ -1845,12 +1715,36 @@
     "type": "sequence_builder",
     "named": true,
     "fields": {
-      "expression": {
+      "binding": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "quantifier_binding",
+            "named": true
+          }
+        ]
+      },
+      "body": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "expression",
+            "type": "constraint_sentence",
+            "named": true
+          }
+        ]
+      },
+      "quantifier": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "existential",
+            "named": true
+          },
+          {
+            "type": "universal",
             "named": true
           }
         ]
@@ -1860,7 +1754,11 @@
         "required": true,
         "types": [
           {
-            "type": "variables",
+            "type": "mapping_variable",
+            "named": true
+          },
+          {
+            "type": "variable_name_set",
             "named": true
           }
         ]
@@ -1876,11 +1774,11 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "function_composition",
             "named": true
           },
           {
-            "type": "name_path",
+            "type": "identifier",
             "named": true
           },
           {
@@ -1895,6 +1793,20 @@
     "type": "sequence_of_predicate_values",
     "named": true,
     "fields": {
+      "element": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          },
+          {
+            "type": "simple_value",
+            "named": true
+          }
+        ]
+      },
       "ordering": {
         "multiple": false,
         "required": false,
@@ -1915,26 +1827,34 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "identifier_reference",
-          "named": true
-        },
-        {
-          "type": "simple_value",
-          "named": true
-        }
-      ]
     }
   },
   {
     "type": "sequence_of_values",
     "named": true,
     "fields": {
+      "element": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          },
+          {
+            "type": "mapping_value",
+            "named": true
+          },
+          {
+            "type": "simple_value",
+            "named": true
+          },
+          {
+            "type": "value_constructor",
+            "named": true
+          }
+        ]
+      },
       "ordering": {
         "multiple": false,
         "required": false,
@@ -1955,28 +1875,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier_reference",
-          "named": true
-        },
-        {
-          "type": "mapping_value",
-          "named": true
-        },
-        {
-          "type": "simple_value",
-          "named": true
-        },
-        {
-          "type": "value_constructor",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1988,21 +1886,6 @@
     "type": "sequence_uniqueness",
     "named": true,
     "fields": {}
-  },
-  {
-    "type": "sequence_variable",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
-          "named": true
-        }
-      ]
-    }
   },
   {
     "type": "simple_sentence",
@@ -2161,15 +2044,15 @@
       "required": true,
       "types": [
         {
+          "type": "function_composition",
+          "named": true
+        },
+        {
           "type": "functional_term",
           "named": true
         },
         {
           "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "name_path",
           "named": true
         },
         {
@@ -2182,21 +2065,6 @@
         },
         {
           "type": "sequence_builder",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "tuple_variable",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
           "named": true
         }
       ]
@@ -2333,28 +2201,7 @@
   {
     "type": "universal",
     "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "quantified_body",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "quantifier_binding",
-          "named": true
-        }
-      ]
-    }
+    "fields": {}
   },
   {
     "type": "value",
@@ -2450,23 +2297,15 @@
     }
   },
   {
-    "type": "variables",
+    "type": "variable_name_set",
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
-          "type": "mapping_variable",
-          "named": true
-        },
-        {
-          "type": "sequence_variable",
-          "named": true
-        },
-        {
-          "type": "tuple_variable",
+          "type": "identifier",
           "named": true
         }
       ]
@@ -2478,6 +2317,10 @@
   },
   {
     "type": ")",
+    "named": false
+  },
+  {
+    "type": ",",
     "named": false
   },
   {
@@ -2578,11 +2421,11 @@
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "end",
@@ -2642,11 +2485,11 @@
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "iri",

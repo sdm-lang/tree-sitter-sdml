@@ -23,7 +23,7 @@
  name: (identifier) @definition.class)
 
 (data_type_def
- base: (data_type_base (identifier_reference) @reference.class))
+ base: (identifier_reference) @reference.class)
 
 (entity_def
  name: (identifier) @definition.class)
@@ -92,10 +92,9 @@
 
 (type_iterator source: (identifier_reference) @reference.class)
 
-(name_path (identifier) @name)
+(function_composition (identifier) @name)
 
 (environment_definition name: (identifier) @definition.function)
 
-(tuple_variable (identifier) @variable)
-(sequence_variable (identifier) @variable)
-(mapping_variable domain: (identifier) range: (identifier) @variable)
+(variable_name_set (identifier) @definition.variable)
+(mapping_variable domain: (identifier) range: (identifier) @definition.variable)

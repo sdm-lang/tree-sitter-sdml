@@ -9,11 +9,14 @@
 (function_parameter name: (identifier) @local.definition)
 
 (quantified_sentence) @local.scope
-(quantifier_binding name: (identifier) @local.definition)
+(quantified_sentence
+ binding: (quantifier_binding name: (identifier) @local.definition))
 
 (sequence_builder) @local.scope
+(variable_name_set (identifier) @local.reference)
+(mapping_variable domain: (identifier) range: (identifier) @local.reference)
 
-(tuple_variable (identifier) @local.definition)
-(sequence_variable (identifier) @local.definition)
-(mapping_variable domain: (identifier) range: (identifier) @local.definition)
-(local_binding (identifier) @local.definition)
+(sequence_builder
+ binding: (quantifier_binding name: (identifier) @local.definition))
+
+(term (identifier) @local.reference)

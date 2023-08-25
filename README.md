@@ -50,19 +50,34 @@ end
 
 # Changes
 
+**Version: 0.1.39**
+
+* Feature: rename rule `name_path` to `function_composition`.
+* Feature: combine components of the two rules `quantified_sentence` and `sequence_builder`.
+  * Add new shared rule `quantifier_binding` (along with `_bound_name_set`) now used in both sentence and builder.
+  * Add the ability to have more than one name in a binding.
+  * Add the ability for sequence builders to have more than one quantified binding.
+  * Change the field `expression` into a field named `body` of type `constraint_sentence`.
+  * Remove rules `expression` and `conjunctive_expression`.
+* Feature: allow multiple bindings at the head of quantified sentences.
+* Feature: made progress on local scopes in highlighting.
+  * Rename rule `_constant_def` to `constant_def`.
+  * To-do: currently references are not picking up their definition formatting.
+* Style: change the order of choices in rule `predicate_value` to match `value` and corresponding sequences.
+
 **Version: 0.1.38**
 
-* Feature: Updated naming for iterators which seems more consistent.
+* Feature: Update naming for iterators to make them consistent.
   * Rename rule `iterator_target` to `iterator_source`.
   * Rename field `from` in `type_iterator` to `source`.
   * Rename field `from` in `sequence_iterator` to `source`.
 
 **Version: 0.1.37**
 
-* Feature: Update rule `function_cardinality_expression` to allow sequence constraints.
+* Feature: update rule `function_cardinality_expression` to allow sequence constraints.
   * Rename rule `any_type` to `wildcard`.
   * Remove rule `any_cardinality` and replace with `wildcard`.
-* Feature: Rename lists to sequences.
+* Feature: rename lists to sequences.
   * Rename rule `list_of_predicate_values` to `sequence_of_predicate_values`.
   * Rename rule `list_of_values` to `sequence_of_values`.
 * Feature: make rule `property_role` private as `_property_role`.
@@ -73,7 +88,7 @@ end
 
 **Version: 0.1.36**
 
-* Feature: Alter the rule `sequence_comprehension` to be more flexible.
+* Feature: alter the rule `sequence_comprehension` to be more flexible.
   * Rename rule `sequence_comprehension` to  `sequence_builder`.
   * Rename rule `returned_value` to `variables` and re-write as a choice of:
   * Add rule `tuple_variable` to return distinct variables.
@@ -82,14 +97,14 @@ end
 
 **Version: 0.1.35**
 
-* Feature: Alter the rule `_property_member` to allow property names to be `identifier_reference`.
+* Feature: alter the rule `_property_member` to allow property names to be `identifier_reference`.
   * New interpretation, field `name` in a member will be the name of a role.
   * Renamed keyword `in`, not `as`.
   * Renamed field `role` to `property` and made it's type `identifier_reference`.
 
 **Version: 0.1.34**
 
-* Feature: Update property definitions to look more like members.
+* Feature: update property definitions to look more like members.
   * Update rule `property_role` to be a choice of three new rules.
   * Add rule `identity_role` which is a subset of `identity_member`.
   * Add rule `role_by_value` which is a subset of `member_by_value`.
@@ -97,88 +112,89 @@ end
 
 **Version: 0.1.33**
 
-* Feature: Renamed quantifier binding targets to be more consistent.
-  * Renamed rule `binding_target` to `iterator_target`.
-  * Renamed rule `binding_type_reference` to `type_iterator` and field name `from_type` to `from`.
-  * Renamed rule `binding_seq_iterator` to `sequence_iterator` and field name `from_sequence` to `from`.
-* Feature: Simplified the rule `environment_definition` and made naming more consistent.
+* Feature: renamed quantifier binding targets to be more consistent.
+  * Rename rule `binding_target` to `iterator_target`.
+  * Rename rule `binding_type_reference` to `type_iterator` and field name `from_type` to `from`.
+  * Rename rule `binding_seq_iterator` to `sequence_iterator` and field name `from_sequence` to `from`.
+* Feature: simplified the rule `environment_definition` and made naming more consistent.
   * Remove optional `signature` field
   * Remove assignment operators
   * Rename field name `rhs` to `body` and change to a choice of `function_def` or `_value_def`.
   * Add rule `function_def` to hold the signature and operators removed from the environment definition.
-  * Renamed rule `fn_parameter` to `function_parameter`.
-  * Renamed rule `_fn_type` to `_function_type_expression_to`.
+  * Rename rule `fn_parameter` to `function_parameter`.
+  * Rename rule `_fn_type` to `_function_type_expression_to`.
   * Add rules `function_cardinality_expression` and `any_cardinality` to capture cardinality or wildcard.
   * Add rule `function_type_reference` to allow wildcards.
-* Feature: Update queries `highlights`, `locals`, and `tags` for all changes above.
-* Docs: Update BNF syntax and diagrams for all changes above.
+* Feature: update queries `highlights`, `locals`, and `tags` for all changes above.
+* Docs: update BNF syntax and diagrams for all changes above.
   
 **Version: 0.1.32**
 
-* Feature: Updated environment definition sequence types to use the same syntax as member type and cardinality.
+* Feature: update environment definition sequence types to use the same syntax as member type and cardinality.
 
 **Version: 0.1.31**
 
-* Feature: Update highlighting queries for constraints with support for locals.
-* Feature: Add a `locals.scm` file with scopes for formal constraints.
-* Feature: Add `∅` (empty set) as a synonym for `[]` in constraints.
-* Fix: Update the mapping value test case to use domain/range field names.
+* Feature: update highlighting queries for constraints with support for locals.
+* Feature: add a `locals.scm` file with scopes for formal constraints.
+* Feature: add `∅` (empty set) as a synonym for `[]` in constraints.
+* Fix: update the mapping value test case to use domain/range field names.
 
 **Version: 0.1.30**
 
-* Feature (minor): Added field names for the domain and range of mapping types and values.
+* Feature (minor): added field names for the domain and range of mapping types and values.
 
 **Version: 0.1.29**
 
-* Fix: An apparent regression, the value for a constructor changed from `simple_value` to `value`. This changes it back.
+* Fix: an apparent regression, the value for a constructor changed from `simple_value` to `value`. This changes it back.
 
 **Version: 0.1.28**
 
-* Feature: Added a mapping type and corresponding value syntax.
+* Feature: add a mapping type and corresponding value syntax.
 
 **Version: 0.1.27**
 
-* Feature: Added ordering and uniqueness constraints into the cardinality expression. Used to constrain the sequence
+* Feature: add *ordering* and *uniqueness* constraints into the cardinality expression. Used to constrain the sequence
   type of a member.
 
 **Version: 0.1.26**
 
-* Feature: Applied same change as 0.1.25 but for property roles as well.
+* Feature: applied same change as 0.1.25 but for property roles as well.
 
 **Version: 0.1.25**
 
-* Feature: Changed grammar for reference members:
+* Feature: changed grammar for reference members:
   * The production `source_cardinality` has been removed.
   * The production `member_inverse_name` has been added.
 
 **Version: 0.1.24**
 
-* Feature: Constraint changes
-  * Added a language-tag to informal constraints.
-  * Implemented a wildcard type for the constraint language.
+* Feature: constraint changes
+  * Add a *language-tag* to informal constraints.
+  * Add a *wildcard type* for the constraint language.
 
 **Version: 0.1.23**
 
-* Feature: Added highlighting test for constraints, had to tweak a few things.
+* Feature: add highlighting test for constraints, had to tweak a few things.
 
 **Version: 0.1.22**
 
-* Renamed the grammar rule `type_definition` to `definition` to address the fact that property definitions aren't types.
-* Renamed the grammar rule `enum_variant` to `value_variant` to align with `type_variant` on unions.
+* Feature: clarify rules and associated meaning.
+  * Rename the grammar rule `type_definition` to `definition` to address the fact that property definitions aren't types.
+  * Rename the grammar rule `enum_variant` to `value_variant` to align with `type_variant` on unions.
 
 **Version: 0.1.21**
 
-* Fixed highlighting/indent/fold for constraints.
-* Added sequence builder support.
-* A number of cosmetic changes to formal constraints.
+* Feature: add support for sequence builder support(set builder) syntax.
+* Fix: highlighting/indent/fold updated for constraints.
+* Style: a number of cosmetic changes to formal constraints.
 
 **Version: 0.1.19/0.1.20**
 
-* Minor change to add a field name to the '..' range operator.
+* Fix: minor change to add a field name to the '..' range operator.
 
 **Version: 0.1.18**
 
-* Added a constraint assertion construct. This allows for specific constraints to be documented for any model element.
+* Feature: add a constraint assertion construct. This allows for specific constraints to be documented for any model element.
   * The grammar rule `annotation` has been renamed `annotation_property`
   * The grammar rule `constraint` has been added.
   * A new grammar rule named `annotation` is defined as a choice of `annotation_property` or `constraint`.

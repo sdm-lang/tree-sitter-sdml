@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.38
+// Version:    0.1.39
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -81,16 +81,16 @@ module.exports = grammar({
         import_statement: $ => seq(
             keyword('import'),
             choice(
-                $.import,
+                $._import,
                 seq(
                     '[',
-                    repeat1($.import),
+                    repeat1($._import),
                     ']'
                 )
             )
         ),
 
-        import: $ => choice(
+        _import: $ => choice(
             $.member_import,
             $.module_import
         ),
@@ -167,7 +167,9 @@ module.exports = grammar({
 
         formal_constraint: $ => seq(
             keyword('is'),
-            optional($.constraint_environment),
+            optional(
+                field('environment', $.constraint_environment)
+            ),
             field('body', $.constraint_sentence),
             keyword('end'),
         ),
@@ -202,7 +204,7 @@ module.exports = grammar({
         atomic_sentence: $ => seq(
             field('predicate', $.term),
            '(',
-            field('arguments', repeat($.term)),
+            field('argument', repeat($.term)),
             ')',
         ),
 
@@ -294,18 +296,25 @@ module.exports = grammar({
             )
         ),
 
-        quantified_sentence: $ => choice(
-            $.universal,
-            $.existential
+        quantified_sentence: $ => seq(
+            repeat1(
+                seq(
+                    field(
+                        'quantifier',
+                        choice(
+                            $.universal,
+                            $.existential
+                        )
+                    ),
+                    field('binding', repeat1($.quantifier_binding)),
+                )
+            ),
+            field('body', $._quantified_body)
         ),
 
-        universal: $ => seq(
-            choice(
-                keyword('forall'),
-                operator('∀') // LaTeX: \forall
-            ),
-            repeat1($.quantifier_binding),
-            field('body', $.quantified_body)
+        universal: $ => choice(
+            keyword('forall'),
+            operator('∀') // LaTeX: \forall
         ),
 
         existential: $ => seq(
@@ -313,26 +322,29 @@ module.exports = grammar({
                 keyword('exists'),
                 operator('∃') // LaTeX: \exists
             ),
-            repeat1($.quantifier_binding),
-            field('body', $.quantified_body)
         ),
 
         quantifier_binding: $ => choice(
-            $.reserved_self,
+            field('source', $.reserved_self),
             seq(
-                field('name', $.identifier),
-                $.iterator_source
+                $._bound_name_set,
+                field('source', $._iterator_source)
             )
         ),
 
-        iterator_source: $ => choice(
+        _bound_name_set: $ => seq(
+            field('name', $.identifier),
+            repeat(
+                seq(
+                    ",",
+                    field('name', $.identifier),
+                )
+            )
+        ),
+
+        _iterator_source: $ => choice(
             $.type_iterator,
             $.sequence_iterator,
-            seq(
-                '(',
-                $.iterator_source,
-                ')'
-            )
         ),
 
         type_iterator: $ => seq(
@@ -354,14 +366,14 @@ module.exports = grammar({
             field(
                 'source',
                 choice(
-                    $.name_path,  // function call sugar
-                    $.identifier, // variable
+                    $.function_composition,  // function call sugar
+                    $.identifier,            // variable
                     $.sequence_builder
                 )
             )
         ),
 
-        quantified_body: $ => seq(
+        _quantified_body: $ => seq(
             '(',
             $.constraint_sentence,
             ')'
@@ -370,7 +382,7 @@ module.exports = grammar({
         // -----------------------------------------------------------------------
 
         term: $ => choice(
-            $.name_path,            // function call sugar
+            $.function_composition, // function call sugar
             $.identifier,           // variable
             $.qualified_identifier, // type
             $.predicate_value,
@@ -378,29 +390,29 @@ module.exports = grammar({
             $.sequence_builder,
         ),
 
-        name_path: $ => seq(
+        function_composition: $ => seq(
             field(
                 'subject',
-                $._path_subject
+                choice(
+                    $.reserved_self,
+                    $.identifier,
+                )
             ),
             repeat1(
                 seq(
                     token.immediate('.'), // LaTeX: reverse with \circ
                     field(
-                        'path',
+                        'name',
                         $.identifier
                     )
                 )
             )
         ),
 
-        _path_subject: $ => choice(
-            $.reserved_self,
-            $.identifier,
-        ),
-
         predicate_value: $ => choice(
             $.simple_value,
+            //$.value_constructor,
+            //$.mapping_value,
             $.sequence_of_predicate_values,
         ),
 
@@ -410,9 +422,14 @@ module.exports = grammar({
                 optional($._sequence_value_constraints),
                 '[',
                 repeat(
-                    choice(
-                        $.simple_value,
-                        $.identifier_reference
+                    field(
+                        'element',
+                        choice(
+                            $.simple_value,
+                            //$.value_constructor,
+                            //$.mapping_value,
+                            $.identifier_reference
+                        )
                     )
                 ),
                 ']'
@@ -426,7 +443,7 @@ module.exports = grammar({
         functional_term: $ => seq(
             field('function', $.term),
             '(',
-            field('arguments', repeat($.term)),
+            field('argument', repeat($.term)),
             ')',
         ),
 
@@ -446,7 +463,7 @@ module.exports = grammar({
                 'body',
                 choice(
                     $.function_def,
-                    $._constant_def
+                    $.constant_def
                 )
             )
         ),
@@ -506,7 +523,7 @@ module.exports = grammar({
 
         wildcard: $ => operator('_'),
 
-        _constant_def: $ => seq(
+        constant_def: $ => seq(
             choice(
                 operator(':='),
                 operator('≔'),
@@ -526,25 +543,34 @@ module.exports = grammar({
             '{',
             field(
                 'variable',
-                $.variables
+                choice(
+                    $.variable_name_set,
+                    $.mapping_variable
+                )
             ),
             '|',
-            field('expression', $.expression),
+            repeat1(
+                seq(
+                    optional(
+                        field(
+                            'quantifier',
+                            choice(
+                                $.universal,
+                                $.existential
+                            )
+                        )
+                    ),
+                    field('binding', repeat1($.quantifier_binding)),
+                    ","
+                 )
+            ),
+            field('body', $.constraint_sentence),
             '}',
         ),
 
-        variables: $ => choice(
-            $.tuple_variable,
-            $.sequence_variable,
-            $.mapping_variable
-        ),
-
-        tuple_variable: $ => repeat1($.identifier),
-
-        sequence_variable: $ => seq(
-            "[",
-            repeat1($.identifier),
-            "]"
+        variable_name_set: $ => repeat1(
+            // RULE: all names MUST be unique.
+            $.identifier
         ),
 
         mapping_variable: $ => seq(
@@ -555,49 +581,6 @@ module.exports = grammar({
             ")"
         ),
 
-        expression: $ => choice(
-            prec(
-                3,
-                $.conjunctive_expression
-            ),
-            prec(
-                2,
-                $.local_binding
-            ),
-            prec(
-                1,
-                $.constraint_sentence
-            ),
-            seq(
-                '(',
-                $.expression,
-                ')'
-            )
-        ),
-
-        conjunctive_expression: $ => prec.left(
-            4,
-            seq(
-                field('lhs', $.expression),
-                choice(
-                    keyword('and'),
-                    operator('∧') // LaTeX: \land
-                ),
-                field('rhs', $.expression)
-            )
-        ),
-
-        local_binding: $ => seq(
-           field(
-                'name',
-                $.identifier
-            ),
-            choice(
-                $.type_iterator,
-                $.sequence_iterator,
-            )
-        ),
-
         // -----------------------------------------------------------------------
         // Values
         // -----------------------------------------------------------------------
@@ -605,20 +588,23 @@ module.exports = grammar({
         value: $ => choice(
             $.simple_value,
             $.value_constructor,
-            $.identifier_reference,
             $.mapping_value,
-            $.sequence_of_values,
+            $.identifier_reference,
+            $.sequence_of_values
         ),
 
         sequence_of_values: $ => seq(
             optional($._sequence_value_constraints),
             '[',
             repeat1(
-                choice(
-                    $.simple_value,
-                    $.value_constructor,
-                    $.identifier_reference,
-                    $.mapping_value,
+                field(
+                    'element',
+                    choice(
+                        $.simple_value,
+                        $.value_constructor,
+                        $.mapping_value,
+                        $.identifier_reference
+                    )
                 )
             ),
             ']'
@@ -763,7 +749,13 @@ module.exports = grammar({
             keyword('datatype'),
             field('name', $.identifier),
             operator('<-'),
-            field('base', $.data_type_base),
+            field(
+                'base',
+                choice(
+                    $.identifier_reference,
+                    $.builtin_simple_type
+                )
+            ),
             optional(field('body', $.annotation_only_body))
         ),
 
@@ -904,14 +896,14 @@ module.exports = grammar({
         property_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
-            repeat1($._property_role),
+            repeat1(
+                choice(
+                    $.identity_role,
+                    $.role_by_value,
+                    $.role_by_reference
+                )
+            ),
             keyword('end')
-        ),
-
-        _property_role: $ => choice(
-            $.identity_role,
-            $.role_by_value,
-            $.role_by_reference
         ),
 
         identity_role: $ => seq(
@@ -931,10 +923,7 @@ module.exports = grammar({
             keyword('ref'),
             field('name', $.identifier),
             optional(
-                field(
-                    'inverse',
-                    $.member_inverse_name
-                )
+                field('inverse_name', $.member_inverse_name)
             ),
             $._type_expression_to,
             optional(field('body', $.annotation_only_body))
@@ -949,7 +938,6 @@ module.exports = grammar({
             field('property', $.identifier_reference),
         ),
 
-        // Default cardinality: !{1..1} -> !{1..1}
         identity_member: $ => seq(
             keyword('identity'),
             field('name', $.identifier),
@@ -962,7 +950,6 @@ module.exports = grammar({
             )
         ),
 
-        // Default cardinality: !{1..1} -> {1..}
         member_by_value: $ => seq(
             field('name', $.identifier),
             choice(
@@ -974,7 +961,6 @@ module.exports = grammar({
             )
         ),
 
-        // Default cardinality: {0..} -> {0..}
         member_by_reference: $ => seq(
             keyword('ref'),
             field('name', $.identifier),
@@ -982,10 +968,7 @@ module.exports = grammar({
                 $._property_member,
                 seq(
                     optional(
-                        field(
-                            'inverse',
-                            $.member_inverse_name
-                        )
+                        field('inverse_name', $.member_inverse_name)
                     ),
                     $._type_expression_to,
                     optional(field('body', $.annotation_only_body))
@@ -995,7 +978,7 @@ module.exports = grammar({
 
         member_inverse_name: $ => seq(
             "(",
-            $.identifier,
+            field('name', $.identifier),
             ")"
         ),
 

@@ -5,13 +5,12 @@ For more information on the language, see the [documentation](https://sdml.io/).
 
 # Example
 
-``` sdml
-module Campaign is
+```sdml
+module Campaign base <https://advertising.amazon.com/api-model> is
 
-  import [xsd skos xml:base dc]
+  import [dc skos xsd]
 
-  @xml:base = <https://advertising.amazon.com/api-model>
-
+  @skos:prefLabel = "Campaign sub-domain"@en
   @skos:version = xsd:decimal(2)
 
   datatype Name <- xsd:string is
@@ -32,7 +31,7 @@ module Campaign is
   end
 
   entity campaign is
-    identity campaignId -> CampaignId
+    identity id -> CampaignId
 
     name -> Name is
       @skos:definition = "the name of the campaign"@en
@@ -40,7 +39,7 @@ module Campaign is
 
     tag -> {0..} Tag
 
-    ref target -> {0..} Target
+    ref target -> {1..} Target
   end
 
   entity Target

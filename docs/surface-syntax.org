@@ -1159,7 +1159,7 @@ additional keywords and cardinality included as follows.
 
 Additionally, to allow for the capture of member names before the elaboration of all types the language allows for the
 target type to be replaced with the keyword ~unknown~. This marks the member, and by extension it's owning type, as
-/incomplete/.
+/incomplete/. Note the grammar allows ASCII and Unicode representations of the /has type/ operator.
 
 #+NAME: lst:grammar-type-expressions
 #+BEGIN_SRC ebnf
@@ -1168,7 +1168,7 @@ TypeExpression
 TypeExpressionTo
     ::= HasType Cardinality? TypeReference
 HasType
-    ::= "->" | "→"
+    ::= "->" | "→" | "↦"
 TypeReference
     ::=  UnknownType | IdentifierReference | BuiltinSimpleType | MappingType
 UnknownType
@@ -1181,7 +1181,7 @@ UnknownType
 
 [[./ebnf-diagram/TypeReference.svg]]
 
-A mapping type denotes a /functional relationship/ between the /domain/ (left-hand type) and /range/ (right-hand type).  
+A mapping type denotes a /functional relationship/ between the /domain/ (left-hand type) and /range/ (right-hand type).
 
 #+BEGIN_SRC ebnf
 MappingType
@@ -1950,7 +1950,7 @@ TypeExpressionTo
     ::= HasType Cardinality? TypeReference
 
 HasType
-    ::= "->" | "→"
+    ::= "->" | "→" | "↦"
 
 TypeReference
     ::=  UnknownType | IdentifierReference | BuiltinSimpleType | MappingType

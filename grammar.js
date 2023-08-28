@@ -1090,6 +1090,7 @@ module.exports = grammar({
         ),
 
         _has_type: $ => choice(
+            operator('↦'),
             operator('→'),
             operator('->'),
         ),

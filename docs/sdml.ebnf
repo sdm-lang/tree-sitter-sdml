@@ -139,7 +139,7 @@ TypeExpressionTo
     ::= HasType Cardinality? TypeReference
 
 HasType
-    ::= "->" | "→"
+    ::= "->" | "→" | "↦"
 
 TypeReference
     ::=  UnknownType | IdentifierReference | BuiltinSimpleType | MappingType

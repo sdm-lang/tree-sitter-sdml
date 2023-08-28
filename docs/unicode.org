@@ -1,0 +1,35 @@
+#+LANGUAGE: en
+#+STARTUP: overview hidestars inlineimages entitiespretty
+
+* <<app:unicode>>Appendix: Unicode Usage
+
+The grammar for SDML uses a number of Unicode alternative characters for operators, relations, and keywords. Table
+[[tbl:unicode-characters]] lists these with their ASCII equivalents. In the case of the /type-of/ relation there are two
+Unicode choices where the character ~→~ is usually used for expressing the type of members and function parameters and the
+character ~↦~ is usually reserved for mapping types and mapping values.
+
+#+NAME: tbl:unicode-characters
+#+CAPTION: Unicode Characters in Grammar
+| What                           | ASCII          | Unicode | Unicode Codepoint |
+|--------------------------------+----------------+---------+------------------|
+| Type-of                        | ~->~             | ~→~ or ~↦~  | =U+2192= or =U+21A6= |
+| Type Restriction               | ~<-~             | ~←~       | =U+2190=           |
+| Defined-as                     | ~:=~             | ~≔~       | =U+2254=           |
+| Universal Quantifier           | ~forall~         | ~∀~       | =U+2200=           |
+| Existential Quantifier         | ~exists~         | ~∃~       | =U+2203=           |
+| Sequence Membership            | ~in~             | ~∈~       | =U+2208=           |
+| Inequality Relation            | ~/=~             | ~≠~       | =U+2260=           |
+| Less-than or Equal Relation    | ~<=~             | ~≤~       | =U+2264=           |
+| Greater-than or Equal Relation | ~>=~             | ~≥~       | =U+2265=           |
+| Negation                       | ~not~            | ~¬~       | =U+00A5=           |
+| Conjunction                    | ~and~            | ~∧~       | =U+2227=           |
+| Disjunction                    | ~or~             | ~∨~       | =U+2228=           |
+| Exclusive Disjunction          | ~xor~            | ~⊻~       | =U+22BB=           |
+| Implication (Conditional)      | ~implies~ or ~==>~ | ~⇒~       | =U+21D2=           |
+| Biconditional                  | ~iff~ or ~<==>~    | ~⇔~       | =U+21D4=           |
+| Empty Sequence                 | ~[]~             | ~∅~       | =U+2205=           |
+| Truth Value                    | ~true~           | ~⊤~       | =U+22A4=           |
+| False Value                    | ~false~          | ~⊥~       | =U+22A5=           |
+
+In describing the type system for SDML the characters ~⊤~ and ~⊥~ are also used to describe the /type of all things/ and the
+/type of no things/ respectively. The grammar does not use these distinctions and the values are only used for boolean values.

@@ -44,7 +44,7 @@ However, the goal is to keep the language as small as possible, taking away some
 where their use may distract from the major purpose of the model. The model also takes some of the language from
 Domain-Driven Design (DDD)[fn:ddd], namely the separation of entities (/an object defined not by its attributes, but its
 identity/) from value objects (/an immutable object that contains attributes but has no conceptual identity/), simply
-termed structures in SDML. This model does not include the following DDD as first-class concepts: /aggregates/,
+termed structures in SDML. This model does not include the following DDD first-class concepts: /aggregates/,
 /repositories/, /factories/, or /services/.
 
 ** <<sec:domain-modeling>>What is Domain Modeling?

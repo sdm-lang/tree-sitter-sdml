@@ -575,7 +575,7 @@ members of that definition. Note that this example also demonstrates the ability
 module labelled is
 
   assert must_have_preferred_label is
-    def has_pref_label(anns -> {0..} Annotation) ≔
+    def has_pref_label(anns → {0..} Annotation) ≔
       ∃ a ∈ anns ( a.name = skos:prefLabel ∧ ¬a.value.is_empty )
   in
     has_pref_label(self.annotations)

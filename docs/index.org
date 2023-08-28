@@ -32,6 +32,8 @@
 
 # --------------- Appendices ---------------
 
+#+INCLUDE: "./unicode.org" :minlevel 1
+
 # A List of modules and top-level definitions only.
 #+INCLUDE: "./std-library.org" :minlevel 1
 

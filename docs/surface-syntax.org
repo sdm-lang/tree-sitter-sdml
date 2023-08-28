@@ -10,6 +10,10 @@ optional wherever possible such that the minimum information neccessary is requi
 document will use the terms /valid/ to denote a model that has no syntactic errors and /complete/ to denote a valid model
 that has no short-form, or /incomplete/, model elements.
 
+The grammar, where possible, supports Unicode representations of keywords and operators that allow for formatting a
+source module with more compact expressions. This is to obviate the need for separate type-setting tools that typically
+perform a one-way transformation from source to some other format.
+
 For the complete grammar, and notes on BNF notation, see section [[sec:complete-grammar]].
 
 ** Whitespace and Comments

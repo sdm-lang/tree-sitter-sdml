@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.39
+// Version:    0.1.40
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -199,6 +199,7 @@ module.exports = grammar({
         simple_sentence: $ => choice(
             $.atomic_sentence,
             $.equation,
+            $.inequation,
         ),
 
         atomic_sentence: $ => seq(
@@ -212,6 +213,40 @@ module.exports = grammar({
             field('lhs', $.term),
             operator('='),
             field('rhs', $.term),
+        ),
+
+        inequation: $ => seq(
+            field('lhs', $.term),
+            field(
+                'relation',
+                choice(
+                    $.not_equal,
+                    $.less_than,
+                    $.greater_than,
+                    $.less_than_or_equal,
+                    $.greater_than_or_equal
+                )
+            ),
+            field('rhs', $.term),
+        ),
+
+        not_equal: $ => choice(
+            operator('/='),
+            operator('≠')
+        ),
+
+        less_than: $ => operator('<'),
+
+        greater_than: $ => operator('>'),
+
+        less_than_or_equal: $ => choice(
+            operator('<='),
+            operator('≤')
+        ),
+
+        greater_than_or_equal: $ => choice(
+            operator('>='),
+            operator('≥')
         ),
 
         boolean_sentence: $ => choice(
@@ -298,18 +333,20 @@ module.exports = grammar({
 
         quantified_sentence: $ => seq(
             repeat1(
-                seq(
-                    field(
-                        'quantifier',
-                        choice(
-                            $.universal,
-                            $.existential
-                        )
-                    ),
-                    field('binding', repeat1($.quantifier_binding)),
-                )
+                field('variable_binding', $.quantified_variable_binding)
             ),
             field('body', $._quantified_body)
+        ),
+
+        quantified_variable_binding: $ => seq(
+            field(
+                'quantifier',
+                choice(
+                    $.universal,
+                    $.existential
+                )
+            ),
+            field('binding', repeat1($.quantifier_bound_names)),
         ),
 
         universal: $ => choice(
@@ -324,7 +361,7 @@ module.exports = grammar({
             ),
         ),
 
-        quantifier_binding: $ => choice(
+        quantifier_bound_names: $ => choice(
             field('source', $.reserved_self),
             seq(
                 $._bound_name_set,
@@ -348,7 +385,7 @@ module.exports = grammar({
         ),
 
         type_iterator: $ => seq(
-            operator('->'),
+            $._has_type,
             field(
                 'source',
                 choice(
@@ -492,7 +529,7 @@ module.exports = grammar({
         ),
 
         _function_type_expression_to: $ => seq(
-            operator('->'),
+            $._has_type,
             optional(
                 field('cardinality', $.function_cardinality_expression)
             ),
@@ -544,31 +581,19 @@ module.exports = grammar({
             field(
                 'variable',
                 choice(
-                    $.variable_name_set,
+                    $.named_variable_set,
                     $.mapping_variable
                 )
             ),
             '|',
             repeat1(
-                seq(
-                    optional(
-                        field(
-                            'quantifier',
-                            choice(
-                                $.universal,
-                                $.existential
-                            )
-                        )
-                    ),
-                    field('binding', repeat1($.quantifier_binding)),
-                    ","
-                 )
+                field('variable_binding', $._variable_binding)
             ),
             field('body', $.constraint_sentence),
             '}',
         ),
 
-        variable_name_set: $ => repeat1(
+        named_variable_set: $ => repeat1(
             // RULE: all names MUST be unique.
             $.identifier
         ),
@@ -576,9 +601,23 @@ module.exports = grammar({
         mapping_variable: $ => seq(
             "(",
             field('domain', $.identifier),
-            operator('->'),
+            $._has_type,
             field('range', $.identifier),
             ")"
+        ),
+
+        _variable_binding: $ => seq(
+            optional(
+                field(
+                    'quantifier',
+                    choice(
+                        $.universal,
+                        $.existential
+                    )
+                )
+            ),
+            field('binding', repeat1($.quantifier_bound_names)),
+            ","
         ),
 
         // -----------------------------------------------------------------------
@@ -634,7 +673,7 @@ module.exports = grammar({
             field('domain', $.simple_value),
             prec.right(
                 seq(
-                    operator('->'),
+                    $._has_type,
                     field('range', $.value)
                 )
             ),
@@ -748,7 +787,7 @@ module.exports = grammar({
         data_type_def: $ => seq(
             keyword('datatype'),
             field('name', $.identifier),
-            operator('<-'),
+            $._type_restriction,
             field(
                 'base',
                 choice(
@@ -983,12 +1022,12 @@ module.exports = grammar({
         ),
 
         _type_expression: $ => seq(
-            operator('->'),
+            $._has_type,
            field('target', $.type_reference)
         ),
 
         _type_expression_to: $ => seq(
-            operator('->'),
+            $._has_type,
             optional(
                 field('cardinality', $.cardinality_expression)
             ),
@@ -1007,7 +1046,7 @@ module.exports = grammar({
             field('domain', $.type_reference),
             prec.right(
                 seq(
-                    operator('->'),
+                    $._has_type,
                     field('range', $.type_reference)
                 )
             ),
@@ -1049,6 +1088,17 @@ module.exports = grammar({
             operator('..'),
             field('max', optional($.unsigned))
         ),
+
+        _has_type: $ => choice(
+            operator('→'),
+            operator('->'),
+        ),
+
+        _type_restriction: $ => choice(
+            operator('←'),
+            operator('<-'),
+        ),
+
 
         // -----------------------------------------------------------------------
         // Comments

@@ -278,7 +278,7 @@ module rentals base <https://example.org/v/rentals> is
     @sdml:versionIdType = VersionId
 
     assert dropoff_after_pickup is
-      forall b -> Booking ( gte(b.dropoff_date b.pickup_date) )
+      forall b -> Booking ( b.dropoff_date >= b.pickup_date )
     end
 
     identity bookingCode -> unknown

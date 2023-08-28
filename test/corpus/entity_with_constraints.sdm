@@ -62,9 +62,10 @@ end
                   (formal_constraint
                     (constraint_sentence
                       (quantified_sentence
-                        (universal)
-                            (quantifier_binding
-                              (reserved_self))
+                        (quantified_variable_binding
+                          (universal)
+                          (quantifier_bound_names
+                            (reserved_self)))
                         (constraint_sentence
                           (simple_sentence
                             (atomic_sentence

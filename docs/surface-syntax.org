@@ -301,7 +301,7 @@ Definition
     ::= DataTypeDef
         | EntityDef
         | EnumDef
-        | EvqentDef
+        | EventDef
         | StructureDef
         | UnionDef
         | PropertyDef
@@ -667,7 +667,7 @@ A mapping value denotes a /functional relationship/ between the /domain/ (left-h
 #+NAME: lst:grammar-mapping-value
 #+BEGIN_SRC ebnf
 MappingValue
-    ::= SimpleValue  "->" Value
+    ::= SimpleValue HasType Value
 #+END_SRC
 
 [[./ebnf-diagram/MappingValue.svg]]
@@ -1164,9 +1164,11 @@ target type to be replaced with the keyword ~unknown~. This marks the member, an
 #+NAME: lst:grammar-type-expressions
 #+BEGIN_SRC ebnf
 TypeExpression 
-    ::= "->" TypeReference
+    ::= HasType TypeReference
 TypeExpressionTo
-    ::= "->" Cardinality? TypeReference
+    ::= HasType Cardinality? TypeReference
+HasType
+    ::= "->" | "→"
 TypeReference
     ::=  UnknownType | IdentifierReference | BuiltinSimpleType | MappingType
 UnknownType
@@ -1183,7 +1185,7 @@ A mapping type denotes a /functional relationship/ between the /domain/ (left-ha
 
 #+BEGIN_SRC ebnf
 MappingType
-    ::= "(" TypeReference "->" TypeReference ")"
+    ::= "(" TypeReference HasType TypeReference ")"
 #+END_SRC
 
 [[./ebnf-diagram/MappingType.svg]]
@@ -1846,7 +1848,10 @@ Definition
         | PropertyDef
 
 DataTypeDef
-    ::= "datatype" Identifier "<-" DataTypeBase AnnotationOnlyBody?
+    ::= "datatype" Identifier TypeRestriction DataTypeBase AnnotationOnlyBody?
+
+TypeRestriction
+    ::= "<-" | "←"
 
 DataTypeBase
     ::= IdentifierReference | BuiltinSimpleType
@@ -1938,11 +1943,14 @@ MemberByReference
     ::= "ref" Identifier
         ( PropertyMember | ( InverseName? TypeExpressionTo AnnotationOnlyBody? ) )
 
-TypeExpression 
-    ::= "->" TypeReference
+TypeExpression
+    ::= HasType TypeReference
 
 TypeExpressionTo
-    ::= "->" Cardinality? TypeReference
+    ::= HasType Cardinality? TypeReference
+
+HasType
+    ::= "->" | "→"
 
 TypeReference
     ::=  UnknownType | IdentifierReference | BuiltinSimpleType | MappingType
@@ -1951,7 +1959,7 @@ UnknownType
     ::= "unknown"
 
 MappingType
-    ::= "(" TypeReference "->" TypeReference ")"
+    ::= "(" TypeReference HasType TypeReference ")"
 
 Cardinality
     ::= "{" SequenceOrdering? SequenceUniqueness? CardinalityInner "}"
@@ -2072,7 +2080,7 @@ ValueConstructor
     ::= IdentifierReference "(" SimpleValue ")"
 
 MappingValue
-    ::= SimpleValue  "->" Value
+    ::= SimpleValue HasType Value
 
 SequenceOfValues
     ::= SequenceValueConstraint? "["
@@ -2122,8 +2130,8 @@ ControlledLanguageTag
     ::= "@" LanguageTagPrimary ControlledLanguageScheme?
 
 ControlledLanguageScheme
-         "-"
-        ETTER ASCII_LETTER ASCII_LETTER
+    ::= "-"
+        ASCII_LETTER  ASCII_LETTER  ASCII_LETTER
         ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
         ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
 
@@ -2139,13 +2147,19 @@ ConstraintSentence
         | "(" ConstraintSentence ")"
 
 SimpleSentence
-    ::= Atomic | Equation
+    ::= Atomic | Equation | Inequation
 
 Atomic
     ::= Term "(" Term* ")"
 
 Equation
     ::= Term "=" Term
+
+Inequation
+    ::= Term InequationRelation Term
+
+InequationRelation
+    ::= ( '/=' | '≠' | '<' | '>' | '<=' | '≤' | '>=' | '≥' )
 
 BooleanSentence
     ::= Negation
@@ -2174,42 +2188,42 @@ Biconditional
     ::= ( "iff" | "⇔" ) ConstraintSentence
 
 QuantifiedSentence
-    ::= Universal | Existential
+    ::= QuantifiedVariableBinding+ QuantifiedBody
+
+QuantifiedVariableBinding
+    ::= ( Universal | Existential ) QuantifierBoundNames
 
 Universal
-    ::= ( "forall" | "∀" ) QuantifierBinding+ QuantifiedBody
+    ::= "forall" | "∀"
 
 Existential
-    ::= ( "exists" | "∃" ) QuantifierBinding+ QuantifiedBody
+    ::= "exists" | "∃"
 
-QuantifierBinding
-    ::= "self" | ( Identifer IteratorTarget )
+QuantifierBoundNames
+    ::= "self" | Identifer ( "," Identifer )* IteratorSource
 
-IteratorTarget
-    ::= TypeIterator | SequenceIterator | "(" IteratorTarget ")"
+IteratorSource
+    ::= TypeIterator | SequenceIterator
 
 TypeIterator
-    ::= "->" ( "Self" | IdentifierReference )
+    ::= HasType ( "Self" | IdentifierReference )
 
 SequenceIterator
-    ::= ( "in" | "∈" ) ( NamePath | Identifier | SequenceBuilder )
+    ::= ( "in" | "∈" ) ( FunctionComposition | Identifier | SequenceBuilder )
 
 QuantifiedBody
     ::= "(" ConstraintSentence ")"
 
 Term
-    ::= NamePath
+    ::= FunctionComposition
         | Identifier
         | QualifiedIdentifier
         | PredicateValue
         | FunctionalTerm
         | SequenceBuilder
 
-NamePath
-    ::= PathSubject ( "." Identifier )+
-
-PathSubject
-    ::= ( "self" | Identifier )
+FunctionComposition
+    ::= ( "self" | Identifier ) ( "." Identifier )+
 
 PredicateValue
     ::= SimpleValue | SequenceOfPredicateValues
@@ -2236,10 +2250,10 @@ FunctionDef
     ::= FunctionSignature ( ":=" | "≔" ) ConstraintSentence
 
 FunctionSignature
-    ::= "(" FunctionParameter+ ")" "->" FunctionType
+    ::= "(" FunctionParameter+ ")" HasType FunctionType
 
 FunctionParameter
-    ::= Identifier "->" FunctionType
+    ::= Identifier HasType FunctionType
 
 FunctionType
     ::=  FunctionCardinality? FunctionTypeRef
@@ -2263,33 +2277,20 @@ ConstantDef
 
 #+BEGIN_SRC ebnf
 SequenceBuilder
-    ::= "{" Variables "|" Expression "}"
+    ::= "{"
+        ( VariableNameSet | MappingVariable )
+        "|"
+        VariableBinding+ ConstraintSentence
+        "}"
 
-Variables
-    ::= TupleVariable
-        | SequenceVariable
-        | MappingVariable
-
-TupleVariable
+VariableNameSet
     ::= Identifier+
 
-SequenceVariable
-    ::= "[" Identifier+ "]"
-
 MappingVariable
-    ::= "(" Identifier "->" Identifier ")"
+    ::= "(" Identifier HasType Identifier ")"
 
-Expression
-    ::= ConjunctiveExpression
-        | LocalBinding
-        | ConstraintSentence
-        | "(" Expression ")"
-
-ConjunctiveExpression
-    ::= Expression ( "and" | "∧" ) Expression
-
-LocalBinding
-    ::= Identifier ( TypeIterator | SequenceIterator )
+VariableBinding
+    ::= ( Universal | Existential ) QuantifierBinding ","
 #+END_SRC
 
 

@@ -96,5 +96,5 @@
 
 (environment_definition name: (identifier) @definition.function)
 
-(variable_name_set (identifier) @definition.variable)
+(named_variable_set (identifier) @definition.variable)
 (mapping_variable domain: (identifier) range: (identifier) @definition.variable)

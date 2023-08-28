@@ -940,6 +940,11 @@
     }
   },
   {
+    "type": "greater_than_or_equal",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "identifier_reference",
     "named": true,
     "fields": {},
@@ -1076,6 +1081,58 @@
     }
   },
   {
+    "type": "inequation",
+    "named": true,
+    "fields": {
+      "lhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "term",
+            "named": true
+          }
+        ]
+      },
+      "relation": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "greater_than",
+            "named": true
+          },
+          {
+            "type": "greater_than_or_equal",
+            "named": true
+          },
+          {
+            "type": "less_than",
+            "named": true
+          },
+          {
+            "type": "less_than_or_equal",
+            "named": true
+          },
+          {
+            "type": "not_equal",
+            "named": true
+          }
+        ]
+      },
+      "rhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "term",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "informal_constraint",
     "named": true,
     "fields": {
@@ -1103,6 +1160,11 @@
   },
   {
     "type": "iri_reference",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "less_than_or_equal",
     "named": true,
     "fields": {}
   },
@@ -1414,6 +1476,21 @@
     }
   },
   {
+    "type": "named_variable_set",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "negation",
     "named": true,
     "fields": {
@@ -1428,6 +1505,11 @@
         ]
       }
     }
+  },
+  {
+    "type": "not_equal",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "predicate_value",
@@ -1531,16 +1613,6 @@
     "type": "quantified_sentence",
     "named": true,
     "fields": {
-      "binding": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "quantifier_binding",
-            "named": true
-          }
-        ]
-      },
       "body": {
         "multiple": true,
         "required": true,
@@ -1559,8 +1631,34 @@
           }
         ]
       },
-      "quantifier": {
+      "variable_binding": {
         "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "quantified_variable_binding",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "quantified_variable_binding",
+    "named": true,
+    "fields": {
+      "binding": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "quantifier_bound_names",
+            "named": true
+          }
+        ]
+      },
+      "quantifier": {
+        "multiple": false,
         "required": true,
         "types": [
           {
@@ -1576,7 +1674,7 @@
     }
   },
   {
-    "type": "quantifier_binding",
+    "type": "quantifier_bound_names",
     "named": true,
     "fields": {
       "name": {
@@ -1720,7 +1818,7 @@
         "required": true,
         "types": [
           {
-            "type": "quantifier_binding",
+            "type": "quantifier_bound_names",
             "named": true
           }
         ]
@@ -1758,7 +1856,29 @@
             "named": true
           },
           {
-            "type": "variable_name_set",
+            "type": "named_variable_set",
+            "named": true
+          }
+        ]
+      },
+      "variable_binding": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": "existential",
+            "named": true
+          },
+          {
+            "type": "quantifier_bound_names",
+            "named": true
+          },
+          {
+            "type": "universal",
             "named": true
           }
         ]
@@ -1901,6 +2021,10 @@
         },
         {
           "type": "equation",
+          "named": true
+        },
+        {
+          "type": "inequation",
           "named": true
         }
       ]
@@ -2297,21 +2421,6 @@
     }
   },
   {
-    "type": "variable_name_set",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "(",
     "named": false
   },
@@ -2336,6 +2445,10 @@
     "named": false
   },
   {
+    "type": "/=",
+    "named": false
+  },
+  {
     "type": ":",
     "named": false
   },
@@ -2352,6 +2465,10 @@
     "named": false
   },
   {
+    "type": "<=",
+    "named": false
+  },
+  {
     "type": "<==>",
     "named": false
   },
@@ -2365,6 +2482,10 @@
   },
   {
     "type": ">",
+    "named": false
+  },
+  {
+    "type": ">=",
     "named": false
   },
   {
@@ -2456,6 +2577,10 @@
     "named": false
   },
   {
+    "type": "greater_than",
+    "named": true
+  },
+  {
     "type": "group",
     "named": false
   },
@@ -2501,6 +2626,10 @@
   },
   {
     "type": "language_tag",
+    "named": true
+  },
+  {
+    "type": "less_than",
     "named": true
   },
   {
@@ -2612,6 +2741,14 @@
     "named": false
   },
   {
+    "type": "←",
+    "named": false
+  },
+  {
+    "type": "→",
+    "named": false
+  },
+  {
     "type": "⇒",
     "named": false
   },
@@ -2645,6 +2782,18 @@
   },
   {
     "type": "≔",
+    "named": false
+  },
+  {
+    "type": "≠",
+    "named": false
+  },
+  {
+    "type": "≤",
+    "named": false
+  },
+  {
+    "type": "≥",
     "named": false
   },
   {

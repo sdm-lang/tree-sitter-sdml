@@ -15,8 +15,8 @@ and MAY be either /informally/, or /formally/ specified.
 
 #+NAME: lst:grammar-constraint
 #+BEGIN_SRC ebnf
-Constraint          ::=
-    "assert" Identifier ( InformalConstraint | FormalConstraint )
+Constraint
+    ::= "assert" Identifier ( InformalConstraint | FormalConstraint )
 #+END_SRC
 
 [[./ebnf-diagram/Constraint.svg]]
@@ -44,7 +44,8 @@ specification.
 
 #+NAME: lst:grammar-informal-constraint
 #+BEGIN_SRC ebnf
-InformalConstraint  ::= "=" QuotedString ControlledLanguageTag?
+InformalConstraint
+    ::= "=" QuotedString ControlledLanguageTag?
 #+END_SRC
 
 [[./ebnf-diagram/InformalConstraint.svg]]
@@ -53,10 +54,11 @@ The controlled language tag only includes the primary language component of a re
 identifier.
 
 #+BEGIN_SRC ebnf
-ControlledLanguageTag ::=
-    "@" LanguageTagPrimary ControlledLanguageScheme?
-ControlledLanguageScheme ::=
-    "-" ASCII_LETTER ASCII_LETTER ASCII_LETTER
+ControlledLanguageTag
+    ::= "@" LanguageTagPrimary ControlledLanguageScheme?
+ControlledLanguageScheme
+    ::= "-"
+        ASCII_LETTER  ASCII_LETTER  ASCII_LETTER
         ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
         ASCII_LETTER? ASCII_LETTER? ASCII_LETTER?
 #+END_SRC
@@ -107,7 +109,10 @@ Logic Interchange Format (CLIF), Conceptual Graph Interchange Format (CGIF), and
 
 #+NAME: lst:grammar-formal-constraint
 #+BEGIN_SRC ebnf
-FormalConstraint    ::= "is" ConstraintEnvironment? ConstraintSentence "end"
+FormalConstraint
+    ::= "is"
+        ConstraintEnvironment? ConstraintSentence
+        "end"
 #+END_SRC
 
 [[./ebnf-diagram/FormalConstraint.svg]]
@@ -160,9 +165,11 @@ temporary values and functions for use in the constraint sentence.
 
 #+NAME: lst:grammar-constraint-sentence
 #+BEGIN_SRC ebnf
-ConstraintSentence  ::=
-    SimpleSentence | BooleanSentence | QuantifiedSentence |
-        "(" ConstraintSentence ")"
+ConstraintSentence
+    ::= SimpleSentence
+        | BooleanSentence
+        | QuantifiedSentence
+        | "(" ConstraintSentence ")"
 #+END_SRC
 
 [[./ebnf-diagram/ConstraintSentence.svg]]
@@ -171,16 +178,49 @@ ConstraintSentence  ::=
 
 #+NAME: lst:grammar-simple-sentence
 #+BEGIN_SRC ebnf
-SimpleSentence      ::= Atomic | Equation
-Atomic              ::= Term "(" Term* ")"
-Equation            ::= Term "=" Term
+SimpleSentence
+    ::= Atomic | Equation | Inequation
 #+END_SRC
 
 [[./ebnf-diagram/SimpleSentence.svg]]
 
+In the case of an /atomic sentence/ the first term is the name of a /predicate/ and the remaining terms are arguments to the
+predicate invocation.
+
+#+BEGIN_SRC ebnf
+Atomic
+    ::= Term "(" Term* ")"
+#+END_SRC
+
 [[./ebnf-diagram/Atomic.svg]]
 
+An /equation/ asserts the equality of it's left and right operand.
+
+#+BEGIN_SRC ebnf
+Equation
+    ::= Term "=" Term
+#+END_SRC
+
 [[./ebnf-diagram/Equation.svg]]
+
+An /inequation/ asserts the inequality of it's left and right operand according to some relation.
+
+#+BEGIN_SRC ebnf
+Inequation
+    ::= Term InequationRelation Term
+#+END_SRC
+
+[[./ebnf-diagram/Inequation.svg]]
+
+The following are the recognized /inequality relations/, note the inclusion of both ASCII and Unicode versions of some
+relation symbols.
+
+#+BEGIN_SRC ebnf
+InequationRelation
+    ::= ( '/=' | '≠' | '<' | '>' | '<=' | '≤' | '>=' | '≥' )
+#+END_SRC
+
+[[./ebnf-diagram/InequationOperator.svg]]
 
 *** Boolean Sentences
 
@@ -188,13 +228,13 @@ Boolean sentences allow for the logical composition of sentences.
 
 #+NAME: lst:grammar-boolean-sentence
 #+BEGIN_SRC ebnf
-BooleanSentence     ::=
-    Negation |
-    ConstraintSentence
-        (
-          Conjunction | Disjunction | ExclusiveDisjunction |
-          Implication | Biconditional
-        )
+BooleanSentence
+    ::= Negation
+        | ConstraintSentence
+          (
+            Conjunction | Disjunction | ExclusiveDisjunction |
+            Implication | Biconditional
+          )
 #+END_SRC
 
 [[./ebnf-diagram/BooleanSentence.svg]]
@@ -203,10 +243,14 @@ The usual operators for negation, conjunction, disjunction, and exclusive disjun
 
 #+NAME: lst:grammar-boolean-sentence-cons
 #+BEGIN_SRC ebnf
-Negation            ::= ( "not" | "¬" ) ConstraintSentence
-Conjunction         ::= ( "and" | "∧" ) ConstraintSentence
-Disjunction         ::= ( "or" | "∨" ) ConstraintSentence
-ExclusiveDisjunction ::= ( "xor" | "⊻" ) ConstraintSentence
+Negation
+    ::= ( "not" | "¬" ) ConstraintSentence
+Conjunction
+    ::= ( "and" | "∧" ) ConstraintSentence
+Disjunction
+    ::= ( "or" | "∨" ) ConstraintSentence
+ExclusiveDisjunction
+    ::= ( "xor" | "⊻" ) ConstraintSentence
 #+END_SRC
 
 [[./ebnf-diagram/Negation.svg]]
@@ -217,10 +261,14 @@ ExclusiveDisjunction ::= ( "xor" | "⊻" ) ConstraintSentence
 
 [[./ebnf-diagram/ExclusiveDisjunction.svg]]
 
+Additionally, the logical relations of implication (or conditional) and biconditional are supported.
+
 #+NAME: lst:grammar-boolean-sentence-impl
 #+BEGIN_SRC ebnf
-Implication         ::= ( "implies" | "⇒" ) ConstraintSentence
-Biconditional       ::= ( "iff" | "⇔" ) ConstraintSentence
+Implication
+    ::= ( "implies" | "⇒" ) ConstraintSentence
+Biconditional
+    ::= ( "iff" | "⇔" ) ConstraintSentence
 #+END_SRC
 
 [[./ebnf-diagram/Implication.svg]]
@@ -230,48 +278,69 @@ Biconditional       ::= ( "iff" | "⇔" ) ConstraintSentence
 *** Quantified Sentences
 
 SDML supports, as shown in listing [[lst:ex-tagged-constraint-2]] sentences that range over values using the universal ($\forall$)
-or existential ($\exists$) quantifier.
+or existential ($\exists$) quantifiers. A quantified sentence is therefore a sentence body with a set of variables bound to these
+quantified values.
 
 #+NAME: lst:grammar-quantified-sentence
 #+BEGIN_SRC ebnf
-QuantifiedSentence  ::= Universal | Existential
-Universal           ::= ( "forall" | "∀" ) QuantifierBinding+ QuantifiedBody
-Existential         ::= ( "exists" | "∃" ) QuantifierBinding+ QuantifiedBody
+QuantifiedSentence
+    ::= QuantifiedVariableBinding+ QuantifiedBody
 #+END_SRC
 
 [[./ebnf-diagram/QuantifiedSentence.svg]]
+
+Each variable binding specifies a quantifier, one or more names, and a source for variable values.
+
+#+BEGIN_SRC ebnf
+QuantifiedVariableBinding
+    ::= ( Universal | Existential ) QuantifierBoundNames
+Universal
+    ::= "forall" | "∀"
+Existential
+    ::= "exists" | "∃"
+#+END_SRC
+
+[[./ebnf-diagram/QuantifiedVariableBinding.svg]]
 
 [[./ebnf-diagram/Universal.svg]]
 
 [[./ebnf-diagram/Existential.svg]]
 
-#+NAME: lst:grammar-quantifier-binding
+The /special variable/ ~self~ is a shortcut for the set of values from the type of the element to which the constraint is
+attached.
+
 #+BEGIN_SRC ebnf
-QuantifierBinding   ::= "self" | ( Identifer IteratorTarget )
-IteratorTarget      ::=
-    TypeIterator | SequenceIterator | "(" IteratorTarget ")"
+QuantifierBoundNames
+    ::= "self"
+        | Identifer ( "," Identifer )* IteratorSource
+IteratorSource
+    ::= TypeIterator | SequenceIterator
 #+END_SRC
 
-[[./ebnf-diagram/QuantifierBinding.svg]]
+[[./ebnf-diagram/QuantifierBoundNames.svg]]
 
-[[./ebnf-diagram/IteratorTarget.svg]]
+[[./ebnf-diagram/IteratorSource.svg]]
+
+The special variable ~self~ can therefore be replaced by a non-special version ~self -> Self~.
 
 #+BEGIN_SRC ebnf
-TypeIterator        ::= "->" ( "Self" | IdentifierReference )
+TypeIterator
+    ::= HasType ( "Self" | IdentifierReference )
 #+END_SRC
 
 [[./ebnf-diagram/TypeIterator.svg]]
 
 #+BEGIN_SRC ebnf
-SequenceIterator    ::=
-    ( "in" | "∈" ) ( NamePath | Identifier | SequenceBuilder )
+SequenceIterator
+    ::= ( "in" | "∈" ) ( FunctionComposition | Identifier | SequenceBuilder )
 #+END_SRC
 
 [[./ebnf-diagram/SequenceIterator.svg]]
 
 #+NAME: lst:grammar-quantified-body
 #+BEGIN_SRC ebnf
-QuantifiedBody      ::= "(" ConstraintSentence ")"
+QuantifiedBody
+    ::= "(" ConstraintSentence ")"
 #+END_SRC
 
 [[./ebnf-diagram/QuantifiedBody.svg]]
@@ -282,26 +351,24 @@ More TBD
 
 #+NAME: lst:grammar-constraint-term
 #+BEGIN_SRC ebnf
-Term                ::=
-    NamePath
-    | Identifier
-    | QualifiedIdentifier
-    | PredicateValue
-    | FunctionalTerm
-    | SequenceBuilder
+Term
+    ::= FunctionComposition
+        | Identifier
+        | QualifiedIdentifier
+        | PredicateValue
+        | FunctionalTerm
+        | SequenceBuilder
 #+END_SRC
 
 [[./ebnf-diagram/Term.svg]]
 
 #+NAME: lst:grammar-name-path
 #+BEGIN_SRC ebnf
-NamePath            ::= PathSubject ( "." Identifier )+
-PathSubject         ::= ( "self" | Identifier )
+FunctionComposition
+    ::= ( "self" | Identifier ) ( "." Identifier )+
 #+END_SRC
 
-[[./ebnf-diagram/NamePath.svg]]
-
-[[./ebnf-diagram/PathSubject.svg]]
+[[./ebnf-diagram/FunctionComposition.svg]]
 
 This notation is effectively syntactic sugar as it can be systematically transformed into the form above. The
 transformation rules are:
@@ -318,8 +385,9 @@ Similarly the quantifier collection ~self.definitions~ becomes ~definitions(self
 
 #+NAME: lst:grammar-predicate-values
 #+BEGIN_SRC ebnf
-PredicateValue      ::=
-    SimpleValue | SequenceOfPredicateValues
+PredicateValue
+    ::= SimpleValue | SequenceOfPredicateValues
+
 SequenceOfPredicateValues
     ::= "∅"
         | SequenceValueConstraint?
@@ -335,7 +403,8 @@ of values, sequence constraints may be included.
 
 #+NAME: lst:grammar-functional-term
 #+BEGIN_SRC ebnf
-FunctionalTerm      ::= Term "(" Term* ")"
+FunctionalTerm
+    ::= Term "(" Term* ")"
 #+END_SRC
 
 [[./ebnf-diagram/FunctionalTerm.svg]]
@@ -352,56 +421,43 @@ of values of $x$ *such that* the predicate $f$ holds true for $x$/".
 
 #+NAME: lst:grammar-sequence-builder
 #+BEGIN_SRC ebnf
-SequenceBuilder     ::= "{" Variables "|" Expression "}"
+SequenceBuilder
+    ::= "{"
+        ( VariableNameSet | MappingVariable )
+        "|"
+        VariableBinding+ ConstraintSentence
+        "}"
 #+END_SRC
 
 [[./ebnf-diagram/SequenceBuilder.svg]]
+
 #+NAME: lst:grammar-builder-variables
 #+BEGIN_SRC ebnf
-Variables           ::= TupleVariable | SequenceVariable | MappingVariable
-TupleVariable       ::= Identifier+
-SequenceVariable    ::= "[" Identifier+ "]"
-MappingVariable     ::= "(" Identifier "->" Identifier ")"
+VariableNameSet
+    ::= Identifier+
+MappingVariable
+    ::= "(" Identifier HasType Identifier ")"
 #+END_SRC
 
-[[./ebnf-diagram/Variables.svg]]
+[[./ebnf-diagram/VariableNameSet.svg]]
 
-With a /tuple variable/ the builder returns a single value and a set of relations named for the variable identifiers.
+With a /named variables/ set the builder returns a single value and a set of relations named for the variable identifiers.
 
 $$t ≔ \bigl\{ x, y \mid P(x) \land Q(y) \land x = y \bigr\}$$
 
-[[./ebnf-diagram/TupleVariable.svg]]
+[[./ebnf-diagram/MappingVariable.svg]]
 
-A /sequence variable/ returns a sequence where each element is another sequence comprising the values of the individual
-identified values.
-
-[[./ebnf-diagram/SequenceVariable.svg]]
-
-Finally, a /mapping variable/ returns a sequence of mapping values which may comprise a lookup table.
+On the other hand, a /mapping variable/ returns a sequence of mapping values which may comprise a lookup table.
 
 $$t ≔ \bigl\{ \left(d \rightarrow r\right) \mid \forall d \in D \land \exists r \in R \land id_{D}(d) = id_{R}(r) \bigr\}$$
 
-[[./ebnf-diagram/MappingVariable.svg]]
-
-#+NAME: lst:grammar-builder-expression
-#+BEGIN_SRC ebnf
-Expression          ::=
-    ConjunctiveExpression | LocalBinding | ConstraintSentence | "(" Expression ")"
-ConjunctiveExpression   ::=
-    Expression ( "and" | "∧" ) Expression
-#+END_SRC
-
-[[./ebnf-diagram/Expression.svg]]
-
-[[./ebnf-diagram/ConjunctiveExpression.svg]]
-
 #+NAME: lst:grammar-builder-local-binding
 #+BEGIN_SRC ebnf
-LocalBinding   ::=
-    Identifier ( BindingFromType | BindingFromSequence )
+VariableBinding
+    ::= ( Universal | Existential ) QuantifierBinding ","
 #+END_SRC
 
-[[./ebnf-diagram/LocalBinding.svg]]
+[[./ebnf-diagram/VariableBinding.svg]]
 
 *** Library Functions
 
@@ -448,14 +504,16 @@ although the function body may be a value or a constraint sentence and not speci
 
 #+NAME: lst:grammar-constraint-environment
 #+BEGIN_SRC ebnf
-ConstraintEnvironment ::= EnvironmentDef+ "in"
+ConstraintEnvironment
+    ::= EnvironmentDef+ "in"
 #+END_SRC
 
 [[./ebnf-diagram/ConstraintEnvironment.svg]]
 
 #+NAME: lst:grammar-environment-definition
 #+BEGIN_SRC ebnf
-EnvironmentDef      ::= "def" Identifier ( FunctionDef | ConstantDef )
+EnvironmentDef
+    ::= "def" Identifier ( FunctionDef | ConstantDef )
 #+END_SRC
 
 [[./ebnf-diagram/EnvironmentDef.svg]]
@@ -464,9 +522,12 @@ A defined function has a signature that describes it's domain, or /parameters/, 
 
 #+NAME: lst:grammar-environment-function
 #+BEGIN_SRC ebnf
-FunctionDef         ::= FunctionSignature ( ":=" | "≔" ) ConstraintSentence
-FunctionSignature   ::= "(" FunctionParameter+ ")" "->" FunctionType
-FunctionParameter   ::= Identifier "->" FunctionType
+FunctionDef
+    ::= FunctionSignature ( ":=" | "≔" ) ConstraintSentence
+FunctionSignature
+    ::= "(" FunctionParameter+ ")" HasType FunctionType
+FunctionParameter
+    ::= Identifier HasType FunctionType
 #+END_SRC
 
 [[./ebnf-diagram/FunctionDef.svg]]
@@ -478,10 +539,16 @@ FunctionParameter   ::= Identifier "->" FunctionType
 Function type specifications may use wildcard symbols to denote their application to undefined types.
 
 #+BEGIN_SRC ebnf
-FunctionType        ::= FunctionCardinality? FunctionTypeRef
-FunctionCardinality ::= "{" SequenceOrdering? SequenceUniqueness? ( Wildcard | CardinalityInner ) "}"
-FunctionTypeRef     ::= Wildcard | IdentiferReference | BuiltinSimpleType | MappingType
-Wildcard            ::= "_"
+FunctionType
+    ::=  FunctionCardinality? FunctionTypeRef
+FunctionCardinality
+    ::= "{"
+        SequenceOrdering? SequenceUniqueness? ( Wildcard | CardinalityInner )
+        "}"
+FunctionTypeRef
+    ::= Wildcard | IdentiferReference | BuiltinSimpleType | MappingType
+Wildcard
+    ::= "_"
 #+END_SRC
 
 [[./ebnf-diagram/FunctionType.svg]]
@@ -491,7 +558,8 @@ Wildcard            ::= "_"
 [[./ebnf-diagram/FunctionTypeRef.svg]]
 
 #+BEGIN_SRC ebnf
-ConstantDef         ::= ( ":=" | "≔" ) ( PredicateValue | ConstraintSentence )
+ConstantDef
+    ::= ( ":=" | "≔" ) ( PredicateValue | ConstraintSentence )
 #+END_SRC
 
 [[./ebnf-diagram/ConstantDef.svg]]

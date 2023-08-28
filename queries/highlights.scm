@@ -127,8 +127,8 @@
 
 ((equation rhs: (term (identifier) @variable)) (#is-not? local))
 
-(quantifier_binding name: (identifier) @variable.parameter)
-(quantifier_binding "," @punctuation.separator)
+(quantifier_bound_names name: (identifier) @variable.parameter)
+(quantifier_bound_names "," @punctuation.separator)
 
 (type_iterator source: (identifier_reference) @type)
 

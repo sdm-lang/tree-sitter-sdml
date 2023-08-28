@@ -49,6 +49,18 @@ end
 
 # Changes
 
+**Version: 0.1.40**
+
+* Feature: Add rule for `inequation` alongside `equation`.
+  * Add new rule `inequation` and make it a choice within `simple_sentence`.
+  * Add new rules for inequality relations; `not_equal`, `less_than`, `less_than_or_equal`, `greater_than`, and `greater_than_or_equal`.
+* Feature: Add rules `_has_type` and `_type_restriction` and allow both ascii and Unicode arrows.
+  * Add rule `_has_type` for values `->` and `→`.
+  * Add rule `_type_restriction` for values `<-` and `←`.
+* Fix: Rules for new shared bindings had confusing names.
+  * Add rule `quantified_variable_binding`.
+  * Rename rule `quantifier_binding` to `quantifier_bound_names`.
+
 **Version: 0.1.39**
 
 * Feature: rename rule `name_path` to `function_composition`.

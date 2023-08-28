@@ -1,0 +1,20 @@
+module another is
+
+  assert just_testing is
+    def has_pref_label(anns -> {0..} Annotation) -> boolean ≔
+    ∃ a ∈ anns ( name(a) = skos:prefLabel ∧ ¬empty(value(a)) )
+    def foo := "foo"
+  in
+    ∀ self (self.tags.contains(foo))
+  end
+
+  datatype byte ← integer is
+  @xsd:minValue = 0
+  @xsd:maxValue = 256
+  end
+
+  structure Foo is
+  name → string
+  end
+
+end

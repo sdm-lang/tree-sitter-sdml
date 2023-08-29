@@ -29,37 +29,37 @@ module Campaign is
       end
     end
 
-    ref e -> Target is
-      assert tagged_with_foo_builder is
+    ref f -> Target is
+      assert tagged_with_foo_builder_2 is
         ∀ self ( ¬is_empty({t | t in self.tags, t = "foo" ∧ color(t) = red}) )
       end
     end
 
-    ref e -> Target is
-      assert tagged_with_foo_builder is
+    ref g -> Target is
+      assert tagged_with_foo_builder_3 is
         ∀ self ( ¬is_empty({t | t in self.tags, t = "foo" ∨ t = "bar"}) )
       end
     end
 
-    ref e -> Target is
-      assert tagged_with_foo_builder is
+    ref h -> Target is
+      assert tagged_with_foo_builder_4 is
         ∀ self ( ¬is_empty({t | t in self.tags, x in self.container.tags, contains(x t)}) )
       end
     end
 
-    ref e -> Target is
-      assert tagged_with_foo_builder is
+    ref i -> Target is
+      assert tagged_with_foo_builder_5 is
         ∀ self ∃ x in self.container.tags ( ¬is_empty({t | t in self.tags, contains(x t)}) )
       end
     end
 
-    ref e -> Target is
-      assert tagged_with_foo_builder is
+    ref j -> Target is
+      assert tagged_with_foo_builder_6 is
         ∀ self ∃ x in self.container.tags ( ¬{t | t in self.tags, contains(x t)} = ∅ )
       end
     end
 
-    ref f -> Target is
+    ref k -> Target is
       assert tagged_with_parent_tags is
         ∀ self ( ∃ tag ∈ self.container.tags ( self.tags.contains(tag) ) )
       end

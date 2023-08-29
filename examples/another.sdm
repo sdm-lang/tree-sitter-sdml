@@ -14,7 +14,7 @@ module another is
   end
 
   structure Foo is
-  name → string
+    name → string
   end
 
 end

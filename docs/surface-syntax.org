@@ -41,6 +41,7 @@ LineComment
 
 [[./ebnf-diagram/LineComment.svg]]
 
+#+NAME: lst:grammar-comment
 #+CAPTION: Comments
 #+BEGIN_SRC sdml :exports code :noeval
 ; <- comments start here and end here ->
@@ -49,7 +50,8 @@ LineComment
 In the following example a tool reading the following file is not required to preserve the comment, which in this case
 is OK as the ~editorialNote~ will be preserved and correctly used for the same purpose.
 
-#+CAPTION: Comments
+#+NAME: lst:grammar-annotation-comment
+#+CAPTION: Annotation Comments
 #+BEGIN_SRC sdml :exports code :noeval
 module foo is
   import [dc skos]

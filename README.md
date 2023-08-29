@@ -49,35 +49,40 @@ end
 
 # Changes
 
-**Version: 0.1.41**
-
-* Feature: add the Unicode character `↦` to the rule `_has_type` which works better for some typesetting.
-
 **Version: 0.1.40**
 
+* Feature: add the Unicode character `↦` to the rule `_has_type` which works better for some typesetting.
 * Feature: add rule for `inequation` alongside `equation`.
   * Add new rule `inequation` and make it a choice within `simple_sentence`.
   * Add new rules for inequality relations; `not_equal`, `less_than`, `less_than_or_equal`, `greater_than`, and `greater_than_or_equal`.
-* Feature: add rules `_has_type` and `_type_restriction` and allow both ascii and Unicode arrows.
+* Refactor: restructure rule `boolean_sentence` into a choice of `unary_boolean_sentence` and `binary_boolean_sentence`.
+  * Add rule `unary_boolean_sentence` for negation only.
+  * Add rule `binary_boolean_sentence` for logical connectives.
+  * Add rules for each logical connective keyword/operator symbols.
+* Refactor: rename field `variable_binding` to ``binding` in rule `quantieid_sentence`.
+* Refactor: use the same rule for empty set in value sequences.
+* Refactor: rename rule `_function_type_expression_to` to `_function_type`.
+* Refactor: add rules `_has_type` and `_type_restriction` and allow both ascii and Unicode arrows.
   * Add rule `_has_type` for values `->` and `→`.
   * Add rule `_type_restriction` for values `<-` and `←`.
 * Fix: rules for new shared bindings had confusing names.
   * Add rule `quantified_variable_binding`.
   * Rename rule `quantifier_binding` to `quantifier_bound_names`.
+* Docs: add appendix with details of Unicode usage.
 
 **Version: 0.1.39**
 
-* Feature: rename rule `name_path` to `function_composition`.
-* Feature: combine components of the two rules `quantified_sentence` and `sequence_builder`.
+* Feature: allow multiple bindings at the head of quantified sentences.
+* Feature: made progress on local scopes in highlighting.
+  * Rename rule `_constant_def` to `constant_def`.
+  * To-do: currently references are not picking up their definition formatting.
+* Refactor: rename rule `name_path` to `function_composition`.
+* Refactor: combine components of the two rules `quantified_sentence` and `sequence_builder`.
   * Add new shared rule `quantifier_binding` (along with `_bound_name_set`) now used in both sentence and builder.
   * Add the ability to have more than one name in a binding.
   * Add the ability for sequence builders to have more than one quantified binding.
   * Change the field `expression` into a field named `body` of type `constraint_sentence`.
   * Remove rules `expression` and `conjunctive_expression`.
-* Feature: allow multiple bindings at the head of quantified sentences.
-* Feature: made progress on local scopes in highlighting.
-  * Rename rule `_constant_def` to `constant_def`.
-  * To-do: currently references are not picking up their definition formatting.
 * Style: change the order of choices in rule `predicate_value` to match `value` and corresponding sequences.
 
 **Version: 0.1.38**

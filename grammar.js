@@ -250,90 +250,73 @@ module.exports = grammar({
         ),
 
         boolean_sentence: $ => choice(
-            $.negation,
-            seq(
-                field('lhs', $.constraint_sentence),
-                choice(
-                    $.conjunction,
-                    $.exclusive_disjunction,
-                    $.disjunction,
-                    $.implication,
-                    $.biconditional,
-                )
-            )
+            $.unary_boolean_sentence,
+            $.binary_boolean_sentence
         ),
 
-        negation: $ => prec(
-            6,
-            seq(
-                choice(
-                    keyword('not'),
-                    operator('¬') // LaTeX: \lnot
-                ),
-                field('rhs', $.constraint_sentence),
-            )
-        ),
-
-        conjunction: $ => prec(
-            5,
-            seq(
-                choice(
-                    keyword('and'),
-                    operator('∧') // LaTeX: \land
-                ),
-                field('rhs', $.constraint_sentence),
-            )
-        ),
-
-        exclusive_disjunction: $ => prec(
-            4,
-            seq(
-                choice(
-                    keyword('xor'),
-                    operator('⊻') // LaTeX: \veebar
-                ),
-                field('rhs', $.constraint_sentence),
-            )
-        ),
-
-        disjunction: $ => prec(
-            3,
-            seq(
-                choice(
-                    keyword('or'),
-                    operator('∨') // LaTeX: \lor
-                ),
-                field('rhs', $.constraint_sentence),
-            )
-        ),
-
-        implication: $ => prec(
+        unary_boolean_sentence: $ => prec.right(
             2,
             seq(
-                choice(
-                    keyword('implies'),
-                    operator('==>'),
-                    operator('⇒') // LaTeX: \implies
-                ),
+                field('operator', $.negation),
                 field('rhs', $.constraint_sentence),
             )
         ),
 
-        biconditional: $ => prec(
+        binary_boolean_sentence: $ => prec.left(
             1,
             seq(
-                choice(
-                    keyword('iff'),
-                    operator('<==>'),
-                    operator('⇔') // LaTeX: \iff
-                ),
-                field('rhs', $.constraint_sentence),
+                field('lhs', $.constraint_sentence), // antecedent
+                field('operator', $._binary_logical_connective),
+                field('rhs', $.constraint_sentence)  // consequent
             )
+        ),
+
+        negation: $ => choice(
+            keyword('not'),
+            operator('¬') // LaTeX: \lnot
+        ),
+
+        _binary_logical_connective: $ => choice(
+            $.conjunction,
+            $.disjunction,
+            $.exclusive_disjunction,
+            $.implication,
+            $.biconditional
+        ),
+
+        conjunction: $ => choice(
+            keyword('and'),
+            operator('∧') // LaTeX: \land
+        ),
+
+        disjunction: $ => choice(
+            keyword('or'),
+            operator('∨') // LaTeX: \lor
+        ),
+
+        exclusive_disjunction: $ => choice(
+            keyword('xor'),
+            operator('⊻') // LaTeX: \veebar
+            // maybe: operator('⊕')
+            // maybe: operator('⩛')
+            // maybe: operator('↮')
+        ),
+
+        implication: $ => choice(
+            keyword('implies'),
+            operator('==>'),
+            operator('⇒') // LaTeX: \implies
+        ),
+
+        biconditional: $ => choice(
+            keyword('iff'),
+            operator('<==>'),
+            operator('⇔') // LaTeX: \iff
         ),
 
         quantified_sentence: $ => seq(
             repeat1(
-                field('variable_binding', $.quantified_variable_binding)
+                field('binding', $.quantified_variable_binding)
             ),
             field('body', $._quantified_body)
         ),
@@ -454,7 +437,7 @@ module.exports = grammar({
         ),
 
         sequence_of_predicate_values: $ => choice(
-            keyword('∅'),
+            field('empty', keyword('∅')),
             seq(
                 optional($._sequence_value_constraints),
                 '[',
@@ -518,17 +501,17 @@ module.exports = grammar({
 
         function_signature: $ => seq(
             '(',
-            repeat1($.function_parameter),
+            repeat1(field('parameter', $.function_parameter)),
             ')',
-            $._function_type_expression_to
+            $._function_type
         ),
 
         function_parameter: $ => seq(
             field('name', $.identifier),
-            $._function_type_expression_to
+            $._function_type
         ),
 
-        _function_type_expression_to: $ => seq(
+        _function_type: $ => seq(
             $._has_type,
             optional(
                 field('cardinality', $.function_cardinality_expression)
@@ -544,9 +527,8 @@ module.exports = grammar({
             optional(
                 field('uniqueness', $.sequence_uniqueness)
             ),
-            choice(
-                $.wildcard,
-                $._cardinality_inner
+            optional(
+                 $._cardinality_inner
             ),
             '}'
         ),
@@ -587,7 +569,7 @@ module.exports = grammar({
             ),
             '|',
             repeat1(
-                field('variable_binding', $._variable_binding)
+                field('binding', $._variable_binding)
             ),
             field('body', $.constraint_sentence),
             '}',
@@ -632,21 +614,24 @@ module.exports = grammar({
             $.sequence_of_values
         ),
 
-        sequence_of_values: $ => seq(
-            optional($._sequence_value_constraints),
-            '[',
-            repeat1(
-                field(
-                    'element',
-                    choice(
-                        $.simple_value,
-                        $.value_constructor,
-                        $.mapping_value,
-                        $.identifier_reference
+        sequence_of_values: $ => choice(
+            field('empty', keyword('∅')),
+            seq(
+                optional($._sequence_value_constraints),
+                '[',
+                repeat(
+                    field(
+                        'element',
+                        choice(
+                            $.simple_value,
+                            $.value_constructor,
+                            $.mapping_value,
+                            $.identifier_reference
+                        )
                     )
-                )
-            ),
-            ']'
+                ),
+                ']'
+            )
         ),
 
         _sequence_value_constraints: $ => seq(

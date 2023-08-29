@@ -88,7 +88,48 @@
   {
     "type": "biconditional",
     "named": true,
+    "fields": {}
+  },
+  {
+    "type": "binary_boolean_sentence",
+    "named": true,
     "fields": {
+      "lhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "constraint_sentence",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "biconditional",
+            "named": true
+          },
+          {
+            "type": "conjunction",
+            "named": true
+          },
+          {
+            "type": "disjunction",
+            "named": true
+          },
+          {
+            "type": "exclusive_disjunction",
+            "named": true
+          },
+          {
+            "type": "implication",
+            "named": true
+          }
+        ]
+      },
       "rhs": {
         "multiple": false,
         "required": true,
@@ -109,44 +150,17 @@
   {
     "type": "boolean_sentence",
     "named": true,
-    "fields": {
-      "lhs": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "constraint_sentence",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": false,
       "required": true,
       "types": [
         {
-          "type": "biconditional",
+          "type": "binary_boolean_sentence",
           "named": true
         },
         {
-          "type": "conjunction",
-          "named": true
-        },
-        {
-          "type": "disjunction",
-          "named": true
-        },
-        {
-          "type": "exclusive_disjunction",
-          "named": true
-        },
-        {
-          "type": "implication",
-          "named": true
-        },
-        {
-          "type": "negation",
+          "type": "unary_boolean_sentence",
           "named": true
         }
       ]
@@ -222,18 +236,7 @@
   {
     "type": "conjunction",
     "named": true,
-    "fields": {
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "constraint_sentence",
-            "named": true
-          }
-        ]
-      }
-    }
+    "fields": {}
   },
   {
     "type": "constant_def",
@@ -418,18 +421,7 @@
   {
     "type": "disjunction",
     "named": true,
-    "fields": {
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "constraint_sentence",
-            "named": true
-          }
-        ]
-      }
-    }
+    "fields": {}
   },
   {
     "type": "entity_body",
@@ -658,18 +650,7 @@
   {
     "type": "exclusive_disjunction",
     "named": true,
-    "fields": {
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "constraint_sentence",
-            "named": true
-          }
-        ]
-      }
-    }
+    "fields": {}
   },
   {
     "type": "existential",
@@ -706,6 +687,16 @@
     "type": "function_cardinality_expression",
     "named": true,
     "fields": {
+      "any": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "wildcard",
+            "named": true
+          }
+        ]
+      },
       "min": {
         "multiple": false,
         "required": false,
@@ -746,16 +737,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "wildcard",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -864,6 +845,16 @@
           }
         ]
       },
+      "parameter": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "function_parameter",
+            "named": true
+          }
+        ]
+      },
       "target": {
         "multiple": false,
         "required": true,
@@ -874,16 +865,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "function_parameter",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1048,18 +1029,7 @@
   {
     "type": "implication",
     "named": true,
-    "fields": {
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "constraint_sentence",
-            "named": true
-          }
-        ]
-      }
-    }
+    "fields": {}
   },
   {
     "type": "import_statement",
@@ -1493,18 +1463,7 @@
   {
     "type": "negation",
     "named": true,
-    "fields": {
-      "rhs": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "constraint_sentence",
-            "named": true
-          }
-        ]
-      }
-    }
+    "fields": {}
   },
   {
     "type": "not_equal",
@@ -1613,6 +1572,16 @@
     "type": "quantified_sentence",
     "named": true,
     "fields": {
+      "binding": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "quantified_variable_binding",
+            "named": true
+          }
+        ]
+      },
       "body": {
         "multiple": true,
         "required": true,
@@ -1627,16 +1596,6 @@
           },
           {
             "type": "constraint_sentence",
-            "named": true
-          }
-        ]
-      },
-      "variable_binding": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "quantified_variable_binding",
             "named": true
           }
         ]
@@ -1927,6 +1886,16 @@
           }
         ]
       },
+      "empty": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "∅",
+            "named": false
+          }
+        ]
+      },
       "ordering": {
         "multiple": false,
         "required": false,
@@ -1955,7 +1924,7 @@
     "fields": {
       "element": {
         "multiple": true,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "identifier_reference",
@@ -1972,6 +1941,16 @@
           {
             "type": "value_constructor",
             "named": true
+          }
+        ]
+      },
+      "empty": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "∅",
+            "named": false
           }
         ]
       },
@@ -2278,6 +2257,32 @@
     }
   },
   {
+    "type": "unary_boolean_sentence",
+    "named": true,
+    "fields": {
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "negation",
+            "named": true
+          }
+        ]
+      },
+      "rhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "constraint_sentence",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "union_body",
     "named": true,
     "fields": {},
@@ -2530,11 +2535,11 @@
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "def",
@@ -2542,11 +2547,11 @@
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "end",

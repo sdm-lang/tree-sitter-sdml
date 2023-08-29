@@ -419,6 +419,11 @@ The simplest form of a builder expression is $\bigl\{ x \mid P(x)\bigr\}$, where
 evaluates to ~true~ to select the value of $x$. In natural language this expression read as follows "/construct a sequence
 of values of $x$ *such that* the predicate $f$ holds true for $x$/".
 
+However, this simple form tells us nothing about the domain of the variable $x$, and in fact $x$ is a free variable in
+the expression because of this lack of /binding/. The expression $\bigl\{ x \mid \forall x \in X, P(x)\bigr\}$ binds the variable $x$
+to the elements of the sequence, or the values of the type, named $X$. SDML does not allow free variables in sequence
+builders and so variable bindings must be present for all specified variables.
+
 #+NAME: lst:grammar-sequence-builder
 #+BEGIN_SRC ebnf
 SequenceBuilder
@@ -430,6 +435,9 @@ SequenceBuilder
 #+END_SRC
 
 [[./ebnf-diagram/SequenceBuilder.svg]]
+
+The variables returned to the caller are specified before the =|= character and may either be a list of identifiers or a
+single mapping of identifer to identifer.
 
 #+NAME: lst:grammar-builder-variables
 #+BEGIN_SRC ebnf
@@ -443,13 +451,13 @@ MappingVariable
 
 With a /named variables/ set the builder returns a single value and a set of relations named for the variable identifiers.
 
-$$t ≔ \bigl\{ x, y \mid P(x) \land Q(y) \land x = y \bigr\}$$
+$$t ≔ \bigl\{ x, y \mid x \in X, y \in Y, P(x) \land Q(y) \land x = y \bigr\}$$
 
 [[./ebnf-diagram/MappingVariable.svg]]
 
 On the other hand, a /mapping variable/ returns a sequence of mapping values which may comprise a lookup table.
 
-$$t ≔ \bigl\{ \left(d \rightarrow r\right) \mid \forall d \in D \land \exists r \in R \land id_{D}(d) = id_{R}(r) \bigr\}$$
+$$t ≔ \bigl\{ \left(d \rightarrow r\right) \mid \forall d \in D, \exists r \in R, id_{D}(d) = id_{R}(r) \bigr\}$$
 
 #+NAME: lst:grammar-builder-local-binding
 #+BEGIN_SRC ebnf

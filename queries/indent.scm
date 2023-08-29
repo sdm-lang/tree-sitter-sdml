@@ -15,6 +15,8 @@
 
 (constraint_environment_end) @indent.dedent
 
+(function_def body: (_) @indent)
+
 (quantified_sentence body: ("(" @indent ")" @indent.end))
 
 (sequence_builder "{" @indent "}" @indent.end)

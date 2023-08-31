@@ -687,16 +687,6 @@
     "type": "function_cardinality_expression",
     "named": true,
     "fields": {
-      "any": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "wildcard",
-            "named": true
-          }
-        ]
-      },
       "min": {
         "multiple": false,
         "required": false,
@@ -1777,7 +1767,19 @@
         "required": true,
         "types": [
           {
+            "type": ",",
+            "named": false
+          },
+          {
+            "type": "existential",
+            "named": true
+          },
+          {
             "type": "quantifier_bound_names",
+            "named": true
+          },
+          {
+            "type": "universal",
             "named": true
           }
         ]
@@ -1816,28 +1818,6 @@
           },
           {
             "type": "named_variable_set",
-            "named": true
-          }
-        ]
-      },
-      "variable_binding": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "existential",
-            "named": true
-          },
-          {
-            "type": "quantifier_bound_names",
-            "named": true
-          },
-          {
-            "type": "universal",
             "named": true
           }
         ]

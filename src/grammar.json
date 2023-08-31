@@ -1732,16 +1732,11 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "FIELD",
-              "name": "any",
-              "content": {
-                "type": "SYMBOL",
-                "name": "wildcard"
-              }
-            },
-            {
               "type": "SYMBOL",
               "name": "_cardinality_inner"
+            },
+            {
+              "type": "BLANK"
             }
           ]
         },
@@ -1864,7 +1859,7 @@
           "type": "REPEAT1",
           "content": {
             "type": "FIELD",
-            "name": "variable_binding",
+            "name": "binding",
             "content": {
               "type": "SYMBOL",
               "name": "_variable_binding"

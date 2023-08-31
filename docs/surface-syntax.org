@@ -2311,4 +2311,3 @@ VariableBinding
 [fn:sparql] [[https://www.w3.org/TR/sparql11-overview/][SPARQL 1.1 Overview]], W3C
 [fn:owlqr] [[https://www.w3.org/2007/OWL/wiki/Quick_Reference_Guide][OWL 2 Web Ontology Language Quick Reference Guide
 (Second Edition)]], W3C
-

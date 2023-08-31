@@ -9,17 +9,23 @@ Based upon the [[https://www.omg.org/spec/UML/2.5.1/About-UML][Unified Modeling 
 
 ** The Profile
 
-
+A UML profile creates a specific sub-language that utilizes the structure and semantics of UML but constrained and
+tailored to a specific domain. In this case the profile creates a way to use UML to visualize the structure of an SDML
+module as well as the dependencies between modules. Figure [[fig:uml-profile-package]] it the top-level of the profile and
+shows the set of /stereotypes/ used to represent the elements of SDML. 
+ 
 #+NAME: fig:uml-profile-package
 #+BEGIN_SRC plantuml :file uml-profile-package.svg
 skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 60
+
 hide circle
 hide members
 
 package "UML 2.5" as uml <<Metamodel>> #white {
 }
-
-class Model <<Metaclass>> #white {}
 
 package sdml <<profile>> {
   class module <<stereotype>> {}
@@ -32,26 +38,34 @@ package sdml <<profile>> {
   class identity <<stereotype>> {}
   class ref <<stereotype>> {}
 }
-sdml --> Model: <<extension>>;
-sdml ..> uml: <<references>>;
+
+sdml ..> uml: <<references>>
 #+END_SRC
 
-#+CAPTION: Profile Package
+#+CAPTION: The «sdml» Profile Package
 #+RESULTS: fig:uml-profile-package
 [[file:uml-profile-package.svg]]
 
-*Example:*
+*Example: Applying the Profile*
+
+Figure [[fig:uml-ex-profile-applied]] shows how the SDML profile is applied to a model; note that some tools have alternative
+methods for applying profiles to a model.
 
 #+NAME: fig:uml-ex-profile-applied
 #+BEGIN_SRC plantuml :file uml-ex-profile-applied.svg
 skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 60
+
 hide circle
 hide members
 
-package rentals {
+package rentals <<model>> {
 }
-package sdml <<profile>> {
+package sdml <<profile>> #white {
 }
+
 rentals .> sdml: <<apply>>
 #+END_SRC
 
@@ -61,31 +75,93 @@ rentals .> sdml: <<apply>>
 
 ** Modules
 
+The SDML profile introduces a stereotype /module/ that may then be applied to a package within the model to denote a named
+module.
+
 #+NAME: fig:uml-profile-module
 #+BEGIN_SRC plantuml :file uml-profile-module.svg
 skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 40
+
 hide circle
 hide members
 
 class Package <<Metaclass>> #white {}
 class module <<stereotype>> {}
-module -> Package: <<extension>>
+module -up-> Package: <<extension>>
+
+note left of module
+**context** module **inv**:
+    self.packagedElement
+        .forAll(
+            e | (
+                    isDataTypeDef(e) **or**
+                    isEntityDef(e) **or**
+                    isEnumerationDef(e) **or**
+                    isEventDef(e) **or**
+                    isStructureDef(e) **or**
+                    isUnionDef(e) **or**
+                    isPropertyDef(e)
+                ) **and** **not** isModuleDef(e)
+        )
+end note
+
+note bottom of module
+**context** module
+    **static** **def**: isInModule(e : PackageableElement) isModuleDef(e.owningPackage)
+    **static** **def**: isModuleDef(e : PackageableElement)
+       e.oclIsTypeOf(Package) **and** e.stereotype.name = "module"
+    **static** **def**: isDatatypeDef(e : PackageableElement)
+       isInModule(e) **and** e.oclIsTypeOf(PrimitiveType) **and** e.stereotype.name = "datatype"
+    **static** **def**: isEnumDef(e : PackageableElement)
+       isInModule(e) **and** e.oclIsTypeOf(Enumeration) **and** e.stereotype.name = "enum"
+    **static** **def**: isEntityDef(e : PackageableElement)
+       isInModule(e) **and** e.oclIsTypeOf(Class) **and** e.stereotype.name = "entity"
+    **static** **def**: isEventDef(e : PackageableElement)
+       isInModule(e) **and** e.oclIsTypeOf(Class) **and** e.stereotype.name = "event"
+    **static** **def**: isStructureDef(e : PackageableElement)
+       isInModule(e) **and** .oclIsTypeOf(Class) **and** e.stereotype.name = "structure"
+    **static** **def**: isUnionDef(e : PackageableElement)
+       isInModule(e) **and** e.oclIsTypeOf(Class) **and** e.stereotype.name = "union"
+    **static** **def**: isPropertyDef(e : PackageableElement)
+        isInModule(e) **and** e.oclIsTypeOf(Class) **and** e.stereotype.name = "property"
+end note
 #+END_SRC
 
-#+CAPTION: Module Stereotype
+#+CAPTION: The «module» Stereotype
 #+RESULTS: fig:uml-profile-module
 [[file:uml-profile-module.svg]]
 
-*Example:*
+*Constraints*
+
+A module with the stereotype ~«module»~ applied:
+
+1. MUST contain ONLY the datatype, enumeration, entity, event, structure, union, and property elements of the SDML
+   profile.
+2. MUST NOT contain a nested module.
+
+The constraint below the module in the previous figure defines a set of functions used to construct other constraints in
+this section.
+
+*Example: An Empty Module*
+
+The following is our example empty module.
 
 #+BEGIN_SRC sdml :exports code :noeval
-module rentals is
-end
+module rentals is end
 #+END_SRC
+
+This empty module above will transform into the following UML.
 
 #+NAME: fig:uml-ex-module
 #+BEGIN_SRC plantuml :file uml-ex-module.svg
 skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 60
+
 hide circle
 hide members
 
@@ -95,13 +171,132 @@ package rentals-model <<sdml>> {
 }
 #+END_SRC
 
-#+CAPTION: A Module Example
+#+CAPTION: An Empty Module
 #+RESULTS: fig:uml-ex-module
 [[file:uml-ex-module.svg]]
 
 ** Imports
 
+Import statements in SDML target either a module, or members within a module by qualified name. UML on the other hand
+has two separate import relations, =ImportElement= and =ImportPackage=. Importing a package in UML brings all the public
+elements of the package into the current namespace unqualified. In SDML there is no way to reference an external
+definition unqualified, so this profile only uses element import.
+
+#+NAME: fig:uml-ex-imports-profile
+#+BEGIN_SRC plantuml :file uml-ex-imports-profile.svg
+skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 60
+
+hide circle
+hide members
+
+class ElementImport <<Metaclass>> #white {}
+
+class import <<stereotype>> {}
+
+import -up-> ElementImport: <<extension>>
+
+note left of import
+**context** import **inv**:
+    isModuleDef(self.importingNamespace)
+end note
+
+note right of import
+**context** import **inv**:
+    self.importedElement
+        .forAll(
+            e | isDataTypeDef(e) **or**
+                isEntityDef(e) **or**
+                isEnumerationDef(e) **or**
+                isEventDef(e) **or**
+                isStructureDef(e) **or**
+                isUnionDef(e) **or**
+                isPropertyDef(e) **or**
+                isModuleDef(e)
+        )   
+end note
+#+END_SRC
+
+#+CAPTION: The «import» Stereotype
+#+RESULTS: fig:uml-ex-imports-profile
+[[file:uml-ex-imports-profile.svg]]
+
+*Constraints*
+
 TBD
+
+*Example: Importing a Module*
+
+The following demonstrates the importing of the module named ~sdml~ into the current module. Following the notation in
+section 7.4.4 of the UML specification, imports are represented with a dashed line and the keyword =«import»=.
+
+#+BEGIN_SRC sdml :exports code :noeval
+module rentals is
+  import sdml
+end
+#+END_SRC
+
+#+NAME: fig:uml-ex-module-imports
+#+BEGIN_SRC plantuml :file uml-ex-module-imports.svg
+skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 60
+
+hide circle
+hide members
+
+package rentals <<module>> {
+}
+package sdml <<module>> #white {
+}
+
+rentals .> sdml: <<import>>
+#+END_SRC
+
+#+CAPTION: Importing a Module
+#+RESULTS: fig:uml-ex-module-imports
+[[file:uml-ex-module-imports.svg]]
+
+*Example: Importing Module Members*
+
+The following demonstrates the importing of the members named ~dc:description~ and ~skos:prefLabel~ into the current module.
+
+#+BEGIN_SRC sdml :exports code :noeval
+module rentals is
+  import skos:prefLabel
+  import dc:description
+end
+#+END_SRC
+
+#+NAME: fig:uml-ex-member-imports
+#+BEGIN_SRC plantuml :file uml-ex-member-imports.svg
+skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 60
+
+hide circle
+hide members
+
+package rentals <<module>> {
+}
+package skos <<module>> #white {
+    class prefLabel {}
+}
+package dc <<module>> #white {
+    class description {}
+}
+
+rentals ..left..> prefLabel: <<import>>
+rentals ..right..> description: <<import>>
+#+END_SRC
+
+#+CAPTION: Importing Module Members
+#+RESULTS: fig:uml-ex-member-imports
+[[file:uml-ex-member-imports.svg]]
 
 ** Annotations
 
@@ -109,27 +304,38 @@ TBD
 
 ** Data Type Definitions
 
-The profile element =«datatype»= is a specialization of the UML =PrimitiveType= (10.2.3.2) classifier.
+The profile element =«datatype»= is a specialization of the UML =PrimitiveType= (section 10.2.3.2 of the UML specification)
+classifier.
 
 #+NAME: fig:uml-profile-datatype
 #+BEGIN_SRC plantuml :file uml-profile-datatype.svg
 skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 60
+
 hide circle
 hide members
 
 class PrimitiveType <<Metaclass>> #white {}
 class datatype <<stereotype>> {}
-datatype -r-> PrimitiveType: <<extension>>
+datatype -up-> PrimitiveType: <<extension>>
 
-note "**context** datatype **inv**:\nself.generalization\n     .forAll(e | e.general.oclIsTypeOf(datatype))" as gendatatype
-datatype .. gendatatype
+note left of datatype
+**context** datatype **inv**:
+    self.generalization.size() == 1 **and**
+    self.generalization
+        .forAll(e | isDatatypeDef(e.general))
+end note
 #+END_SRC
 
-#+CAPTION: Datatype Stereotype
+#+CAPTION: The «datatype» Stereotype
 #+RESULTS: fig:uml-profile-datatype
 [[file:uml-profile-datatype.svg]]
 
-*Example:*
+*Example: A Datatype Example*
+
+The following simple datatype definition restricts the type ~sdml:string~.
 
 #+BEGIN_SRC sdml :exports code :noeval
 module rentals is
@@ -142,11 +348,15 @@ end
 #+NAME: fig:uml-ex-datatype
 #+BEGIN_SRC plantuml :file uml-ex-datatype.svg
 skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 60
+
 hide circle
 hide members
 
 package rentals <<module>> {
-    class sdml::string <<datatype>> {}
+    class sdml::string <<datatype>> #white {}
     class VehicleIdNumber <<datatype>> {}
     VehicleIdNumber -u-|> sdml::string
 }
@@ -161,57 +371,99 @@ package rentals <<module>> {
 #+NAME: fig:uml-profile-entity
 #+BEGIN_SRC plantuml :file uml-profile-entity.svg
 skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 60
+
 hide circle
 hide members
 
-class identity <<stereotype>> {}
 class Class <<Metaclass>> #white {}
 class entity <<stereotype>> {}
-entity -u-> "+identityMember\n{subsets ownedAttribute}" identity
-entity -r-> Class: <<extension>>
-
-note "**context** entity **inv**:\nself.identityMember\n     .collect(e | e.oclIsTypeOf(identity))\n     .size() == 1" as idnote
-entity .l. idnote
+entity -up-> Class: <<extension>>
 #+END_SRC
 
-#+CAPTION: Entity Stereotype
+#+CAPTION: The «entity» Stereotype
 #+RESULTS: fig:uml-profile-entity
 [[file:uml-profile-entity.svg]]
 
 
-#+NAME: fig:uml-profile-entity-members
-#+BEGIN_SRC plantuml :file uml-profile-entity-members.svg
+
+#+NAME: fig:uml-profile-identity-members
+#+BEGIN_SRC plantuml :file uml-profile-identity-members.svg
 skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 200
+
 hide circle
 hide members
 
 class entity <<stereotype>> {}
 class Property <<Metaclass>> #white {}
+
 class identity <<stereotype>> {}
-identity -> Property: <<extension>>
-identity --u-> "+owningEntity\n{renames class}" entity
+identity -up-> Property: <<extension>>
+identity "+identityMember\l{subsets ownedAttribute}\n1" --right--> "+owningEntity\r{renames class}\n1" entity
 
-note "**context** identity **inv**:\nself.type.oclIsTypeOf(entity)" as idtynote
-identity .. idtynote
-
-note "**context** identity **inv**:\nself.lowerValue = 1\n**and** self.upperValue == 1" as cardnote
-identity .. cardnote
-
-class ref <<stereotype>> {}
-Property <- ref: <<extension>>
-ref --u-> "+owningEntity\n{renames class}" entity
-
-note "**context** ref **inv**:\n**not** self.type.oclIsTypeOf(entity)" as refnote
-ref .. refnote
+note left of identity
+**context** identity **inv**:
+    **let** t = self.type **in**
+        isDatatypeDef(t) **or**
+        isEnumerationDef(t) **or**
+        isStructureDef(t) **or**
+        isUnionDef(t)
+end note
 #+END_SRC
 
-#+CAPTION: Entity Member Stereotypes
-#+RESULTS: fig:uml-profile-entity-members
-[[file:uml-profile-entity-members.svg]]
+#+CAPTION: The «identity» Stereotypes
+#+RESULTS: fig:uml-profile-identity-members
+[[file:uml-profile-identity-members.svg]]
+
+!!!
+
+#+NAME: fig:uml-profile-ref-members
+#+BEGIN_SRC plantuml :file uml-profile-ref-members.svg
+skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 200
+
+hide circle
+hide members
+
+class entity <<stereotype>> {}
+class Property <<Metaclass>> #white {}
+
+class ref <<stereotype>> {}
+ref -up-> Property: <<extension>>
+ref "+refMember\l{subsets ownedAttribute}" --right--> "+owningEntity\r{renames class}" entity
+
+note left of ref
+**context** ref **inv**:
+    **let** t = self.type **in**
+        isDatatypeDef(t) **or**
+        isEntityDef(t) **or**
+        isEnumerationDef(t) **or**
+        isStructureDef(t) **or**
+        isUnionDef(t)
+end note
+#+END_SRC
+
+#+CAPTION: The and «ref» Stereotypes
+#+RESULTS: fig:uml-profile-ref-members
+[[file:uml-profile-ref-members.svg]]
 
 For details on by-value members and groups see section [[sec:uml-structures]] below.
 
-*Example:*
+*Constraints*
+
+1. The =«identity»= stereotype renames the meta-association =class= to =owningEntity=, with type =«entity»= and multiplicity
+   =1..1=.
+2. The =«identity»= stereotype
+3. The =«ref»= stereotype 
+
+*Example: An Entity Example*
 
 #+BEGIN_SRC sdml :exports code :noeval
 module rentals is
@@ -226,7 +478,7 @@ module rentals is
 
   entity Booking is
     identity id -> uuid::Uuid
-    ref vehicle {0..1} -> {0..1} Vehicle
+    ref vehicle -> {0..1} Vehicle
   end
 
 end
@@ -235,18 +487,23 @@ end
 #+NAME: fig:uml-ex-entity
 #+BEGIN_SRC plantuml :file uml-ex-entity.svg
 skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 100
+
 hide circle
 hide empty members
 
 package rentals <<module>> {
+    class "sdml::string" as string <<datatype>> #white {}
     class VehicleIdNumber <<datatype>> {}
-    class Vehicle <<entity>> {
-        <<identity>> +vin: VehicleIdNumber
-    }
+    class Vehicle <<entity>> {}
     class Booking <<entity>> {
         <<identity>> +id: uuid::Uuid
     }
-    Booking "0..1" o--r-> "\n0..1" Vehicle: <<ref>>
+    VehicleIdNumber -up-|> string
+    Booking "\l0..1" o--r-> "\r0..1" Vehicle: <<ref>>
+    Vehicle "\l1" *--r--> "+vin\r1" VehicleIdNumber: <<identity>>
 }
 #+END_SRC
 
@@ -270,6 +527,10 @@ The standard =Signal= (10.3.3.1) and =Dependency=
 #+NAME: fig:uml-profile-event
 #+BEGIN_SRC plantuml :file uml-profile-event.svg
 skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 140
+
 hide circle
 hide empty members
 
@@ -277,26 +538,30 @@ class entity <<stereotype>> {}
 
 class Signal <<Metaclass>> #white {}
 class event <<stereotype>> {}
-event -> Signal: <<extension>>
+event -up-> Signal: <<extension>>
 
 class Dependency <<Metaclass>> #white {}
 class source <<stereotype>> {}
-source -r-> Dependency: <<extension>>
+source -up-> Dependency: <<extension>>
 
-source -d-> "+eventSource\n{subsets supplier}" entity
-source -u-> "+event\n{subsets client}" event
+source -left-> "+eventSource\l{subsets supplier}\l1" entity
+source -right-> "+event\r{subsets client}\r1" event
 
-note "**context** entity **inv**:\nself.ownedAttribute\n     .collect(e | e.oclIsTypeOf(source))\n     .size() == 1" as clientnote
-clientnote .r. event
+note bottom of event
+**context** entity **inv**:
+    self.ownedAttribute
+        .collect(e | e.oclIsTypeOf(source))
+        .size() == 1
+end note
 #+END_SRC
 
-#+CAPTION: Event Stereotype
+#+CAPTION: The «event» and «source» Stereotypes
 #+RESULTS: fig:uml-profile-event
 [[file:uml-profile-event.svg]]
 
 For details on by-value members and groups see section [[sec:uml-structures]] below.
 
-*Example:*
+*Example: An Example Event*
 
 #+BEGIN_SRC sdml :exports code :noeval
 module rentals is
@@ -315,19 +580,23 @@ end
 #+NAME: fig:uml-ex-event
 #+BEGIN_SRC plantuml :file uml-ex-event.svg
 skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 60
+
 hide circle
 hide empty members
 
 package rentals <<module>> {
     class VehicleAssigned <<event>> {}
     class Booking <<entity>> {
-        <<identity>> +id: Uuid
+        + <<identity>> id: Uuid
     }
     VehicleAssigned .r.> Booking: <<source>>
 }
 #+END_SRC
 
-#+CAPTION: Example Event
+#+CAPTION: An Example Event
 #+RESULTS: fig:uml-ex-event
 [[file:uml-ex-event.svg]]
 
@@ -346,35 +615,50 @@ Generalization Sets (9.7)
 #+NAME: fig:uml-profile-union
 #+BEGIN_SRC plantuml :file uml-profile-union.svg
 skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 140
+
 hide circle
 hide empty members
 
-class Class <<Metaclass>>
-class GeneralizationSet <<Metaclass>>
-Class --l-> "+powertypeExtent\n*" GeneralizationSet
-class Generalization <<Metaclass>>
-GeneralizationSet --l-> "+generalization\n*" Generalization
+class Class <<Metaclass>> #white
+class GeneralizationSet <<Metaclass>> #white
+class Generalization <<Metaclass>> #white
+
+Class --left--> "+powertypeExtent\l*" GeneralizationSet
+GeneralizationSet --left--> "+generalization\l*" Generalization
 
 class union <<stereotype>>
-union -u-> Class: <<extension>>
+union -up-> Class: <<extension>>
+
+note bottom of union
+**context** union **inv**:
+    self.member.size() == 0 **and**
+    self.powertypeExtent.size() <= 1 **and**
+    self.powertypeExtent.forAll(
+        e | e.isCovering == true **and**
+            e.isDisjoint == true **and**
+            e.generalization
+                .forAll(e | e.oclIsTypeOf(typeVariant))
+    )
+end note
 
 class typeVariant <<stereotype>>
-typeVariant -u->  Generalization: <<extension>>
-note "**context** typeVariant **inv**:self.general.oclIsTypeOf(union)\n" as n2
-typeVariant .. n2
+typeVariant -up->  Generalization: <<extension>>
 
-note "**context** union **inv**:\nself.member.size() == 0\nself.powertypeExtent.size() <= 1 \n**and** self.powertypeExtent.forAll(e | e.generalization.forAll(e | e.oclIsTypeOf(typeVariant)))" as n1
-union .. n1
-
-note "**context** union **inv**:\nself.powertypeExtent.forAll(e | e.isCovering == true **and** e.isDisjoint == true)" as n3
-union .. n3
+note bottom of typeVariant
+**context** typeVariant **inv**:
+    self.general
+        .oclIsTypeOf(union)
+end note
 #+END_SRC
 
-#+CAPTION: Union and typeVariant Stereotypes
+#+CAPTION: The «union» and «typeVariant» Stereotypes
 #+RESULTS: fig:uml-profile-union
 [[file:uml-profile-union.svg]]
 
-*Example:*
+*Example: An Example Union*
 
 #+BEGIN_SRC sdml :exports code :noeval
 module rentals is
@@ -397,6 +681,10 @@ end
 #+NAME: fig:uml-ex-union
 #+BEGIN_SRC plantuml :file uml-ex-union.svg
 skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 60
+
 hide circle
 hide empty members
 
@@ -416,10 +704,105 @@ package rentals <<module>> {
 }
 #+END_SRC
 
-#+CAPTION: Example Union
+#+CAPTION: An Example Union
 #+RESULTS: fig:uml-ex-union
 [[file:uml-ex-union.svg]]
 
 ** Property Definitions
 
 TBD
+
+** Member Cardinality
+
+
+UML
+
+(section 7.5 -- Types and Multiplicities)
+  
+#+NAME: fig:uml-profile-cardinality
+#+BEGIN_SRC plantuml :file uml-profile-cardinality.svg
+skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 60
+
+hide circle
+hide empty members
+
+abstract "**MultiplicityElement**" as me {
+    + isOrdered : Boolean = false
+    + isUnique : Boolean = true
+    + /lower : Integer
+    + /upper : UnlimitedNatural
+}
+
+abstract "**ValueSpecification**" as vs {}
+
+me "{subsets owner}\l+owningLower\l0..1" *--right--> "{subsets ownedElement}\r+lowerValue\r0..1" vs
+me "{subsets owner}\l+owningUpper\l0..1" *--right--> "{subsets ownedElement}\r+upperValue\r0..1" vs
+#+END_SRC
+
+#+CAPTION: UML Multiplicity Element
+#+RESULTS: fig:uml-profile-cardinality
+[[file:uml-profile-cardinality.svg]]
+
+While the type =Integer= is clear in the UML above, the type =UnlimitedNatural= is best defined by the text from the UML
+specification itself:
+
+#+BEGIN_QUOTE
+An instance of =UnlimitedNatural= is a value in the (infinite) set of natural numbers (0, 1, 2...) plus /unlimited/. The
+value of /unlimited/ is shown using an asterisk (‘*’). =UnlimitedNatural= values are typically used to denote the upper
+bound of a range, such as a multiplicity; /unlimited/ is used whenever the range is specified to have no upper bound.
+#+END_QUOTE
+
+Using the following example from the UML specification, actually combining the two diagrams from section 7.5.5 of the
+specification into one.
+
+#+NAME: fig:uml-profile-cardinality-example
+#+BEGIN_SRC plantuml :file uml-profile-cardinality-example.svg
+skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 120
+
+hide circle
+hide empty members
+
+class "Customer" as c1 {
+    + purchase : Purchase [*] {ordered, unique}
+    + account : Account [0..5] {unique}
+}
+
+class Purchase
+class Account
+class "Customer" as c2
+
+c1 -down[hidden]-> c2
+
+c2 --left--> "purchase\l{ordered,unique}\l*" Purchase
+c2 --right--> "account\r{unique}\r0..5" Account
+#+END_SRC
+
+#+CAPTION: UML Multiplicity Example
+#+RESULTS: fig:uml-profile-cardinality-example
+[[file:uml-profile-cardinality-example.svg]]
+
+Either of these representations corresponds to the following SDML structure.
+
+#+BEGIN_SRC sdml :exports code :noeval
+module customer is
+
+  structure Purchase
+  structure Account
+
+  structure Customer is
+    purchase -> {ordered unique 0..} Purchase
+    account -> {unique 0..5} Account
+  end
+
+end
+#+END_SRC
+
+OCL has four built-in sequence types: ~Bag(T)~, ~Sequence(T)~, ~Set(T)~, and ~OrderedSet(T)~. These correspond to the SDML
+/logical sequence types/ in the table [[tbl:builtin-sequence-types]] in section [[sec:sequence-types]] with the exception that the
+type ~List~ in that table is replaced with the OCL type ~Sequence~.

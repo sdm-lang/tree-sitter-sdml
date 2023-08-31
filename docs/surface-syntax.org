@@ -331,9 +331,11 @@ A subset of the definition types in the EBNF above are types, and the complete t
   another, but not both. In the case of SDML only disjoint unions are sum types.
 - Product :: A type whose members are all present, i.e. it's individuals have one member /and/ another and so on. In SDML
   entities, events, and structures are product types.
-- Unknown :: A type marker which represents the type of /zero individuals/ and causes a type to be /incomplete/. This
-  is sometimes termed /bottom/ or /absurdity/ ~⊥~. In SDML member types may be defined as ~unknown~ during module development but
-  such a type, and therefore it's containing module, is incomplete.
+- Unknown :: A pseudo-type that is applied when the author does not yet know what the type should be but wishes to
+  create a valid model. In SDML member types may be defined as ~unknown~ during module development but such a type, and
+  therefore it's containing module, is incomplete.
+- None :: A type which represents the type of /zero individuals/ and is therefore invalid as a member type. This is
+  sometimes termed /bottom/ or /absurdity/ ~⊥~.
 
 #+NAME: lst:sdml-type-model
 #+BEGIN_SRC dot :file sdml-type-model.svg :exports results
@@ -345,7 +347,6 @@ strict digraph {
    edge [arrowhead=onormal; fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="darkgrey"];
    
    Type [color="grey"; fontcolor="grey"; label="Any\n(⊤)"];
-   Unknown [color="grey"; label="Unknown\n(⊥)"];
    Scalar -> Type;
    Scalar [color="grey"; fontcolor="grey"];
    Datatype -> Scalar;
@@ -358,7 +359,16 @@ strict digraph {
    Entity -> Product;
    Event -> Product;
    Structure -> Product;
-   Unknown -> Type [label="disjoint"];
+   Unknown [label="Unknown\n(⊥)"];
+   Unknown -> Type;
+        
+   None [color="grey"; fontcolor="grey"; label="None\n(⊥)"];
+   None -> Datatype;
+   None -> Enumeration;
+   None -> Union;
+   None -> Entity;
+   None -> Event;
+   None -> Structure;
 }
 #+END_SRC
 

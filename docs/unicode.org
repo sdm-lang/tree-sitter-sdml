@@ -31,6 +31,8 @@ character ~↦~ is usually reserved for mapping types and mapping values.
 | Truth Value                    | ~true~           | ~⊤~       | =U+22A4=            | =top=                    |
 | False Value                    | ~false~          | ~⊥~       | =U+22A5=            | =bot=                    |
 
+*Notes*
+
 In describing the type system for SDML the characters ~⊤~ and ~⊥~ are also used to describe the /type of all things/ and the
 /type of no things/ respectively. The grammar does not use these distinctions and the values are only used for boolean
 values.

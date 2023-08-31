@@ -16,13 +16,13 @@ names. Listing [[lst:example-first-pass]] is this first-pass domain model.
 #+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-concept-1.svg :exports both :noweb yes
 module rentals is
 
-  entity Vehicle
-
-  entity Location
+  entity Booking
 
   entity Customer
 
-  entity Booking
+  entity Location
+
+  entity Vehicle
 
 end
 #+END_SRC
@@ -57,12 +57,6 @@ Additionally, the ~vehicle~ relationship specifies a new cardinality overriding 
 #+BEGIN_SRC sdml :cmdline draw --diagram concepts :file ./rentals-concept-2.svg :exports both :noweb yes
 module rentals is
 
-  entity Vehicle
-
-  entity Location
-
-  entity Customer
-
   entity Booking is
     identity bookingCode -> unknown
 
@@ -70,6 +64,12 @@ module rentals is
     ref from -> Location
     ref customer -> Customer
   end
+
+  entity Customer
+
+  entity Vehicle
+
+  entity Location
 
 end
 #+END_SRC
@@ -99,19 +99,6 @@ module rentals is
 
   import cids:VehicleIdentificationNumber
 
-  entity Class
-
-  entity Vehicle is
-    identity vin -> cids:VehicleIdentificationNumber
-
-    ref rentalClass -> {1} Class
-    ref onProperty -> {0..1} Location
-  end
-
-  entity Location
-
-  entity Customer
-
   entity Booking is
     identity bookingCode -> unknown
 
@@ -120,6 +107,19 @@ module rentals is
     ref from -> Location
     ref customer -> {1} Customer
   end
+
+  entity Vehicle is
+    identity vin -> cids:VehicleIdentificationNumber
+
+    ref rentalClass -> {1} Class
+    ref onProperty -> {0..1} Location
+  end
+
+  entity Class
+
+  entity Customer
+
+  entity Location
 
 end
 #+END_SRC
@@ -135,7 +135,7 @@ As usual we generate the concept diagram in figure [[fig:example-third-pass]] fr
 
 #+CAPTION: Rentals More Detail
 #+RESULTS: fig:example-third-pass
-[[./rentals-concept-3.svg]]
+[[file:./rentals-concept-3.svg]]
 
 #+NAME: lst:example-fourth-pass
 #+CAPTION: Rentals Non-Entity Detail
@@ -145,18 +145,21 @@ module rentals is
   import [cids:VehicleIdentificationNumber cids:Uuid]
   import [xsd:date xsd:string]
 
-  entity Class
+  structure Address
 
-  entity Vehicle is
-    identity vin -> cids:VehicleIdentificationNumber
+  entity Booking is
+    assert dropoff_after_pickup =
+      "Ensure the dropoff date is greater than or equal to the pickup date."
+      
+    identity bookingCode -> unknown
 
-    ref rentalClass -> {1} Class
-  end
-
-  entity Location is
-    identity id -> cids:Uuid
-
-    address -> {1} Address
+    ref bookingClass -> {1} RentalClass
+    ref vehicle -> {0..1} Vehicle
+    ref pickup -> {1} Location
+    pickupDate -> {1} xsd:date
+    ref dropoff -> {1} Location
+    dropoffDate -> {1} xsd:date
+    ref customer -> {1} Customer
   end
 
   entity Customer is
@@ -169,27 +172,24 @@ module rentals is
     driverLicense -> {0..1} LicenseInformation
   end
 
-  structure Address
-
   structure LicenseInformation is
     number -> xsd:string
     state -> xsd:string
     expiration -> xsd:date
   end
 
-  entity Booking is
-    assert dropoff_after_pickup =
-      "Ensure the dropoff date is greater than or equal to the pickup date."
-      
-    identity bookingCode -> unknown
+  entity Location is
+    identity id -> cids:Uuid
 
-    ref bookingClass -> {1} Class
-    ref vehicle -> {0..1} Vehicle
-    ref pickup -> {1} Location
-    pickupDate -> {1} xsd:date
-    ref dropoff -> {1} Location
-    dropoffDate -> {1} xsd:date
-    ref customer -> {1} Customer
+    address -> {1} Address
+  end
+
+  enum RentalClass
+
+  entity Vehicle is
+    identity vin -> cids:VehicleIdentificationNumber
+
+    ref rentalClass -> {1} RentalClass
   end
 
 end
@@ -200,7 +200,7 @@ As usual we generate the concept diagram in figure [[fig:example-fourth-pass]] f
 #+NAME: fig:example-fourth-pass
 #+CAPTION: Rentals Non-Entity Detail
 #+RESULTS: lst:example-fourth-pass
-[[./rentals-concept-4.svg]]
+[[file:./rentals-concept-4.svg]]
 
 #+BEGIN_EXAMPLE
 sdml draw --diagram erd \
@@ -226,62 +226,20 @@ sdml draw --diagram erd \
 #+BEGIN_SRC sdml :cmdline draw --diagram uml-class :file ./rentals-uml-5.svg :exports both :noweb yes
 module rentals base <https://example.org/v/rentals> is
 
-  import [ dc skos ]
+  import [ dc skos xsd ]
 
   ;; This is actually a US VIN
   import cids:VehicleIdentificationNumber
 
   @dc:version = 2
 
-  datatype UniqueId <- xsd:string is
-    @xsd:pattern = "[A-Za-z0-9_-]{22}"
-  end
-
-  union RentalClass of
-    Compact
-    UtilityVehicle
-    Luxury
-  end
-
-  enum CustomerLevel of
-    Basic = 1
-    Silver = 2
-    Gold = 3
-  end
-
-  entity Vehicle is
-    @skos:prefLabel = "Vehicle"@en
-
-    identity vin -> VehicleIdentificationNumber
-
-    information -> VehicleInformation
-    ref rentalClass -> {1} Class
-  end
-
-  structure VehicleInformation is
-    make -> xsd:string
-    model -> xsd:string
-    year -> xsd:integer is
-      @xsd:minValue = 2000
-      @xsd:maxValue = 3000
-    end
-  end
-
-  entity Location
-
-  entity Customer is
-    identity id -> UniqueId
-  end
+  structure Address
 
   entity Booking is
-    @sdml:versioningStyle = "Immutable"
-    @sdml:versionIdType = VersionId
+    assert dropoff_after_pickup =
+      "Ensure the dropoff date is greater than or equal to the pickup date."
 
-    assert dropoff_after_pickup is
-      forall b -> Booking ( b.dropoff_date >= b.pickup_date )
-    end
-
-    identity bookingCode -> unknown
+    identity bookingCode -> BookingCode
 
     ref customer -> {1} Customer
 
@@ -295,8 +253,79 @@ module rentals base <https://example.org/v/rentals> is
 
     group
       @skos:prefLabel = "Requested"@en
-      ref bookingClass -> {1} Class
+      ref bookingClass -> {1} RentalClass
       ref vehicle -> {0..1} Vehicle
+    end
+  end
+
+  entity Customer is
+    identity id -> UniqueId
+
+    group
+      @skos:prefLabel = "Personal Information"
+      name -> string
+      contactAddress -> {1} Address
+      driverLicense -> {0..1} LicenseInformation
+    end
+  
+    group
+      @skos:prefLabel = "Membership"
+      level -> 0..1 MembershipLevel
+      since -> xsd:date
+    end
+  
+  end
+
+  structure LicenseInformation is
+    assert drivers_license_valid =
+      "Ensure the drivers license date is in the future."
+  
+    number -> xsd:string
+    state -> xsd:string
+    expiration -> xsd:date
+  end
+
+  entity Location is
+    identity id -> cids:Uuid
+
+    address -> {1} Address
+  end
+
+  enum MembershipLevel of
+    Basic = 1
+    Silver = 2
+    Gold = 3
+  end
+
+  enum RentalClass of
+    SubCompact = 1
+    Compact = 2
+    FullSize = 3
+    CompactUtilityVehicle = 4
+    FullSizeUtilityVehicle = 5
+    Luxury = 6
+    Sports = 7
+  end
+
+  datatype BookingCode <- xsd:string is
+    @xsd:pattern = "[A-Za-z0-9_-]{22}"
+  end
+
+  entity Vehicle is
+    @skos:prefLabel = "Vehicle"@en
+
+    identity vin -> VehicleIdentificationNumber
+
+    information -> VehicleInformation
+    ref rentalClass -> {1} RentalClass
+  end
+
+  structure VehicleInformation is
+    make -> xsd:string
+    model -> xsd:string
+    year -> xsd:integer is
+      @xsd:minValue = 2000
+      @xsd:maxValue = 3000
     end
   end
 

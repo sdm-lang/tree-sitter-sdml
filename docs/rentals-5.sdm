@@ -1,6 +1,6 @@
 module rentals base <https://example.org/v/rentals> is
 
-  import [ dc skos ]
+  import [ cids dc skos xsd ]
 
   ;; This is actually a US VIN
   import cids:VehicleIdentificationNumber
@@ -11,10 +11,14 @@ module rentals base <https://example.org/v/rentals> is
     @xsd:pattern = "[A-Za-z0-9_-]{22}"
   end
 
-  union RentalClass of
-    Compact
-    UtilityVehicle
-    Luxury
+  enum RentalClass of
+    SubCompact = 1
+    Compact = 2
+    FullSize = 3
+    CompactUtilityVehicle = 4
+    FullSizeUtilityVehicle = 5
+    Luxury = 6
+    Sports = 7
   end
 
   enum CustomerLevel of
@@ -23,13 +27,15 @@ module rentals base <https://example.org/v/rentals> is
     Gold = 3
   end
 
+  entity Location
+
   entity Vehicle is
     @skos:prefLabel = "Vehicle"@en
 
     identity vin -> VehicleIdentificationNumber
 
     information -> VehicleInformation
-    ref rentalClass -> {1} Class
+    ref rentalClass -> {1} RentalClass
   end
 
   structure VehicleInformation is
@@ -62,7 +68,7 @@ module rentals base <https://example.org/v/rentals> is
 
     group
       @skos:prefLabel = "Requested"@en
-      ref bookingClass -> {1} Class
+      ref bookingClass -> {1} RentalClass
       ref vehicle -> {0..1} Vehicle
     end
   end

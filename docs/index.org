@@ -14,8 +14,8 @@
 (require 'ob-dot) ;; builtin
 (require 'lua-mode)
 (require 'ob-lua)
-(require 'ob-sdml)
 (require 'ebnf-mode)
+(require 'ob-sdml)
 #+END_SRC
 
 #+INCLUDE: "./introduction.org" :minlevel 1

@@ -25,6 +25,6 @@ end
         value: (value
           (sequence_of_values
             element: (simple_value
-              (iri_reference))
+              (iri))
             element: (simple_value
-              (iri_reference))))))))
+              (iri))))))))

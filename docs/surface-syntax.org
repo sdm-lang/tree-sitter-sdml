@@ -411,12 +411,16 @@ for IRI References. Values corresponding to these types are termed /simple value
 #+NAME: lst:grammar-simple-value
 #+BEGIN_SRC ebnf
 SimpleValue
-    ::= String | Double | Decimal | Integer | Boolean | IriReference
+    ::= Boolean
+        | Unsigned | Integer | Decimal| Double
+        | String | Iri | Binary
 #+END_SRC
 
 [[./ebnf-diagram/SimpleValue.svg]]
 
-A *Boolean* value in SDML is either the keyword ~true~ or ~false~.
+*Booleans*
+
+A /boolean/ value in SDML is either the keyword ~true~ or ~false~.
 
 #+NAME: lst:grammar-boolean
 #+BEGIN_SRC ebnf
@@ -440,7 +444,10 @@ Contradiction
 
 [[./ebnf-diagram/Contradiction.svg]]
 
-An *unsigned* value in SDML is
+*Unsigned Integers*
+
+An /unsigned/ value in SDML is a string of ASCII decimal digits, without leading zeros; zero, =0=, is a valid value however
+=00= and =01= are not. The unsigned type corresponds to a 64-bit unsigned integer number (values $[0, 2^{64}-1]$).
 
 #+NAME: lst:grammar-unsigned
 #+BEGIN_SRC ebnf
@@ -458,8 +465,10 @@ NonZero
 
 [[./ebnf-diagram/NonZero.svg]]
 
-An *Integer* value in SDML is a string of ASCII decimal digits, without leading zeros; zero, =0=, is a valid value however
-=00= and =01= are not. The Integer type corresponds to a 64-bit signed integer number.
+*Signed Integers*
+
+A /signed integer/ value in SDML is a string of ASCII decimal digits, without leading zeros; zero, =0=, is a valid value however
+=00= and =01= are not. The integer type corresponds to a 64-bit signed integer number (values $[−2^{63}, 2^{63} − 1]$).
 
 #+NAME: lst:grammar-integer
 #+BEGIN_SRC ebnf
@@ -473,8 +482,10 @@ NumericSign
 
 [[./ebnf-diagram/NumericSign.svg]]
 
-A *Decimal* value in SDML is an integer-like value, followed by the Full Stop (".", =U+002E=) character and another
-integer-like value. The Decimal type corresponds to a 128-bit representation of a fixed-precision decimal number.
+*Decimal Numbers*
+
+A /decimal/ (fixed point) value in SDML is an integer-like value, followed by the Full Stop (".", =U+002E=) character and another
+integer-like value. The decimal type corresponds to a 128-bit representation of a fixed-precision decimal number.
 
 #+NAME: lst:grammar-decimal
 #+BEGIN_SRC ebnf
@@ -482,9 +493,11 @@ Decimal
     ::= Integer "." ASCII_DIGIT+
 #+END_SRC
 
-A *Double* value in SDML is a decimal-like value followed by a lower or upper case letter E (Latin Small Letter E, "e",
+*Floating-Point Numbers*
+
+A /double/ value in SDML is a decimal-like value followed by a lower or upper case letter E (Latin Small Letter E, "e",
 =U+0065= or Latin Capital Letter E, "E", =U+0045=), a sign character (Hyphen Minus, "-", =U+002D= or Plus Sign, "+", =U+002B=)
-and an integer-like value. The Double type is a 64-bit floating point number (specifically, the "binary64" type defined
+and an integer-like value. The double type is a 64-bit floating point number (specifically, the "binary64" type defined
 in IEEE 754-2008).
 
 #+NAME: lst:grammar-double
@@ -499,10 +512,12 @@ ExponentChar
 
 [[./ebnf-diagram/ExponentChar.svg]]
 
-A *String* value in SDML is a sequence of Unicode characters starting and ending with a Quotation Mark ('"', =U+0022=) character. While
-standard escape sequences allow for embedding non-printing characters. The form =\u{XXXX}=, where =X= is a single hex digit,
-allows for the inclusion of any Unicode characters by their code point. Note that this form requires a minimum of 2 and
-a maximum of 6 such digits. In addition,the following single-character escape characters are supported.
+*Character Strings*
+
+A /string/ value in SDML is a sequence of Unicode characters starting and ending with a Quotation Mark ('"', =U+0022=)
+character. While standard escape sequences allow for embedding non-printing characters. The form =\u{XXXX}=, where =X= is a
+single hex digit, allows for the inclusion of any Unicode characters by their code point. Note that this form requires a
+minimum of 2 and a maximum of 6 such digits. In addition,the following single-character escape characters are supported.
 
 #+NAME: lst:grammar-string
 #+BEGIN_SRC ebnf
@@ -555,7 +570,7 @@ string literal supports multiline forms.
 | =\t=               | Character Tabulation (Horizontal Tab) | =\u{0009}=           |
 | =\v=               | Line Tabulation (Vertical Tab)        | =\u{000B}=           |
 
-A *Language-Tagged String* value in SDML is a String as above but immediately followed by a Commercial At ("@", =U+0040=)
+A /language-tagged string/ value in SDML is a string as above but immediately followed by a Commercial At ("@", =U+0040=)
 character and an unquoted string of characters that conform to a language identifier. Note that both components of such
 a string contribute to equality tests, so that ="abc"@en= is not equal to ="abc"@fr=.
 
@@ -615,22 +630,48 @@ LanguageTagRegion
 
 [[./ebnf-diagram/LanguageTagRegion.svg]]
 
-An *IRI Reference value* in SDML is a value IRI value, either absolute or relative, between a Less-Than Sign ("<", =U+003C=)
+*IRI References*
+
+An /IRI reference/ value in SDML is a value IRI value, either absolute or relative, between a Less-Than Sign ("<", =U+003C=)
 character and a Greater-Than Sign (">", =U+003E=) character. IRI references are more permissive in the SDML grammar than
 the Turtle[fn:iri] language.
 
 #+NAME: lst:grammar-iri-reference
 #+BEGIN_SRC ebnf
-IriReference
-    ::=
-    "<"
-    ( [^<>\"{}|^`\#x00-#x20] | UnicodeEscape )*
-    ">"
+Iri
+    ::= "<"
+        ( [^<>\"{}|^`\#x00-#x20] | UnicodeEscape )*
+        ">"
 #+END_SRC
 
 [[./ebnf-diagram/IriReference.svg]]
 
 See section [[sec:mapping-values]] for a more detailed description of values, literals, and data types.
+
+*Binary Strings*
+
+A /binary/ value in SDML is a compact list of bytes that allows for the encoding of values that may not be possible with
+the other built-in types. 
+
+#+NAME: lst:grammar-binary
+#+BEGIN_SRC ebnf
+Binary
+    ::= "#[" HexPair* "]"
+#+END_SRC
+
+#+CAPTION: Binary Value Example
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  import ex
+
+  @ex:thing = #[
+    52  32  39  76  5a  43  42  43    65  57  55  67  51  33  4a  31
+    5a  57  77  67  56  32  39  79    62  47  51  4b
+  ]
+
+end
+#+END_SRC
 
 *** Value Constructors
 
@@ -831,11 +872,29 @@ BuiltinSimpleType
 | Type Keyword | Qualified Identifier | Equivalent XML Schema Datatype |
 |--------------+----------------------+--------------------------------|
 | ~boolean~      | ~sdml:boolean~         | ~xsd:boolean~                    |
+| ~unsigned~     | ~sdml:unsigned~        | ~xsd:unsignedLong~               |
+| ~integer~      | ~sdml:integer~         | ~xsd:long~                       |
 | ~decimal~      | ~sdml:decimal~         | ~xsd:decimal~                    |
 | ~double~       | ~sdml:double~          | ~xsd:double~                     |
-| ~integer~      | ~sdml:integer~         | ~xsd:integer~                    |
 | ~iri~          | ~sdml:iri~             | ~xsd:anyURI~                     |
 | ~string~       | ~sdml:string~          | ~xsd:string~ or ~rdf:langString~   |
+| ~binary~       | ~sdml:binary~          | ~xsd:hexBinary~                  |
+
+Additionally, some types are defined in the ~sdml~ module, although they are not considered built-in types as they must be
+referenced explicitly.
+
+#+NAME: tbl:additional-simple-types
+#+CAPTION: Additional Simple Types in SDML
+| Qualified Identifier | Equivalent XML Schema Datatype |
+|----------------------+--------------------------------|
+| ~sdml:u8~              | ~xsd:unsignedByte~               |
+| ~sdml:i8~              | ~xsd:byte~                       |
+| ~sdml:u16~             | ~xsd:unsignedShort~              |
+| ~sdml:i16~             | ~xsd:short~                      |
+| ~sdml:u32~             | ~xsd:unsignedInt~                |
+| ~sdml:i32~             | ~xsd:int~                        |
+| ~sdml:u64~             | ~xsd:unsignedLong~               |
+| ~sdml:i64~             | ~xsd:long~                       |
 
 ** <<sec:sequence-types>>Sequence Types
 

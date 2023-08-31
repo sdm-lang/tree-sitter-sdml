@@ -46,7 +46,7 @@
                   "name": "base",
                   "content": {
                     "type": "SYMBOL",
-                    "name": "iri_reference"
+                    "name": "iri"
                   }
                 }
               ]
@@ -2191,7 +2191,7 @@
             "value": 2,
             "content": {
               "type": "STRING",
-              "value": "string"
+              "value": "boolean"
             }
           }
         },
@@ -2202,18 +2202,7 @@
             "value": 2,
             "content": {
               "type": "STRING",
-              "value": "double"
-            }
-          }
-        },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "decimal"
+              "value": "unsigned"
             }
           }
         },
@@ -2235,7 +2224,29 @@
             "value": 2,
             "content": {
               "type": "STRING",
-              "value": "boolean"
+              "value": "decimal"
+            }
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "double"
+            }
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "string"
             }
           }
         },
@@ -2249,6 +2260,17 @@
               "value": "iri"
             }
           }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "binary"
+            }
+          }
         }
       ]
     },
@@ -2257,15 +2279,11 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "string"
+          "name": "boolean"
         },
         {
           "type": "SYMBOL",
-          "name": "double"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "decimal"
+          "name": "unsigned"
         },
         {
           "type": "SYMBOL",
@@ -2273,11 +2291,23 @@
         },
         {
           "type": "SYMBOL",
-          "name": "boolean"
+          "name": "decimal"
         },
         {
           "type": "SYMBOL",
-          "name": "iri_reference"
+          "name": "double"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "string"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "iri"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "binary"
         }
       ]
     },
@@ -2346,7 +2376,7 @@
         }
       }
     },
-    "iri_reference": {
+    "iri": {
       "type": "SEQ",
       "members": [
         {
@@ -2378,6 +2408,26 @@
             "type": "STRING",
             "value": ">"
           }
+        }
+      ]
+    },
+    "binary": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "#["
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "PATTERN",
+            "value": "[0-9A-Fa-f]{2}"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "]"
         }
       ]
     },

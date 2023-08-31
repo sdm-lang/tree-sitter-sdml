@@ -49,6 +49,13 @@ end
 
 # Changes
 
+**Version: 0.1.41**
+
+* Feature: updates to builtin simple types.
+  * Add the new type `unsigned`.
+  * Add the new type `binary`.
+  * Rename type `iri_reference` to `iri`.
+
 **Version: 0.1.40**
 
 * Feature: add the Unicode character `↦` to the rule `_has_type` which works better for some typesetting.

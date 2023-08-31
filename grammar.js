@@ -63,7 +63,7 @@ module.exports = grammar({
                     keyword('base'),
                     field(
                         'base',
-                        $.iri_reference,
+                        $.iri,
                     )
                 )
             ),
@@ -665,21 +665,25 @@ module.exports = grammar({
         ),
 
         builtin_simple_type: $ => choice(
-            keyword('string'),
-            keyword('double'),
-            keyword('decimal'),
-            keyword('integer'),
             keyword('boolean'),
+            keyword('unsigned'),
+            keyword('integer'),
+            keyword('decimal'),
+            keyword('double'),
+            keyword('string'),
             keyword('iri'),
+            keyword('binary'),
         ),
 
         simple_value: $ => choice(
-            $.string,
-            $.double,
-            $.decimal,
-            $.integer,
             $.boolean,
-            $.iri_reference,
+            $.unsigned,
+            $.integer,
+            $.decimal,
+            $.double,
+            $.string,
+            $.iri,
+            $.binary
         ),
 
         string: $ => seq(
@@ -709,7 +713,7 @@ module.exports = grammar({
         ),
 
         // From <https://github.com/BonaBeavis/tree-sitter-turtle/blob/main/grammar.js>
-        iri_reference: $ => seq(
+        iri: $ => seq(
             '<',
             token.immediate(
                 repeat(
@@ -722,6 +726,15 @@ module.exports = grammar({
             token.immediate(
                 '>'
             )
+        ),
+
+        // base-64 encoded data, a string of hex bytes.
+        binary: $ => seq(
+            '#[',
+            repeat(
+                /[0-9A-Fa-f]{2}/
+            ),
+            ']'
         ),
 
         double: $ => token(

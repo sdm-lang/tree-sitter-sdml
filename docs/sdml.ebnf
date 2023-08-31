@@ -2,7 +2,7 @@ Module
     ::= "module" Identifier ModuleBase? ModuleBody
 
 ModuleBase
-    ::= "base" IriReference
+    ::= "base" Iri
 
 ModuleBody
     ::= "is"
@@ -176,10 +176,14 @@ Value
         | SequenceOfValues
 
 SimpleValue
-    ::= String | Double | Decimal | Integer | Boolean | IriReference
+    ::= Boolean
+        | Unsigned | Integer | Decimal| Double
+        | String | Iri | Binary
 
 BuiltinSimpleType
-    ::= "string" | "double" | "decimal" | "integer" | "boolean" | "iri"
+    ::= "boolean"
+        | "unsigned" | "integer"| "decimal"| "double"
+        | "string" | "iri" | "binary"
 
 Boolean
     ::= Tautology | Contradiction
@@ -259,11 +263,13 @@ LanguageTagRegion
         ( ( ASCII_LETTER_UPPER ASCII_LETTER_UPPER )
           | ( ASCII_DIGIT ASCII_DIGIT ASCII_DIGIT ) )
 
-IriReference
-    ::=
-    "<"
-    ( [^<>\"{}|^`\#x00-#x20] | UnicodeEscape )*
-    ">"
+Iri
+    ::= "<"
+        ( [^<>\"{}|^`\#x00-#x20] | UnicodeEscape )*
+        ">"
+
+Binary
+    ::= "#[" HexPair* "]"
 
 ValueConstructor
     ::= IdentifierReference "(" SimpleValue ")"

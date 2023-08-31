@@ -91,6 +91,11 @@
     "fields": {}
   },
   {
+    "type": "binary",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "binary_boolean_sentence",
     "named": true,
     "fields": {
@@ -1119,7 +1124,7 @@
     }
   },
   {
-    "type": "iri_reference",
+    "type": "iri",
     "named": true,
     "fields": {}
   },
@@ -1369,7 +1374,7 @@
         "required": false,
         "types": [
           {
-            "type": "iri_reference",
+            "type": "iri",
             "named": true
           }
         ]
@@ -1998,6 +2003,10 @@
       "required": true,
       "types": [
         {
+          "type": "binary",
+          "named": true
+        },
+        {
           "type": "boolean",
           "named": true
         },
@@ -2014,11 +2023,15 @@
           "named": true
         },
         {
-          "type": "iri_reference",
+          "type": "iri",
           "named": true
         },
         {
           "type": "string",
+          "named": true
+        },
+        {
+          "type": "unsigned",
           "named": true
         }
       ]
@@ -2406,6 +2419,10 @@
     }
   },
   {
+    "type": "#[",
+    "named": false
+  },
+  {
     "type": "(",
     "named": false
   },
@@ -2502,6 +2519,10 @@
     "named": false
   },
   {
+    "type": "binary",
+    "named": false
+  },
+  {
     "type": "boolean",
     "named": false
   },
@@ -2527,11 +2548,11 @@
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "end",
@@ -2695,6 +2716,10 @@
   },
   {
     "type": "unordered",
+    "named": false
+  },
+  {
+    "type": "unsigned",
     "named": false
   },
   {

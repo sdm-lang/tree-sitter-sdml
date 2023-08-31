@@ -20,4 +20,4 @@ end
             module: (identifier)
             member: (identifier)))
         value: (value
-          (simple_value (iri_reference)))))))
+          (simple_value (iri)))))))

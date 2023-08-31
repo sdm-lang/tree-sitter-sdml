@@ -8,5 +8,5 @@ module Campaign base <https://example.org/v/Campaign#> is end
 
 (module
   name: (identifier)
-  base: (iri_reference)
+  base: (iri)
   body: (module_body))

@@ -214,7 +214,9 @@
 (string (quoted_string) @string)
 (string language: (language_tag) @property)
 
-(iri_reference) @string.special
+(iri) @string.special
+
+(binary) @string.special
 
 [
  (decimal)

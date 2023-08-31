@@ -95,7 +95,7 @@ module -up-> Package: <<extension>>
 note left of module
 **context** module **inv**:
     self.packagedElement
-        .forAll(
+        →forAll(
             e | (
                     isDataTypeDef(e) **or**
                     isEntityDef(e) **or**
@@ -112,21 +112,21 @@ note bottom of module
 **context** module
     **static** **def**: isInModule(e : PackageableElement) isModuleDef(e.owningPackage)
     **static** **def**: isModuleDef(e : PackageableElement)
-       e.oclIsTypeOf(Package) **and** e.stereotype.name = "module"
+       e→oclIsTypeOf(Package) **and** e.stereotype.name = "module"
     **static** **def**: isDatatypeDef(e : PackageableElement)
-       isInModule(e) **and** e.oclIsTypeOf(PrimitiveType) **and** e.stereotype.name = "datatype"
+       isInModule(e) **and** e→oclIsTypeOf(PrimitiveType) **and** e.stereotype.name = "datatype"
     **static** **def**: isEnumDef(e : PackageableElement)
-       isInModule(e) **and** e.oclIsTypeOf(Enumeration) **and** e.stereotype.name = "enum"
+       isInModule(e) **and** e→oclIsTypeOf(Enumeration) **and** e.stereotype.name = "enum"
     **static** **def**: isEntityDef(e : PackageableElement)
-       isInModule(e) **and** e.oclIsTypeOf(Class) **and** e.stereotype.name = "entity"
+       isInModule(e) **and** e→oclIsTypeOf(Class) **and** e.stereotype.name = "entity"
     **static** **def**: isEventDef(e : PackageableElement)
-       isInModule(e) **and** e.oclIsTypeOf(Class) **and** e.stereotype.name = "event"
+       isInModule(e) **and** e→oclIsTypeOf(Class) **and** e.stereotype.name = "event"
     **static** **def**: isStructureDef(e : PackageableElement)
-       isInModule(e) **and** .oclIsTypeOf(Class) **and** e.stereotype.name = "structure"
+       isInModule(e) **and** e→oclIsTypeOf(Class) **and** e.stereotype.name = "structure"
     **static** **def**: isUnionDef(e : PackageableElement)
-       isInModule(e) **and** e.oclIsTypeOf(Class) **and** e.stereotype.name = "union"
+       isInModule(e) **and** e→oclIsTypeOf(Class) **and** e.stereotype.name = "union"
     **static** **def**: isPropertyDef(e : PackageableElement)
-        isInModule(e) **and** e.oclIsTypeOf(Class) **and** e.stereotype.name = "property"
+        isInModule(e) **and** e→oclIsTypeOf(Class) **and** e.stereotype.name = "property"
 end note
 #+END_SRC
 
@@ -206,7 +206,7 @@ end note
 note right of import
 **context** import **inv**:
     self.importedElement
-        .forAll(
+        →forAll(
             e | isDataTypeDef(e) **or**
                 isEntityDef(e) **or**
                 isEnumerationDef(e) **or**
@@ -322,10 +322,11 @@ class datatype <<stereotype>> {}
 datatype -up-> PrimitiveType: <<extension>>
 
 note left of datatype
-**context** datatype **inv**:
-    self.generalization.size() == 1 **and**
+,**context** datatype **inv**:
     self.generalization
-        .forAll(e | isDatatypeDef(e.general))
+        →size() = 1 **and**
+    self.generalization
+        →forAll(e | isDatatypeDef(e.general))
 end note
 #+END_SRC
 
@@ -407,12 +408,18 @@ identity -up-> Property: <<extension>>
 identity "+identityMember\l{subsets ownedAttribute}\n1" --right--> "+owningEntity\r{renames class}\n1" entity
 
 note left of identity
-**context** identity **inv**:
-    **let** t = self.type **in**
+,**context** identity **inv**:
+    ,**let** t = self.type **in**
         isDatatypeDef(t) **or**
         isEnumerationDef(t) **or**
         isStructureDef(t) **or**
         isUnionDef(t)
+end note
+
+note bottom of identity
+,**context** identity **inv**:
+    ,**let** c = self.class **in**
+        isEntityDef(c) **or** isPropertyDef(c)
 end note
 #+END_SRC
 
@@ -447,6 +454,12 @@ note left of ref
         isEnumerationDef(t) **or**
         isStructureDef(t) **or**
         isUnionDef(t)
+end note
+
+note bottom of ref
+,**context** ref **inv**:
+    ,**let** c = self.class **in**
+        isEntityDef(c) **or** isPropertyDef(c)
 end note
 #+END_SRC
 
@@ -513,12 +526,86 @@ package rentals <<module>> {
 
 ** Enumeration Definitions
 
+
+#+NAME: fig:uml-profile-enum
+#+BEGIN_SRC plantuml :file uml-profile-enum.svg
+skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 280
+
+hide circle
+hide members
+
+class Enumeration <<Metaclass>> #white {}
+class enum <<stereotype>> {}
+enum -up-> Enumeration: <<extension>>
+
+class EnumerationLiteral <<Metaclass>> #white {}
+Enumeration "{subsets namespace}\l+enumeration\l1" *--right-- "{ordered, subsets ownedMember}\r+ownedLiteral\r*" EnumerationLiteral
+
+note bottom of enum
+,**context** enum **inv**:
+    self.ownedLiteral→size() = 1 **and**
+    self.ownedLiteral→forAll(
+        e | e.classifier→size() = 1 **and**
+            e.classifier→forAll(e | e = LiteralInteger and e ≥ 0) **and**
+            self.ownedLiteral→collect(l | l.value)→asSet()→size()
+                = self.ownedLiteral→collect(l | l.value)→size()
+    )
+end note
+#+END_SRC
+
+#+CAPTION: The «enum» Stereotype
+#+RESULTS: fig:uml-profile-enum
+[[file:uml-profile-enum.svg]]
+
 The standard =Enumeration= classifier is used to model enum definitions.
 The standard =EnumerationLiteral= instance is used to model value variants.
 
-**Example:**
+*Constraints*
 
-TBD
+*Example: An Example Enumeration*
+
+
+#+BEGIN_SRC sdml :exports code :noeval
+module rentals is
+
+  enum VehicleClass of
+    SubCompact = 0
+    Compact = 1
+    MidSize = 2
+    FullSize = 3
+    CompactSuv = 4
+    FullSizeSuv = 5
+  end
+
+end
+#+END_SRC
+
+
+#+NAME: fig:uml-ex-enum
+#+BEGIN_SRC plantuml :file uml-ex-enum.svg
+skinparam backgroundColor transparent
+skinparam style strictuml
+skinparam linetype polyline
+skinparam nodesep 60
+
+hide methods
+
+enum VehicleClass <<enum>> {
+    SubCompact = 0
+    Compact = 1
+    MidSize = 2
+    FullSize = 3
+    CompactSuv = 4
+    FullSizeSuv = 5    
+}
+#+END_SRC
+
+#+CAPTION: An Example Enumeration 
+#+RESULTS: fig:uml-ex-enum
+[[file:uml-ex-enum.svg]]
 
 ** Event Definitions
 
@@ -550,8 +637,8 @@ source -right-> "+event\r{subsets client}\r1" event
 note bottom of event
 **context** entity **inv**:
     self.ownedAttribute
-        .collect(e | e.oclIsTypeOf(source))
-        .size() == 1
+        →collect(e | e→oclIsTypeOf(source))
+        →size() = 1
 end note
 #+END_SRC
 
@@ -569,7 +656,7 @@ module rentals is
   import uuid
 
   entity Booking is
-    identity id -> uuid::Uuid
+    identity id -> uuid:Uuid
   end
 
   event VehicleAssigned source Booking
@@ -590,7 +677,7 @@ hide empty members
 package rentals <<module>> {
     class VehicleAssigned <<event>> {}
     class Booking <<entity>> {
-        + <<identity>> id: Uuid
+        + <<identity>> id: uuid::Uuid
     }
     VehicleAssigned .r.> Booking: <<source>>
 }
@@ -633,30 +720,38 @@ class union <<stereotype>>
 union -up-> Class: <<extension>>
 
 note bottom of union
-**context** union **inv**:
-    self.member.size() == 0 **and**
-    self.powertypeExtent.size() <= 1 **and**
-    self.powertypeExtent.forAll(
-        e | e.isCovering == true **and**
-            e.isDisjoint == true **and**
-            e.generalization
-                .forAll(e | e.oclIsTypeOf(typeVariant))
+,**context** union **inv**:
+    self.powertypeExtent→size() ≤ 1 **and**
+    self.powertypeExtent→forAll(
+        e | e.isCovering = true **and**
+            e.isDisjoint = true **and**
+            e.generalization→forAll(
+                e | e→oclIsTypeOf(typeVariant)
+            )
     )
 end note
 
-class typeVariant <<stereotype>>
-typeVariant -up->  Generalization: <<extension>>
+class variant <<stereotype>>
+variant -up->  Generalization: <<extension>>
 
-note bottom of typeVariant
-**context** typeVariant **inv**:
-    self.general
-        .oclIsTypeOf(union)
+note bottom of variant
+,**context** variant **inv**:
+    self.general→oclIsTypeOf(union) **and**
+    ,**let** s = self.specific **in**
+        isDatatypeDef(s) **or**
+        isEventDef(s) **or**
+        isEnumDef(s) **or**
+        isStructureDef(s) **or**
+        isUnionDef(s)
 end note
 #+END_SRC
 
-#+CAPTION: The «union» and «typeVariant» Stereotypes
+#+CAPTION: The «union» and «variant» Stereotypes
 #+RESULTS: fig:uml-profile-union
 [[file:uml-profile-union.svg]]
+
+*Constraints*
+
 
 *Example: An Example Union*
 
@@ -683,24 +778,21 @@ end
 skinparam backgroundColor transparent
 skinparam style strictuml
 skinparam linetype polyline
-skinparam nodesep 60
+skinparam nodesep 100
 
 hide circle
 hide empty members
 
 package rentals <<module>> {
 
-    class Car
-    class Van
-    class Truck
+    class Car <<structure>>
+    class Van <<structure>>
+    class Truck <<structure>>
     class RentalClass <<union>>
 
-    class "{complete,disjoint}" as gs1 <<GeneralizationSet>>
-
-    Car -u-|> gs1
-    Van -u-|> gs1
-    Truck -u-|> gs1
-    gs1 -u-|> RentalClass
+    Car -right-|> RentalClass: <<variant>>
+    Van -up-|> RentalClass: <<variant>>
+    Truck -left-|> RentalClass: <<variant>>
 }
 #+END_SRC
 
@@ -802,7 +894,3 @@ module customer is
 
 end
 #+END_SRC
-
-OCL has four built-in sequence types: ~Bag(T)~, ~Sequence(T)~, ~Set(T)~, and ~OrderedSet(T)~. These correspond to the SDML
-/logical sequence types/ in the table [[tbl:builtin-sequence-types]] in section [[sec:sequence-types]] with the exception that the
-type ~List~ in that table is replaced with the OCL type ~Sequence~.

@@ -6,14 +6,13 @@
 
 The Simple Domain Modeling Language[fn:sdml] is a small data-oriented language for constructing, documenting, and
 reasoning about a conceptual domain model. For a background on domain modeling see section [[sec:domain-modeling]]. At it's
-core SDML comprises *1.* an /Semantic Model/ whose structure and semantics are described in RDF[fn:rdf] by an OWL[fn:owl]
-ontology (see section [[sec:rdf-semantic-model]] for more details), and *2.* a /surface syntax/ for editing and sharing model
-artifacts (see section [[sec:surface-syntax]] for more details). Figure [[fig:sdml-overview]] shows the relationship between
-these high-level components.
-
-This document covers both the semantic model and surface syntax representation as well as the correspondence between
-them. However, the primary focus of the documentation is the surface syntax as most users will be interacting with it
-alone.
+core SDML comprises *1.* a /Semantic Model/ whose structure and semantics are described in RDF[fn:rdf] by an OWL[fn:owl]
+ontology (see section [[sec:rdf-semantic-model]] for more details), *2.* a /surface syntax/ for editing and sharing model
+artifacts (see section [[sec:surface-syntax]] for more details), *3.* a /constraint language/ to capture model invariants not
+covered by the data descriptions in the surface syntax. Figure [[fig:sdml-overview]] shows the relationship between
+these high-level components. This book covers both the surface syntax and semantic model as well as the correspondence
+between them. However, the primary focus of the documentation is the surface syntax as most users will be interacting
+with it alone.
 
 #+NAME: fig:sdml-overview
 #+BEGIN_SRC dot :file sdml-overview.svg :exports results
@@ -39,20 +38,37 @@ digraph G {
 #+RESULTS: fig:sdml-overview
 [[file:sdml-overview.svg]]
 
-The language uses some ideas from UML[fn:uml], a language which is often used in the construction of such models today.
-However, the goal is to keep the language as small as possible, taking away some options where they don't make sense or
-where their use may distract from the major purpose of the model. The model also takes some of the language from
-Domain-Driven Design (DDD)[fn:ddd], namely the separation of entities (/an object defined not by its attributes, but its
-identity/) from value objects (/an immutable object that contains attributes but has no conceptual identity/), simply
-termed structures in SDML. This model does not include the following DDD first-class concepts: /aggregates/,
-/repositories/, /factories/, or /services/.
+The problem with any language, or technology in general, that aims to be /simple/ it has to leave a lot of things out that
+at least some people would like to see. SDML is simple in that it started with the simplest possible set of constructs
+and set a very high bar for the addition of any additional features. This means that SDML is /opinionated/ and that
+opinion may reflect more on the author than on any methodology. For example, SDML does not model the behavior of the
+business and some readers will expect some behavior description. However, it is far harder to define a model of behavior
+than for data, and such a model gets out of the realm of /simple/ very quickly. SDML also does not support polymorphism in
+ways that programmers will expect, but as programmers are only one of the groups involved in domain modeling we err on
+the side of /broadest understandability/.
+
+The SDML language uses some ideas from UML[fn:uml], a language which is often used in the construction of such models today.
+Unfortunately, UML does not pass the simple test and while there are good ideas and well-understood concepts it was not
+possible to use them without taking away some options where they don't make sense or where their use may distract from
+the major purpose of the model. While UML is predominantly a visual language, the OMG /Human-Usable Textual Notation/
+(HUTN)[fn:hutn] specification notwithstanding, SDML is a textual language with a mapping to UML for visualization. The
+development of SDML as a textual language additionally allows existing tools in the software development space such as
+version control and continuous integration tools to be applied to the models, in effect treating them as source code.
+
+The SDML language also takes some of the concepts from Domain-Driven Design (DDD)[fn:ddd], namely the separation of entities
+(/an object defined not by its attributes, but its identity/) from value objects (/an immutable object that contains
+attributes but has no conceptual identity/), simply termed structures in SDML. This model does not include the following
+DDD first-class concepts: /aggregates/, /repositories/, /factories/, or /services/.
 
 ** <<sec:domain-modeling>>What is Domain Modeling?
 
 Domain modeling is the process by which we develop a model of our business domain. In particular, we model /what/ our
-business does and not /how/ it is done. 
+business does and not /how/ it is done. The resulting model should be recognizable by different stakeholders both
+technical and non-technical, internal to the business as well as external partners. In some domains with a level of
+standardization, or regulation, a level of commonality between different businesses and so domain models may be used to
+describe inter-business interactions. This approach has been used by a number of standards such as RosettaNet[fn:rosettanet].
 
-There is often confusion around the use of the term /Domain Model/ especially in regard to terms such as /Data Model/, /Class
+There is often confusion around the use of the term /Domain Model/ especially in it's relation to terms such as /Data Model/, /Class
 Model/, /Schema/ and more. The rest of this section is an attempt to clarify the terminology and how the relevant modeling
 efforts are undertaken. This is not intended as an exhaustive review of modelling approaches, standards, or technologies
 and neither does it make any judgement as to the usefulness of any approach or technology.
@@ -165,13 +181,17 @@ the Universal API where the model will represent our business model in different
 
 Domain modeling is often an isolated activity in that the created model is applied in a singular fashion. However,
 there are other modeling activities that share similar aims, whose subjects intersect, and which are also conceptual or
-logical data models. Two commonly developed artifacts are:
+logical data models. 
 
-- *Data Catalogs* :: These models describe data in data stores (although they don't have to) and describe tables and
-  similar structures comprised of data elements. The set of data element definitions, commonly referred to as a data
-  dictionary, go beyond simple data typing to include privacy, security, governance, lineage, and provenance
-  classification.
-- *Business Glossaries* :: These models have 
+- *Data Catalogs* :: These describe structured and sometimes unstructured data in data stores, messages, and so forth, and
+  describe tables and similar structures comprised of data elements. The metadata managed in a catalog may go beyond
+  data structure and include privacy, security, governance, lineage, and provenance classification.
+- Data Dictionaries :: Data dictionaries overlap with the data catalog, but typically work from the bottom up rather
+  than top down. Instead of describing structures and the elements they contain, a data dictionary focuses on the atomic
+  elements and how they relate and aggregate into structures. 
+- *Business Glossaries* :: A business glossary also focuses on individual terms but captures both technical and
+  non-technical properties of these terms. A business glossary contains definitions of terms as well as managing
+  relations such as /broader/, /narrower/, /equivalent/, or /labels/  between terms.
 
 Table [[tbl:domain-related-models]] contains a summary of characteristics of these two artifacts compared to a domain model.
 Note that the column "Open/Closed"captures the /World Assumption/ of typical artifacts/processes/products in each row
@@ -179,14 +199,19 @@ Note that the column "Open/Closed"captures the /World Assumption/ of typical art
 
 #+NAME: tbl:domain-related-models
 #+CAPTION: Domain-Related Model Summary
-|                   | Primary          | Secondary              | Open/Closed |
-|-------------------+------------------+------------------------+-------------|
-| Data Dictionary   | Data Element     | Table, Dataset, Job    | Semi-Closed |
-| Business Glossary | Vocabulary, Term | Relations, Labels      | Closed      |
-| Domain Model      | Entities         | Structures             | Closed      |
-| SDML Domain Model | Entities         | Properties, Structures | Open        |
+|                   | Primary          | Secondary                         | Open/Closed |
+|-------------------+------------------+-----------------------------------+-------------|
+| Data Catalog      | Structures       | Data Element, Table, Dataset, Job | Semi-Closed |
+| Data Dictionary   | Data Element     | Aggregates                        | Semi-Closed |
+| Business Glossary | Vocabulary, Term | Relations, Labels                 | Closed      |
+| Domain Model      | Entities         | Structures                        | Closed      |
+| SDML Domain Model | Entities         | Properties, Structures            | Open        |
 
-Given that 
+Given that there is clearly overlap in these tools, of viewpoints, it would be valuable if it were possible to link the
+different models and provide a common view. SDML attempts this by providing an underlying RDF representation that can be
+combined with other RDF-based vocabularies such as SKOS[fn:skos] for thesauri, or XXX for provenance. Storing SDML as
+RDF in a graph database along with SKOS definitions and other vocabularies will enhance each viewpoint with additional
+information. Figure [[fig:sdml-foundation]] shows how these different viewpoints may come together.
 
 #+NAME: fig:sdml-foundation
 #+BEGIN_SRC dot :file sdml-foundation.svg :exports results
@@ -196,15 +221,29 @@ digraph G {
   fontname="Helvetica,Arial,sans-serif";
   node [fontname="Helvetica,Arial,sans-serif"; fontsize=10; width=1.0; height=0.6];
   edge [fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="darkgrey"];
+  splines="ortho";
 
-  sdml [shape="rect"; label="SDML"];
-  catalog [shape="rect"; label="Data\nCatalog"];  
-  glossary [shape="rect"; label="Business\nGlossary"];
+  subgraph cluster_0 {
+    bgcolor="transparent";
+    color="transparent";
+    rankdir="LR";
+
+    sdml [shape="rect"; label="SDML"];
+    catalog [shape="rect"; label="Data\nCatalog"];  
+    dictionary [shape="rect"; label="Data\nDictionary"];  
+    glossary [shape="rect"; label="Business\nGlossary"];
+
+    sdml -> glossary [style="dashed"];
+    glossary -> dictionary [style="dashed"];
+    dictionary -> catalog [style="dashed"];
+  }
+  
   foundation [shape="rect"; width=3.5; label="Common Foundation (RDF/OWL)"];
 
   sdml -> foundation [arrowhead="open"];
-  catalog -> foundation [arrowhead="open"];
   glossary -> foundation [arrowhead="open"];
+  dictionary -> foundation [arrowhead="open"];
+  catalog -> foundation [arrowhead="open"];
 }
 #+END_SRC
 
@@ -216,9 +255,9 @@ digraph G {
 
 The software development process may be described as the management of abstraction; requirements are an abstraction
 representing actual needs of some group of individuals, a whiteboard drawing may be an (informal) abstraction of a
-system design, a UML model may be a formal abstraction of system or component dependencies, and so forth. We can
-stratify these levels of abstraction as shown in figure [[fig:artifact-layering]] although almost any such stratification
-will crash headlong into any number of detractors.
+system design, a UML model may be a more-or-less formal abstraction of system or component dependencies, and so forth.
+We can stratify these levels of abstraction as shown in figure [[fig:artifact-layering]] although almost any such
+stratification will crash headlong into any number of detractors.
 
 #+NAME: fig:artifact-layering
 #+BEGIN_SRC dot :file artifact-layering.svg :exports results
@@ -289,8 +328,9 @@ system and CPU will layout and execute our application.
 Figure [[fig:model-transforms]] demonstrates the key element of a /Model-Driven Development/[fn:mdd] style, namely the
 transformation between models and between models and other development artifacts. In this case we use the terms
 introduced above where we transform from a /more/ abstract model to a /more/ concrete model or directly to other artifacts.
-The transformation also has to have a set of rules that define the selection and projection of elements from the source
-model.
+The transformation also should allow configuration to direct the transform, perhaps injecting properties not a part of
+the domain model but which are required in the transformation target. For example, converting an SDML structure into a
+SQL DDL statement may need to know the specific SQL dialect to target.
 
 #+NAME: fig:model-transforms
 #+BEGIN_SRC dot :file model-transforms.svg :exports results
@@ -303,11 +343,11 @@ digraph G {
 
   semantics [shape="ellipse"; label="Abstract\nModel"];
   transform [shape="cds"; margin="0.2,0.2"; label="Transformation"];
-  tsq [shape="ellipse"; label="Rules"];
+  config [shape="ellipse"; label="Configuration"];
   other [shape="ellipse"; style="dashed"; label="Concrete\nModel(s)"];
 
   semantics -> transform [label="source"];
-  tsq -> transform [label="select/project"];
+  config -> transform [label="parameterize"];
   transform -> other [label="generate"];
   other -> semantics [label="abstraction"];
 }
@@ -319,8 +359,11 @@ digraph G {
 
 *Example:*
 
-In the following example we show a tree of transformations from a domain model through three intermediate models to
-various artifacts such as SQL, code, and Thrift[fn:thrift]. 
+In the following example (figure [[fig:example-transform]]) we show a tree of transformations from a domain model through
+three intermediate models to various artifacts such as SQL, code, and Thrift[fn:thrift]. Some readers may feel a sense
+of déjà vu, you or your employer may have tried different model-driven development tools in the past and noted a number
+of significant issues. One of the major reasons for giving up on this approach is the /round-trip/ problem -- what if I
+edit the generated thing, how does that get reverse engineered back into the higher-level model?
 
 #+NAME: fig:example-transform
 #+BEGIN_SRC dot :file example-transform.svg :exports results
@@ -339,10 +382,10 @@ digraph G {
   service [shape="ellipse"; label="Service\nDefinition"; style=dotted;];
   domain -> service [label="transform"];
 
-  smithy [shape="component"; label="Smithy"];
+  smithy [shape="component"; label="Smithy\n(IDL)"];
   service -> smithy [label="transform"];
   
-  oas [shape="component"; label="OpenAPI Spec\n(YAML)"];
+  oas [shape="component"; label="OpenAPI Spec"];
   smithy -> oas [label="transform"];
 
   stubs [shape="component"; label="Service Stubs\n(code)"];
@@ -363,7 +406,7 @@ digraph G {
   message [shape="ellipse"; label="Message\nDefinition"; style=dotted;];
   domain -> message [label="transform"];
 
-  thrift [shape="ellipse"; label="Apache Thrift\n(IDL)"];
+  thrift [shape="component"; label="Apache Thrift\n(IDL)"];
   message -> thrift [label="transform"];
 }
 #+END_SRC
@@ -372,8 +415,21 @@ digraph G {
 #+RESULTS: fig:example-transform
 [[file:example-transform.svg]]
 
-** SDML as a Domain Modeling Language
-*** Goals
+One key aspect of figure [[fig:example-transform]] is that all of the arrows flow in a single direction. Modeling tool
+vendors got hung up on the fact that they generated artifacts in programming languages that /could/ be edited and so
+almost certainly would be; therefore, they had to attempt to round-trip those changes. If the transformations had been
+given additional configuration that took care of the kinds of edits that people may /need/ to perform then no editing
+would be needed and no round-tripping. Inside a modern compiler your source code is transformed multiple times,
+sometimes a pre-processor, then an intermediate machine-independent language used by the optimizer and then to the
+machine specific assembler. In some compilers there are even multiple intermediate languages at different levels. While
+it is often possible to inspect these intermediate forms it is not realistic to edit them (unless you are a compiler
+developer) and there is *no* expectation that the compiler will put your changes back into your source code.
+
+* SDML as a Domain Modeling Language
+
+TBD
+
+** Goals
 
 The purpose of SDML is to be the source of truth concerning the enterprise's domain, and the root of the tree shown in
 figure [[fig:example-transform]]. It needs to provide an abstraction that is expressive enough to model the structure of
@@ -394,7 +450,7 @@ the surface syntax is the canonical authoring form.
 
 (*TODO*: Add vocabulary discussion)
 
-*** Non-Goals
+** Non-Goals
 
 (*TODO*: Complete this list)
 
@@ -403,7 +459,7 @@ the surface syntax is the canonical authoring form.
 3. Behavior Modeling
 4. Standardization
 
-** Acknowledgments
+* Acknowledgments
 
 Obviously this work relies on the decades of prior art in domain modeling and modeling languages in general; in
 particular, the many authors and contributors to the UML family of specifications. Similarly SDML relies heavily on the
@@ -422,11 +478,17 @@ written by Gunther Rademacher, and hosted at [[https://www.bottlecaps.de/rr/ui.]
 
 [fn:uml] [[http://www.uml.org/][The Unified Modeling Language (UML)]], OMG
 
+[fn:hutn] Human-Usable Textual Notation (HUTN), OMG
+
 [fn:rdf] [[https://www.w3.org/RDF/][Resource Description Framework (RDF)]], W3C
 
 [fn:ddd] [[https://en.wikipedia.org/wiki/Domain-driven_design][Domain-Driven Design]], Wikipedia
 
 [fn:mdd] [[https://en.wikipedia.org/wiki/Model-driven_engineering][Model-Driven Development]], Wikipedia
+
+[fn:rosettanet] ..., ?
+
+[fn:skos] Simple Knowledge Organization System (SKOS), W3C.
 
 [fn:thrift] [[https://thrift.apache.org/docs/idl][Thrift interface description language]], Apache Software Foundation
 

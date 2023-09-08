@@ -25,7 +25,7 @@
 <!-- foundation -->
 <g id="node5" class="node">
 <title>foundation</title>
-<polygon fill="none" stroke="black" points="554.75,-66.8 448,-66.8 448,-9.2 554.75,-9.2 554.75,-66.8"/>
+<polygon fill="none" stroke="black" points="554.75,-59.6 448,-59.6 448,-16.4 554.75,-16.4 554.75,-59.6"/>
 <text text-anchor="middle" x="501.38" y="-39.75" font-family="Helvetica,Arial,sans-serif" font-size="10.00">Common Foundation</text>
 <text text-anchor="middle" x="501.38" y="-28.5" font-family="Helvetica,Arial,sans-serif" font-size="10.00">(RDF/OWL)</text>
 </g>

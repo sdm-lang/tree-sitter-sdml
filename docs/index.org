@@ -24,11 +24,11 @@
 
 #+INCLUDE: "./constraints.org" :minlevel 1
 
-#+INCLUDE: "./rdf-model.org" :minlevel 1
-
 #+INCLUDE: "./walk-through.org" :minlevel 1
 
 #+INCLUDE: "./implementation.org" :minlevel 1
+
+#+INCLUDE: "./rdf-model.org" :minlevel 1
 
 # --------------- Appendices ---------------
 

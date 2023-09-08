@@ -409,6 +409,10 @@
           "named": true
         },
         {
+          "type": "feature_set_def",
+          "named": true
+        },
+        {
           "type": "property_def",
           "named": true
         },
@@ -661,6 +665,97 @@
     "type": "existential",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "feature_set_conjunctive_body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "annotation",
+          "named": true
+        },
+        {
+          "type": "role_by_value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "feature_set_def",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "feature_set_conjunctive_body",
+            "named": true
+          },
+          {
+            "type": "feature_set_disjunctive_body",
+            "named": true
+          },
+          {
+            "type": "feature_set_exclusive_disjunction_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "feature_set_disjunctive_body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "annotation",
+          "named": true
+        },
+        {
+          "type": "type_variant",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "feature_set_exclusive_disjunction_body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "annotation",
+          "named": true
+        },
+        {
+          "type": "type_variant",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "formal_constraint",
@@ -2536,11 +2631,11 @@
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "def",
@@ -2548,11 +2643,11 @@
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "end",
@@ -2576,6 +2671,10 @@
   },
   {
     "type": "false",
+    "named": false
+  },
+  {
+    "type": "features",
     "named": false
   },
   {

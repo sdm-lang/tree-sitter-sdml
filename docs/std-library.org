@@ -959,12 +959,14 @@ Return ~true~ if the sequence has no elements, else ~false~.
 
 #+BEGIN_EXAMPLE
 def is_ordered(t → {_}) → boolean
+    ≔ fold_head(lte t)
 #+END_EXAMPLE
 
 Returns ~true~ if the provided type ~t~ is an ordered sequence, else ~false~.
 
 #+BEGIN_EXAMPLE
 def is_unique(t → {_}) → boolean
+    ≔ count(t) == count(fold(∅ union t))
 #+END_EXAMPLE
 
 Returns ~true~ if the provided type ~t~ is a sequence that guarantees uniqueness of elements, else ~false~.
@@ -979,7 +981,6 @@ placed between each.
 Example: ~join([1 2 3] ",") = "1,2,3"~
 
 *Class: List*
-
 
 Returns ~true~ if the passed value is of type ~List~, else ~false~.
 

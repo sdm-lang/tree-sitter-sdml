@@ -312,6 +312,7 @@ Definition
         | StructureDef
         | UnionDef
         | PropertyDef
+        | FeatureSetDef
 #+END_SRC
 
 [[./ebnf-diagram/Definition.svg]]
@@ -1792,6 +1793,111 @@ module example is
 end
 #+END_SRC
 
+** <<sec:feature-grammar>>Feature Sets
+
+#+NAME: lst:grammar-property-def
+#+BEGIN_SRC ebnf
+FeatureSetDef
+    ::= "features" Identifier
+        (
+            FeatureSetConjunctiveBody
+          | FeatureSetDisjunctiveBody
+          | FeatureSetExclusiveDisjunctionBody
+        )?
+#+END_SRC
+
+[[./ebnf-diagram/PropertyDef.svg]]
+
+*Example*:
+
+#+NAME: lst:sdml-ex-empty-featureset
+#+CAPTION: Empty Feature Set Definition
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  features AccountFeatures
+
+end
+#+END_SRC
+
+The feature set ~AccountFeatures~ in [[lst:sdml-ex-empty-featureset]] is valid but incomplete. Completion of the feature set
+requires the addition of a body with members/variants defined.
+
+*** Exclusive Disjunction Features
+
+#+BEGIN_SRC ebnf
+FeatureSetExclusiveDisjunctionBody
+    ::= ( "{" "xor" "}" )?
+        "of"
+        Annotation* TypeVariant+
+#+END_SRC
+
+[[./ebnf-diagram/FeatureSetExclusiveDisjunctionBody.svg]]
+
+*Example*:
+
+#+NAME: lst:sdml-ex-xor-featureset
+#+CAPTION: Exclusive Disjunction Feature Set
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  features AccountKind {xor} of
+    PersonalAccount as Personal
+    CorporateAccount as Business
+  end
+
+end
+#+END_SRC
+
+*** Disjunctive Features
+
+#+BEGIN_SRC ebnf
+FeatureSetDisjunctiveBody
+    ::= "{" "or" "}" "of"
+        Annotation* TypeVariant+
+#+END_SRC
+
+[[./ebnf-diagram/FeatureSetDisjunctiveBody.svg]]
+
+*Example*:
+#+NAME: lst:sdml-ex-or-featureset
+#+CAPTION: Disjunctive Feature Set
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  features AccountUpgrades {or} is
+    SkipCheckin
+    AutoUpgrade
+  end
+
+end
+#+END_SRC
+
+*** Conjunctive Features
+
+#+BEGIN_SRC ebnf
+FeatureSetConjunctiveBody
+    ::= "{" "and" "}" "is"
+        Annotation* RoleByValue+
+#+END_SRC
+
+[[./ebnf-diagram/FeatureSetConjunctiveBody.svg]]
+
+*Example*:
+
+#+NAME: lst:sdml-ex-and-featureset
+#+CAPTION: Conjunctive Feature Set
+#+BEGIN_SRC sdml :exports code :noeval
+module example is
+
+  features AccountFeatures {and} is
+    kind -> AccountKind
+    upgrades -> AccountUpgrades
+  end
+
+end
+#+END_SRC
+
 ** Common Questions
 
 *** Why are Enumerations and Unions distinct
@@ -1922,6 +2028,7 @@ Definition
         | StructureDef
         | UnionDef
         | PropertyDef
+        | FeatureSetDef
 
 DataTypeDef
     ::= "datatype" Identifier TypeRestriction DataTypeBase AnnotationOnlyBody?
@@ -2003,6 +2110,27 @@ RoleByValue
 
 RoleByReference
     ::= "ref" Identifier InverseName? TypeExpressionTo AnnotationOnlyBody?
+
+FeatureSetDef
+    ::= "features" Identifier
+        (
+            FeatureSetConjunctiveBody
+          | FeatureSetDisjunctiveBody
+          | FeatureSetExclusiveDisjunctionBody
+        )?
+
+FeatureSetConjunctiveBody
+    ::= "{" "and" "}" "is"
+        Annotation* RoleByValue+
+
+FeatureSetDisjunctiveBody
+    ::= "{" "or" "}" "is"
+        Annotation* TypeVariant+
+
+FeatureSetExclusiveDisjunctionBody
+    ::= ( "{" "xor" "}" )?
+        "is"
+        Annotation* TypeVariant+
 
 PropertyMember
     ::= "in" IdentifierReference

@@ -43,6 +43,9 @@
 (union_def
  name: (identifier) @name) @definition.class
 
+(feature_set_def
+ name: (identifier) @name) @definition.class
+
 ;; ---------------------------------------------------------------------------
 ;; Members
 ;; ---------------------------------------------------------------------------

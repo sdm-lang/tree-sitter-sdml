@@ -19,7 +19,7 @@ with it alone.
 digraph G {
   bgcolor="transparent";
   rankdir="LR";
-  fontname="Helvetica,Arial,sans-serif";
+  fontname="Helvetica Neue,Helvetica,Arial,sans-serif";
   node [fontname="Helvetica,Arial,sans-serif"; fontsize=10; width=1.0; height=0.6];
   edge [fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="darkgrey"];
 
@@ -217,33 +217,36 @@ information. Figure [[fig:sdml-foundation]] shows how these different viewpoints
 #+BEGIN_SRC dot :file sdml-foundation.svg :exports results
 digraph G {
   bgcolor="transparent";
-  rankdir="TD";
+  compound=true;
+  rankdir="LR";
   fontname="Helvetica,Arial,sans-serif";
-  node [fontname="Helvetica,Arial,sans-serif"; fontsize=10; width=1.0; height=0.6];
+  node [shape="rect"; fontname="Helvetica,Arial,sans-serif"; fontsize=10; width=1.0; height=0.6];
   edge [fontname="Helvetica,Arial,sans-serif"; fontsize=9; fontcolor="darkgrey"];
   splines="ortho";
 
   subgraph cluster_0 {
-    bgcolor="transparent";
-    color="transparent";
-    rankdir="LR";
-
-    sdml [shape="rect"; label="SDML"];
-    catalog [shape="rect"; label="Data\nCatalog"];  
-    dictionary [shape="rect"; label="Data\nDictionary"];  
-    glossary [shape="rect"; label="Business\nGlossary"];
-
-    sdml -> glossary [style="dashed"];
-    glossary -> dictionary [style="dashed"];
-    dictionary -> catalog [style="dashed"];
+    height=1.0;
+    sdml [label="SDML"];
+    catalog [label="Data\nCatalog"];  
+    dictionary [label="Data\nDictionary"];  
+    glossary [label="Business\nGlossary"];
+  
+    glossary -> sdml [style="dashed"];
+    dictionary -> glossary [style="dashed"];
+    catalog -> dictionary [style="dashed"];
   }
   
-  foundation [shape="rect"; width=3.5; label="Common Foundation (RDF/OWL)"];
+  foundation [label="Common Foundation\n(RDF/OWL)"];
+  sdml -> foundation [ltail=cluster_0];
 
-  sdml -> foundation [arrowhead="open"];
-  glossary -> foundation [arrowhead="open"];
-  dictionary -> foundation [arrowhead="open"];
-  catalog -> foundation [arrowhead="open"];
+  subgraph cluster_1 {
+    sparql [label="SPARQL"];
+    tools [label="Tools"];
+
+    sparql -> tools [style="dashed"; dir="back"];
+  }
+
+  foundation -> sparql [lhead=cluster_1; dir="back"];
 }
 #+END_SRC
 
@@ -424,12 +427,12 @@ sometimes a pre-processor, then an intermediate machine-independent language use
 machine specific assembler. In some compilers there are even multiple intermediate languages at different levels. While
 it is often possible to inspect these intermediate forms it is not realistic to edit them (unless you are a compiler
 developer) and there is *no* expectation that the compiler will put your changes back into your source code.
-
-* SDML as a Domain Modeling Language
+C
+** SDML as a Domain Modeling Language
 
 TBD
 
-** Goals
+*** Goals
 
 The purpose of SDML is to be the source of truth concerning the enterprise's domain, and the root of the tree shown in
 figure [[fig:example-transform]]. It needs to provide an abstraction that is expressive enough to model the structure of
@@ -450,7 +453,7 @@ the surface syntax is the canonical authoring form.
 
 (*TODO*: Add vocabulary discussion)
 
-** Non-Goals
+*** Non-Goals
 
 (*TODO*: Complete this list)
 
@@ -459,7 +462,7 @@ the surface syntax is the canonical authoring form.
 3. Behavior Modeling
 4. Standardization
 
-* Acknowledgments
+** Acknowledgments
 
 Obviously this work relies on the decades of prior art in domain modeling and modeling languages in general; in
 particular, the many authors and contributors to the UML family of specifications. Similarly SDML relies heavily on the

@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.40
+// Version:    0.1.41
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -780,6 +780,7 @@ module.exports = grammar({
             $.structure_def,
             $.union_def,
             $.property_def,
+            $.feature_set_def,
         ),
 
         data_type_def: $ => seq(
@@ -964,6 +965,59 @@ module.exports = grammar({
             ),
             $._type_expression_to,
             optional(field('body', $.annotation_only_body))
+        ),
+
+        feature_set_def: $ => seq(
+            keyword('features'),
+            field('name', $.identifier),
+            optional(
+                field(
+                    'body',
+                    choice(
+                        $.feature_set_conjunctive_body,
+                        $.feature_set_disjunctive_body,
+                        $.feature_set_exclusive_disjunction_body,
+                    )
+                )
+            )
+        ),
+
+        feature_set_conjunctive_body: $ => seq(
+            seq(
+                '{',
+                keyword('and'),
+                '}'
+            ),
+            keyword('is'),
+            repeat($.annotation),
+            repeat1($.role_by_value),
+            keyword('end')
+        ),
+
+        feature_set_disjunctive_body: $ => seq(
+            seq(
+                '{',
+                keyword('or'),
+                '}'
+            ),
+            keyword('of'),
+            repeat($.annotation),
+            repeat1($.type_variant),
+            keyword('end')
+        ),
+
+        feature_set_exclusive_disjunction_body: $ => seq(
+            optional(
+                seq(
+                    '{',
+                    keyword('xor'),
+                    '}'
+                )
+            ),
+            keyword('of'),
+            repeat($.annotation),
+            repeat1($.type_variant),
+            keyword('end')
         ),
 
         // -----------------------------------------------------------------------

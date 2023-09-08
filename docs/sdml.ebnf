@@ -35,6 +35,7 @@ Definition
         | StructureDef
         | UnionDef
         | PropertyDef
+        | FeatureSetDef
 
 DataTypeDef
     ::= "datatype" Identifier TypeRestriction DataTypeBase AnnotationOnlyBody?
@@ -116,6 +117,27 @@ RoleByValue
 
 RoleByReference
     ::= "ref" Identifier InverseName? TypeExpressionTo AnnotationOnlyBody?
+
+FeatureSetDef
+    ::= "features" Identifier
+        (
+            FeatureSetConjunctiveBody
+          | FeatureSetDisjunctiveBody
+          | FeatureSetExclusiveDisjunctionBody
+        )?
+
+FeatureSetConjunctiveBody
+    ::= "{" "and" "}" "is"
+        Annotation* RoleByValue+
+
+FeatureSetDisjunctiveBody
+    ::= "{" "or" "}" "of"
+        Annotation* TypeVariant+
+
+FeatureSetExclusiveDisjunctionBody
+    ::= ( "{" "xor" "}" )?
+        "of"
+        Annotation* TypeVariant+
 
 PropertyMember
     ::= "in" IdentifierReference

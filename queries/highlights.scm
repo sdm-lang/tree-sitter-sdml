@@ -20,6 +20,7 @@
  "enum"
  "event"
  "exists"
+ "features"
  "forall"
  "group"
  "identity"
@@ -165,6 +166,8 @@
 (structure_def name: (identifier) @type.definition)
 
 (union_def name: (identifier) @type.definition)
+
+(feature_set_def name: (identifier) @type.definition)
 
 ;; ---------------------------------------------------------------------------
 ;; Members

@@ -1,0 +1,18 @@
+==================
+Feature Set, Empty
+==================
+
+module example is
+
+  features Engine
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (feature_set_def
+        name: (identifier)))))

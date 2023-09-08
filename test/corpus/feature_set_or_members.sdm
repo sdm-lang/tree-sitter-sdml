@@ -1,0 +1,32 @@
+=======================
+Feature Set, OR Members
+=======================
+
+module example is
+
+  features Engine {or} of
+    FourCylinder
+    SixCylinder
+    SizCylinderTurbo
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (feature_set_def
+        name: (identifier)
+        body: (feature_set_disjunctive_body
+          (type_variant
+            name: (identifier_reference
+              (identifier)))
+          (type_variant
+            name: (identifier_reference
+              (identifier)))
+          (type_variant
+            name: (identifier_reference
+              (identifier))))))))

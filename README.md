@@ -51,6 +51,10 @@ end
 
 **Version: 0.1.41**
 
+* Feature: add support for features from Product Line Engineering.
+  * Add new definition rule `feature_set_def` to rule `definition`.
+  * Add *and*, *or*, *xor* bodies to  `feature_set_def`.
+  * Add basic documentation to book.
 * Feature: updates to builtin simple types.
   * Add the new type `unsigned`.
   * Add the new type `binary`.

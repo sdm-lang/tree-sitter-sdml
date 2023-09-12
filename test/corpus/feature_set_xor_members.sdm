@@ -4,7 +4,7 @@ Feature Set, XOR Members
 
 module example is
 
-  features Engine {xor} of
+  features Engine {1} of
     FourCylinder
     SixCylinder
     SizCylinderTurbo
@@ -20,7 +20,9 @@ end
     (definition
       (feature_set_def
         name: (identifier)
-        body: (feature_set_exclusive_disjunction_body
+        cardinality: (cardinality_expression
+          min: (unsigned))
+        body: (union_body
           (type_variant
             name: (identifier_reference
               (identifier)))

@@ -1,13 +1,13 @@
-=======================
-Feature Set, OR Members
-=======================
+=============================
+Feature Set, Implicit Members
+=============================
 
 module example is
 
-  features Dashboard {1..} of
-    OnCall
-    NativeMapping
-    CarPlay
+  features Engine of
+    FourCylinder
+    SixCylinder
+    SixCylinderTurbo
   end
 
 end
@@ -20,9 +20,6 @@ end
     (definition
       (feature_set_def
         name: (identifier)
-        cardinality: (cardinality_expression
-          min: (unsigned)
-          range: (cardinality_range))
         body: (union_body
           (type_variant
             name: (identifier_reference

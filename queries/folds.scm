@@ -3,10 +3,10 @@
  (entity_def)
  (enum_def)
  (event_def)
+ (feature_set_def)
+ (property_def)
  (structure_def)
  (union_def)
- (property_def)
- (feature_set_def)
  ;; ----------------
  (annotation_only_body)
  (entity_body)
@@ -14,9 +14,6 @@
  (structure_body)
  (union_body)
  (property_body)
- (feature_set_conjunctive_body)
- (feature_set_disjunctive_body)
- (feature_set_exclusive_disjunction_body)
  ;; ----------------
  (entity_group)
  (structure_group)

@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.41
+// Version:    0.1.42
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -972,52 +972,16 @@ module.exports = grammar({
             field('name', $.identifier),
             optional(
                 field(
+                    'cardinality',
+                    $.cardinality_expression
+                )
+            ),
+            optional(
+                field(
                     'body',
-                    choice(
-                        $.feature_set_conjunctive_body,
-                        $.feature_set_disjunctive_body,
-                        $.feature_set_exclusive_disjunction_body,
-                    )
+                    $.union_body
                 )
             )
-        ),
-
-        feature_set_conjunctive_body: $ => seq(
-            seq(
-                '{',
-                keyword('and'),
-                '}'
-            ),
-            keyword('is'),
-            repeat($.annotation),
-            repeat1($.role_by_value),
-            keyword('end')
-        ),
-
-        feature_set_disjunctive_body: $ => seq(
-            seq(
-                '{',
-                keyword('or'),
-                '}'
-            ),
-            keyword('of'),
-            repeat($.annotation),
-            repeat1($.type_variant),
-            keyword('end')
-        ),
-
-        feature_set_exclusive_disjunction_body: $ => seq(
-            optional(
-                seq(
-                    '{',
-                    keyword('xor'),
-                    '}'
-                )
-            ),
-            keyword('of'),
-            repeat($.annotation),
-            repeat1($.type_variant),
-            keyword('end')
         ),
 
         // -----------------------------------------------------------------------

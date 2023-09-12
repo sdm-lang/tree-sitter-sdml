@@ -163,11 +163,11 @@
  name: (identifier) @type.definition
  source: (identifier_reference) @type)
 
+(feature_set_def name: (identifier) @type.definition)
+
 (structure_def name: (identifier) @type.definition)
 
 (union_def name: (identifier) @type.definition)
-
-(feature_set_def name: (identifier) @type.definition)
 
 ;; ---------------------------------------------------------------------------
 ;; Members

@@ -3542,232 +3542,32 @@
           "members": [
             {
               "type": "FIELD",
-              "name": "body",
+              "name": "cardinality",
               "content": {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "feature_set_conjunctive_body"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "feature_set_disjunctive_body"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "feature_set_exclusive_disjunction_body"
-                  }
-                ]
+                "type": "SYMBOL",
+                "name": "cardinality_expression"
               }
             },
             {
               "type": "BLANK"
             }
           ]
-        }
-      ]
-    },
-    "feature_set_conjunctive_body": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "{"
-            },
-            {
-              "type": "TOKEN",
-              "content": {
-                "type": "PREC",
-                "value": 2,
-                "content": {
-                  "type": "STRING",
-                  "value": "and"
-                }
-              }
-            },
-            {
-              "type": "STRING",
-              "value": "}"
-            }
-          ]
         },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "is"
-            }
-          }
-        },
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "annotation"
-          }
-        },
-        {
-          "type": "REPEAT1",
-          "content": {
-            "type": "SYMBOL",
-            "name": "role_by_value"
-          }
-        },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "end"
-            }
-          }
-        }
-      ]
-    },
-    "feature_set_disjunctive_body": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "{"
-            },
-            {
-              "type": "TOKEN",
-              "content": {
-                "type": "PREC",
-                "value": 2,
-                "content": {
-                  "type": "STRING",
-                  "value": "or"
-                }
-              }
-            },
-            {
-              "type": "STRING",
-              "value": "}"
-            }
-          ]
-        },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "of"
-            }
-          }
-        },
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "annotation"
-          }
-        },
-        {
-          "type": "REPEAT1",
-          "content": {
-            "type": "SYMBOL",
-            "name": "type_variant"
-          }
-        },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "end"
-            }
-          }
-        }
-      ]
-    },
-    "feature_set_exclusive_disjunction_body": {
-      "type": "SEQ",
-      "members": [
         {
           "type": "CHOICE",
           "members": [
             {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "{"
-                },
-                {
-                  "type": "TOKEN",
-                  "content": {
-                    "type": "PREC",
-                    "value": 2,
-                    "content": {
-                      "type": "STRING",
-                      "value": "xor"
-                    }
-                  }
-                },
-                {
-                  "type": "STRING",
-                  "value": "}"
-                }
-              ]
+              "type": "FIELD",
+              "name": "body",
+              "content": {
+                "type": "SYMBOL",
+                "name": "union_body"
+              }
             },
             {
               "type": "BLANK"
             }
           ]
-        },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "of"
-            }
-          }
-        },
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "annotation"
-          }
-        },
-        {
-          "type": "REPEAT1",
-          "content": {
-            "type": "SYMBOL",
-            "name": "type_variant"
-          }
-        },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "end"
-            }
-          }
         }
       ]
     },

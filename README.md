@@ -49,6 +49,15 @@ end
 
 # Changes
 
+**Version: 0.1.42**
+
+* Feature: simplified features to be or/xor only.
+
+``` ebnf
+FeatureSetDef
+    ::= "features" Identifier Cardinality? UnionBody?
+```
+
 **Version: 0.1.41**
 
 * Feature: add support for features from Product Line Engineering.

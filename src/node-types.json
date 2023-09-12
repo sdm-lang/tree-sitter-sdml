@@ -667,25 +667,6 @@
     "fields": {}
   },
   {
-    "type": "feature_set_conjunctive_body",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "annotation",
-          "named": true
-        },
-        {
-          "type": "role_by_value",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "feature_set_def",
     "named": true,
     "fields": {
@@ -694,15 +675,17 @@
         "required": false,
         "types": [
           {
-            "type": "feature_set_conjunctive_body",
+            "type": "union_body",
             "named": true
-          },
+          }
+        ]
+      },
+      "cardinality": {
+        "multiple": false,
+        "required": false,
+        "types": [
           {
-            "type": "feature_set_disjunctive_body",
-            "named": true
-          },
-          {
-            "type": "feature_set_exclusive_disjunction_body",
+            "type": "cardinality_expression",
             "named": true
           }
         ]
@@ -717,44 +700,6 @@
           }
         ]
       }
-    }
-  },
-  {
-    "type": "feature_set_disjunctive_body",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "annotation",
-          "named": true
-        },
-        {
-          "type": "type_variant",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "feature_set_exclusive_disjunction_body",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "annotation",
-          "named": true
-        },
-        {
-          "type": "type_variant",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -2643,11 +2588,11 @@
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "end",
@@ -2819,11 +2764,11 @@
   },
   {
     "type": "unsigned",
-    "named": false
+    "named": true
   },
   {
     "type": "unsigned",
-    "named": true
+    "named": false
   },
   {
     "type": "wildcard",

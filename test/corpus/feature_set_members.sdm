@@ -1,0 +1,45 @@
+=============================
+Feature Set, Implicit Members
+=============================
+
+module example is
+
+  structure Car is
+    engine -> features Engine
+  end
+
+  union Engine of
+    FourCylinder
+    SixCylinder
+    SixCylinderTurbo
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (structure_def
+        name: (identifier)
+        body: (structured_body
+          (member
+            name: (identifier)
+            target: (type_reference
+              (identifier_reference
+                (identifier)))))))
+    (definition
+      (union_def
+        name: (identifier)
+        body: (union_body
+          (type_variant
+            name: (identifier_reference
+              (identifier)))
+          (type_variant
+            name: (identifier_reference
+              (identifier)))
+          (type_variant
+            name: (identifier_reference
+              (identifier))))))))

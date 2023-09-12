@@ -51,7 +51,9 @@ end
 
 **Version: 0.1.42**
 
-* Feature: simplified features to be or/xor only.
+* Feature: simplified `features` definition to be or/xor only.
+  * Replace: separate bodies with `UnionBody`.
+  * Add: cardinality now used to determine or/xor.
 
 ``` ebnf
 FeatureSetDef

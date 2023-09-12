@@ -39,7 +39,7 @@ module Campaign base <https://advertising.amazon.com/api-model> is
 
     tag -> {0..} Tag
 
-    ref target -> {1..} Target
+    target -> {1..} Target
   end
 
   entity Target
@@ -48,6 +48,25 @@ end
 ```
 
 # Changes
+
+**Version: 0.2.0**
+
+This is a significant refactor intended to simplify the grammar, and reduce the number of constructs used where the
+differentiation is not as significant as it looked previously.
+
+* Refactor: simplify model overall, especially members and features.
+  * Refactor: combine by-value and by-reference member types.
+    * Remove: rules `member_by_value` and `role_by_value`.
+    * Rename: rule `member_by_reference` to `member` and `role_by_reference` to `member_role`.
+    * Remove: keyword the `ref` from rules `member` and `member_role`.
+    * Rename: rule `identity_member` to `entity_identity`.
+  * Refactor: combine structured type groups.
+    * Rename: rule `structure_body` to `structured_body`.
+    * Rename: rule `structure_group` to `member_group`.
+    * Move: common parts of structure and entity bodies into common `_structured_body_inner` rule.
+  * Refactor: move feature from a definition to a member modifier.
+    * Remove: rule `feature_set_def`, and update `definition` accordingly.
+    * Add: optional keyword `features` into the rule `_type_expression_to`.
 
 **Version: 0.1.42**
 

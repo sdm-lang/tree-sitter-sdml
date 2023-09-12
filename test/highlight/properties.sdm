@@ -34,17 +34,16 @@ module properties is
     end
     ; <- keyword
 
-    ref reference (inverse_ref) -> {1} account:AccountId
-    ; <- keyword
-    ;   ^ variable.field
-    ;             ^ punctuation.bracket
-    ;              ^ variable.field
-    ;                         ^ punctuation.bracket
-    ;                           ^ operator
-    ;                              ^ punctuation.bracket
-    ;                               ^ number
-    ;                                ^ punctuation.bracket
-    ;                                  ^ type
+    reference (inverse_ref) -> {1} account:AccountId
+    ; <- variable.field
+    ;         ^ punctuation.bracket
+    ;          ^ variable.field
+    ;                     ^ punctuation.bracket
+    ;                       ^ operator
+    ;                          ^ punctuation.bracket
+    ;                           ^ number
+    ;                            ^ punctuation.bracket
+    ;                              ^ type
 
   end
   ; <- keyword

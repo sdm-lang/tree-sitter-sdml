@@ -43,27 +43,19 @@
 (union_def
  name: (identifier) @name) @definition.class
 
-(feature_set_def
- name: (identifier) @name) @definition.class
-
 ;; ---------------------------------------------------------------------------
 ;; Members
 ;; ---------------------------------------------------------------------------
 
-(identity_member
+(entity_identity
  name: (identifier) @definition.field
  target: (type_reference (identifier_reference) @reference.class))
 
-(member_by_value
- name: (identifier) @definition.field
- target: (type_reference (identifier_reference) @reference.class))
-
-(member_by_reference
+(member
  name: (identifier) @definition.field
  target: (type_reference (identifier_reference) @reference.class))
 
 (type_variant (identifier_reference) @reference.class)
-
 (type_variant rename: (identifier) @reference.class)
 
 (value_variant
@@ -73,11 +65,7 @@
  name: (identifier) @definition.field
  target: (type_reference) @reference.class)
 
-(role_by_value
- name: (identifier) @definition.field
- target: (type_reference) @reference.class)
-
-(role_by_reference
+(member_role
  name: (identifier) @definition.field
  target: (type_reference) @reference.class)
 

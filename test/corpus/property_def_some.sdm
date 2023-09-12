@@ -7,7 +7,7 @@ module ddict is
     identifier -> {1} account:AccountId is
       @skos:definition = "a"@en
     end
-    ref reference (inverse_ref) -> {1} account:AccountId
+    reference (inverse_ref) -> {1} account:AccountId
   end
 end
 
@@ -20,7 +20,7 @@ end
       (property_def
         (identifier)
         (property_body
-           (role_by_value
+           (member_role
              (identifier)
              (cardinality_expression
                (unsigned))
@@ -41,7 +41,7 @@ end
                        (string
                          (quoted_string)
                          (language_tag))))))))
-           (role_by_reference
+           (member_role
              (identifier)
              (member_inverse_name
                (identifier))

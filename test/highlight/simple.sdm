@@ -17,7 +17,7 @@ module Campaign is
   ;^ property
   ;         ^ operator
   ;           ^ string.special
-  
+
   @skos:version = xsd:decimal(2)
   ; <- property
   ;^ property
@@ -33,22 +33,22 @@ module Campaign is
   ;             ^ operator
   ;                ^ type
   ;                           ^ keyword
-  
+
     @xsd:minLength = 5
     ; <- property
     ;^ property
     ;              ^ operator
     ;                ^ number
-    
+
     @xsd:maxLength = 25
     ; <- property
     ;^ property
     ;              ^ operator
     ;                ^ number
-    
+
   end
   ; <- keyword
-  
+
   datatype CampaignId <- xsd:string is
   ; <- keyword
   ;        ^ type.definition
@@ -124,24 +124,22 @@ module Campaign is
     end
     ; <- keyword
 
-    ref something -> unknown
-    ; <- keyword
-    ;   ^ variable.field
-    ;             ^ operator
-    ;                ^ type.builtin
+    something -> unknown
+    ; <- variable.field
+    ;         ^ operator
+    ;            ^ type.builtin
 
-    ref target (other_name) -> {1..} Target
-    ; <- keyword
-    ;   ^ variable.field
-    ;          ^ punctuation.bracket
-    ;           ^ variable.field
-    ;                     ^ punctuation.bracket
-    ;                       ^ operator
+    target (other_name) -> {1..} Target
+    ; <- variable.field
+    ;      ^ punctuation.bracket
+    ;       ^ variable.field
+    ;                 ^ punctuation.bracket
+    ;                   ^ operator
+    ;                      ^ punctuation.bracket
+    ;                       ^ number
+    ;                        ^ operator
     ;                          ^ punctuation.bracket
-    ;                           ^ number
-    ;                            ^ operator
-    ;                              ^ punctuation.bracket
-    ;                                ^ type
+    ;                            ^ type
 
   end
   ; <- keyword

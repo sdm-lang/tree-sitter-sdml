@@ -3,7 +3,6 @@
  (entity_def)
  (enum_def)
  (event_def)
- (feature_set_def)
  (property_def)
  (structure_def)
  (union_def)
@@ -11,12 +10,11 @@
  (annotation_only_body)
  (entity_body)
  (enum_body)
- (structure_body)
+ (structured_body)
  (union_body)
  (property_body)
  ;; ----------------
- (entity_group)
- (structure_group)
+ (member_group)
  ;; ----------------
  (formal_constraint)
  (constraint_sentence)

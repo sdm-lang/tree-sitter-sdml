@@ -34,7 +34,6 @@
  "of"
  "or"
  "property"
- "ref"
  "source"
  "structure"
  "union"
@@ -163,8 +162,6 @@
  name: (identifier) @type.definition
  source: (identifier_reference) @type)
 
-(feature_set_def name: (identifier) @type.definition)
-
 (structure_def name: (identifier) @type.definition)
 
 (union_def name: (identifier) @type.definition)
@@ -173,17 +170,13 @@
 ;; Members
 ;; ---------------------------------------------------------------------------
 
-(identity_member name: (identifier) @variable.field)
-(identity_member property: (identifier_reference) @variable.field)
-(identity_member target: (type_reference) @type)
+(entity_identity name: (identifier) @variable.field)
+(entity_identity property: (identifier_reference) @variable.field)
+(entity_identity target: (type_reference) @type)
 
-(member_by_value name: (identifier) @variable.field)
-(member_by_value property: (identifier_reference) @variable.field)
-(member_by_value target: (type_reference) @type)
-
-(member_by_reference name: (identifier) @variable.field)
-(member_by_reference property: (identifier_reference) @variable.field)
-(member_by_reference target: (type_reference) @type)
+(member name: (identifier) @variable.field)
+(member property: (identifier_reference) @variable.field)
+(member target: (type_reference) @type)
 
 (member_inverse_name
  "(" @punctuation.bracket
@@ -202,11 +195,7 @@
  name: (identifier) @variable.field
  target: (type_reference) @type)
 
-(role_by_value
- name: (identifier) @variable.field
- target: (type_reference) @type)
-
-(role_by_reference
+(member_role
  name: (identifier) @variable.field
  target: (type_reference) @type)
 

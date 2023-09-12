@@ -9,8 +9,8 @@ module another is
   end
 
   datatype byte ← integer is
-  @xsd:minValue = 0
-  @xsd:maxValue = 256
+    @xsd:minValue = 0
+    @xsd:maxValue = 256
   end
 
   structure Foo is

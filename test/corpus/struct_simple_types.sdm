@@ -19,12 +19,12 @@ end
     (definition
       (structure_def
         name: (identifier)
-        body: (structure_body
-          (member_by_value
+        body: (structured_body
+          (member
             name: (identifier)
             target: (type_reference
               (builtin_simple_type)))
-          (member_by_value
+          (member
             name: (identifier)
             target: (type_reference
               (builtin_simple_type))))))))

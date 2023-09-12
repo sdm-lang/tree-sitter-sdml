@@ -24,21 +24,21 @@ end
       (entity_def
         name: (identifier)
         body: (entity_body
-          identity: (identity_member
+          identity: (entity_identity
             name: (identifier)
             target: (type_reference
               (identifier_reference
                 (qualified_identifier
                   module: (identifier)
                   member: (identifier)))))
-        (member_by_value
+        (member
           name: (identifier)
           target: (type_reference
             (identifier_reference
               (qualified_identifier
                 module: (identifier)
                 member: (identifier)))))
-        (member_by_value
+        (member
           name: (identifier)
           target: (type_reference
             (identifier_reference

@@ -12,7 +12,7 @@ module Campaign is
       assert not_null = "self is not null"
     end
 
-    ref c -> Target is
+    c -> Target is
       assert tagged_with_foo is
         ∀ self (contains(self.tags "foo"))
       end
@@ -32,12 +32,12 @@ end
        (entity_def
          (identifier)
          (entity_body
-           (identity_member
+           (entity_identity
              (identifier)
              (type_reference
                (identifier_reference
                  (identifier))))
-           (member_by_value
+           (member
              (identifier)
              (type_reference
                (identifier_reference
@@ -50,7 +50,7 @@ end
                    (identifier)
                    (informal_constraint
                      (quoted_string))))))
-           (member_by_reference
+           (member
              (identifier)
              (type_reference
                (identifier_reference

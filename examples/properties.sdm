@@ -8,7 +8,7 @@ module properties is
       @skos:definition = "a"@en
     end
 
-    ref reference (inverse_ref) -> {1} account:AccountId
+    reference (inverse_ref) -> {1} account:AccountId
 
   end
 

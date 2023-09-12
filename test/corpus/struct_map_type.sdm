@@ -18,8 +18,8 @@ end
     (definition
       (structure_def
         name: (identifier)
-        body: (structure_body
-          (member_by_value
+        body: (structured_body
+          (member
             name: (identifier)
             cardinality: (cardinality_expression
               uniqueness: (sequence_uniqueness)

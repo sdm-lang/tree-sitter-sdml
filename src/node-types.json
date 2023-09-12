@@ -409,10 +409,6 @@
           "named": true
         },
         {
-          "type": "feature_set_def",
-          "named": true
-        },
-        {
           "type": "property_def",
           "named": true
         },
@@ -441,7 +437,7 @@
         "required": true,
         "types": [
           {
-            "type": "identity_member",
+            "type": "entity_identity",
             "named": true
           }
         ]
@@ -449,22 +445,18 @@
     },
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "annotation",
           "named": true
         },
         {
-          "type": "entity_group",
+          "type": "member",
           "named": true
         },
         {
-          "type": "member_by_reference",
-          "named": true
-        },
-        {
-          "type": "member_by_value",
+          "type": "member_group",
           "named": true
         }
       ]
@@ -497,26 +489,49 @@
     }
   },
   {
-    "type": "entity_group",
+    "type": "entity_identity",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "annotation",
-          "named": true
-        },
-        {
-          "type": "member_by_reference",
-          "named": true
-        },
-        {
-          "type": "member_by_value",
-          "named": true
-        }
-      ]
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "annotation_only_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "property": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type_reference",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -629,7 +644,7 @@
         "required": false,
         "types": [
           {
-            "type": "structure_body",
+            "type": "structured_body",
             "named": true
           }
         ]
@@ -665,42 +680,6 @@
     "type": "existential",
     "named": true,
     "fields": {}
-  },
-  {
-    "type": "feature_set_def",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "union_body",
-            "named": true
-          }
-        ]
-      },
-      "cardinality": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "cardinality_expression",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    }
   },
   {
     "type": "formal_constraint",
@@ -980,52 +959,6 @@
     }
   },
   {
-    "type": "identity_member",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "annotation_only_body",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "property": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier_reference",
-            "named": true
-          }
-        ]
-      },
-      "target": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "type_reference",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "identity_role",
     "named": true,
     "fields": {
@@ -1252,7 +1185,7 @@
     }
   },
   {
-    "type": "member_by_reference",
+    "type": "member",
     "named": true,
     "fields": {
       "body": {
@@ -1272,6 +1205,16 @@
           {
             "type": "cardinality_expression",
             "named": true
+          }
+        ]
+      },
+      "feature": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "features",
+            "named": false
           }
         ]
       },
@@ -1318,59 +1261,22 @@
     }
   },
   {
-    "type": "member_by_value",
+    "type": "member_group",
     "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "annotation_only_body",
-            "named": true
-          }
-        ]
-      },
-      "cardinality": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "cardinality_expression",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "property": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier_reference",
-            "named": true
-          }
-        ]
-      },
-      "target": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "type_reference",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "annotation",
+          "named": true
+        },
+        {
+          "type": "member",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1399,6 +1305,72 @@
         "types": [
           {
             "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "member_role",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "annotation_only_body",
+            "named": true
+          }
+        ]
+      },
+      "cardinality": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "cardinality_expression",
+            "named": true
+          }
+        ]
+      },
+      "feature": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "features",
+            "named": false
+          }
+        ]
+      },
+      "inverse_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "member_inverse_name",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_reference",
             "named": true
           }
         ]
@@ -1541,11 +1513,7 @@
           "named": true
         },
         {
-          "type": "role_by_reference",
-          "named": true
-        },
-        {
-          "type": "role_by_value",
+          "type": "member_role",
           "named": true
         }
       ]
@@ -1695,108 +1663,6 @@
           },
           {
             "type": "type_iterator",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "role_by_reference",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "annotation_only_body",
-            "named": true
-          }
-        ]
-      },
-      "cardinality": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "cardinality_expression",
-            "named": true
-          }
-        ]
-      },
-      "inverse_name": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "member_inverse_name",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "target": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "type_reference",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "role_by_value",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "annotation_only_body",
-            "named": true
-          }
-        ]
-      },
-      "cardinality": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "cardinality_expression",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "target": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "type_reference",
             "named": true
           }
         ]
@@ -2104,29 +1970,6 @@
     }
   },
   {
-    "type": "structure_body",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "annotation",
-          "named": true
-        },
-        {
-          "type": "member_by_value",
-          "named": true
-        },
-        {
-          "type": "structure_group",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "structure_def",
     "named": true,
     "fields": {
@@ -2135,7 +1978,7 @@
         "required": false,
         "types": [
           {
-            "type": "structure_body",
+            "type": "structured_body",
             "named": true
           }
         ]
@@ -2153,7 +1996,7 @@
     }
   },
   {
-    "type": "structure_group",
+    "type": "structured_body",
     "named": true,
     "fields": {},
     "children": {
@@ -2165,7 +2008,11 @@
           "named": true
         },
         {
-          "type": "member_by_value",
+          "type": "member",
+          "named": true
+        },
+        {
+          "type": "member_group",
           "named": true
         }
       ]
@@ -2588,11 +2435,11 @@
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "end",
@@ -2660,11 +2507,11 @@
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "iri",
@@ -2719,10 +2566,6 @@
     "named": true
   },
   {
-    "type": "ref",
-    "named": false
-  },
-  {
     "type": "reserved_self",
     "named": true
   },
@@ -2764,11 +2607,11 @@
   },
   {
     "type": "unsigned",
-    "named": true
+    "named": false
   },
   {
     "type": "unsigned",
-    "named": false
+    "named": true
   },
   {
     "type": "wildcard",

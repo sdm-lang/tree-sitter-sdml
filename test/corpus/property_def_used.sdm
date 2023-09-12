@@ -16,8 +16,8 @@ end
     (definition
       (structure_def
         name: (identifier)
-        body: (structure_body
-          (member_by_value
+        body: (structured_body
+          (member
             name: (identifier)
             property: (identifier_reference
               (identifier))))))))

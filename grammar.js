@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.1.42
+// Version:    0.2.0
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -576,7 +576,7 @@ module.exports = grammar({
         ),
 
         named_variable_set: $ => repeat1(
-            // RULE: all names MUST be unique.
+            // WFR: all names MUST be unique.
             $.identifier
         ),
 
@@ -777,10 +777,9 @@ module.exports = grammar({
             $.entity_def,
             $.enum_def,
             $.event_def,
-            $.structure_def,
-            $.union_def,
             $.property_def,
-            $.feature_set_def,
+            $.structure_def,
+            $.union_def
         ),
 
         data_type_def: $ => seq(
@@ -814,29 +813,11 @@ module.exports = grammar({
             optional(field('body', $.entity_body))
         ),
 
-        entity_group: $ => seq(
-            keyword('group'),
-            repeat($.annotation),
-            repeat1(
-                choice(
-                    $.member_by_value,
-                    $.member_by_reference
-                )
-            ),
-            keyword('end')
-        ),
-
         entity_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
-            field('identity', $.identity_member),
-            repeat(
-                choice(
-                    $.entity_group,
-                    $.member_by_value,
-                    $.member_by_reference
-                )
-            ),
+            field('identity', $.entity_identity),
+            $._structured_body_inner,
             keyword('end')
         ),
 
@@ -865,31 +846,33 @@ module.exports = grammar({
             field('name', $.identifier),
             keyword('source'),
             field('source', $.identifier_reference),
-            optional(field('body', $.structure_body))
+            optional(field('body', $.structured_body))
         ),
 
         structure_def: $ => seq(
             keyword('structure'),
             field('name', $.identifier),
-            optional(field('body', $.structure_body))
+            optional(field('body', $.structured_body))
         ),
 
-        structure_group: $ => seq(
-            keyword('group'),
+        structured_body: $ => seq(
+            keyword('is'),
             repeat($.annotation),
-            repeat1($.member_by_value),
+            $._structured_body_inner,
             keyword('end')
         ),
 
-        structure_body: $ => seq(
-            keyword('is'),
+        _structured_body_inner: $ => repeat1(
+            choice(
+                $.member_group,
+                $.member
+            )
+        ),
+
+        member_group: $ => seq(
+            keyword('group'),
             repeat($.annotation),
-            repeat(
-                choice(
-                    $.structure_group,
-                    $.member_by_value
-                )
-            ),
+            repeat1($.member),
             keyword('end')
         ),
 
@@ -937,8 +920,7 @@ module.exports = grammar({
             repeat1(
                 choice(
                     $.identity_role,
-                    $.role_by_value,
-                    $.role_by_reference
+                    $.member_role
                 )
             ),
             keyword('end')
@@ -951,37 +933,13 @@ module.exports = grammar({
             optional(field('body', $.annotation_only_body))
         ),
 
-        role_by_value: $ => seq(
-            field('name', $.identifier),
-            $._type_expression_to,
-            optional(field('body', $.annotation_only_body))
-        ),
-
-        role_by_reference: $ => seq(
-            keyword('ref'),
+        member_role: $ => seq(
             field('name', $.identifier),
             optional(
                 field('inverse_name', $.member_inverse_name)
             ),
             $._type_expression_to,
             optional(field('body', $.annotation_only_body))
-        ),
-
-        feature_set_def: $ => seq(
-            keyword('features'),
-            field('name', $.identifier),
-            optional(
-                field(
-                    'cardinality',
-                    $.cardinality_expression
-                )
-            ),
-            optional(
-                field(
-                    'body',
-                    $.union_body
-                )
-            )
         ),
 
         // -----------------------------------------------------------------------
@@ -993,7 +951,7 @@ module.exports = grammar({
             field('property', $.identifier_reference),
         ),
 
-        identity_member: $ => seq(
+        entity_identity: $ => seq(
             keyword('identity'),
             field('name', $.identifier),
             choice(
@@ -1005,19 +963,7 @@ module.exports = grammar({
             )
         ),
 
-        member_by_value: $ => seq(
-            field('name', $.identifier),
-            choice(
-                $._property_member,
-                seq(
-                    $._type_expression_to,
-                    optional(field('body', $.annotation_only_body))
-                )
-            )
-        ),
-
-        member_by_reference: $ => seq(
-            keyword('ref'),
+        member: $ => seq(
             field('name', $.identifier),
             choice(
                 $._property_member,
@@ -1047,7 +993,9 @@ module.exports = grammar({
             optional(
                 field('cardinality', $.cardinality_expression)
             ),
-            field('target', $.type_reference)
+            optional(field('feature', keyword('features'))),
+            // WFR: keyword('features') == kindof(target) == UnionDef
+             field('target', $.type_reference)
         ),
 
         type_reference: $ => choice(

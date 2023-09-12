@@ -3614,15 +3614,8 @@
               "type": "FIELD",
               "name": "feature",
               "content": {
-                "type": "TOKEN",
-                "content": {
-                  "type": "PREC",
-                  "value": 2,
-                  "content": {
-                    "type": "STRING",
-                    "value": "features"
-                  }
-                }
+                "type": "SYMBOL",
+                "name": "feature_reference"
               }
             },
             {
@@ -3639,6 +3632,17 @@
           }
         }
       ]
+    },
+    "feature_reference": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "STRING",
+          "value": "features"
+        }
+      }
     },
     "type_reference": {
       "type": "CHOICE",

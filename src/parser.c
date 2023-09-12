@@ -107,7 +107,7 @@ enum {
   anon_sym_as = 88,
   anon_sym_property = 89,
   anon_sym_identity = 90,
-  anon_sym_features = 91,
+  sym_feature_reference = 91,
   sym_unknown_type = 92,
   anon_sym_ordered = 93,
   anon_sym_unordered = 94,
@@ -342,7 +342,7 @@ static const char * const ts_symbol_names[] = {
   [anon_sym_as] = "as",
   [anon_sym_property] = "property",
   [anon_sym_identity] = "identity",
-  [anon_sym_features] = "features",
+  [sym_feature_reference] = "feature_reference",
   [sym_unknown_type] = "unknown_type",
   [anon_sym_ordered] = "ordered",
   [anon_sym_unordered] = "unordered",
@@ -577,7 +577,7 @@ static const TSSymbol ts_symbol_map[] = {
   [anon_sym_as] = anon_sym_as,
   [anon_sym_property] = anon_sym_property,
   [anon_sym_identity] = anon_sym_identity,
-  [anon_sym_features] = anon_sym_features,
+  [sym_feature_reference] = sym_feature_reference,
   [sym_unknown_type] = sym_unknown_type,
   [anon_sym_ordered] = anon_sym_ordered,
   [anon_sym_unordered] = anon_sym_unordered,
@@ -1085,9 +1085,9 @@ static const TSSymbolMetadata ts_symbol_metadata[] = {
     .visible = true,
     .named = false,
   },
-  [anon_sym_features] = {
+  [sym_feature_reference] = {
     .visible = true,
-    .named = false,
+    .named = true,
   },
   [sym_unknown_type] = {
     .visible = true,
@@ -4841,7 +4841,7 @@ static bool ts_lex_keywords(TSLexer *lexer, TSStateId state) {
       ACCEPT_TOKEN(anon_sym_datatype);
       END_STATE();
     case 191:
-      ACCEPT_TOKEN(anon_sym_features);
+      ACCEPT_TOKEN(sym_feature_reference);
       END_STATE();
     case 192:
       ACCEPT_TOKEN(anon_sym_identity);
@@ -5399,7 +5399,7 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [anon_sym_as] = ACTIONS(1),
     [anon_sym_property] = ACTIONS(1),
     [anon_sym_identity] = ACTIONS(1),
-    [anon_sym_features] = ACTIONS(1),
+    [sym_feature_reference] = ACTIONS(1),
     [sym_unknown_type] = ACTIONS(1),
     [anon_sym_ordered] = ACTIONS(1),
     [anon_sym_unordered] = ACTIONS(1),
@@ -9939,7 +9939,7 @@ static const uint16_t ts_small_parse_table[] = {
     ACTIONS(458), 1,
       anon_sym_LBRACE,
     ACTIONS(462), 1,
-      anon_sym_features,
+      sym_feature_reference,
     ACTIONS(464), 1,
       sym_unknown_type,
     STATE(20), 1,
@@ -10715,7 +10715,7 @@ static const uint16_t ts_small_parse_table[] = {
     ACTIONS(464), 1,
       sym_unknown_type,
     ACTIONS(529), 1,
-      anon_sym_features,
+      sym_feature_reference,
     STATE(20), 1,
       sym_qualified_identifier,
     STATE(299), 1,
@@ -11424,7 +11424,7 @@ static const uint16_t ts_small_parse_table[] = {
       anon_sym_string,
       anon_sym_iri,
       anon_sym_binary,
-      anon_sym_features,
+      sym_feature_reference,
       sym_unknown_type,
   [7434] = 3,
     ACTIONS(3), 1,
@@ -11441,7 +11441,7 @@ static const uint16_t ts_small_parse_table[] = {
       anon_sym_string,
       anon_sym_iri,
       anon_sym_binary,
-      anon_sym_features,
+      sym_feature_reference,
       sym_unknown_type,
   [7454] = 5,
     ACTIONS(3), 1,
@@ -11477,7 +11477,7 @@ static const uint16_t ts_small_parse_table[] = {
       anon_sym_string,
       anon_sym_iri,
       anon_sym_binary,
-      anon_sym_features,
+      sym_feature_reference,
       sym_unknown_type,
   [7498] = 4,
     ACTIONS(3), 1,
@@ -11512,7 +11512,7 @@ static const uint16_t ts_small_parse_table[] = {
       anon_sym_string,
       anon_sym_iri,
       anon_sym_binary,
-      anon_sym_features,
+      sym_feature_reference,
       sym_unknown_type,
   [7540] = 8,
     ACTIONS(3), 1,

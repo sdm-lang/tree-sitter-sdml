@@ -993,10 +993,12 @@ module.exports = grammar({
             optional(
                 field('cardinality', $.cardinality_expression)
             ),
-            optional(field('feature', keyword('features'))),
+            optional(field('feature', $.feature_reference)),
             // WFR: keyword('features') == kindof(target) == UnionDef
              field('target', $.type_reference)
         ),
+
+        feature_reference: $ => keyword('features'),
 
         type_reference: $ => choice(
             $.unknown_type,

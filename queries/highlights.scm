@@ -20,7 +20,6 @@
  "enum"
  "event"
  "exists"
- "features"
  "forall"
  "group"
  "identity"
@@ -40,6 +39,7 @@
  "xor"
  (sequence_ordering)
  (sequence_uniqueness)
+ (feature_reference)
  ] @keyword
 
 ;; ---------------------------------------------------------------------------

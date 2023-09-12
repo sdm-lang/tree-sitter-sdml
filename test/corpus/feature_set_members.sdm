@@ -27,6 +27,7 @@ end
         body: (structured_body
           (member
             name: (identifier)
+            feature: (feature_reference)
             target: (type_reference
               (identifier_reference
                 (identifier)))))))

@@ -1213,8 +1213,8 @@
         "required": false,
         "types": [
           {
-            "type": "features",
-            "named": false
+            "type": "feature_reference",
+            "named": true
           }
         ]
       },
@@ -1340,8 +1340,8 @@
         "required": false,
         "types": [
           {
-            "type": "features",
-            "named": false
+            "type": "feature_reference",
+            "named": true
           }
         ]
       },
@@ -2423,11 +2423,11 @@
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "def",
@@ -2435,11 +2435,11 @@
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "end",
@@ -2466,8 +2466,8 @@
     "named": false
   },
   {
-    "type": "features",
-    "named": false
+    "type": "feature_reference",
+    "named": true
   },
   {
     "type": "forall",
@@ -2507,11 +2507,11 @@
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "iri",
@@ -2607,11 +2607,11 @@
   },
   {
     "type": "unsigned",
-    "named": false
+    "named": true
   },
   {
     "type": "unsigned",
-    "named": true
+    "named": false
   },
   {
     "type": "wildcard",

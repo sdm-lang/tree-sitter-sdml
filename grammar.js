@@ -492,11 +492,13 @@ module.exports = grammar({
 
         function_def: $ => seq(
             field('signature', $.function_signature),
-            choice(
-                operator(':='),
-                operator('≔'),
-            ),
+            $._by_definition,
             field('body', $.constraint_sentence)
+        ),
+
+        _by_definition: $ => choice(
+            operator(':='),
+            operator('≔'),
         ),
 
         function_signature: $ => seq(
@@ -543,10 +545,7 @@ module.exports = grammar({
         wildcard: $ => operator('_'),
 
         constant_def: $ => seq(
-            choice(
-                operator(':='),
-                operator('≔'),
-            ),
+            $._by_definition,
             field(
                 'body',
                 choice(
@@ -786,6 +785,7 @@ module.exports = grammar({
             keyword('datatype'),
             field('name', $.identifier),
             $._type_restriction,
+            optional(field('opaque', $.opaque)),
             field(
                 'base',
                 choice(
@@ -795,6 +795,8 @@ module.exports = grammar({
             ),
             optional(field('body', $.annotation_only_body))
         ),
+
+        opaque: $ => keyword('opaque'),
 
         data_type_base: $ => choice(
             $.identifier_reference,
@@ -832,13 +834,6 @@ module.exports = grammar({
             repeat($.annotation),
             repeat1($.value_variant),
             keyword('end')
-        ),
-
-        value_variant: $ => seq(
-            field('name', $.identifier),
-            operator('='),
-            field('value', $.unsigned),
-            optional(field('body', $.annotation_only_body))
         ),
 
         event_def: $ => seq(
@@ -889,25 +884,6 @@ module.exports = grammar({
             keyword('end')
         ),
 
-        type_variant: $ => seq(
-            field('name', $.identifier_reference),
-            optional(
-                seq(
-                    keyword('as'),
-                    field(
-                        'rename',
-                        $.identifier,
-                    )
-                )
-            ),
-            optional(
-                field(
-                    'body',
-                    $.annotation_only_body
-                )
-            )
-        ),
-
         property_def: $ => seq(
             keyword('property'),
             field('name', $.identifier),
@@ -943,10 +919,40 @@ module.exports = grammar({
         ),
 
         // -----------------------------------------------------------------------
+        // Variants
+        // -----------------------------------------------------------------------
+
+        value_variant: $ => seq(
+            field('name', $.identifier),
+            $._by_definition,
+            field('value', $.unsigned),
+            optional(field('body', $.annotation_only_body))
+        ),
+
+        type_variant: $ => seq(
+            field('name', $.identifier_reference),
+            optional(
+                seq(
+                    keyword('as'),
+                    field(
+                        'rename',
+                        $.identifier,
+                    )
+                )
+            ),
+            optional(
+                field(
+                    'body',
+                    $.annotation_only_body
+                )
+            )
+        ),
+
+        // -----------------------------------------------------------------------
         // Members
         // -----------------------------------------------------------------------
 
-        _property_member: $ => seq(
+        _property_reference: $ => seq(
             keyword('in'),
             field('property', $.identifier_reference),
         ),
@@ -955,7 +961,7 @@ module.exports = grammar({
             keyword('identity'),
             field('name', $.identifier),
             choice(
-                $._property_member,
+                $._property_reference,
                 seq(
                     $._type_expression,
                     optional(field('body', $.annotation_only_body))
@@ -966,7 +972,7 @@ module.exports = grammar({
         member: $ => seq(
             field('name', $.identifier),
             choice(
-                $._property_member,
+                $._property_reference,
                 seq(
                     optional(
                         field('inverse_name', $.member_inverse_name)

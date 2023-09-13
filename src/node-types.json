@@ -381,6 +381,16 @@
             "named": true
           }
         ]
+      },
+      "opaque": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "opaque",
+            "named": true
+          }
+        ]
       }
     }
   },
@@ -2423,11 +2433,11 @@
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "def",
@@ -2435,11 +2445,11 @@
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "end",
@@ -2507,11 +2517,11 @@
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "iri",
@@ -2548,6 +2558,10 @@
   {
     "type": "of",
     "named": false
+  },
+  {
+    "type": "opaque",
+    "named": true
   },
   {
     "type": "or",

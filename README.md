@@ -67,6 +67,11 @@ differentiation is not as significant as it looked previously.
   * Refactor: move feature from a definition to a member modifier.
     * Remove: rule `feature_set_def`, and update `definition` accordingly.
     * Add: optional keyword `features` into the rule `_type_expression_to`.
+* Feature: add new keyword `opaque` to datatype definition.
+* Style: Use `:=` throughout for assignment /by definition/.
+  * Add: silent rule `_by_definition`.
+  * Alter rules `value_variant`, `function_def`, and `constant_def` to use `_by_definition`.
+* Style: rename rule `_property_member` to `_property_reference`.
 
 **Version: 0.1.42**
 

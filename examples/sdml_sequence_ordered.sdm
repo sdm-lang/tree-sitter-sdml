@@ -1,0 +1,30 @@
+module sdml_sequence_ordered is
+
+  import skos
+
+  class Ordered({ordered} S) is
+
+    def drop(vs -> S count → unsigned) → S is
+      @skos:definition = "Drop ~count~ items from the beginning of the sequence and return the rest."@en
+    end
+
+    def get(vs -> S index → unsigned) → {0..1} S is
+      @skos:definition = "Return the element in this sequence at the position ~index~."@en
+    end
+
+    def reverse(vs -> S) → S is
+      @skos:definition = "Return a new sequence with the order of elements reversed."@en
+    end
+
+    def slice(vs -> S start → unsigned count → unsigned) → S
+      := take(drop(vs count) start) is
+      @skos:definition = "Return a sub-sequence of ~count~ elements starting at ~start~."@en
+    end
+
+    def take(vs -> S count → unsigned) → S is
+      @skos:definition = "Return ~count~ items from the beginning of the sequence and discard the rest."@en
+    end
+
+  end
+
+end

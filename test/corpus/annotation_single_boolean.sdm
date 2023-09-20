@@ -20,4 +20,6 @@ end
           module: (identifier)
           member: (identifier)))
           value: (value
-            (simple_value (boolean)))))))
+            (simple_value
+              (boolean
+                (boolean_falsity))))))))

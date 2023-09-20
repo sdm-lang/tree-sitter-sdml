@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.2.0
+// Version:    0.2.1
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -204,9 +204,13 @@ module.exports = grammar({
 
         atomic_sentence: $ => seq(
             field('predicate', $.term),
+            $.actual_arguments
+        ),
+
+        actual_arguments: $ => seq(
            '(',
-            field('argument', repeat($.term)),
-            ')',
+            repeat(field('argument', $.term)),
+            ')'
         ),
 
         equation: $ => seq(
@@ -266,7 +270,7 @@ module.exports = grammar({
             1,
             seq(
                 field('lhs', $.constraint_sentence), // antecedent
-                field('operator', $._binary_logical_connective),
+                field('operator', $._logical_connective),
                 field('rhs', $.constraint_sentence)  // consequent
             )
         ),
@@ -276,7 +280,7 @@ module.exports = grammar({
             operator('¬') // LaTeX: \lnot
         ),
 
-        _binary_logical_connective: $ => choice(
+        _logical_connective: $ => choice(
             $.conjunction,
             $.disjunction,
             $.exclusive_disjunction,
@@ -315,10 +319,9 @@ module.exports = grammar({
         ),
 
         quantified_sentence: $ => seq(
-            repeat1(
-                field('binding', $.quantified_variable_binding)
-            ),
-            field('body', $._quantified_body)
+            field('binding', $.quantified_variable_binding),
+            optional(','),
+            field('body', $.constraint_sentence)
         ),
 
         quantified_variable_binding: $ => seq(
@@ -329,7 +332,7 @@ module.exports = grammar({
                     $.existential
                 )
             ),
-            field('binding', repeat1($.quantifier_bound_names)),
+            field('binding', $.quantified_variable),
         ),
 
         universal: $ => choice(
@@ -344,86 +347,57 @@ module.exports = grammar({
             ),
         ),
 
-        quantifier_bound_names: $ => choice(
-            field('source', $.reserved_self),
-            seq(
-                $._bound_name_set,
-                field('source', $._iterator_source)
-            )
-        ),
-
-        _bound_name_set: $ => seq(
-            field('name', $.identifier),
-            repeat(
-                seq(
-                    ",",
-                    field('name', $.identifier),
-                )
-            )
-        ),
-
-        _iterator_source: $ => choice(
-            $.type_iterator,
-            $.sequence_iterator,
-        ),
-
-        type_iterator: $ => seq(
-            $._has_type,
-            field(
-                'source',
-                choice(
-                    $.reserved_self_type,
-                    $.identifier_reference,
-                )
-            )
-        ),
-
-        sequence_iterator: $ => seq(
+        quantified_variable: $ => prec.right(
+            2,
             choice(
-                keyword('in'),
-                operator('∈')
-            ),
-            field(
-                'source',
-                choice(
-                    $.function_composition,  // function call sugar
-                    $.identifier,            // variable
-                    $.sequence_builder
+                field('source', $.reserved_self),
+                seq(
+                    field('name', $.identifier),
+                    choice(
+                        keyword('in'),
+                        operator('∈')
+                    ),
+                    field('source', $.term)
                 )
             )
-        ),
-
-        _quantified_body: $ => seq(
-            '(',
-            $.constraint_sentence,
-            ')'
         ),
 
         // -----------------------------------------------------------------------
 
         term: $ => choice(
-            $.function_composition, // function call sugar
-            $.identifier,           // variable
-            $.qualified_identifier, // type
-            $.predicate_value,
-            $.functional_term,
             $.sequence_builder,
+            $.functional_term,
+            $.function_composition,
+            $.identifier_reference,
+            $.reserved_self,
+            $.predicate_value
         ),
 
-        function_composition: $ => seq(
-            field(
-                'subject',
-                choice(
-                    $.reserved_self,
-                    $.identifier,
-                )
-            ),
-            repeat1(
-                seq(
-                    token.immediate('.'), // LaTeX: reverse with \circ
-                    field(
-                        'name',
-                        $.identifier
+        functional_term: $ => prec.right(
+            2,
+            seq(
+                field('function', $.term),
+                $.actual_arguments
+            )
+        ),
+
+        function_composition: $ => prec.right(
+            2,
+            seq(
+                field(
+                    'subject',
+                    choice(
+                        $.reserved_self,
+                        $.identifier,
+                    )
+                ),
+                repeat1(
+                    seq(
+                        token.immediate('.'), // LaTeX: reverse with \circ
+                        field(
+                            'name',
+                            $.identifier
+                        )
                     )
                 )
             )
@@ -431,8 +405,6 @@ module.exports = grammar({
 
         predicate_value: $ => choice(
             $.simple_value,
-            //$.value_constructor,
-            //$.mapping_value,
             $.sequence_of_predicate_values,
         ),
 
@@ -444,12 +416,7 @@ module.exports = grammar({
                 repeat(
                     field(
                         'element',
-                        choice(
-                            $.simple_value,
-                            //$.value_constructor,
-                            //$.mapping_value,
-                            $.identifier_reference
-                        )
+                        $.predicate_value
                     )
                 ),
                 ']'
@@ -458,25 +425,16 @@ module.exports = grammar({
 
         reserved_self: $ =>  keyword('self'),
 
-        reserved_self_type: $ =>  keyword('Self'),
-
-        functional_term: $ => seq(
-            field('function', $.term),
-            '(',
-            field('argument', repeat($.term)),
-            ')',
-        ),
-
         // -----------------------------------------------------------------------
 
         constraint_environment: $ => seq(
             repeat1(
-                $.environment_definition
+                $.environment_def
             ),
             $.constraint_environment_end,
         ),
 
-        environment_definition: $ => seq(
+        environment_def: $ => seq(
             keyword('def'),
             field('name', $.identifier),
             field(
@@ -492,8 +450,12 @@ module.exports = grammar({
 
         function_def: $ => seq(
             field('signature', $.function_signature),
+            field('body', $.function_body)
+        ),
+
+        function_body: $ => seq(
             $._by_definition,
-            field('body', $.constraint_sentence)
+            $.constraint_sentence
         ),
 
         _by_definition: $ => choice(
@@ -502,9 +464,13 @@ module.exports = grammar({
         ),
 
         function_signature: $ => seq(
-            '(',
-            repeat1(field('parameter', $.function_parameter)),
-            ')',
+            optional(
+                seq(
+                    '(',
+                    repeat1(field('parameter', $.function_parameter)),
+                    ')'
+                )
+            ),
             $._function_type
         ),
 
@@ -536,13 +502,10 @@ module.exports = grammar({
         ),
 
         function_type_reference: $ => choice(
-            $.wildcard,
             $.identifier_reference,
             $.builtin_simple_type,
             $.mapping_type
         ),
-
-        wildcard: $ => operator('_'),
 
         constant_def: $ => seq(
             $._by_definition,
@@ -567,10 +530,7 @@ module.exports = grammar({
                 )
             ),
             '|',
-            repeat1(
-                field('binding', $._variable_binding)
-            ),
-            field('body', $.constraint_sentence),
+            field('body', $.sequence_builder_body),
             '}',
         ),
 
@@ -580,25 +540,22 @@ module.exports = grammar({
         ),
 
         mapping_variable: $ => seq(
-            "(",
+            // WFR: domain and range MUST be distinct
+            '(',
             field('domain', $.identifier),
             $._has_type,
             field('range', $.identifier),
-            ")"
+            ')'
         ),
 
-        _variable_binding: $ => seq(
-            optional(
-                field(
-                    'quantifier',
-                    choice(
-                        $.universal,
-                        $.existential
-                    )
-                )
-            ),
-            field('binding', repeat1($.quantifier_bound_names)),
-            ","
+        sequence_builder_body: $ => choice(
+            // WFR: Quantified variable names MUST be in builder variables
+            $.quantified_sentence,
+            seq(
+                '(',
+                $.quantified_sentence,
+                ')'
+            )
         ),
 
         // -----------------------------------------------------------------------
@@ -753,16 +710,16 @@ module.exports = grammar({
         ),
 
         boolean: $ => choice(
-            $._boolean_true,
-            $._boolean_false
+            $.boolean_truth,
+            $.boolean_falsity
         ),
 
-        _boolean_true: $ => choice(
+        boolean_truth: $ => choice(
              keyword('true'),
              keyword('⊤'),
         ),
 
-        _boolean_false: $ => choice(
+        boolean_falsity: $ => choice(
              keyword('false'),
              keyword('⊥'),
         ),
@@ -778,6 +735,7 @@ module.exports = grammar({
             $.event_def,
             $.property_def,
             $.structure_def,
+            $.type_class_def,
             $.union_def
         ),
 
@@ -788,17 +746,14 @@ module.exports = grammar({
             optional(field('opaque', $.opaque)),
             field(
                 'base',
-                choice(
-                    $.identifier_reference,
-                    $.builtin_simple_type
-                )
+                $._data_type_base
             ),
             optional(field('body', $.annotation_only_body))
         ),
 
         opaque: $ => keyword('opaque'),
 
-        data_type_base: $ => choice(
+        _data_type_base: $ => choice(
             $.identifier_reference,
             $.builtin_simple_type
         ),
@@ -916,6 +871,67 @@ module.exports = grammar({
             ),
             $._type_expression_to,
             optional(field('body', $.annotation_only_body))
+        ),
+
+        // -----------------------------------------------------------------------
+        // Type Classes
+        // -----------------------------------------------------------------------
+
+        type_class_def: $ => seq(
+            keyword('class'),
+            field('name', $.identifier),
+            $.type_class_parameters,
+            optional(field('body', $.type_class_body))
+        ),
+
+        type_class_parameters: $ => seq(
+            '(',
+            repeat1(field('variable', $.type_variable)),
+            ')',
+        ),
+
+        type_variable: $ => seq(
+            optional(
+                field('cardinality', $.function_cardinality_expression)
+            ),
+            field('name', $.identifier),
+            optional($.type_variable_subtype)
+        ),
+
+        type_variable_subtype: $ => seq(
+            $._has_type,
+            choice(
+                field('wildcard', $.wildcard),
+                seq(
+                    field('target', $.identifier_reference),
+                    optional(field('parameters', $.type_class_parameters)),
+                )
+            )
+        ),
+
+        wildcard: $ => operator('_'),
+
+        type_class_body: $ => seq(
+            keyword('is'),
+            repeat($.annotation),
+            repeat1(field('method', $.method_def)),
+            keyword('end')
+        ),
+
+        method_def: $ => seq(
+            keyword('def'),
+            field('name', $.identifier),
+            field(
+                'signature',
+                $.function_signature
+            ),
+            optional(
+                field(
+                    'body',
+                    $.function_body
+                )
+            ),
+            optional($.annotation_only_body)
         ),
 
         // -----------------------------------------------------------------------

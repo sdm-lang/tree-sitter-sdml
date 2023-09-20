@@ -40,6 +40,9 @@
 (structure_def
  name: (identifier) @name) @definition.class
 
+(type_class_def
+ name: (identifier) @name) @definition.class
+
 (union_def
  name: (identifier) @name) @definition.class
 
@@ -69,6 +72,8 @@
  name: (identifier) @definition.field
  target: (type_reference) @reference.class)
 
+(method_def name: (identifier) @definition.method)
+
 ;; ---------------------------------------------------------------------------
 ;; Annotations, Constraints, and Values
 ;; ---------------------------------------------------------------------------
@@ -81,11 +86,12 @@
 
 (constraint name: (identifier) @name)
 
-(type_iterator source: (identifier_reference) @reference.class)
-
 (function_composition (identifier) @name)
 
-(environment_definition name: (identifier) @definition.function)
+(functional_term function: (term (identifier_reference) @reference.function))
+
+(environment_def name: (identifier) @definition.function)
 
 (named_variable_set (identifier) @definition.variable)
+
 (mapping_variable domain: (identifier) range: (identifier) @definition.variable)

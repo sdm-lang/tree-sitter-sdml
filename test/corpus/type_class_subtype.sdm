@@ -1,0 +1,27 @@
+========================
+Type Class, With Subtype
+========================
+
+module sdml_core is
+
+  class Any (T -> None(T))
+
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (definition
+      (type_class_def
+        (identifier)
+        (type_class_parameters
+          (type_variable
+            (identifier)
+            (type_variable_subtype
+              (identifier_reference
+                (identifier))
+              (type_class_parameters
+                (type_variable
+                  (identifier))))))))))

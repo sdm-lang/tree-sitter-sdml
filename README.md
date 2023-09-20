@@ -49,6 +49,42 @@ end
 
 # Changes
 
+**Version: 0.2.1**
+
+This release is primarily to implement *type classes* that allow a better description of the standard library for
+constraints. Adding this support identified some simplifications in functional terms and sequence builders.
+
+``` sdml
+module example is
+  class Typed(T) is
+    def has_type(v -> T) → Type is
+      @skos:definition = "Returns the SDML type of the passed value."@en
+      @skos:example = "~type_of(rentals:Customer) = sdml:Entity~"
+    end
+  end
+end
+
+```
+
+* Feature: add type classes for managing the constraint language library.
+  * Add: rule `type_class_def` and list it as an alternative in `definition`.
+  * Add: rule `method_def` and include as member of `type_class_def`.
+  * Remove: choice `wildcard` from rule `function_type_reference`, wildcards are only allowed on type class parameters.
+* Feature: simplify the rule `quantified_sentence` to only have a single quantified variable binding.
+  * Alter: field `binding` in `quantified_sentence` to remove the repeat.
+  * Alter: field `body` from `_quantified_body` to `constraint_sentence`.
+  * Rename: rule `quantifier_bound_names` to `quantified_variable` to denote singular.
+  * Alter: field `source` in `quantified_variable` to use existing `term`.
+  * Remove: rules `type_iterator` and `sequence_iterator`.
+* Feature: simplify the structure of sequence builder to use `quantified_sentence` as body.
+  * Alter: field `body` in rule `sequence_builder` from `_variable_binding` to `sequence_builder_body`.
+  * Remove: rule `_variable_binding`.
+  * Add: rule `sequence_builder_body` which is simply a reference to rule `quantified_sentence`.
+* Feature: add rule `actual_aruments` for use in rules `atomic_sentence` and `functional_term`.
+* Refactor: rename boolean constants.
+  * Rename: `_boolean_true` to `boolean_truth`.
+  * Rename: `_boolean_false` to `boolean_falsity`.
+
 **Version: 0.2.0**
 
 This is a significant refactor intended to simplify the grammar, and reduce the number of constructs used where the
@@ -70,7 +106,7 @@ differentiation is not as significant as it looked previously.
 * Feature: add new keyword `opaque` to datatype definition.
 * Style: Use `:=` throughout for assignment /by definition/.
   * Add: silent rule `_by_definition`.
-  * Alter rules `value_variant`, `function_def`, and `constant_def` to use `_by_definition`.
+  * Alter: rules `value_variant`, `function_def`, and `constant_def` to use `_by_definition`.
 * Style: rename rule `_property_member` to `_property_reference`.
 
 **Version: 0.1.42**

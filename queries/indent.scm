@@ -11,19 +11,18 @@
 [
  (string)
  (line_comment)
+ (function_body)
  ] @indent.auto
 
 (constraint_environment_end) @indent.dedent
 
-(function_def body: (_) @indent)
+(function_signature "(" @indent ")" @indent.end)
 
-(quantified_sentence body: ("(" @indent ")" @indent.end))
+(constraint_sentence "(" @indent ")" @indent.end)
 
 (sequence_builder "{" @indent "}" @indent.end)
 
-(functional_term "(" @indent ")" @indent.end)
-
-(atomic_sentence "(" @indent ")" @indent.end)
+(actual_arguments "(" @indent ")" @indent.end)
 
 (sequence_of_predicate_values "[" @indent "]" @indent.end)
 

@@ -7,61 +7,61 @@ module Campaign is
     identity a -> CampaignId
 
     b -> xsd:string is
-      assert not_null = "self is not null"
+      assert not_null = "self is not empty"
     end
 
     c -> Target is
       assert tagged_with_foo is
-        ∀ self (contains(self.tags "foo"))
+        ∀ self contains(self.tags "foo")
       end
     end
 
     d -> Target is
       assert tagged_with_foo_path is
         def foo := "foo" in
-        ∀ self (self.tags.contains(foo))
+        ∀ self ( self.tags.contains(foo) )
       end
     end
 
     e -> Target is
       assert tagged_with_foo_builder is
-        ∀ self ( ¬is_empty({t | t in self.tags, t = "foo"}) )
+        ∀ self ( ¬is_empty({t | ∃ t ∈ self.tags t = "foo"}) )
       end
     end
 
     f -> Target is
       assert tagged_with_foo_builder_2 is
-        ∀ self ( ¬is_empty({t | t in self.tags, t = "foo" ∧ color(t) = red}) )
+        ∀ self ( ¬is_empty({t | ∃ t ∈ self.tags t = "foo" ∧ color(t) = red}) )
       end
     end
 
     g -> Target is
       assert tagged_with_foo_builder_3 is
-        ∀ self ( ¬is_empty({t | t in self.tags, t = "foo" ∨ t = "bar"}) )
+        ∀ self ( ¬is_empty({t | ∀ t ∈ self.tags t = "foo" ∨ t = "bar"}) )
       end
     end
 
     h -> Target is
       assert tagged_with_foo_builder_4 is
-        ∀ self ( ¬is_empty({t | t in self.tags, x in self.container.tags, contains(x t)}) )
+        ∀ self ( ¬is_empty({t | ∀ t ∈ self.tags ∃ x ∈ self.container.tags contains(x t)}) )
       end
     end
 
     i -> Target is
       assert tagged_with_foo_builder_5 is
-        ∀ self ∃ x in self.container.tags ( ¬is_empty({t | t in self.tags, contains(x t)}) )
+        ∀ self ( ∃ x ∈ self.container.tags ¬is_empty({t | ∀ t ∈ self.tags contains(x t)}) )
       end
     end
 
     j -> Target is
       assert tagged_with_foo_builder_6 is
-        ∀ self ∃ x in self.container.tags ( ¬{t | t in self.tags, contains(x t)} = ∅ )
+        ∀ self ( ∃ x ∈ self.container.tags ¬{t | ∀ t ∈ self.tags contains(x t)} = ∅ )
       end
     end
 
     k -> Target is
       assert tagged_with_parent_tags is
-        ∀ self ( ∃ tag ∈ self.container.tags ( self.tags.contains(tag) ) )
+        ∀ self ( ∃ tag ∈ self.container.tags self.tags.contains(tag) )
       end
     end
 

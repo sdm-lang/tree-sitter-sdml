@@ -1,0 +1,162 @@
+module sdml_sequence_ordered is
+; <- keyword
+;      ^ module.definition
+;                            ^ keyword
+
+  import skos
+  ; <- keyword
+  ;      ^ module
+
+  class Ordered({ordered nonunique 0..} S) is
+  ; <- keyword
+  ;     ^ type.definition
+  ;            ^ punctuation.bracket
+  ;             ^ punctuation.bracket
+  ;              ^ keyword
+  ;                      ^ keyword
+  ;                                ^ number
+  ;                                 ^ operator
+  ;                                   ^ punctuation.bracket
+  ;                                      ^ punctuation.bracket
+  ;                                        ^ keyword
+
+    def drop(vs -> S count → unsigned) → S is
+    ; <- keyword
+    ;   ^ method
+    ;       ^ punctuation.bracket
+    ;        ^ variable.parameter
+    ;           ^ operator
+    ;              ^ type
+    ;                ^ variable.parameter
+    ;                      ^ operator
+    ;                          ^ type.builtin
+    ;                                  ^ punctuation.bracket
+    ;                                    ^ operator
+    ;                                        ^ type
+    ;                                          ^ keyword
+
+      @skos:definition = "Drop ~count~ items from the beginning of the sequence and return the rest."@en
+      ; <- property
+      ;^ property
+      ;                ^ operator
+      ;                  ^ string
+      ;                                                                                              ^ property
+    end
+    ; <- keyword
+
+    def get(vs -> S index -> unsigned) -> {0..1} S is
+    ; <- keyword
+    ;   ^ method
+    ;      ^ punctuation.bracket
+    ;       ^ variable.parameter
+    ;          ^ operator
+    ;             ^ type
+    ;               ^ variable.parameter
+    ;                     ^ operator
+    ;                         ^ type.builtin
+    ;                                ^ punctuation.bracket
+    ;                                  ^ operator
+    ;                                     ^ punctuation.bracket
+    ;                                      ^ number
+    ;                                       ^ operator
+    ;                                         ^ number
+    ;                                          ^ punctuation.bracket
+    ;                                            ^ type
+    ;                                              ^ keyword
+
+      @skos:definition = "Return the element in this sequence at the position ~index~."@en
+      ; <- property
+      ;^ property
+      ;                ^ operator
+      ;                  ^ string
+      ;                                                                                ^ property
+    end
+    ; <- keyword
+
+    def reverse(vs -> S) -> S is
+    ; <- keyword
+    ;   ^ method
+    ;          ^ punctuation.bracket
+    ;           ^ variable.parameter
+    ;              ^ operator
+    ;                 ^ type
+    ;                  ^ punctuation.bracket
+    ;                    ^ operator
+    ;                       ^ type
+    ;                         ^ keyword
+
+      @skos:definition = "Return a new sequence with the order of elements reversed."@en
+      ; <- property
+      ;^ property
+      ;                ^ operator
+      ;                  ^ string
+      ;                                                                              ^ property
+    end
+    ; <- keyword
+
+    def slice(vs -> S start -> unsigned count -> unsigned) -> S
+    ; <- keyword
+    ;   ^ method
+    ;        ^ punctuation.bracket
+    ;         ^ variable.parameter
+    ;            ^ operator
+    ;               ^ type
+    ;                 ^ variable.parameter
+    ;                       ^ operator
+    ;                           ^ type.builtin
+    ;                                   ^ variable.parameter
+    ;                                         ^ operator
+    ;                                            ^ type.builtin
+    ;                                                    ^ punctuation.bracket
+    ;                                                      ^ operator
+    ;                                                         ^ type
+
+      := take(drop(vs count) start) is
+      ; <- operator
+      ;  ^ function.call
+      ;      ^ punctuation.bracket
+      ;       ^ function.call
+      ;           ^ punctuation.bracket
+      ;            ^ variable
+      ;                    ^ punctuation.bracket
+      ;                           ^ punctuation.bracket
+      ;                             ^ keyword
+
+      @skos:definition = "Return a sub-sequence of ~count~ elements starting at ~start~."@en
+      ; <- property
+      ;^ property
+      ;                ^ operator
+      ;                  ^ string
+      ;                                                                                  ^ property
+    end
+    ; <- keyword
+
+    def take(vs -> S count -> unsigned) -> S is
+    ; <- keyword
+    ;   ^ method
+    ;       ^ punctuation.bracket
+    ;        ^ variable.parameter
+    ;           ^ operator
+    ;              ^ type
+    ;                ^ variable.parameter
+    ;                      ^ operator
+    ;                          ^ type.builtin
+    ;                                 ^ punctuation.bracket
+    ;                                   ^ operator
+    ;                                      ^ type
+    ;                                        ^ keyword
+
+      @skos:definition = "Return ~count~ items from the beginning of the sequence and discard the rest."@en
+      ; <- property
+      ;^ property
+      ;                ^ operator
+      ;                  ^ string
+      ;                                                                                                 ^ property
+    end
+    ; <- keyword
+
+  end
+  ; <- keyword
+
+end
+; <- keyword

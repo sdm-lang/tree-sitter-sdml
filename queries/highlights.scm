@@ -12,6 +12,7 @@
  "module"
  "import"
  "assert"
+ "class"
  "datatype"
  "entity"
  "enum"
@@ -44,22 +45,11 @@
  "∃"
  "∈"
  "->"
+ "→"
  "<-"
+ "←"
  ".."
  ] @operator
-
-;; ---------------------------------------------------------------------------
-;; Brackets
-;; ---------------------------------------------------------------------------
-
-[
- "["
- "]"
- "("
- ")"
- "{"
- "}"
- ] @punctuation.bracket
 
 ;; ---------------------------------------------------------------------------
 ;; Module & Imports
@@ -67,6 +57,8 @@
 
 (module name: (identifier) @module.definition)
 (module "base" @keyword)
+
+(import_statement [ "[" "]" ] @punctuation.bracket)
 
 (member_import name: (qualified_identifier) @type)
 
@@ -85,43 +77,57 @@
 (constraint name: (identifier) @property)
 
 (informal_constraint (quoted_string) @embedded)
-
 (informal_constraint language: (controlled_language_tag) @property)
 
-(environment_definition "def" @keyword)
-(environment_definition (identifier) @function.definition . (function_def))
-(environment_definition (identifier) @constant . (constant_def))
+(constraint_environment (constraint_environment_end) @keyword)
+
+(environment_def "def" @keyword)
+(environment_def (identifier) @function.definition . (function_def))
+(environment_def (identifier) @constant . (constant_def))
 
 (function_signature target: (_) @type)
+(function_signature [ "(" ")" ] @punctuation.bracket)
+
 (function_parameter name: (identifier) @variable.parameter)
 (function_parameter target: (_) @type)
 
-(constraint_environment (constraint_environment_end) @keyword)
+(function_cardinality_expression (sequence_ordering) @keyword)
+(function_cardinality_expression (sequence_uniqueness) @keyword)
+(function_cardinality_expression [ "{" "}" ] @punctuation.bracket)
+
+(wildcard) @type.builtin
 
 (function_composition subject: (reserved_self) @variable.builtin)
 (function_composition name: (identifier) @function.call)
 (function_composition "." @punctuation.delimiter)
 
-(functional_term function: (term (identifier) @function.call))
+(constraint_sentence [ "(" ")" ] @punctuation.bracket)
 
-(term (qualified_identifier) @type)
+(atomic_sentence predicate: (term (identifier_reference) @function.call))
 
-(atomic_sentence predicate: (term (identifier) @function.call))
+(actual_arguments [ "(" ")" ] @punctuation.bracket)
+(actual_arguments argument: (term (identifier_reference (identifier) @variable)))
 
-((equation lhs: (term (identifier) @variable)) (#is-not? local))
+((equation lhs: (term (identifier_reference) @variable)) (#is-not? local))
 
-((equation rhs: (term (identifier) @variable)) (#is-not? local))
+((equation rhs: (term (identifier_reference) @variable)) (#is-not? local))
 
-(quantifier_bound_names source: (reserved_self) @variable.builtin)
-(quantifier_bound_names name: (identifier) @variable.parameter)
-(quantifier_bound_names "," @punctuation.separator)
+(quantified_sentence "," @punctuation.separator)
 
-(type_iterator source: (reserved_self_type) @variable.builtin)
-(type_iterator source: (identifier_reference) @type)
+(quantified_variable source: (reserved_self) @variable.builtin)
+(quantified_variable name: (identifier) @variable.parameter)
+(quantified_variable "in" @keyword)
 
-(sequence_builder [ "|" "," ] @punctuation.separator)
+(functional_term function: (term (identifier_reference) @function.call))
 
-(sequence_of_predicate_values (identifier_reference) @type)
+(actual_arguments (term (identifier_reference) @variable))
+
+(sequence_builder "|" @punctuation.separator)
+(sequence_builder [ "{" "}" ] @punctuation.bracket)
+
+(sequence_builder_body [ "(" ")" ] @punctuation.bracket)
+
+(sequence_of_predicate_values [ "[" "]" ] @punctuation.bracket)
 
 (negation "not" @keyword)
 (conjunction "and" @keyword)
@@ -132,8 +138,6 @@
 
 (universal "forall" @keyword)
 (existential "exists" @keyword)
-
-(sequence_iterator "in" @keyword)
 
 ;; ---------------------------------------------------------------------------
 ;; Types
@@ -162,6 +166,20 @@
 (member_group "group" @keyword)
 
 (union_def name: (identifier) @type.definition)
+
+;; ---------------------------------------------------------------------------
+;; Type Classes
+;; ---------------------------------------------------------------------------
+
+(type_class_def name: (identifier) @type.definition)
+(type_class_parameters [ "(" ")" ] @punctuation.bracket)
+
+(type_variable name: (identifier) @type)
+
+(type_variable_subtype target: (identifier_reference) @type)
+
+(method_def "def" @keyword)
+(method_def name: (identifier) @method)
 
 ;; ---------------------------------------------------------------------------
 ;; Members
@@ -204,6 +222,7 @@
 
 (cardinality_expression (sequence_ordering) @keyword)
 (cardinality_expression (sequence_uniqueness) @keyword)
+(cardinality_expression [ "{" "}" ] @punctuation.bracket)
 
 ;; ---------------------------------------------------------------------------
 ;; Values
@@ -226,10 +245,12 @@
 (boolean) @boolean
 
 (value_constructor name: (identifier_reference) @function.call)
+(value_constructor [ "(" ")" ] @punctuation.bracket)
 
 (value (identifier_reference) @type)
 
 (sequence_of_values (identifier_reference) @type)
+(sequence_of_values  [ "[" "]" ] @punctuation.bracket)
 
 ;; ---------------------------------------------------------------------------
 ;; Errors

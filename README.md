@@ -1,5 +1,20 @@
 # tree-sitter-sdml
 
+```
+        ___          _____          ___ 
+       /  /\        /  /::\        /__/\ 
+      /  /:/_      /  /:/\:\      |  |::\ 
+     /  /:/ /\    /  /:/  \:\     |  |:|:\    ___     ___ 
+    /  /:/ /::\  /__/:/ \__\:|  __|__|:|\:\  /__/\   /  /\ 
+   /__/:/ /:/\:\ \  \:\ /  /:/ /__/::::| \:\ \  \:\ /  /:/ 
+   \  \:\/:/~/:/  \  \:\  /:/  \  \:\~~\__\/  \  \:\  /:/ 
+    \  \::/ /:/    \  \:\/:/    \  \:\         \  \:\/:/ 
+     \__\/ /:/      \  \::/      \  \:\         \  \::/ 
+       /__/:/        \__\/        \  \:\         \__\/ 
+       \__\/          Domain       \__\/          Language
+        Simple                      Modeling
+```
+
 A [tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for the Simple Domain Modeling Language (SDML).
 For more information on the language, see the [documentation](https://sdml.io/).
 

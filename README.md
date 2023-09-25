@@ -1,4 +1,4 @@
-# tree-sitter-sdml
+# Tree-Sitter grammar for SDML
 
 ```
         ___          _____          ___ 
@@ -15,8 +15,8 @@
         Simple                      Modeling
 ```
 
-A [tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for the Simple Domain Modeling Language (SDML).
-For more information on the language, see the [documentation](https://sdml.io/).
+A [tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for the Simple Domain Modeling Language (SDML). For more information on the language, see the
+[documentation](https://sdml.io/).
 
 # Example
 
@@ -63,6 +63,15 @@ end
 ```
 
 # Changes
+
+**Version: 0.2.2**
+
+* Feature: add rule `optional` for the operator "?" to allow for optional values. Also added to type reference rules.
+* Fix: minor updates to type classes:
+  * Add: name `parameters` to the rule reference `type_class_parameters` in rule `type_class_def`.
+  * Rename: rule `type_variable_subtype` to `type_variable_restriction`.
+  * Remove: wildcard from top of rule `type_variable_restriction`.
+  * Add: ability to have multiple types in a restriction separated by "+".
 
 **Version: 0.2.1**
 

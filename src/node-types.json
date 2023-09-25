@@ -953,7 +953,18 @@
   {
     "type": "function_type_reference",
     "named": true,
-    "fields": {},
+    "fields": {
+      "optional": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "optional",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": false,
       "required": true,
@@ -2104,6 +2115,32 @@
     }
   },
   {
+    "type": "type_class_arguments",
+    "named": true,
+    "fields": {
+      "variable": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "type_class_reference",
+            "named": true
+          }
+        ]
+      },
+      "wildcard": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "wildcard",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "type_class_body",
     "named": true,
     "fields": {
@@ -2152,17 +2189,17 @@
             "named": true
           }
         ]
+      },
+      "parameters": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_class_parameters",
+            "named": true
+          }
+        ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "type_class_parameters",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -2175,6 +2212,32 @@
         "types": [
           {
             "type": "type_variable",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "type_class_reference",
+    "named": true,
+    "fields": {
+      "arguments": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type_class_arguments",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier_reference",
             "named": true
           }
         ]
@@ -2238,46 +2301,25 @@
       "required": false,
       "types": [
         {
-          "type": "type_variable_subtype",
+          "type": "type_variable_restriction",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "type_variable_subtype",
+    "type": "type_variable_restriction",
     "named": true,
-    "fields": {
-      "parameters": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "type_class_parameters",
-            "named": true
-          }
-        ]
-      },
-      "target": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier_reference",
-            "named": true
-          }
-        ]
-      },
-      "wildcard": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "wildcard",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "type_class_reference",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -2498,6 +2540,10 @@
     "named": false
   },
   {
+    "type": "+",
+    "named": false
+  },
+  {
     "type": ",",
     "named": false
   },
@@ -2607,11 +2653,11 @@
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "def",
@@ -2738,6 +2784,10 @@
     "named": true
   },
   {
+    "type": "optional",
+    "named": true
+  },
+  {
     "type": "or",
     "named": false
   },
@@ -2791,11 +2841,11 @@
   },
   {
     "type": "unsigned",
-    "named": false
+    "named": true
   },
   {
     "type": "unsigned",
-    "named": true
+    "named": false
   },
   {
     "type": "wildcard",
@@ -2827,10 +2877,6 @@
   },
   {
     "type": "→",
-    "named": false
-  },
-  {
-    "type": "↦",
     "named": false
   },
   {

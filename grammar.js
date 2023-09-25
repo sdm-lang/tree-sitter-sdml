@@ -2,10 +2,25 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.2.1
+// Version:    0.2.2
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
+//
+// -------------------------------------------------------------------
+//
+//         ___          _____          ___
+//        /  /\        /  /::\        /__/\
+//       /  /:/_      /  /:/\:\      |  |::\
+//      /  /:/ /\    /  /:/  \:\     |  |:|:\    ___     ___
+//     /  /:/ /::\  /__/:/ \__\:|  __|__|:|\:\  /__/\   /  /\
+//    /__/:/ /:/\:\ \  \:\ /  /:/ /__/::::| \:\ \  \:\ /  /:/
+//    \  \:\/:/~/:/  \  \:\  /:/  \  \:\~~\__\/  \  \:\  /:/
+//     \  \::/ /:/    \  \:\/:/    \  \:\         \  \:\/:/
+//      \__\/ /:/      \  \::/      \  \:\         \  \::/
+//        /__/:/        \__\/        \  \:\         \__\/
+//        \__\/          Domain       \__\/          Language
+//         Simple                      Modeling
 //
 // -------------------------------------------------------------------
 
@@ -501,11 +516,16 @@ module.exports = grammar({
             '}'
         ),
 
-        function_type_reference: $ => choice(
-            $.identifier_reference,
-            $.builtin_simple_type,
-            $.mapping_type
+        function_type_reference: $ => seq(
+            optional(field('optional', $.optional)),
+            choice(
+                $.identifier_reference,
+                $.builtin_simple_type,
+                $.mapping_type
+            )
         ),
+
+        optional: $ => operator('?'),
 
         constant_def: $ => seq(
             $._by_definition,
@@ -880,7 +900,7 @@ module.exports = grammar({
         type_class_def: $ => seq(
             keyword('class'),
             field('name', $.identifier),
-            $.type_class_parameters,
+            field('parameters', $.type_class_parameters),
             optional(field('body', $.type_class_body))
         ),
 
@@ -895,18 +915,32 @@ module.exports = grammar({
                 field('cardinality', $.function_cardinality_expression)
             ),
             field('name', $.identifier),
-            optional($.type_variable_subtype)
+            optional($.type_variable_restriction)
         ),
 
-        type_variable_subtype: $ => seq(
+        type_variable_restriction: $ => seq(
             $._has_type,
-            choice(
-                field('wildcard', $.wildcard),
+            $.type_class_reference,
+            repeat(
                 seq(
-                    field('target', $.identifier_reference),
-                    optional(field('parameters', $.type_class_parameters)),
+                    '+',
+                    $.type_class_reference
                 )
             )
+        ),
+
+        type_class_reference: $ => seq(
+            field('name', $.identifier_reference),
+            optional(field('arguments', $.type_class_arguments)),
+        ),
+
+        type_class_arguments: $ => seq(
+            '(',
+            choice(
+                field('wildcard', $.wildcard),
+                repeat1(field('variable', $.type_class_reference)),
+                ),
+            ')',
         ),
 
         wildcard: $ => operator('_'),
@@ -1078,7 +1112,6 @@ module.exports = grammar({
         ),
 
         _has_type: $ => choice(
-            operator('↦'),
             operator('→'),
             operator('->'),
         ),

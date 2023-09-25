@@ -19,9 +19,11 @@ end
         (type_class_parameters
           (type_variable
             (identifier)
-            (type_variable_subtype
-              (identifier_reference
-                (identifier))
-              (type_class_parameters
-                (type_variable
-                  (identifier))))))))))
+            (type_variable_restriction
+              (type_class_reference
+                (identifier_reference
+                  (identifier))
+                (type_class_arguments
+                  (type_class_reference
+                    (identifier_reference
+                      (identifier))))))))))))

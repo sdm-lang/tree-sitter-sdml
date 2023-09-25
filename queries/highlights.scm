@@ -91,11 +91,11 @@
 (function_parameter name: (identifier) @variable.parameter)
 (function_parameter target: (_) @type)
 
+(optional) @operator
+
 (function_cardinality_expression (sequence_ordering) @keyword)
 (function_cardinality_expression (sequence_uniqueness) @keyword)
 (function_cardinality_expression [ "{" "}" ] @punctuation.bracket)
-
-(wildcard) @type.builtin
 
 (function_composition subject: (reserved_self) @variable.builtin)
 (function_composition name: (identifier) @function.call)
@@ -107,6 +107,8 @@
 
 (actual_arguments [ "(" ")" ] @punctuation.bracket)
 (actual_arguments argument: (term (identifier_reference (identifier) @variable)))
+
+(term (reserved_self) @variable.builtin)
 
 ((equation lhs: (term (identifier_reference) @variable)) (#is-not? local))
 
@@ -124,6 +126,10 @@
 
 (sequence_builder "|" @punctuation.separator)
 (sequence_builder [ "{" "}" ] @punctuation.bracket)
+
+(named_variable_set (identifier) @variable)
+
+(mapping_variable domain: (identifier) @variable range: (identifier) @variable)
 
 (sequence_builder_body [ "(" ")" ] @punctuation.bracket)
 
@@ -172,14 +178,21 @@
 ;; ---------------------------------------------------------------------------
 
 (type_class_def name: (identifier) @type.definition)
+
 (type_class_parameters [ "(" ")" ] @punctuation.bracket)
 
 (type_variable name: (identifier) @type)
 
-(type_variable_subtype target: (identifier_reference) @type)
+(type_variable_restriction "+" @operator)
+
+(type_class_reference name: (identifier_reference) @type)
+
+(type_class_arguments [ "(" ")" ] @punctuation.bracket)
 
 (method_def "def" @keyword)
 (method_def name: (identifier) @method)
+
+(wildcard) @type.builtin
 
 ;; ---------------------------------------------------------------------------
 ;; Members

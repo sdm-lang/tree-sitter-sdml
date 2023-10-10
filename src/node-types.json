@@ -736,6 +736,22 @@
     "fields": {}
   },
   {
+    "type": "feature_reference",
+    "named": true,
+    "fields": {
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "formal_constraint",
     "named": true,
     "fields": {
@@ -1443,7 +1459,7 @@
       },
       "target": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "type_reference",
@@ -1833,7 +1849,19 @@
         "required": false,
         "types": [
           {
+            "type": "identifier_reference",
+            "named": true
+          },
+          {
+            "type": "mapping_value",
+            "named": true
+          },
+          {
             "type": "predicate_value",
+            "named": true
+          },
+          {
+            "type": "value_constructor",
             "named": true
           }
         ]
@@ -2514,16 +2542,6 @@
             "named": true
           }
         ]
-      },
-      "value": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "unsigned",
-            "named": true
-          }
-        ]
       }
     }
   },
@@ -2665,11 +2683,11 @@
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "end",
@@ -2696,8 +2714,8 @@
     "named": false
   },
   {
-    "type": "feature_reference",
-    "named": true
+    "type": "features",
+    "named": false
   },
   {
     "type": "forall",
@@ -2737,11 +2755,11 @@
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "iri",

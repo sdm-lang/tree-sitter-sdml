@@ -27,9 +27,8 @@ end
         body: (structured_body
           (member
             name: (identifier)
-            feature: (feature_reference)
-            target: (type_reference
-              (identifier_reference
+            feature: (feature_reference
+              target: (identifier_reference
                 (identifier)))))))
     (definition
       (union_def

@@ -103,10 +103,12 @@
 
 (constraint_sentence [ "(" ")" ] @punctuation.bracket)
 
-(atomic_sentence predicate: (term (identifier_reference) @function.call))
+(atomic_sentence
+ predicate: (term (identifier_reference) @function.call))
 
 (actual_arguments [ "(" ")" ] @punctuation.bracket)
-(actual_arguments argument: (term (identifier_reference (identifier) @variable)))
+(actual_arguments
+ argument: (term (identifier_reference (identifier) @variable)))
 
 (term (reserved_self) @variable.builtin)
 
@@ -120,19 +122,20 @@
 (quantified_variable name: (identifier) @variable.parameter)
 (quantified_variable "in" @keyword)
 
-(functional_term function: (term (identifier_reference) @function.call))
+(functional_term
+ function: (term (identifier_reference) @function.call))
 
-(actual_arguments (term (identifier_reference) @variable))
-
-(sequence_builder "|" @punctuation.separator)
-(sequence_builder [ "{" "}" ] @punctuation.bracket)
+(sequence_builder [ "{" "}" ] @punctuation.bracket
+                  "|" @punctuation.separator)
 
 (named_variable_set (identifier) @variable)
 
-(mapping_variable domain: (identifier) @variable range: (identifier) @variable)
+(mapping_variable
+ domain: (identifier) @variable range: (identifier) @variable)
 
 (sequence_builder_body [ "(" ")" ] @punctuation.bracket)
 
+(sequence_of_predicate_values (identifier_reference) @type)
 (sequence_of_predicate_values [ "[" "]" ] @punctuation.bracket)
 
 (negation "not" @keyword)
@@ -154,9 +157,8 @@
  (unknown_type)
  ] @type.builtin
 
-(data_type_def
- name: (identifier) @type.definition
- base: (identifier_reference) @type)
+(data_type_def name: (identifier) @type.definition)
+(data_type_def base: (identifier_reference) @type)
 (data_type_def opaque: (opaque) @keyword)
 
 (entity_def name: (identifier) @type.definition)
@@ -207,7 +209,10 @@
 (member name: (identifier) @variable.field)
 (member property: (identifier_reference) @variable.field)
 (member target: (type_reference) @type)
-(member feature: (feature_reference) @keyword)
+(member
+ feature: (feature_reference
+           "features" @keyword
+           target: (identifier_reference) @type))
 (member "in" @keyword)
 
 (member_inverse_name

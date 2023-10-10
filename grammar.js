@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.2.2
+// Version:    0.2.3
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -431,7 +431,12 @@ module.exports = grammar({
                 repeat(
                     field(
                         'element',
-                        $.predicate_value
+                        choice(
+                            $.predicate_value,
+                            $.value_constructor,
+                            $.mapping_value,
+                            $.identifier_reference
+                        )
                     )
                 ),
                 ']'
@@ -560,7 +565,6 @@ module.exports = grammar({
         ),
 
         mapping_variable: $ => seq(
-            // WFR: domain and range MUST be distinct
             '(',
             field('domain', $.identifier),
             $._has_type,
@@ -708,7 +712,10 @@ module.exports = grammar({
         binary: $ => seq(
             '#[',
             repeat(
-                /[0-9A-Fa-f]{2}/
+                field(
+                    'byte',
+                    /[0-9A-Fa-f]{2}/
+                )
             ),
             ']'
         ),
@@ -819,6 +826,24 @@ module.exports = grammar({
             optional(field('body', $.structured_body))
         ),
 
+        property_def: $ => seq(
+            keyword('property'),
+            field('name', $.identifier),
+            optional(field('body', $.property_body))
+        ),
+
+        property_body: $ => seq(
+            keyword('is'),
+            repeat($.annotation),
+            repeat1(
+                choice(
+                    $.identity_role,
+                    $.member_role
+                )
+            ),
+            keyword('end')
+        ),
+
         structure_def: $ => seq(
             keyword('structure'),
             field('name', $.identifier),
@@ -839,13 +864,6 @@ module.exports = grammar({
             )
         ),
 
-        member_group: $ => seq(
-            keyword('group'),
-            repeat($.annotation),
-            repeat1($.member),
-            keyword('end')
-        ),
-
         union_def: $ => seq(
             keyword('union'),
             field('name', $.identifier),
@@ -857,40 +875,6 @@ module.exports = grammar({
             repeat($.annotation),
             repeat1($.type_variant),
             keyword('end')
-        ),
-
-        property_def: $ => seq(
-            keyword('property'),
-            field('name', $.identifier),
-            optional(field('body', $.property_body))
-        ),
-
-        property_body: $ => seq(
-            keyword('is'),
-            repeat($.annotation),
-            repeat1(
-                choice(
-                    $.identity_role,
-                    $.member_role
-                )
-            ),
-            keyword('end')
-        ),
-
-        identity_role: $ => seq(
-            keyword('identity'),
-            field('name', $.identifier),
-            $._type_expression,
-            optional(field('body', $.annotation_only_body))
-        ),
-
-        member_role: $ => seq(
-            field('name', $.identifier),
-            optional(
-                field('inverse_name', $.member_inverse_name)
-            ),
-            $._type_expression_to,
-            optional(field('body', $.annotation_only_body))
         ),
 
         // -----------------------------------------------------------------------
@@ -969,38 +953,15 @@ module.exports = grammar({
         ),
 
         // -----------------------------------------------------------------------
-        // Variants
-        // -----------------------------------------------------------------------
-
-        value_variant: $ => seq(
-            field('name', $.identifier),
-            $._by_definition,
-            field('value', $.unsigned),
-            optional(field('body', $.annotation_only_body))
-        ),
-
-        type_variant: $ => seq(
-            field('name', $.identifier_reference),
-            optional(
-                seq(
-                    keyword('as'),
-                    field(
-                        'rename',
-                        $.identifier,
-                    )
-                )
-            ),
-            optional(
-                field(
-                    'body',
-                    $.annotation_only_body
-                )
-            )
-        ),
-
-        // -----------------------------------------------------------------------
         // Members
         // -----------------------------------------------------------------------
+
+        member_group: $ => seq(
+            keyword('group'),
+            repeat($.annotation),
+            repeat1($.member),
+            keyword('end')
+        ),
 
         _property_reference: $ => seq(
             keyword('in'),
@@ -1049,12 +1010,17 @@ module.exports = grammar({
             optional(
                 field('cardinality', $.cardinality_expression)
             ),
-            optional(field('feature', $.feature_reference)),
-            // WFR: keyword('features') == kindof(target) == UnionDef
-             field('target', $.type_reference)
+            choice(
+                field('feature', $.feature_reference),
+                field('target', $.type_reference)
+            )
         ),
 
-        feature_reference: $ => keyword('features'),
+        feature_reference: $ => seq(
+            // WFR: keyword('features') == kindof(target) == UnionDef
+            keyword('features'),
+            field('target', $.identifier_reference),
+        ),
 
         type_reference: $ => choice(
             $.unknown_type,
@@ -1121,6 +1087,53 @@ module.exports = grammar({
             operator('<-'),
         ),
 
+        // -----------------------------------------------------------------------
+        // Variants
+        // -----------------------------------------------------------------------
+
+        value_variant: $ => seq(
+            field('name', $.identifier),
+            optional(field('body', $.annotation_only_body))
+        ),
+
+        type_variant: $ => seq(
+            field('name', $.identifier_reference),
+            optional(
+                seq(
+                    keyword('as'),
+                    field(
+                        'rename',
+                        $.identifier,
+                    )
+                )
+            ),
+            optional(
+                field(
+                    'body',
+                    $.annotation_only_body
+                )
+            )
+        ),
+
+        // -----------------------------------------------------------------------
+        // Roles
+        // -----------------------------------------------------------------------
+
+        identity_role: $ => seq(
+            keyword('identity'),
+            field('name', $.identifier),
+            $._type_expression,
+            optional(field('body', $.annotation_only_body))
+        ),
+
+        member_role: $ => seq(
+            field('name', $.identifier),
+            optional(
+                field('inverse_name', $.member_inverse_name)
+            ),
+            $._type_expression_to,
+            optional(field('body', $.annotation_only_body))
+        ),
 
         // -----------------------------------------------------------------------
         // Comments

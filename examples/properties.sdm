@@ -1,6 +1,9 @@
 module properties is
 
-  import [ account skos ]
+  import [
+    account
+    skos
+  ]
 
   property accountId is
 

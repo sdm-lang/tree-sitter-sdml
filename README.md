@@ -64,6 +64,17 @@ end
 
 # Changes
 
+**Version: 0.2.3**
+
+* Feature: expand rule `sequence_of_predicate_values` to match `sequence_of_values` with value constructor, mapping value,
+  and identifier reference choices.
+* Feature: simplify rule `value_variant` to remove the assignment to an unsigned value.
+* Feature: change rule `feature_reference` to contain the identifier reference, update the rule `_type_expression_to` to
+  have a choice of `feature_reference` *or* `type_reference`.
+* Fix: add field `byte` to rule `binary` to aid in parser and highlighting.
+
+Along with minor changes in highlighting and examples.
+
 **Version: 0.2.2**
 
 * Feature: add rule `optional` for the operator "?" to allow for optional values. Also added to type reference rules.

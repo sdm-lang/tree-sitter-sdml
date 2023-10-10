@@ -1,46 +1,79 @@
-module campaign is
+module invoice base <https://example.com/rentals/> is
+  ; Part of a larger example.
 
-  import [xsd skos xml:base dc]
+  import [dc skos xsd:decimal xsd:date xsd:string]
 
-  import foo
-
-  @xml:base = <https://advertising.amazon.com/api-model>
+  import customers  ;; customer account information
+  import finance    ;; stuff
+  import vehicles   ;; vehicle information
 
   @skos:version = xsd:decimal(2)
+  @skos:release = xsd:date("2023-08-12")
+
+  structure DateRange is
+    start_date -> xsd:date
+    end_date -> xsd:date is
+	  assert valid_range
+        = "self.end_date >= self.start_date"
+    end
+  end
+
+  structure OdometerRange is
+    start_miles -> vehicles:OdometerReading
+    end_miles -> vehicles:OdometerReading is
+	  assert
+        valid_range
+        = "self.end_miles >= self.start_miles"
+    end
+  end
+
+  entity Invoice is
+    identity id -> integer
+    customer -> customers:Customer
+    vehicle -> vehicles:Vehicle
+    rental_dates -> DateRange
+    mileage -> OdometerRange
+    group
+      day_rate -> finance:CurrencyRate
+      mile_rate -> ; FIXME: nance:CurrencyRate
+      discount -> finance:DiscountPercentage
+    end
+  end
 
   datatype Name <- xsd:string is
-    @xsd:minLength = 5
+    @xsd:minLength = true
     @xsd:maxLength = 25
   end
 
-  datatype CampaignId <- xsd:string is
-    @skos:prefLabel = [
-      "Campaign Identifier"@en
-      "Identified de campagne"@fr
-    ]
+  datatype InvoiceId <- opaque integer
+
+  event InvoiceCreated source Invoice is
+    at -> xsd:dateTime
   end
 
-  structure Tag is
-    key -> xsd:NMTOKEN
-    value -> {0..} rdfs:langStrings
+  event InvoicePayed source Invoice is
+    at -> xsd:dateTime
   end
 
-  entity Campaign is
-    identity campaignId -> CampaignId
-
-    name -> unknown
-
-    tag -> {0..} Tag
-
-    target (in_campaigns) -> {0..5} Target
+  event InvoiceOverdue source Invoice is
+    at -> xsd:dateTime
   end
 
-  union Foo of
-    Bar
-    Baz
+  structure Payment is
+    received -> xsd:dateTime
+    amount -> finance:CurrencyAmount
+    kind -> finance:PaymentKind
   end
 
+  enum Terms of
+    Immediate
+    ThirtyDays
+    SixtyDays
+  end
 
-  entity Target
+  union PaymentKind of
+    Cash
+    Card
+  end
 
 end

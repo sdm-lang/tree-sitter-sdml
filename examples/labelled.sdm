@@ -2,16 +2,16 @@ module labelled is
 
   assert must_have_preferred_label is
     def has_pref_label(anns -> {0..} Annotation) -> boolean ≔
-      ∃ a ∈ anns, name(a) = skos:prefLabel ∧ ¬empty(value(a))
+        ∃ a ∈ anns, name(a) = skos:prefLabel ∧ ¬empty(value(a))
   in
     has_pref_label(self.annotations)
     ∧ ∀ d ∈ self.definitions,
-      has_pref_label(d.annotations)
-      ∧ Entity(d) ⇒ ∀ m ∈ d.flat_members, ( has_pref_label(m.annotations) )
-      ∧ Enumeration(d) ⇒ ∀ m ∈ d.variants, ( has_pref_label(m.annotations) )
-      ∧ Event(d) ⇒ ∀ m ∈ d.flat_members, ( has_pref_label(m.annotations) )
-      ∧ Structure(d) ⇒ ∀ m ∈ d.flat_members, ( has_pref_label(m.annotations) )
-      ∧ Union(d) ⇒ ∀ m ∈ d.variants, ( has_pref_label(m.annotations) )
+        has_pref_label(d.annotations)
+          ∧ Entity(d) ⇒ ∀ m ∈ d.flat_members, ( has_pref_label(m.annotations) )
+              ∧ Enumeration(d) ⇒ ∀ m ∈ d.variants, ( has_pref_label(m.annotations) )
+                  ∧ Event(d) ⇒ ∀ m ∈ d.flat_members, ( has_pref_label(m.annotations) )
+                      ∧ Structure(d) ⇒ ∀ m ∈ d.flat_members, ( has_pref_label(m.annotations) )
+                          ∧ Union(d) ⇒ ∀ m ∈ d.variants, ( has_pref_label(m.annotations) )
   end
 
 end

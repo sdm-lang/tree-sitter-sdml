@@ -5,8 +5,8 @@ Enum, With Variants
 module campaign is
 
   enum NameKind of
-    Internal := 0
-    External := 1
+    Internal
+    External
   end
 
 end
@@ -21,8 +21,6 @@ end
         name: (identifier)
         body: (enum_body
           (value_variant
-            name: (identifier)
-            value: (unsigned))
+            name: (identifier))
           (value_variant
-            name: (identifier)
-            value: (unsigned)))))))
+            name: (identifier)))))))

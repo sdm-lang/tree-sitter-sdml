@@ -192,7 +192,7 @@
 (type_class_arguments [ "(" ")" ] @punctuation.bracket)
 
 (method_def "def" @keyword)
-(method_def name: (identifier) @method)
+(method_def name: (identifier) @method.definition)
 
 (wildcard) @type.builtin
 

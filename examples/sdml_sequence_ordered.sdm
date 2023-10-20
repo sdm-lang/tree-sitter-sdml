@@ -4,7 +4,7 @@ module sdml_sequence_ordered is
 
   class Ordered({ordered} S) is
 
-    def drop(vs -> S count → unsigned) → S is
+    def drop(vs → S count → unsigned) → S is
       @skos:definition = "Drop ~count~ items from the beginning of the sequence and return the rest."@en
     end
 

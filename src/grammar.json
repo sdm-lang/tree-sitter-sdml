@@ -3176,7 +3176,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "type_variable_restriction"
+              "name": "_type_variable_restriction"
             },
             {
               "type": "BLANK"
@@ -3185,7 +3185,7 @@
         }
       ]
     },
-    "type_variable_restriction": {
+    "_type_variable_restriction": {
       "type": "SEQ",
       "members": [
         {

@@ -185,7 +185,7 @@
 
 (type_variable name: (identifier) @type)
 
-(type_variable_restriction "+" @operator)
+(type_variable "+" @operator)
 
 (type_class_reference name: (identifier_reference) @type)
 

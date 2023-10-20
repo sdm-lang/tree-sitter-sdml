@@ -2325,23 +2325,8 @@
       }
     },
     "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "type_variable_restriction",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "type_variable_restriction",
-    "named": true,
-    "fields": {},
-    "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "type_class_reference",
@@ -2671,11 +2656,11 @@
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "def",
@@ -2683,11 +2668,11 @@
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "end",
@@ -2755,11 +2740,11 @@
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "iri",

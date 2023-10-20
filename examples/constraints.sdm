@@ -12,20 +12,20 @@ module Campaign is
 
     c -> Target is
       assert tagged_with_foo is
-        ∀ self contains(self.tags "foo")
+        forall self self.tags.contains(1)
       end
     end
 
     d -> Target is
       assert tagged_with_foo_path is
         def foo := "foo" in
-        ∀ self ( self.tags.contains(foo) )
+        forall self ( self.tags.contains(foo) )
       end
     end
 
     e -> Target is
       assert tagged_with_foo_builder is
-        ∀ self ( ¬is_empty({t | ∃ t ∈ self.tags t = "foo"}) )
+        forall self ( not is_empty({t | exists t in self.tags t = "foo"}) )
       end
     end
 
@@ -43,13 +43,13 @@ module Campaign is
 
     h -> Target is
       assert tagged_with_foo_builder_4 is
-        ∀ self ( ¬is_empty({t | ∀ t ∈ self.tags ∃ x ∈ self.container.tags contains(x t)}) )
+        forall self ( not is_empty({t | forall t in self.tags, exists x in self.container.tags, contains(x t)}) )
       end
     end
 
     i -> Target is
       assert tagged_with_foo_builder_5 is
-        ∀ self ( ∃ x ∈ self.container.tags ¬is_empty({t | ∀ t ∈ self.tags contains(x t)}) )
+        forall self ( exists x in self.container.tags not is_empty({t | ∀ t ∈ self.tags contains(x t)}) )
       end
     end
 

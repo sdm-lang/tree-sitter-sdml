@@ -899,10 +899,10 @@ module.exports = grammar({
                 field('cardinality', $.function_cardinality_expression)
             ),
             field('name', $.identifier),
-            optional($.type_variable_restriction)
+            optional($._type_variable_restriction)
         ),
 
-        type_variable_restriction: $ => seq(
+       _type_variable_restriction: $ => seq(
             $._has_type,
             $.type_class_reference,
             repeat(

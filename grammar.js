@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.2.4
+// Version:    0.2.5
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -884,14 +884,12 @@ module.exports = grammar({
         type_class_def: $ => seq(
             keyword('class'),
             field('name', $.identifier),
-            field('parameters', $.type_class_parameters),
+            seq(
+                '(',
+                repeat1(field('variable', $.type_variable)),
+                ')',
+            ),
             optional(field('body', $.type_class_body))
-        ),
-
-        type_class_parameters: $ => seq(
-            '(',
-            repeat1(field('variable', $.type_variable)),
-            ')',
         ),
 
         type_variable: $ => seq(

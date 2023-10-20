@@ -180,11 +180,9 @@
 ;; ---------------------------------------------------------------------------
 
 (type_class_def name: (identifier) @type.definition)
-
-(type_class_parameters [ "(" ")" ] @punctuation.bracket)
+(type_class_def [ "(" ")" ] @punctuation.bracket)
 
 (type_variable name: (identifier) @type)
-
 (type_variable "+" @operator)
 
 (type_class_reference name: (identifier_reference) @type)

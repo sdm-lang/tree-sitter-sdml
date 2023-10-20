@@ -2218,22 +2218,6 @@
           }
         ]
       },
-      "parameters": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "type_class_parameters",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "type_class_parameters",
-    "named": true,
-    "fields": {
       "variable": {
         "multiple": true,
         "required": true,
@@ -2656,11 +2640,11 @@
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "def",
@@ -2668,11 +2652,11 @@
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "end",
@@ -2740,11 +2724,11 @@
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "iri",

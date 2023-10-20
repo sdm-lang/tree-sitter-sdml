@@ -16,13 +16,12 @@ end
     (definition
       (type_class_def
         (identifier)
-        (type_class_parameters
-          (type_variable
-            (identifier)
-            (type_class_reference
-              (identifier_reference
-                (identifier))
-              (type_class_arguments
-                (type_class_reference
-                  (identifier_reference
-                    (identifier)))))))))))
+        (type_variable
+          (identifier)
+          (type_class_reference
+            (identifier_reference
+              (identifier))
+            (type_class_arguments
+              (type_class_reference
+                (identifier_reference
+                  (identifier))))))))))

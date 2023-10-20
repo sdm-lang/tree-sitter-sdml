@@ -46,18 +46,18 @@ module Campaign is
       ;      ^ property
       ;                      ^ keyword
 
-        ∀ self ( contains(self.tags "foo") )
+        ∀ self, ( contains(self.tags "foo") )
         ; <- operator
         ;   ^ variable.builtin
-        ;        ^ punctuation.bracket
-        ;          ^ function.call
-        ;                  ^ punctuation.bracket
-        ;                    ^ variable.builtin
-        ;                       ^ punctuation.delimiter
-        ;                        ^ function.call
-        ;                             ^ string
-        ;                                  ^ punctuation.bracket
-        ;                                    ^ punctuation.bracket
+        ;         ^ punctuation.bracket
+        ;           ^ function.call
+        ;                   ^ punctuation.bracket
+        ;                     ^ variable.builtin
+        ;                        ^ punctuation.delimiter
+        ;                         ^ function.call
+        ;                              ^ string
+        ;                                   ^ punctuation.bracket
+        ;                                     ^ punctuation.bracket
       end
       ; <- keyword
 
@@ -85,18 +85,18 @@ module Campaign is
         in
         ; <- keyword
 
-        ∀ self ( self.tags.contains(foo) )
+        ∀ self, ( self.tags.contains(foo) )
         ; <- operator
         ;   ^ variable.builtin
-        ;        ^ punctuation.bracket
-        ;          ^ variable.builtin
-        ;              ^ punctuation.delimiter
-        ;               ^ function.call
-        ;                   ^ punctuation.delimiter
-        ;                    ^ function.call
-        ;                            ^ punctuation.bracket
-        ;                                ^ punctuation.bracket
-        ;                                  ^ punctuation.bracket
+        ;         ^ punctuation.bracket
+        ;           ^ variable.builtin
+        ;               ^ punctuation.delimiter
+        ;                ^ function.call
+        ;                    ^ punctuation.delimiter
+        ;                     ^ function.call
+        ;                             ^ punctuation.bracket
+        ;                                 ^ punctuation.bracket
+        ;                                   ^ punctuation.bracket
 
       end
       ; <- keyword
@@ -116,17 +116,17 @@ module Campaign is
       ;                              ^ keyword
 
 
-        ∀ self (
+        ∀ self, (
         ; <- operator
         ;   ^ variable.builtin
-        ;        ^ punctuation.bracket
+        ;         ^ punctuation.bracket
 
           ¬is_empty(
           ; <- operator
           ; ^ function.call
           ;         ^ punctuation.bracket
 
-            {t | t in self.tags t = "foo"}
+            {t | t in self.tags, t = "foo"}
             ; <- punctuation.bracket
             ;  ^ punctuation.separator
             ;    ^ variable.parameter
@@ -134,9 +134,9 @@ module Campaign is
             ;         ^ variable.builtin
             ;             ^ punctuation.delimiter
             ;              ^ function.call
-            ;                     ^ operator
-            ;                       ^ string
-            ;                            ^ punctuation.bracket
+            ;                      ^ operator
+            ;                        ^ string
+            ;                             ^ punctuation.bracket
           )
         ; ^ punctuation.bracket
         )
@@ -157,12 +157,12 @@ module Campaign is
       ;      ^ property
       ;                              ^ keyword
 
-        ∀ self (
+        ∀ self, (
         ; <- operator
         ;   ^ variable.builtin
-        ;        ^ punctuation.bracket
+        ;         ^ punctuation.bracket
 
-          ∃ tag ∈ self.container.tags
+          ∃ tag ∈ self.container.tags,
           ;<- operator
           ;   ^ variable.parameter
           ;       ^ operator

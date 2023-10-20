@@ -6,7 +6,7 @@ module another is
     def foo
       := "foo"
   in
-    ∀ self self.tags.contains(foo)
+    ∀ self, self.tags.contains(foo)
   end
 
   datatype byte ← integer is

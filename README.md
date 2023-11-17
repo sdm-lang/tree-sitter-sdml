@@ -1,19 +1,6 @@
 # Tree-Sitter grammar for SDML
 
-```
-        ___          _____          ___ 
-       /  /\        /  /::\        /__/\ 
-      /  /:/_      /  /:/\:\      |  |::\ 
-     /  /:/ /\    /  /:/  \:\     |  |:|:\    ___     ___ 
-    /  /:/ /::\  /__/:/ \__\:|  __|__|:|\:\  /__/\   /  /\ 
-   /__/:/ /:/\:\ \  \:\ /  /:/ /__/::::| \:\ \  \:\ /  /:/ 
-   \  \:\/:/~/:/  \  \:\  /:/  \  \:\~~\__\/  \  \:\  /:/ 
-    \  \::/ /:/    \  \:\/:/    \  \:\         \  \:\/:/ 
-     \__\/ /:/      \  \::/      \  \:\         \  \::/ 
-       /__/:/        \__\/        \  \:\         \__\/ 
-       \__\/          Domain       \__\/          Language
-        Simple                      Modeling
-```
+![SDML Logo Text](https://raw.githubusercontent.com/sdm-lang/.github/main/profile/horizontal-text.svg)
 
 A [tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for the Simple Domain Modeling Language (SDML). For more information on the language, see the
 [documentation](https://sdml.io/).
@@ -60,6 +47,10 @@ module Campaign base <https://advertising.amazon.com/api-model> is
   entity Target
 
 end
+
+## License
+
+This package is released under the Apache License, Version 2.0. See LICENSE file for details.
 ```
 
 # Changes

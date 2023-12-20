@@ -499,7 +499,7 @@
     },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "annotation",
@@ -507,10 +507,6 @@
         },
         {
           "type": "member",
-          "named": true
-        },
-        {
-          "type": "member_group",
           "named": true
         }
       ]
@@ -1353,25 +1349,6 @@
     }
   },
   {
-    "type": "member_group",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "annotation",
-          "named": true
-        },
-        {
-          "type": "member",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "member_import",
     "named": true,
     "fields": {
@@ -2099,10 +2076,6 @@
         {
           "type": "member",
           "named": true
-        },
-        {
-          "type": "member_group",
-          "named": true
         }
       ]
     }
@@ -2652,11 +2625,11 @@
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "end",
@@ -2695,10 +2668,6 @@
     "named": true
   },
   {
-    "type": "group",
-    "named": false
-  },
-  {
     "type": "identifier",
     "named": true
   },
@@ -2724,11 +2693,11 @@
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "iri",

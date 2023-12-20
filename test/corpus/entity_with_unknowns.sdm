@@ -10,10 +10,6 @@ module Campaign is
 
     a -> unknown
 
-    group
-      b -> unknown
-    end
-
   end
 
 end
@@ -34,9 +30,4 @@ end
           (member
             name: (identifier)
             target: (type_reference
-              (unknown_type)))
-          (member_group
-            (member
-              name: (identifier)
-              target: (type_reference
-                (unknown_type)))))))))
+              (unknown_type))))))))

@@ -1,5 +1,4 @@
 [
- "group"
  "is"
  "of"
  ] @indent

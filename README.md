@@ -55,6 +55,23 @@ This package is released under the Apache License, Version 2.0. See LICENSE file
 
 # Changes
 
+**Version: 0.2.7**
+
+* Remove member group from grammar, can't find a use that isn't better done by moving members to a structure of their
+  own.
+
+**Version: 0.2.6**
+
+* Fix: test case typos.
+
+**Version: 0.2.5**
+
+* Feature: Inline type variables in type classes.
+
+**Version: 0.2.4**
+
+* Fix: tidy grammar for type classes.
+
 **Version: 0.2.3**
 
 * Feature: expand rule `sequence_of_predicate_values` to match `sequence_of_values` with value constructor, mapping value,

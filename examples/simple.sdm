@@ -27,15 +27,16 @@ module invoice base <https://example.com/rentals/> is
 
   entity Invoice is
     identity id -> integer
+  
     customer -> customers:Customer
     vehicle -> vehicles:Vehicle
     rental_dates -> DateRange
     mileage -> OdometerRange
-    group
-      day_rate -> finance:CurrencyRate
-      mile_rate -> finance:CurrencyRate
-      discount -> finance:DiscountPercentage
-    end
+
+    day_rate -> finance:CurrencyRate
+    mile_rate -> finance:CurrencyRate
+    discount -> finance:DiscountPercentage
+
   end
 
   datatype Name <- xsd:string is

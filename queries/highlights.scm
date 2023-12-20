@@ -171,7 +171,6 @@
  source: (identifier_reference) @type)
 
 (structure_def name: (identifier) @type.definition)
-(member_group "group" @keyword)
 
 (union_def name: (identifier) @type.definition)
 

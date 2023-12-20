@@ -16,8 +16,6 @@
  (type_class_body)
  (union_body)
  ;; ----------------
- (member_group)
- ;; ----------------
  (formal_constraint)
  (constraint_environment)
  (environment_def)

@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.2.6
+// Version:    0.2.7
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -801,7 +801,7 @@ module.exports = grammar({
             keyword('is'),
             repeat($.annotation),
             field('identity', $.entity_identity),
-            $._structured_body_inner,
+            repeat($.member),
             keyword('end')
         ),
 
@@ -853,15 +853,8 @@ module.exports = grammar({
         structured_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
-            $._structured_body_inner,
+            repeat1($.member),
             keyword('end')
-        ),
-
-        _structured_body_inner: $ => repeat1(
-            choice(
-                $.member_group,
-                $.member
-            )
         ),
 
         union_def: $ => seq(
@@ -953,13 +946,6 @@ module.exports = grammar({
         // -----------------------------------------------------------------------
         // Members
         // -----------------------------------------------------------------------
-
-        member_group: $ => seq(
-            keyword('group'),
-            repeat($.annotation),
-            repeat1($.member),
-            keyword('end')
-        ),
 
         _property_reference: $ => seq(
             keyword('in'),

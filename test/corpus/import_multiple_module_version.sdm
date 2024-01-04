@@ -1,0 +1,29 @@
+================================
+Import multiple versioned module
+================================
+
+module campaign is
+
+  import [
+    sdml
+    customer <https://example.org/v2/Customer#>
+    rdf skos
+  ]
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (import_statement
+      (module_import
+        name: (identifier))
+      (module_import
+        name: (identifier)
+        uri: (iri))
+      (module_import
+        name: (identifier))
+      (module_import
+        name: (identifier)))))

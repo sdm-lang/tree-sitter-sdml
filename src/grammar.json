@@ -214,7 +214,7 @@
       ]
     },
     "member_import": {
-      "type": "CHOICE",
+      "type": "SEQ",
       "members": [
         {
           "type": "FIELD",
@@ -236,6 +236,22 @@
             "type": "SYMBOL",
             "name": "identifier"
           }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "uri",
+              "content": {
+                "type": "SYMBOL",
+                "name": "iri"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },

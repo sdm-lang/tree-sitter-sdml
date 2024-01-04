@@ -1588,6 +1588,16 @@
             "named": true
           }
         ]
+      },
+      "uri": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "iri",
+            "named": true
+          }
+        ]
       }
     }
   },

@@ -55,6 +55,13 @@ This package is released under the Apache License, Version 2.0. See LICENSE file
 
 # Changes
 
+**Version: 0.2.10**
+
+* Feature: add version support to modules.
+  * Remove `base` keyword.
+  * Add optional `version` keyword and string/IRI version information.
+  * Add optional IRI after identifier for module imports.
+
 **Version: 0.2.8/0.2.9**
 
 * Feature: better support for RDF generation.

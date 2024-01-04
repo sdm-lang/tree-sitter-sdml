@@ -1,4 +1,4 @@
-module invoice base <https://example.com/rentals/> is
+module invoice <https://example.com/rentals/> version "2023-12-21" <https://example.com/v2/rentals/> is
   ; Part of a larger example.
 
   import [dc skos xsd:decimal xsd:date xsd:string]
@@ -27,7 +27,7 @@ module invoice base <https://example.com/rentals/> is
 
   entity Invoice is
     identity id -> integer
-  
+
     customer -> customers:Customer
     vehicle -> vehicles:Vehicle
     rental_dates -> DateRange

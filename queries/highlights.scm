@@ -56,7 +56,7 @@
 ;; ---------------------------------------------------------------------------
 
 (module name: (identifier) @module.definition)
-(module "base" @keyword)
+(module "version" @keyword)
 
 (import_statement [ "[" "]" ] @punctuation.bracket)
 
@@ -175,6 +175,16 @@
 (union_def name: (identifier) @type.definition)
 
 ;; ---------------------------------------------------------------------------
+;; RDF Definitions
+;; ---------------------------------------------------------------------------
+
+(rdf_thing_def "rdf" @keyword)
+
+(rdf_class_def name: (identifier) @type.definition)
+
+(rdf_property_def name: (identifier) @variable.field)
+
+;; ---------------------------------------------------------------------------
 ;; Type Classes
 ;; ---------------------------------------------------------------------------
 
@@ -212,7 +222,7 @@
            target: (identifier_reference) @type))
 (member "in" @keyword)
 
-(member_inverse_name
+ (member_inverse_name
  "(" @punctuation.bracket
  name: (identifier) @variable.field
  ")" @punctuation.bracket)

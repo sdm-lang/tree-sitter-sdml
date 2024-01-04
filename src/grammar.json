@@ -28,28 +28,8 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "TOKEN",
-                  "content": {
-                    "type": "PREC",
-                    "value": 2,
-                    "content": {
-                      "type": "STRING",
-                      "value": "base"
-                    }
-                  }
-                },
-                {
-                  "type": "FIELD",
-                  "name": "base",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "iri"
-                  }
-                }
-              ]
+              "type": "SYMBOL",
+              "name": "_module_locations"
             },
             {
               "type": "BLANK"
@@ -63,6 +43,67 @@
             "type": "SYMBOL",
             "name": "module_body"
           }
+        }
+      ]
+    },
+    "_module_locations": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "base",
+          "content": {
+            "type": "SYMBOL",
+            "name": "iri"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "TOKEN",
+                  "content": {
+                    "type": "PREC",
+                    "value": 2,
+                    "content": {
+                      "type": "STRING",
+                      "value": "version"
+                    }
+                  }
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "FIELD",
+                      "name": "version_info",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "quoted_string"
+                      }
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                },
+                {
+                  "type": "FIELD",
+                  "name": "version_uri",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "iri"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -2444,6 +2485,10 @@
         {
           "type": "SYMBOL",
           "name": "union_def"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "rdf_thing_def"
         }
       ]
     },
@@ -3051,6 +3096,91 @@
               "value": "end"
             }
           }
+        }
+      ]
+    },
+    "rdf_thing_def": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "rdf"
+            }
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "rdf_class_def"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "rdf_property_def"
+            }
+          ]
+        }
+      ]
+    },
+    "rdf_class_def": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "structure"
+            }
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "annotation_only_body"
+        }
+      ]
+    },
+    "rdf_property_def": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "property"
+            }
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "annotation_only_body"
         }
       ]
     },

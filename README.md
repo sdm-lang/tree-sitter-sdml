@@ -55,6 +55,14 @@ This package is released under the Apache License, Version 2.0. See LICENSE file
 
 # Changes
 
+**Version: 0.2.8/0.2.9**
+
+* Feature: better support for RDF generation.
+  * Add direct support for RDF structures and properties rather than using SDML structures.
+    * see file `examples/rdf_schema.sdm`
+  * Remove keyword `"base"`, add new version clause on module definitions.
+    * see file `test/corpus/module_empty_with_version.sdm`
+
 **Version: 0.2.7**
 
 * Remove member group from grammar, can't find a use that isn't better done by moving members to a structure of their

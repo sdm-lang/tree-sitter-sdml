@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.2.7
+// Version:    0.2.9
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -73,16 +73,30 @@ module.exports = grammar({
         module: $ => seq(
             keyword('module'),
             field('name', $.identifier),
+            optional($._module_locations),
+            field('body', $.module_body)
+        ),
+
+        _module_locations: $ => seq(
+            field(
+                'base',
+                $.iri,
+            ),
             optional(
                 seq(
-                    keyword('base'),
+                    keyword('version'),
+                    optional(
+                        field(
+                            'version_info',
+                            $.quoted_string,
+                        )
+                    ),
                     field(
-                        'base',
+                        'version_uri',
                         $.iri,
                     )
                 )
-            ),
-            field('body', $.module_body)
+            )
         ),
 
         module_body: $ => seq(
@@ -763,7 +777,8 @@ module.exports = grammar({
             $.property_def,
             $.structure_def,
             $.type_class_def,
-            $.union_def
+            $.union_def,
+            $.rdf_thing_def
         ),
 
         data_type_def: $ => seq(
@@ -868,6 +883,26 @@ module.exports = grammar({
             repeat($.annotation),
             repeat1($.type_variant),
             keyword('end')
+        ),
+
+        rdf_thing_def: $ => seq(
+            keyword('rdf'),
+            choice(
+                $.rdf_class_def,
+                $.rdf_property_def,
+            )
+        ),
+
+        rdf_class_def: $ => seq(
+            keyword('structure'),
+            field('name', $.identifier),
+            $.annotation_only_body
+        ),
+
+        rdf_property_def: $ => seq(
+            keyword('property'),
+            field('name', $.identifier),
+            $.annotation_only_body
         ),
 
         // -----------------------------------------------------------------------

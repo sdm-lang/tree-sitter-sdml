@@ -1,0 +1,16 @@
+==========================
+Module, empty with version
+==========================
+
+module Campaign <https://example.org/v/Campaign#>
+  version "2" <https://example.org/v2/Campaign#> is
+end
+
+---
+
+(module
+  name: (identifier)
+  base: (iri)
+  version_info: (quoted_string)
+  version_uri: (iri)
+  body: (module_body))

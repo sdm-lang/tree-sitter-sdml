@@ -22,7 +22,7 @@ end
         name: (identifier))
       (module_import
         name: (identifier)
-        uri: (iri))
+        version_uri: (iri))
       (module_import
         name: (identifier))
       (module_import

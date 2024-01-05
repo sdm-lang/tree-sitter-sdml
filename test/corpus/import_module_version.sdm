@@ -16,4 +16,4 @@ end
     (import_statement
       (module_import
         name: (identifier)
-        uri: (iri)))))
+        version_uri: (iri)))))

@@ -242,7 +242,7 @@
           "members": [
             {
               "type": "FIELD",
-              "name": "uri",
+              "name": "version_uri",
               "content": {
                 "type": "SYMBOL",
                 "name": "iri"
@@ -3167,8 +3167,12 @@
           }
         },
         {
-          "type": "SYMBOL",
-          "name": "annotation_only_body"
+          "type": "FIELD",
+          "name": "body",
+          "content": {
+            "type": "SYMBOL",
+            "name": "annotation_only_body"
+          }
         }
       ]
     },
@@ -3195,8 +3199,12 @@
           }
         },
         {
-          "type": "SYMBOL",
-          "name": "annotation_only_body"
+          "type": "FIELD",
+          "name": "body",
+          "content": {
+            "type": "SYMBOL",
+            "name": "annotation_only_body"
+          }
         }
       ]
     },

@@ -130,7 +130,7 @@ module.exports = grammar({
 
         module_import: $ => seq(
             field('name', $.identifier),
-            optional(field('uri', $.iri))
+            optional(field('version_uri', $.iri))
         ),
 
         // -----------------------------------------------------------------------
@@ -897,13 +897,13 @@ module.exports = grammar({
         rdf_class_def: $ => seq(
             keyword('structure'),
             field('name', $.identifier),
-            $.annotation_only_body
+            field('body', $.annotation_only_body)
         ),
 
         rdf_property_def: $ => seq(
             keyword('property'),
             field('name', $.identifier),
-            $.annotation_only_body
+            field('body', $.annotation_only_body)
         ),
 
         // -----------------------------------------------------------------------

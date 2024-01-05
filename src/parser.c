@@ -12,7 +12,7 @@
 #define ALIAS_COUNT 0
 #define TOKEN_COUNT 106
 #define EXTERNAL_TOKEN_COUNT 0
-#define FIELD_COUNT 46
+#define FIELD_COUNT 45
 #define MAX_ALIAS_SEQUENCE_LENGTH 6
 #define PRODUCTION_ID_COUNT 97
 
@@ -1769,12 +1769,11 @@ enum {
   field_subject = 38,
   field_target = 39,
   field_uniqueness = 40,
-  field_uri = 41,
-  field_value = 42,
-  field_variable = 43,
-  field_version_info = 44,
-  field_version_uri = 45,
-  field_wildcard = 46,
+  field_value = 41,
+  field_variable = 42,
+  field_version_info = 43,
+  field_version_uri = 44,
+  field_wildcard = 45,
 };
 
 static const char * const ts_field_names[] = {
@@ -1819,7 +1818,6 @@ static const char * const ts_field_names[] = {
   [field_subject] = "subject",
   [field_target] = "target",
   [field_uniqueness] = "uniqueness",
-  [field_uri] = "uri",
   [field_value] = "value",
   [field_variable] = "variable",
   [field_version_info] = "version_info",
@@ -1947,7 +1945,7 @@ static const TSFieldMapEntry ts_field_map_entries[] = {
     {field_version_uri, 2},
   [12] =
     {field_name, 0},
-    {field_uri, 1},
+    {field_version_uri, 1},
   [14] =
     {field_base, 0},
     {field_version_info, 2},
@@ -15713,8 +15711,8 @@ static const TSParseActionEntry ts_parse_actions[] = {
   [746] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_entity_def, 3, .production_id = 1),
   [748] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_property_body, 3),
   [750] = {.entry = {.count = 1, .reusable = true}}, SHIFT(241),
-  [752] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_rdf_class_def, 3, .production_id = 5),
-  [754] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_rdf_property_def, 3, .production_id = 5),
+  [752] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_rdf_class_def, 3, .production_id = 1),
+  [754] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_rdf_property_def, 3, .production_id = 1),
   [756] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_definition, 1),
   [758] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_property_body, 4),
   [760] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_type_class_def, 6, .production_id = 64),

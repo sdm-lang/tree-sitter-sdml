@@ -43,8 +43,8 @@ end
       (module_import
         (identifier)))
     (definition
-      (rdf_thing_def
-        (rdf_class_def
+      (rdf_def
+          (rdf_type_class)
           (identifier)
           (annotation_only_body
             (line_comment)
@@ -71,10 +71,10 @@ end
                 (value
                   (simple_value
                     (string
-                      (quoted_string))))))))))
+                      (quoted_string)))))))))
     (definition
-      (rdf_thing_def
-        (rdf_property_def
+      (rdf_def
+        (rdf_type_property)
           (identifier)
           (annotation_only_body
             (line_comment)
@@ -114,10 +114,10 @@ end
                 (value
                   (simple_value
                     (string
-                      (quoted_string))))))))))
+                      (quoted_string)))))))))
     (definition
-      (rdf_thing_def
-        (rdf_property_def
+      (rdf_def
+        (rdf_type_property)
           (identifier)
           (annotation_only_body
             (line_comment)
@@ -168,4 +168,4 @@ end
                 (value
                   (simple_value
                     (string
-                      (quoted_string))))))))))))
+                      (quoted_string)))))))))))

@@ -779,7 +779,7 @@ module.exports = grammar({
             $.structure_def,
             $.type_class_def,
             $.union_def,
-            $.rdf_thing_def
+            $.rdf_def
         ),
 
         data_type_def: $ => seq(
@@ -886,25 +886,23 @@ module.exports = grammar({
             keyword('end')
         ),
 
-        rdf_thing_def: $ => seq(
+        rdf_def: $ => seq(
             keyword('rdf'),
-            choice(
-                $.rdf_class_def,
-                $.rdf_property_def,
-            )
-        ),
-
-        rdf_class_def: $ => seq(
-            keyword('structure'),
+            field(
+                'type',
+                choice(
+                    $.rdf_type_class,
+                    $.rdf_type_property,
+                )
+            ),
             field('name', $.identifier),
             field('body', $.annotation_only_body)
         ),
 
-        rdf_property_def: $ => seq(
-            keyword('property'),
-            field('name', $.identifier),
-            field('body', $.annotation_only_body)
-        ),
+        rdf_type_class: $ => keyword('structure'),
+
+        rdf_type_property: $ => keyword('property'),
+
 
         // -----------------------------------------------------------------------
         // Type Classes

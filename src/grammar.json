@@ -2504,7 +2504,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "rdf_thing_def"
+          "name": "rdf_def"
         }
       ]
     },
@@ -3115,7 +3115,7 @@
         }
       ]
     },
-    "rdf_thing_def": {
+    "rdf_def": {
       "type": "SEQ",
       "members": [
         {
@@ -3130,32 +3130,20 @@
           }
         },
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "rdf_class_def"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "rdf_property_def"
-            }
-          ]
-        }
-      ]
-    },
-    "rdf_class_def": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "TOKEN",
+          "type": "FIELD",
+          "name": "type",
           "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "structure"
-            }
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "rdf_type_class"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "rdf_type_property"
+              }
+            ]
           }
         },
         {
@@ -3176,37 +3164,27 @@
         }
       ]
     },
-    "rdf_property_def": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "property"
-            }
-          }
-        },
-        {
-          "type": "FIELD",
-          "name": "name",
-          "content": {
-            "type": "SYMBOL",
-            "name": "identifier"
-          }
-        },
-        {
-          "type": "FIELD",
-          "name": "body",
-          "content": {
-            "type": "SYMBOL",
-            "name": "annotation_only_body"
-          }
+    "rdf_type_class": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "STRING",
+          "value": "structure"
         }
-      ]
+      }
+    },
+    "rdf_type_property": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "STRING",
+          "value": "property"
+        }
+      }
     },
     "type_class_def": {
       "type": "SEQ",

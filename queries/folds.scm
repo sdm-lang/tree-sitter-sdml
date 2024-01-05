@@ -7,7 +7,7 @@
  (structure_def)
  (type_class_def)
  (union_def)
- (rdf_thing_def)
+ (rdf_def)
  ;; ----------------
  (annotation_only_body)
  (entity_body)

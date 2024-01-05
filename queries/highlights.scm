@@ -18,6 +18,7 @@
  "enum"
  "event"
  "property"
+ "rdf"
  "structure"
  "union"
  "is"
@@ -178,11 +179,7 @@
 ;; RDF Definitions
 ;; ---------------------------------------------------------------------------
 
-(rdf_thing_def "rdf" @keyword)
-
-(rdf_class_def name: (identifier) @type.definition)
-
-(rdf_property_def name: (identifier) @variable.field)
+(rdf_def name: (identifier) @type.definition)
 
 ;; ---------------------------------------------------------------------------
 ;; Type Classes

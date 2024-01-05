@@ -55,6 +55,11 @@ This package is released under the Apache License, Version 2.0. See LICENSE file
 
 # Changes
 
+**Version: 0.2.11**
+
+* Fix: rename field `uri` to `version_uri` on rule `module_import`.
+* Refactor: clean-up test case names to match those in sdml-parse Rust crate.
+
 **Version: 0.2.10**
 
 * Feature: add version support to modules.

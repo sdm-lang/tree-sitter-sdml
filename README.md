@@ -55,6 +55,10 @@ This package is released under the Apache License, Version 2.0. See LICENSE file
 
 # Changes
 
+**Version: 0.2.13**
+
+* Feature: add `rdf_super_types` optional rule to `rdf_def`.
+
 **Version: 0.2.12**
 
 * Refactor: simplify the `rdf_thing_def` rule into `rdf_def`.

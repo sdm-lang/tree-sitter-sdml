@@ -4,7 +4,7 @@ module rdf_schema <http://www.w3.org/2000/01/rdf-schema#> is
 
   structure Foo is a -> string end
 
-  rdf structure Resource is
+  rdf structure Resource <- Resource is
     @comment = "The class resource, everything."
   end
 

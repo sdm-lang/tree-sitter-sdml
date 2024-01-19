@@ -1830,6 +1830,16 @@
           }
         ]
       },
+      "super_types": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "rdf_super_types",
+            "named": true
+          }
+        ]
+      },
       "type": {
         "multiple": false,
         "required": true,
@@ -1844,6 +1854,21 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "rdf_super_types",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier_reference",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -2773,11 +2798,11 @@
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "iri",

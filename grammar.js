@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.2.13
+// Version:    0.2.14
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -910,7 +910,7 @@ module.exports = grammar({
                 $.identifier_reference,
                 seq(
                     '[',
-                    repeat1($.identifier_reference),
+                    repeat($.identifier_reference),
                     ']'
                 )
             )

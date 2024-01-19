@@ -6,13 +6,13 @@ module rdfs <http://www.w3.org/2000/01/rdf-schema#> is
 
   import [ owl rdf ]
 
-  rdf structure Resource is ;; assumed: @rdf:type = Class
+  rdf Resource is
     @isDefinedBy = rdfs
     @label = "Resource"@en
     @comment = "The class resource, everything."
   end
 
-  rdf property subClassOf is ;; assumed: @rdf:type = rdf:Property
+  rdf subClassOf type rdf:Property is
     @domain = Class
     @range = Class
     @isDefinedBy = rdfs
@@ -20,8 +20,7 @@ module rdfs <http://www.w3.org/2000/01/rdf-schema#> is
     @comment = "The subject is a subclass of a class."
   end
 
-  rdf property comment is ;; assumed: @rdf:type = rdf:Property
-    @rdf:type = owl:AnnotationProperty
+  rdf comment  type [ rdf:Property owl:AnnotationProperty ] is
     @domain = Resource
     @range = Literal
     @isDefinedBy = rdfs
@@ -34,138 +33,135 @@ end
 ---
 
 (module
-  (identifier)
-  (iri)
-  (module_body
-    (import_statement
-      (module_import
-        (identifier))
-      (module_import
-        (identifier)))
-    (definition
-      (rdf_def
-          (rdf_type_class)
-          (identifier)
-          (annotation_only_body
-            (line_comment)
-            (annotation
-              (annotation_property
-                (identifier_reference
-                  (identifier))
-                (value
-                  (identifier_reference
-                    (identifier)))))
-            (annotation
-              (annotation_property
-                (identifier_reference
-                  (identifier))
-                (value
-                  (simple_value
-                    (string
-                      (quoted_string)
-                      (language_tag))))))
-            (annotation
-              (annotation_property
-                (identifier_reference
-                  (identifier))
-                (value
-                  (simple_value
-                    (string
-                      (quoted_string)))))))))
-    (definition
-      (rdf_def
-        (rdf_type_property)
-          (identifier)
-          (annotation_only_body
-            (line_comment)
-            (annotation
-              (annotation_property
-                (identifier_reference
-                  (identifier))
-                (value
-                  (identifier_reference
-                    (identifier)))))
-            (annotation
-              (annotation_property
-                (identifier_reference
-                  (identifier))
-                (value
-                  (identifier_reference
-                    (identifier)))))
-            (annotation
-              (annotation_property
-                (identifier_reference
-                  (identifier))
-                (value
-                  (identifier_reference
-                    (identifier)))))
-            (annotation
-              (annotation_property
-                (identifier_reference
-                  (identifier))
-                (value
-                  (simple_value
-                    (string
-                      (quoted_string))))))
-            (annotation
-              (annotation_property
-                (identifier_reference
-                  (identifier))
-                (value
-                  (simple_value
-                    (string
-                      (quoted_string)))))))))
-    (definition
-      (rdf_def
-        (rdf_type_property)
-          (identifier)
-          (annotation_only_body
-            (line_comment)
-            (annotation
-              (annotation_property
-                (identifier_reference
-                  (qualified_identifier
-                    (identifier)
-                    (identifier)))
-                (value
-                  (identifier_reference
-                    (qualified_identifier
-                      (identifier)
-                      (identifier))))))
-            (annotation
-              (annotation_property
-                (identifier_reference
-                  (identifier))
-                (value
-                  (identifier_reference
-                    (identifier)))))
-            (annotation
-              (annotation_property
-                (identifier_reference
-                  (identifier))
-                (value
-                  (identifier_reference
-                    (identifier)))))
-            (annotation
-              (annotation_property
-                (identifier_reference
-                  (identifier))
-                (value
-                  (identifier_reference
-                    (identifier)))))
-            (annotation
-              (annotation_property
-                (identifier_reference
-                  (identifier))
-                (value
-                  (simple_value
-                    (string
-                      (quoted_string))))))
-            (annotation
-              (annotation_property
-                (identifier_reference
-                  (identifier))
-                (value
-                  (simple_value
-                    (string
-                      (quoted_string)))))))))))
+   (identifier)
+   (iri)
+   (module_body
+     (import_statement
+       (module_import
+         (identifier))
+       (module_import
+         (identifier)))
+     (definition
+       (rdf_def
+         (identifier)
+         (annotation_only_body
+           (annotation
+             (annotation_property
+               (identifier_reference
+                 (identifier))
+               (value
+                 (identifier_reference
+                   (identifier)))))
+           (annotation
+             (annotation_property
+               (identifier_reference
+                 (identifier))
+               (value
+                 (simple_value
+                   (string
+                     (quoted_string)
+                     (language_tag))))))
+           (annotation
+             (annotation_property
+               (identifier_reference
+                 (identifier))
+               (value
+                 (simple_value
+                   (string
+                     (quoted_string)))))))))
+     (definition
+       (rdf_def
+         (identifier)
+         (rdf_types
+           (identifier_reference
+             (qualified_identifier
+               (identifier)
+               (identifier))))
+         (annotation_only_body
+           (annotation
+             (annotation_property
+               (identifier_reference
+                 (identifier))
+               (value
+                 (identifier_reference
+                   (identifier)))))
+           (annotation
+             (annotation_property
+               (identifier_reference
+                 (identifier))
+               (value
+                 (identifier_reference
+                   (identifier)))))
+           (annotation
+             (annotation_property
+               (identifier_reference
+                 (identifier))
+               (value
+                 (identifier_reference
+                   (identifier)))))
+           (annotation
+             (annotation_property
+               (identifier_reference
+                 (identifier))
+               (value
+                 (simple_value
+                   (string
+                     (quoted_string))))))
+           (annotation
+             (annotation_property
+               (identifier_reference
+                 (identifier))
+               (value
+                 (simple_value
+                   (string
+                     (quoted_string)))))))))
+     (definition
+       (rdf_def
+         (identifier)
+         (rdf_types
+           (identifier_reference
+             (qualified_identifier
+               (identifier)
+               (identifier)))
+           (identifier_reference
+             (qualified_identifier
+               (identifier)
+               (identifier))))
+         (annotation_only_body
+           (annotation
+             (annotation_property
+               (identifier_reference
+                 (identifier))
+               (value
+                 (identifier_reference
+                   (identifier)))))
+           (annotation
+             (annotation_property
+               (identifier_reference
+                 (identifier))
+               (value
+                 (identifier_reference
+                   (identifier)))))
+           (annotation
+             (annotation_property
+               (identifier_reference
+                 (identifier))
+               (value
+                 (identifier_reference
+                   (identifier)))))
+           (annotation
+             (annotation_property
+               (identifier_reference
+                 (identifier))
+               (value
+                 (simple_value
+                   (string
+                     (quoted_string))))))
+           (annotation
+             (annotation_property
+               (identifier_reference
+                 (identifier))
+               (value
+                 (simple_value
+                   (string
+                     (quoted_string)))))))))))

@@ -3131,23 +3131,6 @@
         },
         {
           "type": "FIELD",
-          "name": "type",
-          "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "rdf_type_class"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "rdf_type_property"
-              }
-            ]
-          }
-        },
-        {
-          "type": "FIELD",
           "name": "name",
           "content": {
             "type": "SYMBOL",
@@ -3158,12 +3141,8 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "FIELD",
-              "name": "super_types",
-              "content": {
-                "type": "SYMBOL",
-                "name": "rdf_super_types"
-              }
+              "type": "SYMBOL",
+              "name": "rdf_types"
             },
             {
               "type": "BLANK"
@@ -3180,39 +3159,17 @@
         }
       ]
     },
-    "rdf_type_class": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PREC",
-        "value": 2,
-        "content": {
-          "type": "STRING",
-          "value": "structure"
-        }
-      }
-    },
-    "rdf_type_property": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PREC",
-        "value": 2,
-        "content": {
-          "type": "STRING",
-          "value": "property"
-        }
-      }
-    },
-    "rdf_super_types": {
+    "rdf_types": {
       "type": "SEQ",
       "members": [
         {
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 1,
+            "value": 2,
             "content": {
               "type": "STRING",
-              "value": "<-"
+              "value": "type"
             }
           }
         },
@@ -3220,8 +3177,12 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "identifier_reference"
+              "type": "FIELD",
+              "name": "type",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier_reference"
+              }
             },
             {
               "type": "SEQ",
@@ -3231,10 +3192,14 @@
                   "value": "["
                 },
                 {
-                  "type": "REPEAT1",
+                  "type": "REPEAT",
                   "content": {
-                    "type": "SYMBOL",
-                    "name": "identifier_reference"
+                    "type": "FIELD",
+                    "name": "type",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "identifier_reference"
+                    }
                   }
                 },
                 {

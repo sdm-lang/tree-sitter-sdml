@@ -180,6 +180,8 @@
 ;; ---------------------------------------------------------------------------
 
 (rdf_def name: (identifier) @type.definition)
+(rdf_types "type" @keyword type: (identifier_reference) @type)
+(rdf_types [ "[" "]" ] @punctuation.bracket)
 
 ;; ---------------------------------------------------------------------------
 ;; Type Classes

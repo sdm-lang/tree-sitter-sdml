@@ -1829,57 +1829,34 @@
             "named": true
           }
         ]
-      },
-      "super_types": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "rdf_super_types",
-            "named": true
-          }
-        ]
-      },
-      "type": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "rdf_type_class",
-            "named": true
-          },
-          {
-            "type": "rdf_type_property",
-            "named": true
-          }
-        ]
       }
-    }
-  },
-  {
-    "type": "rdf_super_types",
-    "named": true,
-    "fields": {},
+    },
     "children": {
-      "multiple": true,
-      "required": true,
+      "multiple": false,
+      "required": false,
       "types": [
         {
-          "type": "identifier_reference",
+          "type": "rdf_types",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "rdf_type_class",
+    "type": "rdf_types",
     "named": true,
-    "fields": {}
-  },
-  {
-    "type": "rdf_type_property",
-    "named": true,
-    "fields": {}
+    "fields": {
+      "type": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          }
+        ]
+      }
+    }
   },
   {
     "type": "sequence_builder",
@@ -2718,11 +2695,11 @@
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "def",
@@ -2798,11 +2775,11 @@
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "iri",
@@ -2886,6 +2863,10 @@
   },
   {
     "type": "true",
+    "named": false
+  },
+  {
+    "type": "type",
     "named": false
   },
   {

@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.2.15
+// Version:    0.2.16
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -889,7 +889,7 @@ module.exports = grammar({
         rdf_def: $ => seq(
             keyword('rdf'),
             field('name', $.identifier),
-            optional($.rdf_types),
+            optional(field('types', $.rdf_types)),
             field('body', $.annotation_only_body)
         ),
 

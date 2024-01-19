@@ -1829,17 +1829,17 @@
             "named": true
           }
         ]
+      },
+      "types": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "rdf_types",
+            "named": true
+          }
+        ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "rdf_types",
-          "named": true
-        }
-      ]
     }
   },
   {

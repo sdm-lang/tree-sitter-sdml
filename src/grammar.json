@@ -3141,8 +3141,12 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SYMBOL",
-              "name": "rdf_types"
+              "type": "FIELD",
+              "name": "types",
+              "content": {
+                "type": "SYMBOL",
+                "name": "rdf_types"
+              }
             },
             {
               "type": "BLANK"

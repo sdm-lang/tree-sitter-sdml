@@ -12,22 +12,23 @@ end
 
 ---
 
-(module
-  name: (identifier)
-  body: (module_body
-    (definition
-      (structure_def
-        name: (identifier)
-        body: (structured_body
-          (member
-            name: (identifier)
-            cardinality: (cardinality_expression
-              uniqueness: (sequence_uniqueness)
-              min: (unsigned)
-              range: (cardinality_range))
-            target: (type_reference
-              (mapping_type
-                domain: (type_reference
-                  (builtin_simple_type))
-                range: (type_reference
-                  (builtin_simple_type))))))))))
+    (module
+      (identifier)
+      (module_body
+        (definition
+          (structure_def
+            (identifier)
+            (structured_body
+              (member
+                (member_def
+                  (identifier)
+                  (cardinality_expression
+                    (sequence_uniqueness)
+                    (unsigned)
+                    (cardinality_range))
+                  (type_reference
+                    (mapping_type
+                      (type_reference
+                        (builtin_simple_type))
+                      (type_reference
+                        (builtin_simple_type)))))))))))

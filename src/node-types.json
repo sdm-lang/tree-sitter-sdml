@@ -545,47 +545,16 @@
   {
     "type": "entity_identity",
     "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "annotation_only_body",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "property": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier_reference",
-            "named": true
-          }
-        ]
-      },
-      "target": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "type_reference",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "member",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1051,42 +1020,6 @@
     }
   },
   {
-    "type": "identity_role",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "annotation_only_body",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "target": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "type_reference",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "implication",
     "named": true,
     "fields": {}
@@ -1279,6 +1212,25 @@
   {
     "type": "member",
     "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "member_def",
+          "named": true
+        },
+        {
+          "type": "property_ref",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "member_def",
+    "named": true,
     "fields": {
       "body": {
         "multiple": false,
@@ -1310,32 +1262,12 @@
           }
         ]
       },
-      "inverse_name": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "member_inverse_name",
-            "named": true
-          }
-        ]
-      },
       "name": {
         "multiple": false,
         "required": true,
         "types": [
           {
             "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "property": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier_reference",
             "named": true
           }
         ]
@@ -1362,88 +1294,6 @@
         "types": [
           {
             "type": "qualified_identifier",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "member_inverse_name",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "member_role",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "annotation_only_body",
-            "named": true
-          }
-        ]
-      },
-      "cardinality": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "cardinality_expression",
-            "named": true
-          }
-        ]
-      },
-      "feature": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "feature_reference",
-            "named": true
-          }
-        ]
-      },
-      "inverse_name": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "member_inverse_name",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "target": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "type_reference",
             "named": true
           }
         ]
@@ -1646,48 +1496,30 @@
     }
   },
   {
-    "type": "property_body",
+    "type": "property_def",
     "named": true,
     "fields": {},
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
         {
-          "type": "annotation",
-          "named": true
-        },
-        {
-          "type": "identity_role",
-          "named": true
-        },
-        {
-          "type": "member_role",
+          "type": "member_def",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "property_def",
+    "type": "property_ref",
     "named": true,
     "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "property_body",
-            "named": true
-          }
-        ]
-      },
-      "name": {
+      "property": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "identifier_reference",
             "named": true
           }
         ]
@@ -2695,11 +2527,11 @@
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "def",
@@ -2843,6 +2675,10 @@
   },
   {
     "type": "rdf",
+    "named": false
+  },
+  {
+    "type": "ref",
     "named": false
   },
   {

@@ -12,7 +12,6 @@
  (annotation_only_body)
  (entity_body)
  (enum_body)
- (property_body)
  (structured_body)
  (type_class_body)
  (union_body)

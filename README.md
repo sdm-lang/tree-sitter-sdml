@@ -55,6 +55,49 @@ This package is released under the Apache License, Version 2.0. See LICENSE file
 
 # Changes
 
+**Version: 0.3.0**
+
+* Feature: simplified property definitions.
+  * Removed notion of role, a `property_def` is singular.
+  * Removed "in" keyword, `property_ref` uses "ref".
+  * Removed inverse names.
+
+```js
+property_def: $ => seq(
+    keyword('property'),
+    $.member_def
+),
+```
+
+* Feature: unified single definition of `member`.
+  * Changed member, is now *either* `property_ref` or `member_def`.
+  * Changed `property_def` to simply be `member_def`.
+  * Changed `entity_identity` to be `member`.
+  * Expect to add warning for unbounded cardinality for entity identities.
+
+```js
+entity_identity: $ => seq(
+    keyword('identity'),
+    $.member
+),
+
+member: $ => choice(
+    $.member_def,
+    $.property_ref,             
+),
+
+member_def: $ => seq(
+    field('name', $.identifier),
+    $._type_expression_to,
+    optional(field('body', $.annotation_only_body))               
+),
+
+property_ref: $ => seq(
+    keyword('ref'),
+    field('property', $.identifier_reference),
+),
+```
+
 **Version: 0.2.14-16**
 
 * Feature: simplified form of `rdf_def`.

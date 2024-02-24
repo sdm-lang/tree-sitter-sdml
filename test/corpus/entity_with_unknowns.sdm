@@ -16,18 +16,21 @@ end
 
 ---
 
-(module
-  name: (identifier)
-  body: (module_body
-    (definition
-      (entity_def
-        name: (identifier)
-        body: (entity_body
-          identity: (entity_identity
-            name: (identifier)
-            target: (type_reference
-              (unknown_type)))
-          (member
-            name: (identifier)
-            target: (type_reference
-              (unknown_type))))))))
+    (module
+      (identifier)
+      (module_body
+        (definition
+          (entity_def
+            (identifier)
+            (entity_body
+              (entity_identity
+                (member
+                  (member_def
+                    (identifier)
+                    (type_reference
+                      (unknown_type)))))
+              (member
+                (member_def
+                  (identifier)
+                  (type_reference
+                    (unknown_type)))))))))

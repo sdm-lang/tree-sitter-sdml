@@ -17,31 +17,35 @@ end
 
 ---
 
-(module
-  name: (identifier)
-  body: (module_body
-    (definition
-      (entity_def
-        name: (identifier)
-        body: (entity_body
-          identity: (entity_identity
-            name: (identifier)
-            target: (type_reference
-              (identifier_reference
-                (qualified_identifier
-                  module: (identifier)
-                  member: (identifier)))))
-        (member
-          name: (identifier)
-          target: (type_reference
-            (identifier_reference
-              (qualified_identifier
-                module: (identifier)
-                member: (identifier)))))
-        (member
-          name: (identifier)
-          target: (type_reference
-            (identifier_reference
-              (qualified_identifier
-                module: (identifier)
-                member: (identifier))))))))))
+    (module
+      (identifier)
+      (module_body
+        (definition
+          (entity_def
+            (identifier)
+            (entity_body
+              (entity_identity
+                (member
+                  (member_def
+                    (identifier)
+                    (type_reference
+                      (identifier_reference
+                        (qualified_identifier
+                          (identifier)
+                          (identifier)))))))
+              (member
+                (member_def
+                  (identifier)
+                  (type_reference
+                    (identifier_reference
+                      (qualified_identifier
+                        (identifier)
+                        (identifier))))))
+              (member
+                (member_def
+                  (identifier)
+                  (type_reference
+                    (identifier_reference
+                      (qualified_identifier
+                        (identifier)
+                        (identifier)))))))))))

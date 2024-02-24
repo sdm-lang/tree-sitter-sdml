@@ -4,20 +4,20 @@ Property Referenced as Member
 
 module ddict is
   structure Account is
-    default in accountId
+    ref accountId
   end
 end
 
 ---
 
-(module
-  name: (identifier)
-  body: (module_body
-    (definition
-      (structure_def
-        name: (identifier)
-        body: (structured_body
-          (member
-            name: (identifier)
-            property: (identifier_reference
-              (identifier))))))))
+    (module
+      (identifier)
+      (module_body
+        (definition
+          (structure_def
+            (identifier)
+            (structured_body
+              (member
+                (property_ref
+                  (identifier_reference
+                    (identifier)))))))))

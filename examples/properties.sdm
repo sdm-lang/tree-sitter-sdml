@@ -5,19 +5,13 @@ module properties is
     skos
   ]
 
-  property accountId is
-
-    identifier -> {1} account:AccountId is
-      @skos:definition = "a"@en
-    end
-
-    reference (inverse_ref) -> {1} account:AccountId
-
+  property accountId -> {1} account:AccountId is
+    @skos:definition = "a"@en
   end
 
   structure Account is
 
-    identifier in accountId
+    ref accountId
 
     name -> string
 

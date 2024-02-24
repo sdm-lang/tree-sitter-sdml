@@ -17,34 +17,40 @@ end
 
 ---
 
-(module
-  name: (identifier)
-  body: (module_body
-    (definition
-      (structure_def
-        name: (identifier)
-        body: (structured_body
-          (member
-            name: (identifier)
-            target: (type_reference
-              (builtin_simple_type)))
-          (member
-            name: (identifier)
-            target: (type_reference
-              (builtin_simple_type)))
-          (member
-            name: (identifier)
-            target: (type_reference
-              (builtin_simple_type)))
-          (member
-            name: (identifier)
-            target: (type_reference
-              (builtin_simple_type)))
-          (member
-            name: (identifier)
-            target: (type_reference
-              (builtin_simple_type)))
-          (member
-            name: (identifier)
-            target: (type_reference
-              (builtin_simple_type))))))))
+    (module
+      (identifier)
+      (module_body
+        (definition
+          (structure_def
+            (identifier)
+            (structured_body
+              (member
+                (member_def
+                  (identifier)
+                  (type_reference
+                    (builtin_simple_type))))
+              (member
+                (member_def
+                  (identifier)
+                  (type_reference
+                    (builtin_simple_type))))
+              (member
+                (member_def
+                  (identifier)
+                  (type_reference
+                    (builtin_simple_type))))
+              (member
+                (member_def
+                  (identifier)
+                  (type_reference
+                    (builtin_simple_type))))
+              (member
+                (member_def
+                  (identifier)
+                  (type_reference
+                    (builtin_simple_type))))
+              (member
+                (member_def
+                  (identifier)
+                  (type_reference
+                    (builtin_simple_type)))))))))

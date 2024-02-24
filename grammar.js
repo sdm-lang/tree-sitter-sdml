@@ -24,7 +24,7 @@
 //
 // -------------------------------------------------------------------
 
-const IDENTIFIER = /[\p{Lu}\p{Ll}][\p{Lu}\p{Ll}\p{Nd}]*(_[\p{Lu}\p{Ll}\p{Nd}]+)*/;
+const IDENTIFIER = /[\p{Lu}\p{Ll}][\p{Lu}\p{Ll}\p{Nd}]*(_+[\p{Lu}\p{Ll}\p{Nd}]+)*/;
 
 const STRING_CHAR = /([^\x00-\x08\x0B-\x1F\x7F"\\\\])|\\\\(["\\\\abefnrtv\/]|u\{[0-9a-fA-F]{2,6}\})/;
 
@@ -844,20 +844,7 @@ module.exports = grammar({
 
         property_def: $ => seq(
             keyword('property'),
-            field('name', $.identifier),
-            optional(field('body', $.property_body))
-        ),
-
-        property_body: $ => seq(
-            keyword('is'),
-            repeat($.annotation),
-            repeat1(
-                choice(
-                    $.identity_role,
-                    $.member_role
-                )
-            ),
-            keyword('end')
+            $.member_def
         ),
 
         structure_def: $ => seq(
@@ -982,46 +969,25 @@ module.exports = grammar({
         // Members
         // -----------------------------------------------------------------------
 
-        _property_reference: $ => seq(
-            keyword('in'),
-            field('property', $.identifier_reference),
-        ),
-
         entity_identity: $ => seq(
             keyword('identity'),
-            field('name', $.identifier),
-            choice(
-                $._property_reference,
-                seq(
-                    $._type_expression,
-                    optional(field('body', $.annotation_only_body))
-                )
-            )
+            $.member
         ),
 
-        member: $ => seq(
-            field('name', $.identifier),
-            choice(
-                $._property_reference,
-                seq(
-                    optional(
-                        field('inverse_name', $.member_inverse_name)
-                    ),
-                    $._type_expression_to,
-                    optional(field('body', $.annotation_only_body))
-                )
-            )
+        member: $ => choice(
+            $.member_def,
+            $.property_ref,             
         ),
 
-        member_inverse_name: $ => seq(
-            "(",
+        member_def: $ => seq(
             field('name', $.identifier),
-            ")"
+            $._type_expression_to,
+            optional(field('body', $.annotation_only_body))               
         ),
 
-        _type_expression: $ => seq(
-            $._has_type,
-           field('target', $.type_reference)
+        property_ref: $ => seq(
+            keyword('ref'),
+            field('property', $.identifier_reference),
         ),
 
         _type_expression_to: $ => seq(
@@ -1132,26 +1098,6 @@ module.exports = grammar({
                     $.annotation_only_body
                 )
             )
-        ),
-
-        // -----------------------------------------------------------------------
-        // Roles
-        // -----------------------------------------------------------------------
-
-        identity_role: $ => seq(
-            keyword('identity'),
-            field('name', $.identifier),
-            $._type_expression,
-            optional(field('body', $.annotation_only_body))
-        ),
-
-        member_role: $ => seq(
-            field('name', $.identifier),
-            optional(
-                field('inverse_name', $.member_inverse_name)
-            ),
-            $._type_expression_to,
-            optional(field('body', $.annotation_only_body))
         ),
 
         // -----------------------------------------------------------------------

@@ -1,54 +1,38 @@
-===============================
-Property Definition, With Roles
-===============================
+===================
+Property Definition
+===================
 
 module ddict is
-  property accountId is
-    identifier -> {1} account:AccountId is
-      @skos:definition = "a"@en
-    end
-    reference (inverse_ref) -> {1} account:AccountId
+  property accountId -> {1} account:AccountId is
+    @skos:definition = "a"@en
   end
 end
 
 ---
 
-(module
-  (identifier)
-  (module_body
-    (definition
-      (property_def
-        (identifier)
-        (property_body
-           (member_role
-             (identifier)
-             (cardinality_expression
-               (unsigned))
-             (type_reference
-               (identifier_reference
-                 (qualified_identifier
-                   (identifier)
-                   (identifier))))
-             (annotation_only_body
-               (annotation
-                 (annotation_property
-                   (identifier_reference
-                     (qualified_identifier
-                       (identifier)
-                       (identifier)))
-                   (value
-                     (simple_value
-                       (string
-                         (quoted_string)
-                         (language_tag))))))))
-           (member_role
-             (identifier)
-             (member_inverse_name
-               (identifier))
-             (cardinality_expression
-               (unsigned))
-             (type_reference
-               (identifier_reference
-                 (qualified_identifier
-                   (identifier)
-                   (identifier))))))))))
+    (module
+      (identifier)
+      (module_body
+        (definition
+          (property_def
+            (member_def
+              (identifier)
+              (cardinality_expression
+                (unsigned))
+              (type_reference
+                (identifier_reference
+                  (qualified_identifier
+                    (identifier)
+                    (identifier))))
+              (annotation_only_body
+                (annotation
+                  (annotation_property
+                    (identifier_reference
+                      (qualified_identifier
+                        (identifier)
+                        (identifier)))
+                    (value
+                      (simple_value
+                        (string
+                          (quoted_string)
+                          (language_tag))))))))))))

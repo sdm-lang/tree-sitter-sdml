@@ -50,11 +50,7 @@
 ;; Members
 ;; ---------------------------------------------------------------------------
 
-(entity_identity
- name: (identifier) @definition.field
- target: (type_reference (identifier_reference) @reference.class))
-
-(member
+(member_def
  name: (identifier) @definition.field
  target: (type_reference (identifier_reference) @reference.class))
 
@@ -63,14 +59,6 @@
 
 (value_variant
  name: (identifier) @definition.constant)
-
-(identity_role
- name: (identifier) @definition.field
- target: (type_reference) @reference.class)
-
-(member_role
- name: (identifier) @definition.field
- target: (type_reference) @reference.class)
 
 (method_def name: (identifier) @definition.method)
 

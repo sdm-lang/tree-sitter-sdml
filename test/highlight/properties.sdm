@@ -10,40 +10,22 @@ module properties is
   ;                ^ module
   ;                     ^ punctuation.bracket
 
-  property accountId is
+  property accountId -> {1} account:AccountId is
   ; <- keyword
   ;        ^ variable.field
-  ;                  ^ keyword
+  ;                  ^ operator
+  ;                     ^ punctuation.bracket
+  ;                      ^ number
+  ;                       ^ punctuation.bracket
+  ;                         ^ type
+  ;                                           ^ keyword
 
-    identifier -> {1} account:AccountId is
-    ; <- variable.field
-    ;          ^ operator
-    ;             ^ punctuation.bracket
-    ;              ^ number
-    ;               ^ punctuation.bracket
-    ;                 ^ type
-    ;                                   ^ keyword
-
-      @skos:definition = "a"@en
-      ; <- property
-      ;^ property
-      ;                ^ operator
-      ;                  ^ string
-      ;                     ^ property
-
-    end
-    ; <- keyword
-
-    reference (inverse_ref) -> {1} account:AccountId
-    ; <- variable.field
-    ;         ^ punctuation.bracket
-    ;          ^ variable.field
-    ;                     ^ punctuation.bracket
-    ;                       ^ operator
-    ;                          ^ punctuation.bracket
-    ;                           ^ number
-    ;                            ^ punctuation.bracket
-    ;                              ^ type
+    @skos:definition = "a"@en
+    ; <- property
+    ;^ property
+    ;                ^ operator
+    ;                  ^ string
+    ;                     ^ property
 
   end
   ; <- keyword
@@ -53,10 +35,9 @@ module properties is
   ;         ^ type.definition
   ;                 ^ keyword
 
-    identifier in accountId
-    ; <- variable.field
-    ;          ^ keyword
-    ;             ^ variable.field
+    ref accountId
+    ; <- keyword
+    ;   ^ variable.field
 
     name -> string
     ; <- variable.field

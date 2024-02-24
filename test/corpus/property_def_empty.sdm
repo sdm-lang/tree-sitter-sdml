@@ -3,15 +3,18 @@ Property Definition, Empty
 ==========================
 
 module ddict is
-  property accountIdd
+  property accountId -> unknown
 end
 
 ---
 
-(module
-  name: (identifier)
-  body: (module_body
-    (definition
-      (property_def
-        name: (identifier)))))
+    (module
+      (identifier)
+      (module_body
+        (definition
+          (property_def
+            (member_def
+              (identifier)
+              (type_reference
+                (unknown_type)))))))
 

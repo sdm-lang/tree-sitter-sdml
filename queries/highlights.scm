@@ -207,42 +207,23 @@
 ;; ---------------------------------------------------------------------------
 
 (entity_identity "identity" @keyword)
-(entity_identity name: (identifier) @variable.field)
-(entity_identity property: (identifier_reference) @variable.field)
-(entity_identity target: (type_reference) @type)
-(entity_identity "in" @keyword)
 
-(member name: (identifier) @variable.field)
-(member property: (identifier_reference) @variable.field)
-(member target: (type_reference) @type)
-(member
+(member_def name: (identifier) @variable.field)
+(member_def target: (type_reference) @type)
+(member_def
  feature: (feature_reference
            "features" @keyword
            target: (identifier_reference) @type))
-(member "in" @keyword)
 
- (member_inverse_name
- "(" @punctuation.bracket
- name: (identifier) @variable.field
- ")" @punctuation.bracket)
+(property_ref
+ "ref" @keyword
+ property: (identifier_reference) @variable.field)
 
 (value_variant name: (identifier) @constant)
 
 (type_variant (identifier_reference) @type)
 (type_variant rename: (identifier) @type)
 (type_variant "as" @keyword)
-
-(property_def name: (identifier) @variable.field)
-
-(identity_role "identity" @keyword)
-(identity_role
- name: (identifier) @variable.field
- target: (type_reference) @type)
-
-(member_role
- name: (identifier) @variable.field
- target: (type_reference) @type)
-(member_role feature: (feature_reference) @keyword)
 
 (cardinality_expression (sequence_ordering) @keyword)
 (cardinality_expression (sequence_uniqueness) @keyword)

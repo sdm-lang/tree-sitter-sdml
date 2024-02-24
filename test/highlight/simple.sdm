@@ -129,17 +129,14 @@ module Campaign is
     ;         ^ operator
     ;            ^ type.builtin
 
-    target (other_name) -> {1..} Target
+    target -> {1..} Target
     ; <- variable.field
-    ;      ^ punctuation.bracket
-    ;       ^ variable.field
-    ;                 ^ punctuation.bracket
-    ;                   ^ operator
-    ;                      ^ punctuation.bracket
-    ;                       ^ number
-    ;                        ^ operator
-    ;                          ^ punctuation.bracket
-    ;                            ^ type
+    ;      ^ operator
+    ;         ^ punctuation.bracket
+    ;          ^ number
+    ;           ^ operator
+    ;             ^ punctuation.bracket
+    ;               ^ type
 
   end
   ; <- keyword

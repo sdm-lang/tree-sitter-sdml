@@ -563,7 +563,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "annotation",
@@ -1985,7 +1985,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "annotation",
@@ -2065,7 +2065,7 @@
     "fields": {
       "method": {
         "multiple": true,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "method_def",
@@ -2278,7 +2278,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "annotation",

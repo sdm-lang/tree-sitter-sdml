@@ -830,7 +830,7 @@ module.exports = grammar({
         enum_body: $ => seq(
             keyword('of'),
             repeat($.annotation),
-            repeat1($.value_variant),
+            repeat($.value_variant),
             keyword('end')
         ),
 
@@ -856,7 +856,7 @@ module.exports = grammar({
         structured_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
-            repeat1($.member),
+            repeat($.member),
             keyword('end')
         ),
 
@@ -869,7 +869,7 @@ module.exports = grammar({
         union_body: $ => seq(
             keyword('of'),
             repeat($.annotation),
-            repeat1($.type_variant),
+            repeat($.type_variant),
             keyword('end')
         ),
 
@@ -945,7 +945,7 @@ module.exports = grammar({
         type_class_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
-            repeat1(field('method', $.method_def)),
+            repeat(field('method', $.method_def)),
             keyword('end')
         ),
 

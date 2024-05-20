@@ -5,7 +5,7 @@
 A [tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for the Simple Domain Modeling Language (SDML). For more information on the language, see the
 [documentation](https://sdml.io/).
 
-# Example
+## Example
 
 ```sdml
 module Campaign base <https://advertising.amazon.com/api-model> is
@@ -47,13 +47,18 @@ module Campaign base <https://advertising.amazon.com/api-model> is
   entity Target
 
 end
+```
 
 ## License
 
 This package is released under the Apache License, Version 2.0. See LICENSE file for details.
-```
 
-# Changes
+## Changes
+
+**Version: 0.3.1**
+
+* Fix: regular expression for characters inside a string.
+  * Added `examples/escaped_strings.sdm` file for basic testing.
 
 **Version: 0.3.0**
 

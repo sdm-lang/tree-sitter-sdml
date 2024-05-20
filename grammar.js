@@ -26,7 +26,7 @@
 
 const IDENTIFIER = /[\p{Lu}\p{Ll}][\p{Lu}\p{Ll}\p{Nd}]*(_+[\p{Lu}\p{Ll}\p{Nd}]+)*/;
 
-const STRING_CHAR = /([^\x00-\x08\x0B-\x1F\x7F"\\\\])|\\\\(["\\\\abefnrtv\/]|u\{[0-9a-fA-F]{2,6}\})/;
+const STRING_CHAR = /(?:[^\x00-\x08\x0B-\x1F\x7F"\\])|\\(?:["\\abefnrtv\/]|u\{[0-9a-fA-F]{2,6}\})/;
 
 function keyword(str) {
     return token(
@@ -976,13 +976,13 @@ module.exports = grammar({
 
         member: $ => choice(
             $.member_def,
-            $.property_ref,             
+            $.property_ref,
         ),
 
         member_def: $ => seq(
             field('name', $.identifier),
             $._type_expression_to,
-            optional(field('body', $.annotation_only_body))               
+            optional(field('body', $.annotation_only_body))
         ),
 
         property_ref: $ => seq(

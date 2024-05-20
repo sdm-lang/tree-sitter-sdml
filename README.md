@@ -59,6 +59,7 @@ This package is released under the Apache License, Version 2.0. See LICENSE file
 
 * Fix: regular expression for characters inside a string.
   * Added `examples/escaped_strings.sdm` file for basic testing.
+  * Added `test/corpus/escaped_strings.sdm` file for more complete testing.
 
 **Version: 0.3.0**
 

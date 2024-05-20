@@ -26,8 +26,6 @@
 
 const IDENTIFIER = /[\p{Lu}\p{Ll}][\p{Lu}\p{Ll}\p{Nd}]*(_+[\p{Lu}\p{Ll}\p{Nd}]+)*/;
 
-const STRING_CHAR = /(?:[^\x00-\x08\x0B-\x1F\x7F"\\])|\\(?:["\\abefnrtv\/]|u\{[0-9a-fA-F]{2,6}\})/;
-
 function keyword(str) {
     return token(
         prec(2, str)
@@ -691,7 +689,16 @@ module.exports = grammar({
         quoted_string: $ => token(
             seq(
                 token.immediate('"'),
-                repeat(STRING_CHAR),
+                repeat(
+                    choice(
+                        // Standard, printable, characters
+                        /[^\x00-\x08\x0B-\x1F\x7F\\\"]/,
+                        // Single character escapes
+                        /\\[\"\\\/abefnrtv]/,
+                        // Unicode escape codes
+                        /\\u\{[0-9a-fA-F]{2,6}\}/
+                    )
+                ),
                 token.immediate('"'),
             )
         ),

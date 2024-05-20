@@ -2288,8 +2288,21 @@
           {
             "type": "REPEAT",
             "content": {
-              "type": "PATTERN",
-              "value": "(?:[^\\x00-\\x08\\x0B-\\x1F\\x7F\"\\\\])|\\\\(?:[\"\\\\abefnrtv\\/]|u\\{[0-9a-fA-F]{2,6}\\})"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "PATTERN",
+                  "value": "[^\\x00-\\x08\\x0B-\\x1F\\x7F\\\\\\\"]"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "\\\\[\\\"\\\\\\/abefnrtv]"
+                },
+                {
+                  "type": "PATTERN",
+                  "value": "\\\\u\\{[0-9a-fA-F]{2,6}\\}"
+                }
+              ]
             }
           },
           {

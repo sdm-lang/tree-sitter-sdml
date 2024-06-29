@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.3.1
+// Version:    0.3.2
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -72,7 +72,13 @@ module.exports = grammar({
             keyword('module'),
             field('name', $.identifier),
             optional($._module_locations),
-            field('body', $.module_body)
+            field(
+                'body',
+                choice(
+                    $.module_body,
+                    $.library_body,
+                )
+            )
         ),
 
         _module_locations: $ => seq(
@@ -102,6 +108,15 @@ module.exports = grammar({
             repeat($.import_statement),
             repeat($.annotation),
             repeat($.definition),
+            keyword('end')
+        ),
+
+        library_body: $ => seq(
+            keyword('library'),
+            keyword('is'),
+            repeat($.import_statement),
+            repeat($.annotation),
+            repeat($.library_definition),
             keyword('end')
         ),
 
@@ -784,9 +799,7 @@ module.exports = grammar({
             $.event_def,
             $.property_def,
             $.structure_def,
-            $.type_class_def,
-            $.union_def,
-            $.rdf_def
+            $.union_def
         ),
 
         data_type_def: $ => seq(
@@ -880,6 +893,16 @@ module.exports = grammar({
             keyword('end')
         ),
 
+        // -----------------------------------------------------------------------
+        // Library Definitions
+        // -----------------------------------------------------------------------
+
+        library_definition: $ => choice(
+            $.definition,
+            $.rdf_def,
+            $.type_class_def,
+        ),
+
         rdf_def: $ => seq(
             keyword('rdf'),
             field('name', $.identifier),
@@ -898,10 +921,6 @@ module.exports = grammar({
                 )
             )
         ),
-
-        // -----------------------------------------------------------------------
-        // Type Classes
-        // -----------------------------------------------------------------------
 
         type_class_def: $ => seq(
             keyword('class'),
@@ -1002,16 +1021,7 @@ module.exports = grammar({
             optional(
                 field('cardinality', $.cardinality_expression)
             ),
-            choice(
-                field('feature', $.feature_reference),
-                field('target', $.type_reference)
-            )
-        ),
-
-        feature_reference: $ => seq(
-            // WFR: keyword('features') == kindof(target) == UnionDef
-            keyword('features'),
-            field('target', $.identifier_reference),
+            field('target', $.type_reference)
         ),
 
         type_reference: $ => choice(

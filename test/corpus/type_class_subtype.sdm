@@ -2,7 +2,7 @@
 Type Class, With Subtype
 ========================
 
-module sdml_core is
+module sdml_core library is
 
   class Any (T -> None(T))
 
@@ -12,8 +12,8 @@ end
 
 (module
   (identifier)
-  (module_body
-    (definition
+  (library_body
+    (library_definition
       (type_class_def
         (identifier)
         (type_variable

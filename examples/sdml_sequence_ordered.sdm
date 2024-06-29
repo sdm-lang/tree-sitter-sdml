@@ -1,4 +1,4 @@
-module sdml_sequence_ordered is
+module sdml_sequence_ordered library is
 
   import skos
 

@@ -463,15 +463,7 @@
           "named": true
         },
         {
-          "type": "rdf_def",
-          "named": true
-        },
-        {
           "type": "structure_def",
-          "named": true
-        },
-        {
-          "type": "type_class_def",
           "named": true
         },
         {
@@ -703,22 +695,6 @@
     "type": "existential",
     "named": true,
     "fields": {}
-  },
-  {
-    "type": "feature_reference",
-    "named": true,
-    "fields": {
-      "target": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier_reference",
-            "named": true
-          }
-        ]
-      }
-    }
   },
   {
     "type": "formal_constraint",
@@ -1132,6 +1108,52 @@
     "fields": {}
   },
   {
+    "type": "library_body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "annotation",
+          "named": true
+        },
+        {
+          "type": "import_statement",
+          "named": true
+        },
+        {
+          "type": "library_definition",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "library_definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "definition",
+          "named": true
+        },
+        {
+          "type": "rdf_def",
+          "named": true
+        },
+        {
+          "type": "type_class_def",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "mapping_type",
     "named": true,
     "fields": {
@@ -1252,16 +1274,6 @@
           }
         ]
       },
-      "feature": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "feature_reference",
-            "named": true
-          }
-        ]
-      },
       "name": {
         "multiple": false,
         "required": true,
@@ -1274,7 +1286,7 @@
       },
       "target": {
         "multiple": false,
-        "required": false,
+        "required": true,
         "types": [
           {
             "type": "type_reference",
@@ -1364,6 +1376,10 @@
         "multiple": false,
         "required": true,
         "types": [
+          {
+            "type": "library_body",
+            "named": true
+          },
           {
             "type": "module_body",
             "named": true
@@ -2539,11 +2555,11 @@
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "end",
@@ -2567,10 +2583,6 @@
   },
   {
     "type": "false",
-    "named": false
-  },
-  {
-    "type": "features",
     "named": false
   },
   {
@@ -2628,6 +2640,10 @@
   {
     "type": "less_than",
     "named": true
+  },
+  {
+    "type": "library",
+    "named": false
   },
   {
     "type": "line_comment",
@@ -2723,11 +2739,11 @@
   },
   {
     "type": "unsigned",
-    "named": true
+    "named": false
   },
   {
     "type": "unsigned",
-    "named": false
+    "named": true
   },
   {
     "type": "version",

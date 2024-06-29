@@ -2,7 +2,7 @@
 Type Class, with Methods
 ========================
 
-module sdml_core is
+module sdml_core library is
 
   class Any (T) is
     def is_structure(v -> T) -> boolean
@@ -19,8 +19,8 @@ end
 
 (module
   (identifier)
-  (module_body
-    (definition
+  (library_body
+    (library_definition
       (type_class_def
         (identifier)
         (type_variable (identifier))

@@ -55,6 +55,14 @@ This package is released under the Apache License, Version 2.0. See LICENSE file
 
 ## Changes
 
+**Version: 0.3.2**
+
+- Feature: change ``module`` rule to include a choice between the existing `module_body` and a new `library_body`.
+  - the rules `rdf_def` and `type_class_def` from `module_body` to `library_body`.
+* Feature: simplify rule `property_def` to simply be `member`.
+- Feature: simplified entity identity member to be the same as all other members.
+* Feature: remove the rule `feature_reference` entirely.
+
 **Version: 0.3.1**
 
 * Fix: regular expression for characters inside a string.

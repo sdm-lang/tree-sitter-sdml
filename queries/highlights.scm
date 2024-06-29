@@ -59,6 +59,8 @@
 (module name: (identifier) @module.definition)
 (module "version" @keyword)
 
+(library_body "library" @keyword)
+
 (import_statement [ "[" "]" ] @punctuation.bracket)
 
 (member_import name: (qualified_identifier) @type)
@@ -210,10 +212,6 @@
 
 (member_def name: (identifier) @variable.field)
 (member_def target: (type_reference) @type)
-(member_def
- feature: (feature_reference
-           "features" @keyword
-           target: (identifier_reference) @type))
 
 (property_ref
  "ref" @keyword

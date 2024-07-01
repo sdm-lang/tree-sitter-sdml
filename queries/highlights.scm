@@ -59,8 +59,6 @@
 (module name: (identifier) @module.definition)
 (module "version" @keyword)
 
-(library_body "library" @keyword)
-
 (import_statement [ "[" "]" ] @punctuation.bracket)
 
 (member_import name: (qualified_identifier) @type)

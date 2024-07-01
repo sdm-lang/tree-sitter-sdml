@@ -72,13 +72,7 @@ module.exports = grammar({
             keyword('module'),
             field('name', $.identifier),
             optional($._module_locations),
-            field(
-                'body',
-                choice(
-                    $.module_body,
-                    $.library_body,
-                )
-            )
+            field('body',$.module_body)
         ),
 
         _module_locations: $ => seq(
@@ -108,15 +102,6 @@ module.exports = grammar({
             repeat($.import_statement),
             repeat($.annotation),
             repeat($.definition),
-            keyword('end')
-        ),
-
-        library_body: $ => seq(
-            keyword('library'),
-            keyword('is'),
-            repeat($.import_statement),
-            repeat($.annotation),
-            repeat($.library_definition),
             keyword('end')
         ),
 
@@ -799,7 +784,10 @@ module.exports = grammar({
             $.event_def,
             $.property_def,
             $.structure_def,
-            $.union_def
+            $.union_def,
+            // Libraries only:
+            $.rdf_def,
+            $.type_class_def
         ),
 
         data_type_def: $ => seq(
@@ -896,12 +884,6 @@ module.exports = grammar({
         // -----------------------------------------------------------------------
         // Library Definitions
         // -----------------------------------------------------------------------
-
-        library_definition: $ => choice(
-            $.definition,
-            $.rdf_def,
-            $.type_class_def,
-        ),
 
         rdf_def: $ => seq(
             keyword('rdf'),

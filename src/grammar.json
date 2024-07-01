@@ -40,17 +40,8 @@
           "type": "FIELD",
           "name": "body",
           "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "module_body"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "library_body"
-              }
-            ]
+            "type": "SYMBOL",
+            "name": "module_body"
           }
         }
       ]
@@ -149,65 +140,6 @@
           "content": {
             "type": "SYMBOL",
             "name": "definition"
-          }
-        },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "end"
-            }
-          }
-        }
-      ]
-    },
-    "library_body": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "library"
-            }
-          }
-        },
-        {
-          "type": "TOKEN",
-          "content": {
-            "type": "PREC",
-            "value": 2,
-            "content": {
-              "type": "STRING",
-              "value": "is"
-            }
-          }
-        },
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "import_statement"
-          }
-        },
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "annotation"
-          }
-        },
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "library_definition"
           }
         },
         {
@@ -2578,6 +2510,14 @@
         {
           "type": "SYMBOL",
           "name": "union_def"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "rdf_def"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "type_class_def"
         }
       ]
     },
@@ -3115,23 +3055,6 @@
               "value": "end"
             }
           }
-        }
-      ]
-    },
-    "library_definition": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "definition"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "rdf_def"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "type_class_def"
         }
       ]
     },
@@ -4094,4 +4017,3 @@
   "inline": [],
   "supertypes": []
 }
-

@@ -2,7 +2,7 @@
 Type Class, Empty
 =================
 
-module sdml_core library is
+module sdml_core is
 
   class Any (T)
 
@@ -12,8 +12,8 @@ end
 
 (module
   (identifier)
-  (library_body
-    (library_definition
+  (module_body
+    (definition
       (type_class_def
         (identifier)
         (type_variable

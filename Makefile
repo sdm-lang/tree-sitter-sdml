@@ -92,6 +92,13 @@ publish: publish_bindings
 clean: clean_grammar clean_parser clean_bindings
 
 # ----------------------------------------------------------------------------
+# Build ❯ Directories
+# ----------------------------------------------------------------------------
+
+$(BUILD_DIR):
+	mkdir -p $@
+
+# ----------------------------------------------------------------------------
 # Build ❯ Grammar
 # ----------------------------------------------------------------------------
 
@@ -135,7 +142,7 @@ clean_parser:
 $(PARSER): $(OBJ_FILES)
 	$(CC) $(LDFLAGS) -dynamiclib $(LDLIBS) $^ -o $@
 
-$(BUILD_DIR)/%.o : $(SRC_DIR)/%.c
+$(BUILD_DIR)/%.o : $(SRC_DIR)/%.c | $(BUILD_DIR)
 	$(CC) -c $(CFLAGS) -I$(SRC_DIR) $< -o $@
 
 install_parser: $(INSTALL_LIB_DIR)/$(PARSER) $(INSTALL_INCLUDE_DIR)/tree_sitter/parser.h
@@ -156,11 +163,11 @@ EMACS_TS_DIR ?= $(HOME)/.tree-sitter/bin
 EMACS_ABI := 13
 EMACS_BINDING := $(EMACS_TS_DIR)/$(SHORT_NAME).$(DYLIB_EXT)
 
-emacs: $(EMACS_BINDING)
+emacs: $(EMACS_BINDING) | $(BUILD__DIR)
 
 $(EMACS_BINDING): generate_for_emacs build_parser
 	cp $(PARSER) $(EMACS_BINDING)
- 
+
 .PHONY: generate_for_emacs
 generate_for_emacs:
 	$(TS_CLI) generate --abi=$(EMACS_ABI)

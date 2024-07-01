@@ -2,7 +2,7 @@
 RDF Custom Definitions
 ======================
 
-module rdfs <http://www.w3.org/2000/01/rdf-schema#> library is
+module rdfs <http://www.w3.org/2000/01/rdf-schema#> is
 
   import [ owl rdf ]
 
@@ -35,13 +35,13 @@ end
 (module
    (identifier)
    (iri)
-   (library_body
+   (module_body
      (import_statement
        (module_import
          (identifier))
        (module_import
          (identifier)))
-     (library_definition
+     (definition
        (rdf_def
          (identifier)
          (annotation_only_body
@@ -69,7 +69,7 @@ end
                  (simple_value
                    (string
                      (quoted_string)))))))))
-     (library_definition
+     (definition
        (rdf_def
          (identifier)
          (rdf_types
@@ -115,7 +115,7 @@ end
                  (simple_value
                    (string
                      (quoted_string)))))))))
-     (library_definition
+     (definition
        (rdf_def
          (identifier)
          (rdf_types

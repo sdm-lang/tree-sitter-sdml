@@ -1,8 +1,7 @@
-module sdml_sequence_ordered library is
+module sdml_sequence_ordered is
 ; <- keyword
 ;      ^ module.definition
 ;                            ^ keyword
-;                                    ^ keyword
 
   import skos
   ; <- keyword

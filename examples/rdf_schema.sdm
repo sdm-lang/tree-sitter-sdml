@@ -1,4 +1,4 @@
-module rdf_schema <http://www.w3.org/2000/01/rdf-schema#> library is
+module rdf_schema <http://www.w3.org/2000/01/rdf-schema#> is
 
   import [ owl rdf ]
 

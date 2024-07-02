@@ -207,7 +207,7 @@ clean_bindings: clean_rust clean_node clean_python clean_wasm
 # ----------------------------------------------------------------------------
 
 $(BINDING_RUST): $(PARSER) $(RUST_SRC_DIR)/build.rs
-	cargo build $(CARGO_FLAGS)
+	@(cargo build $(CARGO_FLAGS))
 
 test_rust: $(BINDING_RUST)
 	$(info -> running Rust binding tests)
@@ -231,14 +231,14 @@ clean_rust:
 # ----------------------------------------------------------------------------
 
 $(BINDING_NODE): $(PARSER) $(ROOT)/binding.gyp $(NODE_BUILD_DIR)/Makefile $(NODE_SRC_DIR)/index.js $(NODE_SRC_DIR)/binding.cc
-	node-gyp build
+	@(node-gyp build)
 
 $(NODE_BUILD_DIR)/Makefile: $(ROOT)/binding.gyp
-	node-gyp configure
+	@(node-gyp configure)
 
 publish_node: $(BINDING_NODE)
 	$(info -> publishing Node binding to npmjs)
-	npm publish
+	@(npm publish)
 
 .PHONY: clean_node
 clean_node:
@@ -254,13 +254,16 @@ PYTHON_SETUP=python3 $(ROOT)/setup.py
 .PHONY: build_python install_python clean_python
 
 $(BINDING_PYTHON_SDIST): $(PYTHON_SRC_DIR)/binding.c $(PYTHON_SRC_DIR)/__init__.py
-	$(PYTHON_SETUP) sdist
+	$(info -> building Python source distribution)
+	@($(PYTHON_SETUP) sdist)
 
 $(BINDING_PYTHON_WHEEL): $(PYTHON_SRC_DIR)/binding.c $(PYTHON_SRC_DIR)/__init__.py
-	$(PYTHON_SETUP) bdist_wheel
+	$(info -> building Python binary/wheel distribution)
+	@($(PYTHON_SETUP) bdist_wheel)
 
-build_python: $(PYTHON_SRC_DIR)/binding.c $(PYTHON_SRC_DIR)/__init__.py
-	$(PYTHON_SETUP) build
+build_python_only: $(PYTHON_SRC_DIR)/binding.c $(PYTHON_SRC_DIR)/__init__.py
+	$(info -> running Python build)
+	@($(PYTHON_SETUP) build)
 
 # Currently not included in the install_bindings target
 install_python:
@@ -282,11 +285,12 @@ clean_python:
 # Build ❯ Bindings ❯ WASM
 # ----------------------------------------------------------------------------
 
+.PHONY: clean_wasm
+
 $(BINDING_WASM): $(PARSER) $(SRC_DIR)/grammar.json | $(BUILD_DIR)
 	$(info -> building WASM binding file)
 	$(TS_CLI) build --wasm --output $(BUILD_DIR)/parser.wasm
 
-.PHONY: clean_wasm
 clean_wasm:
 	$(info -> removing WASM binding file)
 	@(rm -f $(BINDING_WASM))
@@ -298,20 +302,22 @@ clean_wasm:
 INSTALLER=brew
 INSTALL_CMD=$(INSTALLER) install
 
-setup: node npm emscripten twine
+.PHONY: node npm emscripten twine
 
-.PHONY: node
-node:
-	$(INSTALL_CMD) node
+setup: setup_node setup_npm setup_emscripten setup_twine
 
-.PHONY: npm
-npm:
-	$(INSTALL_CMD) npm
+setup_node:
+	$(info -> installing node)
+	@($(INSTALL_CMD) node)
 
-.PHONY: emscripten
-emscripten:
-	$(INSTALL_CMD) emscripten
+setup_npm:
+	$(info -> installing npm)
+	@($(INSTALL_CMD) npm)
 
-.PHONY: twine
-twine:
-	$(INSTALL_CMD) twine
+setup_emscripten:
+	$(info -> installing emscripten)
+	@($(INSTALL_CMD) emscripten)
+
+setup_twine:
+	$(info -> installing twine)
+	@($(INSTALL_CMD) twine)

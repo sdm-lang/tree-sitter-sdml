@@ -545,16 +545,17 @@
   {
     "type": "entity_identity",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "member",
-          "named": true
-        }
-      ]
+    "fields": {
+      "identity": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "member",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -1472,16 +1473,17 @@
   {
     "type": "property_def",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "member_def",
-          "named": true
-        }
-      ]
+    "fields": {
+      "member": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "member_def",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {

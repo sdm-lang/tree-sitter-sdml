@@ -852,7 +852,7 @@ module.exports = grammar({
 
         property_def: $ => seq(
             keyword('property'),
-            $.member_def
+            field('member', $.member_def)
         ),
 
         structure_def: $ => seq(
@@ -979,7 +979,7 @@ module.exports = grammar({
 
         entity_identity: $ => seq(
             keyword('identity'),
-            $.member
+            field('identity', $.member)
         ),
 
         member: $ => choice(

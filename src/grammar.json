@@ -2891,8 +2891,12 @@
           }
         },
         {
-          "type": "SYMBOL",
-          "name": "member_def"
+          "type": "FIELD",
+          "name": "member",
+          "content": {
+            "type": "SYMBOL",
+            "name": "member_def"
+          }
         }
       ]
     },
@@ -3490,8 +3494,12 @@
           }
         },
         {
-          "type": "SYMBOL",
-          "name": "member"
+          "type": "FIELD",
+          "name": "identity",
+          "content": {
+            "type": "SYMBOL",
+            "name": "member"
+          }
         }
       ]
     },
@@ -4017,3 +4025,4 @@
   "inline": [],
   "supertypes": []
 }
+

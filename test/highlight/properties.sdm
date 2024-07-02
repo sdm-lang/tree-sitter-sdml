@@ -12,7 +12,7 @@ module properties is
 
   property accountId -> {1} account:AccountId is
   ; <- keyword
-  ;        ^ variable.field
+  ;        ^ type.definition
   ;                  ^ operator
   ;                     ^ punctuation.bracket
   ;                      ^ number

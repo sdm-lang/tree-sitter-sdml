@@ -31,24 +31,57 @@ pub fn language() -> Language {
 /// The content of the [`node-types.json`][] file for this grammar.
 ///
 /// [`node-types.json`]: https://tree-sitter.github.io/tree-sitter/using-parsers#static-node-types
-pub const NODE_TYPES: &'static str = include_str!("../../src/node-types.json");
+pub const NODE_TYPES: &str = include_str!("../../src/node-types.json");
 
-pub const GRAMMAR_VERSION: &'static str = env!("CARGO_PKG_VERSION");
+pub const GRAMMAR_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 // Uncomment these to include any queries that this grammar contains
 
-pub const HIGHLIGHTS_QUERY: &'static str = include_str!("../../queries/highlights.scm");
-pub const INJECTIONS_QUERY: &'static str = include_str!("../../queries/injections.scm");
-pub const LOCALS_QUERY: &'static str = include_str!("../../queries/locals.scm");
-pub const TAGS_QUERY: &'static str = include_str!("../../queries/tags.scm");
+pub const HIGHLIGHTS_QUERY: &str = include_str!("../../queries/highlights.scm");
+pub const INJECTIONS_QUERY: &str = include_str!("../../queries/injections.scm");
+pub const LOCALS_QUERY: &str = include_str!("../../queries/locals.scm");
+pub const TAGS_QUERY: &str = include_str!("../../queries/tags.scm");
 
 #[cfg(test)]
 mod tests {
+    use std::fs;
+
     #[test]
     fn test_can_load_grammar() {
         let mut parser = tree_sitter::Parser::new();
         parser
             .set_language(super::language())
             .expect("Error loading sdml language");
+    }
+
+    const MANIFEST_PATH: &str = env!("CARGO_MANIFEST_DIR");
+    const TEST_PATH: &str = "/test/corpus/";
+
+    #[test]
+    fn test_parse_test_corpus() {
+        let mut parser = tree_sitter::Parser::new();
+        parser
+            .set_language(super::language())
+            .expect("Error loading sdml language");
+
+        for entry in fs::read_dir(format!("{MANIFEST_PATH}{TEST_PATH}")).expect("not a directory?")
+        {
+            let entry = entry.expect("not a directory entry?");
+            let path = entry.path();
+            if path.is_file()
+                && path
+                    .extension()
+                    .map(|s| s.to_str())
+                    .unwrap_or(Some(""))
+                    .unwrap()
+                    == "sdm"
+            {
+                println!("Parsing test file {path:?}...");
+                let source = fs::read_to_string(path).expect("couldn't read source file");
+                parser
+                    .parse(source, None)
+                    .expect("Could not parse test file");
+            }
+        }
     }
 }

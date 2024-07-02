@@ -14,6 +14,11 @@ BINDING_DIR := $(ROOT)/bindings
 NODE_SRC_DIR := $(BINDING_DIR)/node
 NODE_BUILD_DIR := $(BUILD_DIR)
 
+PYTHON_ROOT_DIR := $(BINDING_DIR)/python
+PYTHON_SRC_DIR := $(PYTHON_ROOT_DIR)/tree_sitter_sdml
+PYTHON_BUILD_DIR := $(BUILD_DIR)
+PYTHON_DIST_DIR := $(ROOT)/dist
+
 RUST_SRC_DIR := $(BINDING_DIR)/rust
 RUST_BUILD_DIR := $(ROOT)/target
 
@@ -67,13 +72,16 @@ NODE_BUILD_KIND := $(shell echo $(BUILD_KIND) | sed 's/.*/\u&/')
 BINDING_NODE_LIB := $(BASE_NAME_US)_binding.node
 BINDING_NODE := $(NODE_BUILD_DIR)/$(NODE_BUILD_KIND)/$(BINDING_NODE_LIB)
 
+BINDING_PYTHON_SDIST := $(shell python3 $(PYTHON_ROOT_DIR)/dist_name.py source)
+BINDING_PYTHON_WHEEL := $(shell python3 $(PYTHON_ROOT_DIR)/dist_name.py wheel)
+
 BINDING_RUST_LIB := lib$(BASE_NAME_US).rlib
 BINDING_RUST := $(RUST_BUILD_DIR)/$(BUILD_KIND)/$(BINDING_RUST_LIB)
 
 BINDING_WASM_LIB := $(BASE_NAME).wasm
-BINDING_WASM := $(ROOT)/$(BINDING_WASM_LIB)
+BINDING_WASM := $(BUILD_DIR)/$(BINDING_WASM_LIB)
 
-ALL_BINDINGS := $(BINDING_NODE) $(BINDING_RUST) $(BINDING_WASM)
+ALL_BINDINGS := $(BINDING_NODE) $(BINDING_PYTHON_SDIST) $(BINDING_PYTHON_WHEEL) $(BINDING_RUST) $(BINDING_WASM)
 
 # ----------------------------------------------------------------------------
 # Start Here
@@ -163,7 +171,7 @@ EMACS_TS_DIR ?= $(HOME)/.tree-sitter/bin
 EMACS_ABI := 13
 EMACS_BINDING := $(EMACS_TS_DIR)/$(SHORT_NAME).$(DYLIB_EXT)
 
-emacs: $(EMACS_BINDING) | $(BUILD__DIR)
+emacs: $(EMACS_BINDING)
 
 $(EMACS_BINDING): generate_for_emacs build_parser
 	cp $(PARSER) $(EMACS_BINDING)
@@ -180,11 +188,11 @@ build_bindings: $(ALL_BINDINGS)
 
 test_bindings: test_rust
 
-install_bindings: install_rust
+install_bindings: install_rust install_python
 
 publish_bindings: publish_rust publish_node
 
-clean_bindings: clean_rust clean_node clean_wasm
+clean_bindings: clean_rust clean_node clean_python clean_wasm
 
 # ----------------------------------------------------------------------------
 # Build ❯ Bindings ❯ Rust
@@ -224,11 +232,41 @@ clean_node:
 	rm -rf $(NODE_BUILD_DIR)
 
 # ----------------------------------------------------------------------------
+# Build ❯ Bindings ❯ Python
+# ----------------------------------------------------------------------------
+
+PYTHON_SETUP=python3 $(ROOT)/setup.py
+
+.PHONY: build_python install_python clean_python
+
+$(BINDING_PYTHON_SDIST): $(PYTHON_SRC_DIR)/binding.c $(PYTHON_SRC_DIR)/__init__.py
+	$(PYTHON_SETUP) sdist
+
+$(BINDING_PYTHON_WHEEL): $(PYTHON_SRC_DIR)/binding.c $(PYTHON_SRC_DIR)/__init__.py
+	$(PYTHON_SETUP) bdist_wheel
+
+build_python: $(PYTHON_SRC_DIR)/binding.c $(PYTHON_SRC_DIR)/__init__.py
+	$(PYTHON_SETUP) build
+
+# Currently not included in the install_bindings target
+install_python:
+	pip3 install -e .
+
+# Currently not included in the install_bindings target
+publish_python: $(BINDING_PYTHON_SDIST) $(BINDING_PYTHON_WHEEL)
+	twine --sign --identity $(GPG_SIGNER) --non-interactive upload $(PYTHON_DIST_DIR)/*
+
+clean_python:
+	rm -rf $(ROOT)/dist
+	rm -rf $(PYTHON_ROOT_DIR)/tree_sitter_sdml.egg-info
+	rm $(PYTHON_SRC_DIR)_binding.abi*.so
+
+# ----------------------------------------------------------------------------
 # Build ❯ Bindings ❯ WASM
 # ----------------------------------------------------------------------------
 
-$(BINDING_WASM): $(PARSER) $(SRC_DIR)/grammar.json
-	$(TS_CLI) build-wasm
+$(BINDING_WASM): $(PARSER) $(SRC_DIR)/grammar.json | $(BUILD_DIR)
+	$(TS_CLI) build --wasm --output $(BUILD_DIR)/parser.wasm
 
 .PHONY: clean_wasm
 clean_wasm:
@@ -241,7 +279,7 @@ clean_wasm:
 INSTALLER=brew
 INSTALL_CMD=$(INSTALLER) install
 
-setup: node npm emscripten
+setup: node npm emscripten twine
 
 .PHONY: node
 node:
@@ -255,3 +293,6 @@ npm:
 emscripten:
 	$(INSTALL_CMD) emscripten
 
+.PHONY: twine
+twine:
+	$(INSTALL_CMD) twine

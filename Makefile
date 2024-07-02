@@ -104,7 +104,8 @@ clean: clean_grammar clean_parser clean_bindings
 # ----------------------------------------------------------------------------
 
 $(BUILD_DIR):
-	mkdir -p $@
+	$(info -> creating common build directory)
+	@(mkdir -p $@)
 
 # ----------------------------------------------------------------------------
 # Build ❯ Grammar
@@ -122,13 +123,15 @@ $(SRC_DIR)/parser.c: $(ROOT)/grammar.js
 	$(TS_CLI) $(TS_GENERATE)
 
 test_grammar: clean_grammar $(SRC_DIR)/grammar.json
+	$(info -> running grammar tests)
 	$(TS_CLI) $(TS_TEST) $(TS_TEST_FLAGS)
 	$(TS_CLI) parse examples/*.sdm --quiet --time
 
 .PHONY: clean_grammar
 clean_grammar:
-	rm -f $(TST_DIR)/corpus/*.$(FILE_EXT)~ $(TST_DIR)/corpus/.*.\~undo-tree\~
-	rm -f $(TST_DIR)/highlight/*.$(FILE_EXT)~ $(TST_DIR)/highlight/.*.\~undo-tree\~
+	$(info -> removing grammar cruft)
+	@(rm -f $(TST_DIR)/corpus/*.$(FILE_EXT)~ $(TST_DIR)/corpus/.*.\~undo-tree\~)
+	@(rm -f $(TST_DIR)/highlight/*.$(FILE_EXT)~ $(TST_DIR)/highlight/.*.\~undo-tree\~)
 
 # ----------------------------------------------------------------------------
 # Build ❯ Library
@@ -145,7 +148,8 @@ build_parser: $(PARSER)
 
 .PHONY: clean_parser
 clean_parser:
-	rm -f $(OBJ_FILES) $(PARSER)
+	$(info -> removing parser build files)
+	@(rm -f $(OBJ_FILES) $(PARSER))
 
 $(PARSER): $(OBJ_FILES)
 	$(CC) $(LDFLAGS) -dynamiclib $(LDLIBS) $^ -o $@
@@ -156,12 +160,14 @@ $(BUILD_DIR)/%.o : $(SRC_DIR)/%.c | $(BUILD_DIR)
 install_parser: $(INSTALL_LIB_DIR)/$(PARSER) $(INSTALL_INCLUDE_DIR)/tree_sitter/parser.h
 
 $(INSTALL_LIB_DIR)/$(PARSER): $(PARSER)
-	install -d '$(INSTALL_LIB_DIR)'
-	install -m755 '$(PARSER)' '$(INSTALL_LIB_DIR)'/'$(PARSER)'
+	$(info -> installing parser library)
+	@(install -d '$(INSTALL_LIB_DIR)')
+	@(install -m755 '$(PARSER)' '$(INSTALL_LIB_DIR)'/'$(PARSER)')
 
 $(INSTALL_INCLUDE_DIR)/tree_sitter/parser.h: $(SRC_DIR)/tree_sitter/parser.h
-	install -d '$(INSTALL_INCLUDE_DIR)'/tree_sitter
-	install '$(SRC_DIR)'/'$(INCLUDE_DIR)'/parser.h '$(INSTALL_INCLUDE_DIR)'/'$(INCLUDE_DIR)'/parser.h
+	$(info -> installing parser headers)
+	@(install -d '$(INSTALL_INCLUDE_DIR)'/tree_sitter)
+	@(install '$(SRC_DIR)'/'$(INCLUDE_DIR)'/parser.h '$(INSTALL_INCLUDE_DIR)'/'$(INCLUDE_DIR)'/parser.h)
 
 # ----------------------------------------------------------------------------
 # Build ❯ Library ❯ Emacs
@@ -174,10 +180,12 @@ EMACS_BINDING := $(EMACS_TS_DIR)/$(SHORT_NAME).$(DYLIB_EXT)
 emacs: $(EMACS_BINDING)
 
 $(EMACS_BINDING): generate_for_emacs build_parser
-	cp $(PARSER) $(EMACS_BINDING)
+	$(info -> installing Emacs binding locally)
+	@(cp $(PARSER) $(EMACS_BINDING))
 
 .PHONY: generate_for_emacs
 generate_for_emacs:
+	$(info -> generating Emacs binding)
 	$(TS_CLI) generate --abi=$(EMACS_ABI)
 
 # ----------------------------------------------------------------------------
@@ -202,17 +210,21 @@ $(BINDING_RUST): $(PARSER) $(RUST_SRC_DIR)/build.rs
 	cargo build $(CARGO_FLAGS)
 
 test_rust: $(BINDING_RUST)
-	cargo test
+	$(info -> running Rust binding tests)
+	@(cargo test)
 
 install_rust: $(BINDING_RUST)
-	cargo install --path '.' --locked
+	$(info -> installing Rust binding locally)
+	@(cargo install --path '.' --locked)
 
 publish_rust: $(BINDING_RUST)
-	cargo publish --allow-dirty
+	$(info -> publishing Rust binding to crates.io)
+	@(cargo publish --allow-dirty)
 
 .PHONY: clean_rust
 clean_rust:
-	rm -rf $(RUST_BUILD_DIR)
+	$(info -> removing Rust binding files)
+	@(rm -rf $(RUST_BUILD_DIR))
 
 # ----------------------------------------------------------------------------
 # Build ❯ Bindings ❯ Node
@@ -225,11 +237,13 @@ $(NODE_BUILD_DIR)/Makefile: $(ROOT)/binding.gyp
 	node-gyp configure
 
 publish_node: $(BINDING_NODE)
+	$(info -> publishing Node binding to npmjs)
 	npm publish
 
 .PHONY: clean_node
 clean_node:
-	rm -rf $(NODE_BUILD_DIR)
+	$(info -> removing Node binding files)
+	@(rm -rf $(NODE_BUILD_DIR))
 
 # ----------------------------------------------------------------------------
 # Build ❯ Bindings ❯ Python
@@ -250,27 +264,32 @@ build_python: $(PYTHON_SRC_DIR)/binding.c $(PYTHON_SRC_DIR)/__init__.py
 
 # Currently not included in the install_bindings target
 install_python:
-	pip3 install -e .
+	$(info -> installing Python binding locally)
+	@(pip3 install -e .)
 
 # Currently not included in the install_bindings target
 publish_python: $(BINDING_PYTHON_SDIST) $(BINDING_PYTHON_WHEEL)
-	twine --sign --identity $(GPG_SIGNER) --non-interactive upload $(PYTHON_DIST_DIR)/*
+	$(info -> uploading Python binding to PyPI)
+	@(twine --sign --identity $(GPG_SIGNER) --non-interactive upload $(PYTHON_DIST_DIR)/*)
 
 clean_python:
-	rm -rf $(ROOT)/dist
-	rm -rf $(PYTHON_ROOT_DIR)/tree_sitter_sdml.egg-info
-	rm $(PYTHON_SRC_DIR)_binding.abi*.so
+	$(info -> removing Python binding files)
+	@(rm -rf $(ROOT)/dist)
+	@(rm -rf $(PYTHON_ROOT_DIR)/tree_sitter_sdml.egg-info)
+	@(rm $(PYTHON_SRC_DIR)_binding.abi*.so)
 
 # ----------------------------------------------------------------------------
 # Build ❯ Bindings ❯ WASM
 # ----------------------------------------------------------------------------
 
 $(BINDING_WASM): $(PARSER) $(SRC_DIR)/grammar.json | $(BUILD_DIR)
+	$(info -> building WASM binding file)
 	$(TS_CLI) build --wasm --output $(BUILD_DIR)/parser.wasm
 
 .PHONY: clean_wasm
 clean_wasm:
-	rm -f $(BINDING_WASM)
+	$(info -> removing WASM binding file)
+	@(rm -f $(BINDING_WASM))
 
 # ----------------------------------------------------------------------------
 # Setup

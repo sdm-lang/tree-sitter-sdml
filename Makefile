@@ -161,6 +161,7 @@ clean_grammar:
 	$(info -> removing grammar cruft)
 	@(rm -f $(TST_DIR)/corpus/*.$(FILE_EXT)~ $(TST_DIR)/corpus/.*.\~undo-tree\~)
 	@(rm -f $(TST_DIR)/highlight/*.$(FILE_EXT)~ $(TST_DIR)/highlight/.*.\~undo-tree\~)
+	@(rm -f $(TST_DIR)/tags/*.$(FILE_EXT)~ $(TST_DIR)/tags/.*.\~undo-tree\~)
 
 # ----------------------------------------------------------------------------
 # Build ❯ Parser Library

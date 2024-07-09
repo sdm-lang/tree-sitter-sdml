@@ -1,0 +1,160 @@
+module invoice <https://example.com/rentals/> version "2023-12-21" <https://example.com/v2/rentals/> is
+  ;    ^ definition.module
+
+  import [dc skos xsd:decimal xsd:date xsd:string]
+  ;       ^ reference.module
+  ;          ^ reference.module
+  ;               ^ reference.module
+  ;                   ^ reference.type
+  ;                           ^ reference.module
+  ;                               ^ reference.type
+  ;                                    ^ reference.module
+  ;                                        ^ reference.type
+
+  import customers:foo
+  ;      ^ reference.module
+  ;                ^ reference.type
+  import finance
+  ;      ^ reference.module
+  import vehicles
+  ;      ^ reference.module
+
+  @skos:release = xsd:date("2023-08-12")
+  ;^ reference.type
+  @skos:definition = "hello"
+  ;^ reference.type
+
+  structure DateRange is
+    ;       ^ definition.structure
+    assert valid_date_range is
+      ;    ^ definition.constraint
+      forall self, self.end_date >= self.start_date
+      ;      ^ definition.variable
+      ;            ^ reference.variable
+      ;                 ^ reference.call
+      ;                             ^ reference.variable
+      ;                                  ^ reference.call
+    end
+    start_date -> xsd:date
+    ; <- definition.field
+    ;             ^ reference.type
+    end_date -> xsd:date
+    ; <- definition.field
+    ;           ^ reference.type
+  end
+
+  structure OdometerRange is
+    ;       ^ definition.structure
+    start_miles -> vehicles:OdometerReading
+    ; <- definition.field
+    end_miles -> vehicles:OdometerReading is
+    ; <- definition.field
+      assert valid_range = "self.end_miles >= self.start_miles"
+      ;      ^ definition.constraint
+    end
+  end
+
+  entity Invoice is
+    ;    ^ definition.entity
+    identity id -> integer
+    ;        ^ definition.field
+    ;              ^ reference.type
+
+    customer -> customers:Customer
+    ; <- definition.field
+    ;           ^ reference.type
+    vehicle -> vehicles:Vehicle
+    ; <- definition.field
+    ;          ^ reference.type
+    rental_dates -> DateRange
+    ; <- definition.field
+    ;               ^ reference.type
+    mileage -> OdometerRange
+    ; <- definition.field
+    ;          ^ reference.type
+
+    day_rate -> finance:CurrencyRate
+    ; <- definition.field
+    ;           ^ reference.type
+    mile_rate -> finance:CurrencyRate
+    ; <- definition.field
+    ;            ^ reference.type
+    discount -> finance:DiscountPercentage
+    ; <- definition.field
+    ;           ^ reference.type
+
+  end
+
+  datatype Name <- xsd:string is
+    ;      ^ definition.datatype
+    ;              ^ reference.datatype
+    @xsd:minLength = true
+    ;^ reference.type
+    @xsd:maxLength = 25
+    ;^ reference.type
+  end
+
+  datatype InvoiceId <- opaque integer
+    ;      ^ definition.datatype
+    ;                          ^ reference.datatype
+
+  event InvoiceCreated source Invoice is
+    ;   ^ definition.event
+    ;                         ^ reference.entity
+    at -> xsd:dateTime
+    ; <- definition.field
+    ;     ^ reference.type
+  end
+
+  event InvoicePayed source Invoice is
+    ;   ^ definition.event
+    ;                       ^ reference.entity
+    at -> xsd:dateTime
+    ; <- definition.field
+    ;     ^ reference.type
+  end
+
+  event InvoiceOverdue source Invoice is
+    ;   ^ definition.event
+    ;                         ^ reference.entity
+    at -> xsd:dateTime
+    ; <- definition.field
+    ;     ^ reference.type
+  end
+
+  structure Payment is
+    ;       ^ definition.structure
+    received -> xsd:dateTime
+    ; <- definition.field
+    ;           ^ reference.type
+    amount -> finance:CurrencyAmount
+    ; <- definition.field
+    ;         ^ reference.type
+    kind -> finance:PaymentKind
+    ; <- definition.field
+    ;       ^ reference.type
+  end
+
+  enum Terms of
+    ;  ^ definition.enum
+    Immediate is
+    ; <- definition.constant
+      @skos:preLabel = "NOW"
+      ;^ reference.type
+    end
+    ThirtyDays
+    ; <- definition.constant
+    SixtyDays
+    ; <- definition.constant
+  end
+
+  union PaymentKind of
+    ;   ^ definition.union
+    Cash
+    ; <- reference.type
+    Card as Plastic
+    ; <- reference.type
+    ;       ^ definition.type
+  end
+
+end

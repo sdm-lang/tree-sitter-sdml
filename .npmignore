@@ -1,5 +1,6 @@
 bindings/rust
 build
+dev
+dist
 examples
-target
 test

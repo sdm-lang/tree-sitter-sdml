@@ -171,10 +171,6 @@
  name: (identifier) @type.definition
  source: (identifier_reference) @type)
 
-   (property_def
-    member: (member_def
-             name: (identifier) @type.definition))
-
 (structure_def name: (identifier) @type.definition)
 
 (union_def name: (identifier) @type.definition)

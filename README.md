@@ -88,6 +88,10 @@ for details.
 
 ## Changes
 
+### Version: 0.3.3
+
+- Build: update version of dependent packages `cc` and `tree-sitter`.
+
 ### Version: 0.3.2
 
 - Feature: change `module`'s *well-formedness rules* to disallow the definitions
@@ -105,7 +109,7 @@ type_reference: $ => choice(
 
 ```
 
-### Version: 0.3.1**
+### Version: 0.3.1
 
 - Fix: regular expression for characters inside a string.
   - Added `examples/escaped_strings.sdm` file for basic testing.

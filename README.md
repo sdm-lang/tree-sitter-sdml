@@ -88,6 +88,10 @@ for details.
 
 ## Changes
 
+### Version: 0.3.4
+
+* Fix missing `byte` nodes in grammar for binary literals.
+
 ### Version: 0.3.3
 
 - Build: update version of dependent packages `cc` and `tree-sitter`.

@@ -2374,8 +2374,8 @@
             "type": "FIELD",
             "name": "byte",
             "content": {
-              "type": "PATTERN",
-              "value": "[0-9A-Fa-f]{2}"
+              "type": "SYMBOL",
+              "name": "hex_byte"
             }
           }
         },
@@ -2384,6 +2384,13 @@
           "value": "]"
         }
       ]
+    },
+    "hex_byte": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "[0-9A-Fa-f]{2}"
+      }
     },
     "double": {
       "type": "TOKEN",

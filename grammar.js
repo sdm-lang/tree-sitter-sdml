@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.3.2
+// Version:    0.3.3
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -529,7 +529,7 @@ module.exports = grammar({
                 field('uniqueness', $.sequence_uniqueness)
             ),
             optional(
-                 $._cardinality_inner
+                $._cardinality_inner
             ),
             '}'
         ),
@@ -730,16 +730,20 @@ module.exports = grammar({
             )
         ),
 
-        // base-64 encoded data, a string of hex bytes.
+        // hex encoded binary, a sequence of hex bytes.
         binary: $ => seq(
             '#[',
             repeat(
                 field(
                     'byte',
-                    /[0-9A-Fa-f]{2}/
+                    $.hex_byte
                 )
             ),
             ']'
+        ),
+
+        hex_byte: $ => token(
+            /[0-9A-Fa-f]{2}/
         ),
 
         double: $ => token(

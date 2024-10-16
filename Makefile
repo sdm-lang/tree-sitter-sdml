@@ -105,7 +105,7 @@ BINDING_RUST := $(RUST_TARGET_DIR)/$(BUILD_KIND)/$(BINDING_RUST_LIB)
 BINDING_WASM_LIB := $(BASE_NAME).wasm
 BINDING_WASM := $(BUILD_DIR)/$(BINDING_WASM_LIB)
 
-ALL_BINDINGS := $(BINDING_NODE) $(BINDING_PYTHON_SDIST) $(BINDING_PYTHON_WHEEL) $(BINDING_RUST) $(BINDING_WASM)
+ALL_BINDINGS := $(BINDING_NODE) $(BINDING_RUST) $(BINDING_WASM) # $(BINDING_PYTHON_SDIST) $(BINDING_PYTHON_WHEEL)
 
 # ----------------------------------------------------------------------------
 # Start Here
@@ -221,11 +221,11 @@ build_bindings: $(ALL_BINDINGS)
 
 test_bindings: test_rust
 
-install_bindings: install_rust install_python
+install_bindings: install_rust # install_python
 
-publish_bindings: publish_rust publish_node publish_python
+publish_bindings: publish_rust publish_node # publish_python
 
-clean_bindings: clean_rust clean_node clean_python clean_wasm
+clean_bindings: clean_rust clean_node clean_wasm # clean_python
 
 # ----------------------------------------------------------------------------
 # Build ❯ Bindings ❯ Rust

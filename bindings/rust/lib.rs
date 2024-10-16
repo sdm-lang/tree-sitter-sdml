@@ -6,7 +6,7 @@
 //! ```
 //! let code = "";
 //! let mut parser = tree_sitter::Parser::new();
-//! parser.set_language(tree_sitter_sdml::language()).expect("Error loading sdml grammar");
+//! parser.set_language(&tree_sitter_sdml::language()).expect("Error loading sdml grammar");
 //! let tree = parser.parse(code, None).unwrap();
 //! ```
 //!
@@ -50,7 +50,7 @@ mod tests {
     fn test_can_load_grammar() {
         let mut parser = tree_sitter::Parser::new();
         parser
-            .set_language(super::language())
+            .set_language(&super::language())
             .expect("Error loading sdml language");
     }
 
@@ -61,7 +61,7 @@ mod tests {
     fn test_parse_test_corpus() {
         let mut parser = tree_sitter::Parser::new();
         parser
-            .set_language(super::language())
+            .set_language(&super::language())
             .expect("Error loading sdml language");
 
         for entry in fs::read_dir(format!("{MANIFEST_PATH}{TEST_PATH}")).expect("not a directory?")

@@ -458,6 +458,10 @@
           "named": true
         },
         {
+          "type": "dimension_def",
+          "named": true
+        },
+        {
           "type": "entity_def",
           "named": true
         },
@@ -493,20 +497,15 @@
     }
   },
   {
-    "type": "disjunction",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "entity_body",
+    "type": "dimension_body",
     "named": true,
     "fields": {
-      "identity": {
+      "source": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
-            "type": "entity_identity",
+            "type": "identifier_reference",
             "named": true
           }
         ]
@@ -518,6 +517,117 @@
       "types": [
         {
           "type": "annotation",
+          "named": true
+        },
+        {
+          "type": "dimension_member",
+          "named": true
+        },
+        {
+          "type": "dimension_parent",
+          "named": true
+        },
+        {
+          "type": "entity_identity",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "dimension_def",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "dimension_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "dimension_member",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "member_def",
+          "named": true
+        },
+        {
+          "type": "member_from",
+          "named": true
+        },
+        {
+          "type": "property_ref",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "dimension_parent",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "parent": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "disjunction",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "entity_body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "annotation",
+          "named": true
+        },
+        {
+          "type": "entity_identity",
           "named": true
         },
         {
@@ -671,6 +781,36 @@
     }
   },
   {
+    "type": "event_body",
+    "named": true,
+    "fields": {
+      "source": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "annotation",
+          "named": true
+        },
+        {
+          "type": "member",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "event_def",
     "named": true,
     "fields": {
@@ -679,7 +819,7 @@
         "required": false,
         "types": [
           {
-            "type": "structured_body",
+            "type": "event_body",
             "named": true
           }
         ]
@@ -690,16 +830,6 @@
         "types": [
           {
             "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "source": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier_reference",
             "named": true
           }
         ]
@@ -1264,6 +1394,32 @@
         "types": [
           {
             "type": "type_reference",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "member_from",
+    "named": true,
+    "fields": {
+      "from": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
             "named": true
           }
         ]
@@ -1941,33 +2097,7 @@
     }
   },
   {
-    "type": "structure_def",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "structured_body",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "structured_body",
+    "type": "structure_body",
     "named": true,
     "fields": {},
     "children": {
@@ -1983,6 +2113,32 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "structure_def",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "structure_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -2514,14 +2670,18 @@
   },
   {
     "type": "decimal",
-    "named": true
-  },
-  {
-    "type": "decimal",
     "named": false
   },
   {
+    "type": "decimal",
+    "named": true
+  },
+  {
     "type": "def",
+    "named": false
+  },
+  {
+    "type": "dimension",
     "named": false
   },
   {
@@ -2558,6 +2718,10 @@
   },
   {
     "type": "forall",
+    "named": false
+  },
+  {
+    "type": "from",
     "named": false
   },
   {
@@ -2650,6 +2814,10 @@
   },
   {
     "type": "ordered",
+    "named": false
+  },
+  {
+    "type": "parent",
     "named": false
   },
   {

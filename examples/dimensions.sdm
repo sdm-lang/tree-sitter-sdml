@@ -1,0 +1,13 @@
+module dimensions is
+
+  import [ sales stores ]
+
+  dimension Location is
+    source sales:Sale
+    store from stores:Store
+    city from stores:City
+    state -> stores:State
+    country -> stores:Country
+  end
+
+end

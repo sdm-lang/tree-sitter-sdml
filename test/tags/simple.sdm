@@ -98,25 +98,28 @@ module invoice <https://example.com/rentals/> version "2023-12-21" <https://exam
     ;      ^ definition.datatype
     ;                          ^ reference.datatype
 
-  event InvoiceCreated source Invoice is
+  event InvoiceCreated is
     ;   ^ definition.event
-    ;                         ^ reference.entity
+    source Invoice
+    ;      ^ reference.entity
     at -> xsd:dateTime
     ; <- definition.field
     ;     ^ reference.type
   end
 
-  event InvoicePayed source Invoice is
+  event InvoicePayed is
     ;   ^ definition.event
-    ;                       ^ reference.entity
+    source Invoice
+    ;      ^ reference.entity
     at -> xsd:dateTime
     ; <- definition.field
     ;     ^ reference.type
   end
 
-  event InvoiceOverdue source Invoice is
+  event InvoiceOverdue is
     ;   ^ definition.event
-    ;                         ^ reference.entity
+    source Invoice
+    ;      ^ reference.entity
     at -> xsd:dateTime
     ; <- definition.field
     ;     ^ reference.type

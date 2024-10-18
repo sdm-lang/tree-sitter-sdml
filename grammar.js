@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.3.3
+// Version:    0.4.0-dev
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -783,6 +783,7 @@ module.exports = grammar({
 
         definition: $ => choice(
             $.data_type_def,
+            $.dimension_def,
             $.entity_def,
             $.enum_def,
             $.event_def,
@@ -819,6 +820,36 @@ module.exports = grammar({
             keyword('end')
         ),
 
+        dimension_def: $ => seq(
+            keyword('dimension'),
+            field('name', $.identifier),
+            optional(field('body', $.dimension_body))
+        ),
+
+        dimension_body: $ => seq(
+            keyword('is'),
+            repeat($.annotation),
+            choice(
+                $._definition_source,
+                $.entity_identity
+            ),
+            repeat($.dimension_parent),
+            repeat($.dimension_member),
+            keyword('end')
+        ),
+
+        _definition_source: $ => seq(
+            keyword('source'),
+            field('source', $.identifier_reference),
+        ),
+
+        dimension_parent: $ => seq(
+            keyword('parent'),
+            field('name', $.identifier),
+            $._has_type,
+            field('parent', $.identifier_reference)
+        ),
+
         entity_def: $ => seq(
             keyword('entity'),
             field('name', $.identifier),
@@ -828,7 +859,7 @@ module.exports = grammar({
         entity_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
-            field('identity', $.entity_identity),
+            $.entity_identity,
             repeat($.member),
             keyword('end')
         ),
@@ -849,9 +880,15 @@ module.exports = grammar({
         event_def: $ => seq(
             keyword('event'),
             field('name', $.identifier),
-            keyword('source'),
-            field('source', $.identifier_reference),
-            optional(field('body', $.structured_body))
+            optional(field('body', $.event_body))
+        ),
+
+        event_body: $ => seq(
+            keyword('is'),
+            repeat($.annotation),
+            $._definition_source,
+            repeat($.member),
+            keyword('end')
         ),
 
         property_def: $ => seq(
@@ -862,10 +899,10 @@ module.exports = grammar({
         structure_def: $ => seq(
             keyword('structure'),
             field('name', $.identifier),
-            optional(field('body', $.structured_body))
+            optional(field('body', $.structure_body))
         ),
 
-        structured_body: $ => seq(
+        structure_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
             repeat($.member),
@@ -989,6 +1026,18 @@ module.exports = grammar({
         member: $ => choice(
             $.member_def,
             $.property_ref,
+        ),
+
+        dimension_member: $ => choice(
+            $.member_from,
+            $.member_def,
+            $.property_ref,
+        ),
+
+        member_from: $ => seq(
+            field('name', $.identifier),
+            keyword('from'),
+            field('from', $.identifier_reference)
         ),
 
         member_def: $ => seq(

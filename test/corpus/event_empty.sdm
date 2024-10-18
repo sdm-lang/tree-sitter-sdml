@@ -4,7 +4,7 @@ Event, Empty
 
 module campaign is
 
-  event NameChanged source Campaign
+  event NameChanged
 
 end
 
@@ -15,6 +15,4 @@ end
   body: (module_body
     (definition
       (event_def
-        name: (identifier)
-        source: (identifier_reference
-           (identifier))))))
+        name: (identifier)))))

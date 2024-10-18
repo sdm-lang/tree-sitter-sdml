@@ -1,0 +1,25 @@
+======================
+Dimension, With Source
+======================
+
+module dimensions is
+
+  dimension Campaigns is
+    source entity:Campaign
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (dimension_def
+        name: (identifier)
+        body: (dimension_body
+          source: (identifier_reference
+            (qualified_identifier
+              module: (identifier)
+              member: (identifier))))))))

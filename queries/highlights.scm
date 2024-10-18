@@ -14,6 +14,7 @@
  "assert"
  "class"
  "datatype"
+ "dimension"
  "entity"
  "enum"
  "event"
@@ -162,14 +163,17 @@
 (data_type_def base: (identifier_reference) @type)
 (data_type_def opaque: (opaque) @keyword)
 
+(dimension_def name: (identifier) @type.definition)
+
+(dimension_body "source" @keyword source: (identifier_reference) @type)
+
 (entity_def name: (identifier) @type.definition)
 
 (enum_def name: (identifier) @type.definition)
 
-(event_def "source" @keyword)
-(event_def
- name: (identifier) @type.definition
- source: (identifier_reference) @type)
+(event_def name: (identifier) @type.definition)
+
+(event_body "source" @keyword source: (identifier_reference) @type)
 
 (structure_def name: (identifier) @type.definition)
 
@@ -208,12 +212,23 @@
 
 (entity_identity "identity" @keyword)
 
-(member_def name: (identifier) @variable.field)
-(member_def target: (type_reference) @type)
+(member_from
+ name: (identifier) @variable.field
+ "from" @keyword
+ from: (identifier_reference) @type)
+
+(member_def
+ name: (identifier) @variable.field
+ target: (type_reference) @type)
 
 (property_ref
  "ref" @keyword
  property: (identifier_reference) @variable.field)
+
+(dimension_parent
+ "parent" @keyword
+ name: (identifier) @variable.field
+ parent: (identifier_reference) @type)
 
 (value_variant name: (identifier) @constant)
 

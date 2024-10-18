@@ -263,8 +263,9 @@ dmypy.json
 ### Generic Build ###
 
 /dev/
-
 /build/
 
+### Binding Generator ###
 
-
+.editorconfig
+.gitattributes

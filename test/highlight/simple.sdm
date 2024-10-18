@@ -145,5 +145,14 @@ module Campaign is
   ; <- keyword
   ;      ^ type.definition
 
+  event CampaignNameChanged is
+  ; <- keyword
+  ;     ^ type.definition
+  ;                         ^ keyword
+    source Campaign
+    ; <- keyword
+    ;      ^ type
+  end
+
 end
 ; <- keyword

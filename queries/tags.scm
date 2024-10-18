@@ -20,33 +20,27 @@
 ;; Types
 ;; ---------------------------------------------------------------------------
 
-(data_type_def
- name: (identifier) @name) @definition.datatype
-(data_type_def
- base: (_) @name) @reference.datatype
+(data_type_def name: (identifier) @name) @definition.datatype
+(data_type_def base: (_) @name) @reference.datatype
 
-(entity_def
- name: (identifier) @name) @definition.entity
+(dimension_def name: (identifier) @name) @definition.dimension
+(dimension_body source: (identifier_reference) @name) @reference.entity
 
-(enum_def
- name: (identifier) @name) @definition.enum
+(entity_def name: (identifier) @name) @definition.entity
 
-(event_def
- name: (identifier) @name) @definition.event
-(event_def
- source: (identifier_reference) @name) @reference.entity
+(enum_def name: (identifier) @name) @definition.enum
 
-(rdf_def
- name: (identifier) @name) @definition.rdf
+(event_def name: (identifier) @name) @definition.event
 
-(structure_def
- name: (identifier) @name) @definition.structure
+(event_body source: (identifier_reference) @name) @reference.entity
 
-(type_class_def
- name: (identifier) @name) @definition.class
+(rdf_def name: (identifier) @name) @definition.rdf
 
-(union_def
- name: (identifier) @name) @definition.union
+(structure_def name: (identifier) @name) @definition.structure
+
+(type_class_def name: (identifier) @name) @definition.class
+
+(union_def name: (identifier) @name) @definition.union
 
 ;; ---------------------------------------------------------------------------
 ;; Members

@@ -1,0 +1,28 @@
+==================================
+Dimension, With Source and Parents
+==================================
+
+module dimensions is
+
+  dimension Campaigns is
+    source Campaign
+    parent portfolio -> Portfolio
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (dimension_def
+        name: (identifier)
+        body: (dimension_body
+          source: (identifier_reference
+            (identifier))
+          (dimension_parent
+            name: (identifier)
+            parent: (identifier_reference
+              (identifier))))))))

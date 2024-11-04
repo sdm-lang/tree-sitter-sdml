@@ -63,8 +63,12 @@
 (import_statement [ "[" "]" ] @punctuation.bracket)
 
 (member_import name: (qualified_identifier) @type)
+(member_import "as" @keyword)
+(member_import rename: (identifier) @type)
 
 (module_import name: (identifier) @module)
+(module_import "as" @keyword)
+(module_import rename: (identifier) @module)
 
 ;; ---------------------------------------------------------------------------
 ;; Annotations and Constraints
@@ -92,8 +96,6 @@
 
 (function_parameter name: (identifier) @variable.parameter)
 (function_parameter target: (_) @type)
-
-(optional) @operator
 
 (function_cardinality_expression (sequence_ordering) @keyword)
 (function_cardinality_expression (sequence_uniqueness) @keyword)
@@ -165,19 +167,19 @@
 
 (dimension_def name: (identifier) @type.definition)
 
-(dimension_body "source" @keyword source: (identifier_reference) @type)
-
 (entity_def name: (identifier) @type.definition)
 
 (enum_def name: (identifier) @type.definition)
 
 (event_def name: (identifier) @type.definition)
 
-(event_body "source" @keyword source: (identifier_reference) @type)
-
 (structure_def name: (identifier) @type.definition)
 
 (union_def name: (identifier) @type.definition)
+
+(source_entity "source" @keyword entity: (identifier_reference) @type)
+(source_entity "with" @keyword)
+(source_entity member: (identifier) @variable.field)
 
 ;; ---------------------------------------------------------------------------
 ;; RDF Definitions
@@ -212,11 +214,6 @@
 
 (entity_identity "identity" @keyword)
 
-(member_from
- name: (identifier) @variable.field
- "from" @keyword
- from: (identifier_reference) @type)
-
 (member_def
  name: (identifier) @variable.field
  target: (type_reference) @type)
@@ -228,7 +225,7 @@
 (dimension_parent
  "parent" @keyword
  name: (identifier) @variable.field
- parent: (identifier_reference) @type)
+ entity: (identifier_reference) @type)
 
 (value_variant name: (identifier) @constant)
 

@@ -11,9 +11,11 @@ module dimensions is
   ; <- keyword
   ;         ^ type.definition
   ;             ^ keyword
-    source SourceEntity
+    source SourceEntity with title
     ; <- keyword
     ;      ^ type
+    ;                   ^ keyword
+    ;                        ^ variable.field
 
     parent some -> OtherDimension
     ; <- keyword
@@ -25,11 +27,6 @@ module dimensions is
     ; <- variable.field
     ;    ^ operator
     ;       ^ type
-
-    title from SourceEntity
-    ; <- variable.field
-    ;     ^ keyword
-    ;          ^ type
 
     ref Property
     ; <- keyword

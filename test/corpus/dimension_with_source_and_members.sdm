@@ -5,8 +5,7 @@ Dimension, With Source and Members
 module dimensions is
 
   dimension Campaigns is
-    source Campaign
-    status from Campaign
+    source Campaign with status
     name -> Name
     ref Target
   end
@@ -22,20 +21,17 @@ end
       (dimension_def
         name: (identifier)
         body: (dimension_body
-          source: (identifier_reference
-            (identifier))
-          (dimension_member
-            (member_from
-              name: (identifier)
-              from: (identifier_reference
-                (identifier))))
-          (dimension_member
+          identity: (source_entity
+            entity: (identifier_reference
+              (identifier))
+            member: (identifier))
+          (member
             (member_def
               name: (identifier)
               target: (type_reference
                 (identifier_reference
                   (identifier)))))
-          (dimension_member
+          (member
             (property_ref
               property: (identifier_reference
                 (identifier)))))))))

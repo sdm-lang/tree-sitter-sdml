@@ -1,0 +1,22 @@
+========================
+Import and rename member
+========================
+
+module Campaign is
+
+  import xsd:base as base
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (import_statement
+      (member_import
+        name: (qualified_identifier
+          module: (identifier)
+          member: (identifier))
+        rename: (identifier)))))
+

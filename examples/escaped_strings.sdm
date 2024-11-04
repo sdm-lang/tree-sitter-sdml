@@ -1,4 +1,4 @@
-module example is
+module escaped_strings is
 
   @char_escape_a = "\a"
   @char_escape_b = "\b"

@@ -11,11 +11,13 @@ module invoice <https://example.com/rentals/> version "2023-12-21" <https://exam
   ;                                    ^ reference.module
   ;                                        ^ reference.type
 
-  import customers:foo
+  import customers:foo as Foo
   ;      ^ reference.module
   ;                ^ reference.type
-  import finance
+  ;                       ^ reference.type
+  import finance as banking
   ;      ^ reference.module
+  ;                 ^ reference.module
   import vehicles
   ;      ^ reference.module
 
@@ -118,8 +120,9 @@ module invoice <https://example.com/rentals/> version "2023-12-21" <https://exam
 
   event InvoiceOverdue is
     ;   ^ definition.event
-    source Invoice
+    source Invoice with total
     ;      ^ reference.entity
+    ;                   ^ reference.field
     at -> xsd:dateTime
     ; <- definition.field
     ;     ^ reference.type

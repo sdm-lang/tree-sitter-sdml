@@ -6,7 +6,8 @@ module properties is
   ]
 
   property accountId -> {1} account:AccountId is
-    @skos:definition = "a"@en
+    @skos:prefLabel = "account identifier"
+    @skos:definition = "an account Identifier."@en
   end
 
   structure Account is

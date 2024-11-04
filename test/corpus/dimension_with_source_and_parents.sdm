@@ -20,9 +20,10 @@ end
       (dimension_def
         name: (identifier)
         body: (dimension_body
-          source: (identifier_reference
-            (identifier))
+          identity: (source_entity
+            entity: (identifier_reference
+              (identifier)))
           (dimension_parent
             name: (identifier)
-            parent: (identifier_reference
+            entity: (identifier_reference
               (identifier))))))))

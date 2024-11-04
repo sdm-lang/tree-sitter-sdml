@@ -169,6 +169,19 @@ module example is
   end
 
 end
+
+Additionally, this version of the grammar allows module's to rename imports,
+both modules and members. This allows then client module to avoid always using
+qualified names, and to use short, or more meaningful, names as appropriate.
+
+``` sdml
+module example is
+
+  import rentals_billing as billing
+
+  import billing:Invoice as Invoice
+
+end
 ```
 
 ### Version: 0.3.4

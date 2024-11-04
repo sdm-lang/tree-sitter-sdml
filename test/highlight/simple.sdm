@@ -3,6 +3,24 @@ module Campaign is
 ;      ^ module.definition
 ;               ^ keyword
 
+  import foo as bar
+  ; <- keyword
+  ;      ^ module
+  ;          ^ keyword
+  ;             ^ module
+
+  import versioned <https://example.org> as bar
+  ; <- keyword
+  ;      ^ module
+  ;                                      ^ keyword
+  ;                                         ^ module
+
+  import skos:prefLabel as label
+  ; <- keyword
+  ;      ^ type
+  ;                     ^ keyword
+  ;                        ^ type
+
   import [xsd skos xml:base dc]
   ; <- keyword
   ;      ^ punctuation.bracket

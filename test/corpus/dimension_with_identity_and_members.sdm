@@ -21,20 +21,20 @@ end
       (dimension_def
         name: (identifier)
         body: (dimension_body
-          (entity_identity
+          identity: (entity_identity
             identity: (member
               (member_def
                 name: (identifier)
                 target: (type_reference
                   (identifier_reference
                     (identifier))))))
-          (dimension_member
+          (member
             (member_def
               name: (identifier)
               target: (type_reference
                 (identifier_reference
                   (identifier)))))
-          (dimension_member
+          (member
             (property_ref
               property: (identifier_reference
                 (identifier)))))))))

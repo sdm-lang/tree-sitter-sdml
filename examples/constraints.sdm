@@ -1,4 +1,4 @@
-module Campaign is
+module constraints is
 
   @skos:prefLabel = "Example"
 

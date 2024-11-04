@@ -221,11 +221,11 @@ build_bindings: $(ALL_BINDINGS)
 
 test_bindings: test_rust
 
-install_bindings: install_rust # install_python
+install_bindings: install_rust install_python
 
-publish_bindings: publish_rust publish_node # publish_python
+publish_bindings: publish_rust publish_node publish_python
 
-clean_bindings: clean_rust clean_node clean_wasm # clean_python
+clean_bindings: clean_rust clean_node clean_wasm clean_python
 
 # ----------------------------------------------------------------------------
 # Build ❯ Bindings ❯ Rust

@@ -1,0 +1,36 @@
+===================
+Event, With Members
+===================
+
+module campaign is
+
+  event NameChanged is
+    source Campaign
+    old_name -> string
+    new_name -> string
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (event_def
+        name: (identifier)
+        body: (event_body
+          identity: (source_entity
+            entity: (identifier_reference
+              (identifier)))
+          (member
+            (member_def
+              name: (identifier)
+              target: (type_reference
+                (builtin_simple_type))))
+          (member
+            (member_def
+              name: (identifier)
+              target: (type_reference
+                (builtin_simple_type)))))))))

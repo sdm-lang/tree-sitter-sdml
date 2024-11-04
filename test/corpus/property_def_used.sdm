@@ -16,7 +16,7 @@ end
         (definition
           (structure_def
             (identifier)
-            (structured_body
+            (structure_body
               (member
                 (property_ref
                   (identifier_reference

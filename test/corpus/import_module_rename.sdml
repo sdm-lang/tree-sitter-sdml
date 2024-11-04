@@ -1,0 +1,19 @@
+========================
+Import and rename module
+========================
+
+module Campaign is
+
+  import xsd as schema
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (import_statement
+      (module_import
+        name: (identifier)
+        rename: (identifier)))))

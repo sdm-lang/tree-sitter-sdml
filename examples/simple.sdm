@@ -46,15 +46,18 @@ module invoice <https://example.com/rentals/> version "2023-12-21" <https://exam
 
   datatype InvoiceId <- opaque integer
 
-  event InvoiceCreated source Invoice is
+  event InvoiceCreated is
+    source Invoice
     at -> xsd:dateTime
   end
 
-  event InvoicePayed source Invoice is
+  event InvoicePayed is
+    source Invoice
     at -> xsd:dateTime
   end
 
-  event InvoiceOverdue source Invoice is
+  event InvoiceOverdue is
+    source Invoice
     at -> xsd:dateTime
   end
 

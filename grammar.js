@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.3.3
+// Version:    0.4.0
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -122,13 +122,20 @@ module.exports = grammar({
             $.module_import
         ),
 
+        _rename_import: $ => seq(
+                keyword('as'),
+                field('rename', $.identifier)
+        ),
+
         member_import: $ => seq(
             field('name', $.qualified_identifier),
+            optional($._rename_import)
         ),
 
         module_import: $ => seq(
             field('name', $.identifier),
-            optional(field('version_uri', $.iri))
+            optional(field('version_uri', $.iri)),
+            optional($._rename_import)
         ),
 
         // -----------------------------------------------------------------------
@@ -500,7 +507,7 @@ module.exports = grammar({
             optional(
                 seq(
                     '(',
-                    repeat1(field('parameter', $.function_parameter)),
+                    repeat(field('parameter', $.function_parameter)),
                     ')'
                 )
             ),
@@ -535,7 +542,6 @@ module.exports = grammar({
         ),
 
         function_type_reference: $ => seq(
-            optional(field('optional', $.optional)),
             choice(
                 $.identifier_reference,
                 $.builtin_simple_type,
@@ -783,6 +789,7 @@ module.exports = grammar({
 
         definition: $ => choice(
             $.data_type_def,
+            $.dimension_def,
             $.entity_def,
             $.enum_def,
             $.event_def,
@@ -819,6 +826,55 @@ module.exports = grammar({
             keyword('end')
         ),
 
+        dimension_def: $ => seq(
+            keyword('dimension'),
+            field('name', $.identifier),
+            optional(field('body', $.dimension_body))
+        ),
+
+        dimension_body: $ => seq(
+            keyword('is'),
+            repeat($.annotation),
+            field(
+                'identity',
+                choice(
+                    $.source_entity,
+                    $.entity_identity
+                )
+            ),
+            repeat($.dimension_parent),
+            repeat($.member),
+            keyword('end')
+        ),
+
+        source_entity: $ => seq(
+            keyword('source'),
+            field('entity', $.identifier_reference),
+            optional(
+                seq(
+                    keyword('with'),
+                    $._identifier_or_list
+                )
+            )
+        ),
+
+        _identifier_or_list: $ => choice(
+            field('member', $.identifier),
+            seq(
+                '[',
+                repeat1(field('member', $.identifier)),
+                ']'
+            )
+        ),
+
+        dimension_parent: $ => seq(
+            keyword('parent'),
+            field('name', $.identifier),
+            $._has_type,
+            field('entity', $.identifier_reference),
+            optional(field('body', $.annotation_only_body))
+        ),
+
         entity_def: $ => seq(
             keyword('entity'),
             field('name', $.identifier),
@@ -849,9 +905,15 @@ module.exports = grammar({
         event_def: $ => seq(
             keyword('event'),
             field('name', $.identifier),
-            keyword('source'),
-            field('source', $.identifier_reference),
-            optional(field('body', $.structured_body))
+            optional(field('body', $.event_body))
+        ),
+
+        event_body: $ => seq(
+            keyword('is'),
+            repeat($.annotation),
+            field('identity', $.source_entity),
+            repeat($.member),
+            keyword('end')
         ),
 
         property_def: $ => seq(
@@ -862,10 +924,10 @@ module.exports = grammar({
         structure_def: $ => seq(
             keyword('structure'),
             field('name', $.identifier),
-            optional(field('body', $.structured_body))
+            optional(field('body', $.structure_body))
         ),
 
-        structured_body: $ => seq(
+        structure_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
             repeat($.member),
@@ -911,10 +973,12 @@ module.exports = grammar({
         type_class_def: $ => seq(
             keyword('class'),
             field('name', $.identifier),
-            seq(
-                '(',
-                repeat1(field('variable', $.type_variable)),
-                ')',
+            optional(
+                seq(
+                    '(',
+                    repeat1(field('variable', $.type_variable)),
+                    ')',
+                )
             ),
             optional(field('body', $.type_class_body))
         ),

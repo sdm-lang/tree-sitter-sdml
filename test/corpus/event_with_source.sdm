@@ -1,0 +1,24 @@
+==================
+Event, With Source
+==================
+
+module campaign is
+
+  event NameChanged is
+    source Campaign
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (event_def
+        name: (identifier)
+        body: (event_body
+          identity: (source_entity
+            entity: (identifier_reference
+              (identifier))))))))

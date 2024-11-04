@@ -1,0 +1,59 @@
+module dimensions is
+; <- keyword
+;      ^ module.definition
+;                 ^ keyword
+
+  dimension Zero
+  ; <- keyword
+  ;         ^ type.definition
+
+  dimension One is
+  ; <- keyword
+  ;         ^ type.definition
+  ;             ^ keyword
+    source SourceEntity with title
+    ; <- keyword
+    ;      ^ type
+    ;                   ^ keyword
+    ;                        ^ variable.field
+
+    parent some -> OtherDimension
+    ; <- keyword
+    ;      ^ variable.field
+    ;           ^ operator
+    ;              ^ type
+
+    name -> Name
+    ; <- variable.field
+    ;    ^ operator
+    ;       ^ type
+
+    ref Property
+    ; <- keyword
+    ;   ^ variable.field
+  end
+  ; <- keyword
+
+  dimension Two is
+  ; <- keyword
+  ;         ^ type.definition
+  ;             ^ keyword
+    identity source -> SourceEntity
+    ; <- keyword
+    ;        ^ variable.field
+    ;               ^ operator
+    ;                  ^ type
+
+    name -> Name
+    ; <- variable.field
+    ;    ^ operator
+    ;       ^ type
+
+    ref Property
+    ; <- keyword
+    ;   ^ variable.field
+  end
+  ; <- keyword
+
+end
+; <- keyword

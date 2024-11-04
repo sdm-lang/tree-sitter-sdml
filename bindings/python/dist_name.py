@@ -1,13 +1,29 @@
-import sys, sysconfig, tomllib
+import re, sys, sysconfig
 
-with open("pyproject.toml", "rb") as fp:
-    project = tomllib.load(fp)["project"]
+__string_assign=re.compile(r"""^(\w+)\s*=\s*"([^"]*)"$""")
+__in_project=False
+__project_name=""
+__project_version=""
+
+with open("pyproject.toml", "rt") as fp:
+    for line in fp:
+        if (not __in_project) and line.strip() == "[project]":
+            __in_project=1
+        elif __in_project:
+            __match = __string_assign.match(line.strip())
+            if not __match is None:
+                if __match.group(1) == "name":
+                    __project_name = __match.group(2)
+                elif __match.group(1) == "version":
+                    __project_version = __match.group(2)
+        elif __in_project and line.lstrip().starts_with("["):
+            break
 
 def name():
-    return project["name"].replace('-', '_')
+    return __project_name.replace('-', '_')
 
 def version():
-    return project["version"]
+    return __project_version
 
 def python_tag():
     # See https://packaging.python.org/en/latest/specifications/platform-compatibility-tags/

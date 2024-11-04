@@ -1,0 +1,18 @@
+================
+Dimension, Empty
+================
+
+module Campaign is
+
+  dimension Campaigns
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (dimension_def
+        name: (identifier)))))

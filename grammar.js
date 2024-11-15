@@ -123,8 +123,8 @@ module.exports = grammar({
         ),
 
         _rename_import: $ => seq(
-                keyword('as'),
-                field('rename', $.identifier)
+            keyword('as'),
+            field('rename', $.identifier)
         ),
 
         member_import: $ => seq(
@@ -541,12 +541,10 @@ module.exports = grammar({
             '}'
         ),
 
-        function_type_reference: $ => seq(
-            choice(
-                $.identifier_reference,
-                $.builtin_simple_type,
-                $.mapping_type
-            )
+        function_type_reference: $ => choice(
+            $.identifier_reference,
+            $.builtin_simple_type,
+            $.mapping_type
         ),
 
         optional: $ => operator('?'),

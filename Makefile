@@ -199,7 +199,7 @@ clean_parser:
 
 .PHONY: generate_for_emacs
 
-EMACS_TS_DIR ?= $(HOME)/.tree-sitter/bin
+EMACS_TS_DIR ?= $(HOME)/.emacs.d/tree-sitter/
 EMACS_ABI := 13
 EMACS_BINDING := $(EMACS_TS_DIR)/$(SHORT_NAME).$(DYLIB_EXT)
 

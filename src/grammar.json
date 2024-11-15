@@ -1768,24 +1768,19 @@
       ]
     },
     "function_type_reference": {
-      "type": "SEQ",
+      "type": "CHOICE",
       "members": [
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "identifier_reference"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "builtin_simple_type"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "mapping_type"
-            }
-          ]
+          "type": "SYMBOL",
+          "name": "identifier_reference"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "builtin_simple_type"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "mapping_type"
         }
       ]
     },

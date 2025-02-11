@@ -13,7 +13,7 @@ version "2023-12-21" <https://example.com/v2/rentals/> is
 
   structure DateRange is
     assert valid_date_range is
-      forall self, self.end_date >= self.start_date
+      self.end_date >= self.start_date
     end
     start_date -> xsd:date
     end_date -> xsd:date

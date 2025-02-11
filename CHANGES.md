@@ -1,5 +1,26 @@
 # Changes for tree-sitter-sdml
 
+## Version 0.4.3
+
+The primary aim of this release is to clean up the syntax of the formal
+constraint language to remove some redundancy and simplify for the upcoming
+formatter. For example, as constraints are written as invariants over all
+instances of a class the construct `∀ self` to create a quantified sentence over
+the set of all instances is extra work and as `self` is an allowed term on it's
+own the quantifier can be dropped and simpler sentence constructs used instead.
+
+### Detailed Changes
+
+* Feature: removed the choice of 'self' from the rule `quantified_variable`.
+* Feature: a new, simpler, rule named `variable` replaces `named_variable_set` and
+  `mapping_variable`.
+  * Additionally, both quantified sentences and sequence builders now use
+    `variable` as their rule for variable definitions.
+* Feature: the vertical bar used in the sequence builder is now a named rule
+  `set_op_builder`.
+* Removed: an existing ability to have multiple sentences as the body of a
+  sequence builder, this did not make sense as-is.
+
 ## Version 0.4.2
 
 The primary aim of this release is to introduce a more streamlined syntax for

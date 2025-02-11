@@ -1389,32 +1389,6 @@
     }
   },
   {
-    "type": "mapping_variable",
-    "named": true,
-    "fields": {
-      "domain": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "range": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "member",
     "named": true,
     "fields": {},
@@ -1657,21 +1631,6 @@
     }
   },
   {
-    "type": "named_variable_set",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "op_greater_than_or_equal",
     "named": true,
     "fields": {}
@@ -1819,10 +1778,10 @@
     "fields": {
       "name": {
         "multiple": false,
-        "required": false,
+        "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "variable",
             "named": true
           }
         ]
@@ -1832,10 +1791,6 @@
         "required": true,
         "types": [
           {
-            "type": "reserved_self",
-            "named": true
-          },
-          {
             "type": "term",
             "named": true
           }
@@ -1844,7 +1799,7 @@
     },
     "children": {
       "multiple": false,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "set_op_membership",
@@ -1969,19 +1924,25 @@
         ]
       },
       "variable": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
-            "type": "mapping_variable",
-            "named": true
-          },
-          {
-            "type": "named_variable_set",
+            "type": "variable",
             "named": true
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "set_op_builder",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -2768,6 +2729,32 @@
     }
   },
   {
+    "type": "variable",
+    "named": true,
+    "fields": {
+      "range": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "#[",
     "named": false
   },
@@ -3232,6 +3219,10 @@
     "named": true
   },
   {
+    "type": "set_op_builder",
+    "named": true
+  },
+  {
     "type": "short",
     "named": false
   },
@@ -3329,10 +3320,6 @@
   },
   {
     "type": "{",
-    "named": false
-  },
-  {
-    "type": "|",
     "named": false
   },
   {

@@ -30,12 +30,11 @@ module invoice <https://example.com/rentals/> version "2023-12-21" <https://exam
     ;       ^ definition.structure
     assert valid_date_range is
       ;    ^ definition.constraint
-      forall self, self.end_date >= self.start_date
-      ;      ^ definition.variable
-      ;            ^ reference.variable
-      ;                 ^ reference.call
-      ;                             ^ reference.variable
-      ;                                  ^ reference.call
+      self.end_date >= self.start_date
+      ; <- reference.variable
+      ;    ^ reference.call
+      ;                ^ reference.variable
+      ;                     ^ reference.call
     end
     start_date -> xsd:date
     ; <- definition.field

@@ -10,7 +10,7 @@ module Example is
       assert tagged_with_foo_path with
         def foo -> string := "foo"
       is
-        forall self, self.tags.contains(foo)
+        self.tags.contains(foo)
       end
     end
 
@@ -51,20 +51,14 @@ end
                                       (string
                                         (quoted_string))))))))
                           (constraint_sentence
-                            (quantified_sentence
-                              (quantified_variable_binding
-                                (logical_quantifier_universal)
-                                (quantified_variable
-                                  (reserved_self)))
-                              (constraint_sentence
-                                (simple_sentence
-                                  (atomic_sentence
-                                    (term
-                                      (function_composition
-                                        (reserved_self)
-                                        (identifier)
-                                        (identifier)))
-                                    (actual_arguments
-                                      (term
-                                        (identifier_reference
-                                          (identifier))))))))))))))))))))
+                            (simple_sentence
+                              (atomic_sentence
+                                (term
+                                  (function_composition
+                                    (reserved_self)
+                                    (identifier)
+                                    (identifier)))
+                                (actual_arguments
+                                  (term
+                                    (identifier_reference
+                                      (identifier))))))))))))))))))

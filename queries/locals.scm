@@ -11,12 +11,8 @@
 
 (quantified_sentence) @local.scope
 
-(quantified_variable name: (identifier) @local.definition)
-
 (sequence_builder) @local.scope
 
-(named_variable_set (identifier) @local.reference)
-
-(mapping_variable domain: (identifier) range: (identifier) @local.reference)
+(variable (identifier) @local.reference)
 
 (term (identifier_reference) @local.reference)

@@ -14,7 +14,7 @@ module Campaign is
 
     c -> Target is
       assert tagged_with_foo is
-        ∀ self, self.tags.contains("foo")
+        self.tags.contains("foo")
       end
 
     end
@@ -65,22 +65,17 @@ end
                         (identifier)
                         (formal_constraint
                           (constraint_sentence
-                            (quantified_sentence
-                              (quantified_variable_binding
-                                (logical_quantifier_universal)
-                                (quantified_variable
-                                  (reserved_self)))
-                              (constraint_sentence
-                                (simple_sentence
-                                  (atomic_sentence
-                                    (term
-                                      (function_composition
-                                        (reserved_self)
-                                        (identifier)
-                                        (identifier)))
-                                    (actual_arguments
-                                      (term
-                                        (predicate_value
-                                          (simple_value
-                                            (string
-                                              (quoted_string))))))))))))))))))))))
+                            (simple_sentence
+                              (atomic_sentence
+                                (term
+                                  (function_composition
+                                    (reserved_self)
+                                    (identifier)
+                                    (identifier)))
+                                (actual_arguments
+                                  (term
+                                    (predicate_value
+                                      (simple_value
+                                        (string
+                                          (quoted_string))))))))))))))))))))
+

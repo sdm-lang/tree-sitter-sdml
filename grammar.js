@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.4.2
+// Version:    0.4.3
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -302,12 +302,19 @@ module.exports = grammar({
 
         quantified_variable: $ => prec.right(
             2,
-            choice(
-                field('source', $.reserved_self),
+            seq(
+                field('name', $.variable),
+                $.set_op_membership,
+                field('source', $.term)
+            )
+        ),
+
+        variable: $ => seq(
+            $.identifier,
+            optional(
                 seq(
-                    field('name', $.identifier),
-                    $.set_op_membership,
-                    field('source', $.term)
+                    $._type_op_has_type,
+                    field('range', $.identifier)
                 )
             )
         ),
@@ -456,39 +463,20 @@ module.exports = grammar({
         sequence_builder: $ => seq(
             // not the usual use of braces.
             '{',
-            field(
-                'variable',
-                choice(
-                    $.named_variable_set,
-                    $.mapping_variable
+            repeat1(
+                field(
+                    'variable',
+                    $.variable
                 )
             ),
-            '|',
+            $.set_op_builder,
             field('body', $.sequence_builder_body),
             '}',
-        ),
-
-        named_variable_set: $ => repeat1(
-            // WFR: all names MUST be unique.
-            $.identifier
-        ),
-
-        mapping_variable: $ => seq(
-            '(',
-            field('domain', $.identifier),
-            $._type_op_has_type,
-            field('range', $.identifier),
-            ')'
         ),
 
         sequence_builder_body: $ => choice(
             // WFR: Quantified variable names MUST be in builder variables
             $.quantified_sentence,
-            seq(
-                '(',
-                $.quantified_sentence,
-                ')'
-            )
         ),
 
         // -----------------------------------------------------------------------
@@ -1310,6 +1298,8 @@ module.exports = grammar({
             keyword('in'),
             operator('∈')
         ),
+
+        set_op_builder: $ => operator('|'),
 
         // -----------------------------------------------------------------------
         // Common Function/Method-Related

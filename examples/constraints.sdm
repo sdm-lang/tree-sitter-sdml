@@ -11,7 +11,7 @@ module constraints is
 
     c -> Target is
       assert tagged_with_foo is
-        forall self, self.tags.contains(1)
+        self.tags.contains(1)
       end
     end
 
@@ -19,49 +19,55 @@ module constraints is
       assert tagged_with_foo_path with
         def foo -> string := "foo"
       is
-        forall self, self.tags.contains(foo)
+        self.tags.contains(foo)
       end
     end
 
     e -> Target is
       assert tagged_with_foo_builder is
-        forall self, not is_empty({ t |exists t in self.tags, t = "foo" })
+        not is_empty({ t |exists t in self.tags, t = "foo" })
       end
     end
 
     f -> Target is
       assert tagged_with_foo_builder_2 is
-        ∀ self, ¬ is_empty({ t |∃ t ∈ self.tags, t = "foo" ∧ color(t) = red })
+        ¬ is_empty({ t |∃ t ∈ self.tags, t = "foo" ∧ color(t) = red })
       end
     end
 
     g -> Target is
       assert tagged_with_foo_builder_3 is
-        ∀ self, ¬ is_empty({ t |∀ t ∈ self.tags, t = "foo" ∨ t = "bar" })
+        ¬ is_empty({ t |∀ t ∈ self.tags, t = "foo" ∨ t = "bar" })
       end
     end
 
     h -> Target is
       assert tagged_with_foo_builder_4 is
-        forall self, not is_empty({ t |forall t in self.tags, exists x in self.container.tags, contains(x t) })
+        not is_empty( { t |forall t in self.tags, exists x in self.container.tags, contains(x t) })
       end
     end
 
     i -> Target is
       assert tagged_with_foo_builder_5 is
-        forall self, exists x in self.container.tags, not is_empty({ t |∀ t ∈ self.tags, contains(x t) })
+        exists x in self.container.tags, not is_empty({ t |∀ t ∈ self.tags, contains(x t) })
       end
     end
 
     j -> Target is
       assert tagged_with_foo_builder_6 is
-        ∀ self, ∃ x ∈ self.container.tags, ¬ { t |∀ t ∈ self.tags, contains(x t) } = ∅
+        ∃ x ∈ self.container.tags,
+          ¬ {
+              t
+            |
+              ∀ t ∈ self.tags, contains(x t)
+            } = ∅
       end
     end
 
     k -> Target is
       assert tagged_with_parent_tags is
-        ∀ self, ∃ tag ∈ self.container.tags, self.tags.contains(tag)
+        ∃ tag ∈ self.container.tags,
+          self.tags.contains(tag)
       end
     end
 

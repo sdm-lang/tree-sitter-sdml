@@ -97,21 +97,13 @@
 
 (quantified_sentence "," @punctuation.separator)
 
-(quantified_variable source: (reserved_self) @variable.builtin)
-(quantified_variable name: (identifier) @variable.parameter)
+(variable (identifier) @variable)
 
 (functional_term
  function: (term (identifier_reference) @function.call))
 
 (sequence_builder [ "{" "}" ] @punctuation.bracket
-                  "|" @punctuation.separator)
-
-(named_variable_set (identifier) @variable)
-
-(mapping_variable
- domain: (identifier) @variable range: (identifier) @variable)
-
-(sequence_builder_body [ "(" ")" ] @punctuation.bracket)
+                  (set_op_builder) @punctuation.separator)
 
 (sequence_of_predicate_values (identifier_reference) @type)
 (sequence_of_predicate_values [ "[" "]" ] @punctuation.bracket)
@@ -256,13 +248,6 @@
 (member_def
  name: (identifier) @variable.field
  target: (type_reference) @type)
-
-;; (owl_datatype_restriction [ "{" "}" ] @punctuation.bracket)
-;; (owl_value_restriction_facet
-;;  [ "allValuesFrom"
-;;    "someValuesFrom"
-;;    "hasValue" ] @property
-;;    "=" @operator)
 
 (property_ref
  "ref" @keyword

@@ -94,5 +94,6 @@ See [CHANGES.md](CHANGES.md).
 
 * Node bindings -- [npm.js](https://www.npmjs.com/package/tree-sitter-sdml)
 * Rust bindings -- [crates.io](https://crates.io/crates/tree-sitter-sdml)
+* Python bindings -- [PyPi.org](https://pypi.org/project/tree-sitter-sdml/)
 * Emacs -- [sdml-mode](https://github.com/johnstonskj/emacs-sdml-mode)
 * Command-line tool -- [rust-sdml](https://github.com/johnstonskj/rust-sdml)

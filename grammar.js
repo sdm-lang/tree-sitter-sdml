@@ -1072,7 +1072,7 @@ module.exports = grammar({
             $.type_class_reference,
             repeat(
                 seq(
-                    '+',
+                    $.type_op_combiner,
                     $.type_class_reference
                 )
             )
@@ -1332,6 +1332,11 @@ module.exports = grammar({
         _type_op_type_restriction: $ => choice(
             operator('←'),
             operator('<-'),
+        ),
+
+        type_op_combiner: $ => choice(
+            operator('+'),
+            operator('⊕')
         ),
 
         // -----------------------------------------------------------------------

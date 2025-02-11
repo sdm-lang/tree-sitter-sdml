@@ -4092,8 +4092,8 @@
             "type": "SEQ",
             "members": [
               {
-                "type": "STRING",
-                "value": "+"
+                "type": "SYMBOL",
+                "name": "type_op_combiner"
               },
               {
                 "type": "SYMBOL",
@@ -5263,6 +5263,33 @@
             "content": {
               "type": "STRING",
               "value": "<-"
+            }
+          }
+        }
+      ]
+    },
+    "type_op_combiner": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 1,
+            "content": {
+              "type": "STRING",
+              "value": "+"
+            }
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 1,
+            "content": {
+              "type": "STRING",
+              "value": "⊕"
             }
           }
         }

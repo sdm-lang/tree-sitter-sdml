@@ -9,19 +9,6 @@
 ;; ---------------------------------------------------------------------------
 
 [
- "module"
- "import"
- "assert"
- "class"
- "datatype"
- "dimension"
- "entity"
- "enum"
- "event"
- "property"
- "rdf"
- "structure"
- "union"
  "is"
  "of"
  "end"
@@ -33,8 +20,6 @@
 
 [
  "="
- ":="
- "≔"
  "->"
  "→"
  "<-"
@@ -46,18 +31,17 @@
 ;; Module & Imports
 ;; ---------------------------------------------------------------------------
 
-(module name: (identifier) @module.definition)
+(module "module" @keyword name: (identifier) @module.definition)
 (module "version" @keyword)
 
+(import_statement "import" @keyword)
 (import_statement [ "[" "]" ] @punctuation.bracket)
 
 (member_import name: (qualified_identifier) @type)
-(member_import "as" @keyword)
-(member_import rename: (identifier) @type)
+(member_import "as" @keyword rename: (identifier) @type)
 
 (module_import name: (identifier) @module)
-(module_import "as" @keyword)
-(module_import rename: (identifier) @module)
+(module_import "as" @keyword rename: (identifier) @module)
 
 ;; ---------------------------------------------------------------------------
 ;; Annotations and Constraints
@@ -69,7 +53,7 @@
 
 (annotation_property value: (value (identifier_reference) @type))
 
-(constraint name: (identifier) @property)
+(constraint "assert" @keyword name: (identifier) @property)
 
 (informal_constraint (quoted_string) @embedded)
 (informal_constraint language: (controlled_language_tag) @property)
@@ -89,6 +73,8 @@
 (function_cardinality_expression (sequence_ordering) @keyword)
 (function_cardinality_expression (sequence_uniqueness) @keyword)
 (function_cardinality_expression [ "{" "}" ] @punctuation.bracket)
+
+(function_body (function_op_by_definition) @operator)
 
 (function_composition subject: (reserved_self) @variable.builtin)
 (function_composition name: (identifier) @function.call)
@@ -130,29 +116,31 @@
 (sequence_of_predicate_values (identifier_reference) @type)
 (sequence_of_predicate_values [ "[" "]" ] @punctuation.bracket)
 
-(logical_op_negation "¬" @operator)
-(logical_op_negation "not" @keyword)
+(unary_boolean_sentence
+ [ (logical_op_negation "¬" @operator)
+   (logical_op_negation "not" @keyword) ])
 
-(logical_op_conjunction "∧" @operator)
-(logical_op_conjunction "and" @keyword)
+(binary_boolean_sentence
+ [ (logical_op_conjunction "∧" @operator)
+   (logical_op_conjunction "and" @keyword)
+   (logical_op_disjunction "∨" @operator)
+   (logical_op_disjunction "or" @keyword)
+   (logical_op_exclusive_disjunction "⊻" @operator)
+   (logical_op_exclusive_disjunction "xor" @keyword)
+   (logical_op_implication [ "==>" "⇒" ] @operator)
+   (logical_op_implication "implies" @keyword)
+   (logical_op_biconditional [ "<==>" "⇔" ] @operator)
+   (logical_op_biconditional "iff" @keyword) ])
 
-(logical_op_disjunction "∨" @operator)
-(logical_op_disjunction "or" @keyword)
+(quantified_variable_binding
+ [ (logical_quantifier_universal "∀" @operator)
+   (logical_quantifier_universal "forall" @keyword)
+   (logical_quantifier_existential "∃" @operator)
+   (logical_quantifier_existential "exists" @keyword) ])
 
-(logical_op_exclusive_disjunction "⊻" @operator)
-(logical_op_exclusive_disjunction "xor" @keyword)
-
-(logical_op_implication [ "==>" "⇒" ] @operator)
-(logical_op_implication "implies" @keyword)
-
-(logical_op_biconditional [ "<==>" "⇔" ] @operator)
-(logical_op_biconditional "iff" @keyword)
-
-(logical_quantifier_universal "∀" @operator)
-(logical_quantifier_universal "forall" @keyword)
-
-(logical_quantifier_existential "∃" @operator)
-(logical_quantifier_existential "exists" @keyword)
+(quantified_variable
+ [ (set_op_membership "∈" @operator)
+   (set_op_membership "in" @keyword) ])
 
 ;; (set_op_union "∪" @operator)
 ;; (set_op_union "union" @keyword)
@@ -163,9 +151,6 @@
 ;; (set_op_complement "∖" @operator)
 ;; (set_op_complement "complement" @keyword)
 
-(set_op_membership "∈" @operator)
-(set_op_membership "in" @keyword)
-
 ;; ---------------------------------------------------------------------------
 ;; Types
 ;; ---------------------------------------------------------------------------
@@ -175,8 +160,11 @@
  (unknown_type)
  ] @type.builtin
 
-(data_type_def name: (identifier) @type.definition)
+(data_type_def
+ "datatype" @keyword
+ name: (identifier) @type.definition)
 (data_type_def base: (identifier_reference) @type)
+(data_type_def base: (builtin_simple_type) @type.builtin)
 (data_type_def opaque: (opaque) @keyword)
 
 ;; (datatype_set_constructed_base [ "[" "]" ] @punctuation.bracket)
@@ -213,17 +201,19 @@
 
 (tz_restriction_value) @keyword
 
-(dimension_def name: (identifier) @type.definition)
+(dimension_def "dimension" @keyword name: (identifier) @type.definition)
 
-(entity_def name: (identifier) @type.definition)
+(entity_def "entity" @keyword name: (identifier) @type.definition)
 
-(enum_def name: (identifier) @type.definition)
+(enum_def "enum" @keyword name: (identifier) @type.definition)
 
-(event_def name: (identifier) @type.definition)
+(event_def "event" @keyword name: (identifier) @type.definition)
 
-(structure_def name: (identifier) @type.definition)
+(property_def "property" @keyword)
 
-(union_def name: (identifier) @type.definition)
+(structure_def "structure" @keyword name: (identifier) @type.definition)
+
+(union_def "union" @keyword name: (identifier) @type.definition)
 
 (source_entity "source" @keyword entity: (identifier_reference) @type)
 (source_entity "with" @keyword)
@@ -234,7 +224,7 @@
 ;; RDF Definitions
 ;; ---------------------------------------------------------------------------
 
-(rdf_def name: (identifier) @type.definition)
+(rdf_def "rdf" @keyword name: (identifier) @type.definition)
 (rdf_types "type" @keyword type: (identifier_reference) @type)
 (rdf_types [ "[" "]" ] @punctuation.bracket)
 
@@ -242,11 +232,11 @@
 ;; Type Classes
 ;; ---------------------------------------------------------------------------
 
-(type_class_def name: (identifier) @type.definition)
+(type_class_def "class" @keyword name: (identifier) @type.definition)
 (type_class_def [ "(" ")" ] @punctuation.bracket)
 
 (type_variable name: (identifier) @type)
-(type_variable "+" @operator)
+(type_variable (type_op_combiner) @operator)
 
 (type_class_reference name: (identifier_reference) @type)
 
@@ -286,8 +276,7 @@
 (value_variant name: (identifier) @constant)
 
 (type_variant (identifier_reference) @type)
-(type_variant rename: (identifier) @type)
-(type_variant "as" @keyword)
+(type_variant "as" @keyword rename: (identifier) @type)
 
 (cardinality_expression (sequence_ordering) @keyword)
 (cardinality_expression (sequence_uniqueness) @keyword)

@@ -2427,6 +2427,11 @@
     }
   },
   {
+    "type": "type_op_combiner",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "type_reference",
     "named": true,
     "fields": {},
@@ -2484,6 +2489,10 @@
       "types": [
         {
           "type": "type_class_reference",
+          "named": true
+        },
+        {
+          "type": "type_op_combiner",
           "named": true
         }
       ]
@@ -3196,11 +3205,11 @@
   },
   {
     "type": "rational",
-    "named": true
+    "named": false
   },
   {
     "type": "rational",
-    "named": false
+    "named": true
   },
   {
     "type": "rdf",
@@ -3400,6 +3409,10 @@
   },
   {
     "type": "≥",
+    "named": false
+  },
+  {
+    "type": "⊕",
     "named": false
   },
   {

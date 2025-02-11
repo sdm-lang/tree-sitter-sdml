@@ -8,20 +8,22 @@ information on the language, see the [documentation](https://sdml.io/).
 ## Example
 
 ```sdml
-module campaign base <https://advertising.amazon.com/api-model> is
+module campaign <https://advertising.amazon.com/api-model> is
 
   import [dc skos xsd]
 
   @skos:prefLabel = "Campaign sub-domain"@en
   @skos:version = xsd:decimal(2)
 
-  datatype Name <- xsd:string is
-    @xsd:minLength = 5
-    @xsd:maxLength = 25
-  end
+  datatype Name <- xsd:string {
+    minLength = 5
+    maxLength = 25
+  }
 
-  datatype Identifier <- opaque xsd:string is
-    @xsd:length = 20
+  datatype Identifier <- opaque xsd:string {
+    length = 20
+  } is
+    @dc:description = "An opaque, general, entity identifier."@en
   end
 
   property CampaignId -> Identifier is
@@ -29,7 +31,7 @@ module campaign base <https://advertising.amazon.com/api-model> is
       "Campaign Identifier"@en
       "Identified de campagne"@fr
     ]
-    @skos:description = "The globally unique identifier for a Campaign entity"@en
+    @dc:description = "The globally unique identifier for a Campaign entity"@en
   end
 
   structure Tag is
@@ -44,7 +46,7 @@ module campaign base <https://advertising.amazon.com/api-model> is
       @skos:definition = "the name of the campaign"@en
     end
 
-    tag -> {0..} Tag
+    tag -> {unordered unique 0..} Tag
 
     target -> {1..} Target
   end

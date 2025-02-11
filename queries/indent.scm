@@ -15,7 +15,9 @@
 
 (source_entity "[" @indent "]" @indent.end)
 
-(constraint_environment_end) @indent.dedent
+(constraint_environment
+ "with" @indent
+ ) @indent.end
 
 (function_signature "(" @indent ")" @indent.end)
 

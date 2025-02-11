@@ -35,17 +35,6 @@
  "="
  ":="
  "≔"
- "¬"
- "∧"
- "∨"
- "⊻"
- "==>"
- "⇒"
- "<==>"
- "⇔"
- "∀"
- "∃"
- "∈"
  "->"
  "→"
  "<-"
@@ -85,12 +74,12 @@
 (informal_constraint (quoted_string) @embedded)
 (informal_constraint language: (controlled_language_tag) @property)
 
-(constraint_environment (constraint_environment_end) @keyword)
+(constraint_environment "with" @keyword)
 
-(environment_def "def" @keyword)
-(environment_def (identifier) @function.definition . (function_def))
-(environment_def (identifier) @constant . (constant_def))
+(function_def
+ (function_signature name: (identifier) @function.definition))
 
+(function_signature "def" @keyword)
 (function_signature target: (_) @type)
 (function_signature [ "(" ")" ] @punctuation.bracket)
 
@@ -103,7 +92,7 @@
 
 (function_composition subject: (reserved_self) @variable.builtin)
 (function_composition name: (identifier) @function.call)
-(function_composition "." @punctuation.delimiter)
+(function_composition [ "·" "." ] @operator)
 
 (constraint_sentence [ "(" ")" ] @punctuation.bracket)
 
@@ -124,7 +113,6 @@
 
 (quantified_variable source: (reserved_self) @variable.builtin)
 (quantified_variable name: (identifier) @variable.parameter)
-(quantified_variable "in" @keyword)
 
 (functional_term
  function: (term (identifier_reference) @function.call))
@@ -142,15 +130,41 @@
 (sequence_of_predicate_values (identifier_reference) @type)
 (sequence_of_predicate_values [ "[" "]" ] @punctuation.bracket)
 
-(negation "not" @keyword)
-(conjunction "and" @keyword)
-(disjunction "or" @keyword)
-(exclusive_disjunction "xor" @keyword)
-(implication "implies" @keyword)
-(biconditional "iff" @keyword)
+(logical_op_negation "¬" @operator)
+(logical_op_negation "not" @keyword)
 
-(universal "forall" @keyword)
-(existential "exists" @keyword)
+(logical_op_conjunction "∧" @operator)
+(logical_op_conjunction "and" @keyword)
+
+(logical_op_disjunction "∨" @operator)
+(logical_op_disjunction "or" @keyword)
+
+(logical_op_exclusive_disjunction "⊻" @operator)
+(logical_op_exclusive_disjunction "xor" @keyword)
+
+(logical_op_implication [ "==>" "⇒" ] @operator)
+(logical_op_implication "implies" @keyword)
+
+(logical_op_biconditional [ "<==>" "⇔" ] @operator)
+(logical_op_biconditional "iff" @keyword)
+
+(logical_quantifier_universal "∀" @operator)
+(logical_quantifier_universal "forall" @keyword)
+
+(logical_quantifier_existential "∃" @operator)
+(logical_quantifier_existential "exists" @keyword)
+
+;; (set_op_union "∪" @operator)
+;; (set_op_union "union" @keyword)
+
+;; (set_op_intersection "∩" @operator)
+;; (set_op_intersection "intersection" @keyword)
+
+;; (set_op_complement "∖" @operator)
+;; (set_op_complement "complement" @keyword)
+
+(set_op_membership "∈" @operator)
+(set_op_membership "in" @keyword)
 
 ;; ---------------------------------------------------------------------------
 ;; Types
@@ -164,6 +178,40 @@
 (data_type_def name: (identifier) @type.definition)
 (data_type_def base: (identifier_reference) @type)
 (data_type_def opaque: (opaque) @keyword)
+
+;; (datatype_set_constructed_base [ "[" "]" ] @punctuation.bracket)
+;; (datatype_set_constructed_base
+;;  first: (identifier_reference) @type
+;;  rest: (identifier_reference) @type)
+
+(datatype_def_restriction [ "{" "}" ] @punctuation.bracket)
+(length_restriction_facet
+ [ "length"
+   "maxLength"
+   "minLength" ] @property
+   "=" @operator)
+(digit_restriction_facet
+ [ "fractionDigits"
+   "totalDigits" ] @property
+   "=" @operator)
+(value_restriction_facet
+ [ "maxExclusive"
+   "maxInclusive"
+   "minExclusive"
+   "minInclusive" ] @property
+   "=" @operator)
+(tz_restriction_facet
+ "explicitTimezone" @property
+ "=" @operator)
+(pattern_restriction_facet [ "[" "]" ] @punctuation.bracket)
+(pattern_restriction_facet
+ "pattern" @property
+ "=" @operator
+ (quoted_string) @string)
+
+(kw_is_fixed) @keyword
+
+(tz_restriction_value) @keyword
 
 (dimension_def name: (identifier) @type.definition)
 
@@ -179,6 +227,7 @@
 
 (source_entity "source" @keyword entity: (identifier_reference) @type)
 (source_entity "with" @keyword)
+(source_entity [ "[" "]" ] @punctuation.bracket)
 (source_entity member: (identifier) @variable.field)
 
 ;; ---------------------------------------------------------------------------
@@ -203,8 +252,8 @@
 
 (type_class_arguments [ "(" ")" ] @punctuation.bracket)
 
-(method_def "def" @keyword)
-(method_def name: (identifier) @method.definition)
+(method_def
+ (function_signature name: (identifier) @method.definition))
 
 (wildcard) @type.builtin
 
@@ -217,6 +266,13 @@
 (member_def
  name: (identifier) @variable.field
  target: (type_reference) @type)
+
+;; (owl_datatype_restriction [ "{" "}" ] @punctuation.bracket)
+;; (owl_value_restriction_facet
+;;  [ "allValuesFrom"
+;;    "someValuesFrom"
+;;    "hasValue" ] @property
+;;    "=" @operator)
 
 (property_ref
  "ref" @keyword
@@ -249,6 +305,7 @@
 (binary) @string.special
 
 [
+ (rational)
  (decimal)
  (double)
  (integer)

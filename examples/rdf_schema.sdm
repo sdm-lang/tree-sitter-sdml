@@ -1,8 +1,11 @@
-module rdf_schema <http://www.w3.org/2000/01/rdf-schema#> is
+module rdf_schema <http://www.w3.org/2000/01/rdf-schema#>
+is
 
   import [ owl rdf ]
 
-  structure Foo is a -> string end
+  structure Foo is
+    a -> string
+  end
 
   rdf Resource is
     @comment = "The class resource, everything."
@@ -14,7 +17,7 @@ module rdf_schema <http://www.w3.org/2000/01/rdf-schema#> is
     @comment = "The subject is a subclass of a class."
   end
 
-  rdf comment type [ rdf:Property owl:AnnotationProperty ] is
+  rdf comment type [ rdf:Property owl:AnnotationProperty ]is
     @domain = Resource
     @range = Literal
     @comment = "A description of the subject resource."

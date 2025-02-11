@@ -53,7 +53,7 @@ module Campaign is
         ;           ^ function.call
         ;                   ^ punctuation.bracket
         ;                     ^ variable.builtin
-        ;                        ^ punctuation.delimiter
+        ;                        ^ operator
         ;                         ^ function.call
         ;                              ^ string
         ;                                   ^ punctuation.bracket
@@ -70,19 +70,21 @@ module Campaign is
     ;    ^ type
     ;           ^ keyword
 
-      assert tagged_with_foo_path is
+      assert tagged_with_foo_path with
       ; <- keyword
       ;      ^ property
       ;                           ^ keyword
 
 
-        def foo := "foo"
+        def foo -> string := "foo"
         ; <- keyword
-        ;   ^ constant
+        ;   ^ function.definition
         ;       ^ operator
-        ;          ^ string
+        ;          ^ type.builtin
+        ;                 ^ operator
+        ;                     ^ string
 
-        in
+        is
         ; <- keyword
 
         ∀ self, ( self.tags.contains(foo) )
@@ -90,9 +92,9 @@ module Campaign is
         ;   ^ variable.builtin
         ;         ^ punctuation.bracket
         ;           ^ variable.builtin
-        ;               ^ punctuation.delimiter
+        ;               ^ operator
         ;                ^ function.call
-        ;                    ^ punctuation.delimiter
+        ;                    ^ operator
         ;                     ^ function.call
         ;                             ^ punctuation.bracket
         ;                                 ^ punctuation.bracket
@@ -132,7 +134,7 @@ module Campaign is
             ;    ^ variable.parameter
             ;      ^ keyword
             ;         ^ variable.builtin
-            ;             ^ punctuation.delimiter
+            ;             ^ operator
             ;              ^ function.call
             ;                      ^ operator
             ;                        ^ string
@@ -167,16 +169,16 @@ module Campaign is
           ;   ^ variable.parameter
           ;       ^ operator
           ;           ^ variable.builtin
-          ;               ^ punctuation.delimiter
+          ;               ^ operator
           ;                ^ function.call
-          ;                         ^ punctuation.delimiter
+          ;                         ^ operator
           ;                          ^ function.call
 
             self.tags.contains(tag)
             ; <- variable.builtin
-            ;   ^ punctuation.delimiter
+            ;   ^ operator
             ;    ^ function.call
-            ;        ^ punctuation.delimiter
+            ;        ^ operator
             ;         ^ function.call
             ;                 ^ punctuation.bracket
             ;                     ^ punctuation.bracket

@@ -4,11 +4,11 @@ module sdml_sequence_ordered is
 
   class Ordered is
 
-    def drop(count → unsigned) → Self is
+    def drop (count → unsigned) → Self is
       @skos:definition = "Drop ~count~ items from the beginning of the sequence and return the rest."@en
     end
 
-    def get(index → unsigned) → {0..1} Self is
+    def get (index → unsigned) → {0..1} Self is
       @skos:definition = "Return the element in this sequence at the position ~index~."@en
     end
 
@@ -16,12 +16,12 @@ module sdml_sequence_ordered is
       @skos:definition = "Return a new sequence with the order of elements reversed."@en
     end
 
-    def slice(start → unsigned count → unsigned) → Self
-      := take(drop(vs count) start) is
+    def slice (start → unsigned count → unsigned) → Self :=
+      take(drop(vs count) start) is
       @skos:definition = "Return a sub-sequence of ~count~ elements starting at ~start~."@en
     end
 
-    def take(count → unsigned) → Self is
+    def take (count → unsigned) → Self is
       @skos:definition = "Return ~count~ items from the beginning of the sequence and discard the rest."@en
     end
 

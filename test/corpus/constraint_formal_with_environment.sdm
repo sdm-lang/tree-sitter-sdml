@@ -1,0 +1,70 @@
+===================================
+Constraint, formal with environment
+===================================
+
+module Example is
+
+  structure Outer is
+
+    inner -> string is
+      assert tagged_with_foo_path with
+        def foo -> string := "foo"
+      is
+        forall self, self.tags.contains(foo)
+      end
+    end
+
+  end
+
+end
+
+---
+
+   (module
+      (identifier)
+      (module_body
+        (definition
+          (structure_def
+            (identifier)
+            (structure_body
+              (member
+                (member_def
+                  (identifier)
+                  (type_reference
+                    (builtin_simple_type))
+                  (annotation_only_body
+                    (annotation
+                      (constraint
+                        (identifier)
+                        (formal_constraint
+                          (constraint_environment
+                            (function_def
+                              (function_signature
+                                (identifier)
+                                (function_type_reference
+                                  (builtin_simple_type)))
+                              (function_body
+                                (function_op_by_definition)
+                                (term
+                                  (predicate_value
+                                    (simple_value
+                                      (string
+                                        (quoted_string))))))))
+                          (constraint_sentence
+                            (quantified_sentence
+                              (quantified_variable_binding
+                                (logical_quantifier_universal)
+                                (quantified_variable
+                                  (reserved_self)))
+                              (constraint_sentence
+                                (simple_sentence
+                                  (atomic_sentence
+                                    (term
+                                      (function_composition
+                                        (reserved_self)
+                                        (identifier)
+                                        (identifier)))
+                                    (actual_arguments
+                                      (term
+                                        (identifier_reference
+                                          (identifier))))))))))))))))))))

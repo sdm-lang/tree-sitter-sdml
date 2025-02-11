@@ -67,7 +67,7 @@ end
                           (constraint_sentence
                             (quantified_sentence
                               (quantified_variable_binding
-                                (universal)
+                                (logical_quantifier_universal)
                                 (quantified_variable
                                   (reserved_self)))
                               (constraint_sentence

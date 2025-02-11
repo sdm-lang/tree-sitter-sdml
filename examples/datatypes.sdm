@@ -1,0 +1,34 @@
+module datatypes is
+
+  import skos
+
+  datatype shortName <- string {
+    minLength = fixed 2
+    maxLength = 20
+  } is
+    @skos:prefLabel = "short name"
+    @skos:definition = "A short descriptive name"
+  end
+
+  datatype eventOcurred <- dateTime {
+    explicitTimezone = fixed required
+  }
+
+  datatype thing <- string {
+    pattern = ""
+  }
+
+  datatype uuid <- string {
+    pattern = [
+      "^(?:[[:xdigit:]]{32})$"
+      "^(?:[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12})$"
+      "^(?:\\{[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}\\})$"
+      "^(?:\\([[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}\\))$"
+      "^(?:\\{0x[[:xdigit:]]{8},(?:0x[[:xdigit:]]{4},){2}\\{(?:0x[[:xdigit:]]{2},){7}0x[[:xdigit:]]{2}\\}\\})$"
+    ]
+  } is
+    @skos:prefLabel = "UUID"@en
+    @dc:description = "The string form of a UUID, conforming to one of 5 standard patterns."@en
+  end
+
+end

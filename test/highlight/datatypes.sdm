@@ -1,0 +1,108 @@
+module datatypes is
+; <- keyword
+;      ^ module.definition
+;                ^ keyword
+
+  import skos
+  ; <- keyword
+  ;      ^ module
+
+  datatype shortName <- string {
+  ; <- keyword
+  ;        ^ type.definition
+  ;                  ^ operator
+  ;                     ^ type.builtin
+  ;                            ^ punctuation.bracket
+    minLength = fixed 2
+    ; <- property
+    ;         ^ operator
+    ;           ^ keyword
+    ;                 ^ number
+    maxLength = 20
+    ; <- property
+    ;         ^ operator
+    ;           ^ number
+  } is
+  ; <- punctuation.bracket
+  ; ^ keyword
+    @skos:prefLabel = "short name"
+    ; <- property
+    ;^ property
+    ;               ^ operator
+    ;                 ^ string
+    @skos:definition = "A short descriptive name"
+    ; <- property
+    ;^ property
+    ;                ^ operator
+    ;                  ^ string
+  end
+
+  datatype eventOcurred <- dateTime {
+  ; <- keyword
+  ;        ^ type.definition
+  ;                     ^ operator
+  ;                        ^ type.builtin
+  ;                                 ^ punctuation.bracket
+    explicitTimezone = fixed required
+    ; <- property
+    ;                ^ operator
+    ;                  ^ keyword
+    ;                        ^ keyword
+  }
+  ; <- punctuation.bracket
+
+  datatype thing <- string {
+  ; <- keyword
+  ;        ^ type.definition
+  ;              ^ operator
+  ;                 ^ type.builtin
+  ;                        ^ punctuation.bracket
+    pattern = ""
+    ; <- property
+    ;       ^ operator
+    ;         ^ string
+  }
+  ; <- punctuation.bracket
+
+  datatype uuid <- string {
+  ; <- keyword
+  ;        ^ type.definition
+  ;             ^ operator
+  ;                ^ type.builtin
+  ;                       ^ punctuation.bracket
+    pattern = [
+    ; <- property
+    ;       ^ operator
+    ;         ^ punctuation.bracket
+      "^(?:[[:xdigit:]]{32})$"
+      ; <- string
+      "^(?:[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12})$"
+      ; <- string
+      "^(?:\\{[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}\\})$"
+      ; <- string
+      "^(?:\\([[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}\\))$"
+      ; <- string
+      "^(?:\\{0x[[:xdigit:]]{8},(?:0x[[:xdigit:]]{4},){2}\\{(?:0x[[:xdigit:]]{2},){7}0x[[:xdigit:]]{2}\\}\\})$"
+      ; <- string
+    ]
+    ; <- punctuation.bracket
+  } is
+  ; <- punctuation.bracket
+  ; ^ keyword
+    @skos:prefLabel = "UUID"@en
+    ; <- property
+    ;^ property
+    ;               ^ operator
+    ;                 ^ string
+    ;                       ^ property
+    @dc:description = "The string form of a UUID, conforming to one of 5 standard patterns."@en
+    ; <- property
+    ;^ property
+    ;               ^ operator
+    ;                 ^ string
+    ;                                                                                       ^ property
+  end
+  ; <- keyword
+
+end
+; <- keyword

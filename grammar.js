@@ -76,23 +76,14 @@ module.exports = grammar({
         ),
 
         _module_locations: $ => seq(
-            field(
-                'base',
-                $.iri,
-            ),
+            field('base', $.iri),
             optional(
                 seq(
                     keyword('version'),
                     optional(
-                        field(
-                            'version_info',
-                            $.quoted_string,
-                        )
+                        field('version_info', $.quoted_string)
                     ),
-                    field(
-                        'version_uri',
-                        $.iri,
-                    )
+                    field('version_uri', $.iri)
                 )
             )
         ),
@@ -201,10 +192,10 @@ module.exports = grammar({
         // -----------------------------------------------------------------------
 
         formal_constraint: $ => seq(
-            keyword('is'),
             optional(
                 field('environment', $.constraint_environment)
             ),
+            keyword('is'),
             field('body', $.constraint_sentence),
             keyword('end'),
         ),
@@ -212,18 +203,9 @@ module.exports = grammar({
         // -----------------------------------------------------------------------
 
         constraint_sentence: $ => choice(
-            prec(
-                3,
-                $.simple_sentence
-            ),
-            prec(
-                2,
-                $.boolean_sentence,
-            ),
-            prec(
-                1,
-                $.quantified_sentence,
-            ),
+            prec(3, $.simple_sentence),
+            prec(2, $.boolean_sentence),
+            prec(1, $.quantified_sentence),
             seq(
                 '(',
                 $.constraint_sentence,
@@ -259,33 +241,14 @@ module.exports = grammar({
             field(
                 'relation',
                 choice(
-                    $.not_equal,
-                    $.less_than,
-                    $.greater_than,
-                    $.less_than_or_equal,
-                    $.greater_than_or_equal
+                    $.op_inequality,
+                    $.op_less_than,
+                    $.op_greater_than,
+                    $.op_less_than_or_equal,
+                    $.op_greater_than_or_equal
                 )
             ),
             field('rhs', $.term),
-        ),
-
-        not_equal: $ => choice(
-            operator('/='),
-            operator('≠')
-        ),
-
-        less_than: $ => operator('<'),
-
-        greater_than: $ => operator('>'),
-
-        less_than_or_equal: $ => choice(
-            operator('<='),
-            operator('≤')
-        ),
-
-        greater_than_or_equal: $ => choice(
-            operator('>='),
-            operator('≥')
         ),
 
         boolean_sentence: $ => choice(
@@ -296,7 +259,7 @@ module.exports = grammar({
         unary_boolean_sentence: $ => prec.right(
             2,
             seq(
-                field('operator', $.negation),
+                field('operator', $.logical_op_negation),
                 field('rhs', $.constraint_sentence),
             )
         ),
@@ -310,47 +273,13 @@ module.exports = grammar({
             )
         ),
 
-        negation: $ => choice(
-            keyword('not'),
-            operator('¬') // LaTeX: \lnot
-        ),
 
         _logical_connective: $ => choice(
-            $.conjunction,
-            $.disjunction,
-            $.exclusive_disjunction,
-            $.implication,
-            $.biconditional
-        ),
-
-        conjunction: $ => choice(
-            keyword('and'),
-            operator('∧') // LaTeX: \land
-        ),
-
-        disjunction: $ => choice(
-            keyword('or'),
-            operator('∨') // LaTeX: \lor
-        ),
-
-        exclusive_disjunction: $ => choice(
-            keyword('xor'),
-            operator('⊻') // LaTeX: \veebar
-            // maybe: operator('⊕')
-            // maybe: operator('⩛')
-            // maybe: operator('↮')
-        ),
-
-        implication: $ => choice(
-            keyword('implies'),
-            operator('==>'),
-            operator('⇒') // LaTeX: \implies
-        ),
-
-        biconditional: $ => choice(
-            keyword('iff'),
-            operator('<==>'),
-            operator('⇔') // LaTeX: \iff
+            $.logical_op_conjunction,
+            $.logical_op_disjunction,
+            $.logical_op_exclusive_disjunction,
+            $.logical_op_implication,
+            $.logical_op_biconditional
         ),
 
         quantified_sentence: $ => seq(
@@ -363,24 +292,13 @@ module.exports = grammar({
             field(
                 'quantifier',
                 choice(
-                    $.universal,
-                    $.existential
+                    $.logical_quantifier_universal,
+                    $.logical_quantifier_existential
                 )
             ),
             field('binding', $.quantified_variable),
         ),
 
-        universal: $ => choice(
-            keyword('forall'),
-            operator('∀') // LaTeX: \forall
-        ),
-
-        existential: $ => seq(
-            choice(
-                keyword('exists'),
-                operator('∃') // LaTeX: \exists
-            ),
-        ),
 
         quantified_variable: $ => prec.right(
             2,
@@ -388,10 +306,7 @@ module.exports = grammar({
                 field('source', $.reserved_self),
                 seq(
                     field('name', $.identifier),
-                    choice(
-                        keyword('in'),
-                        operator('∈')
-                    ),
+                    $.set_op_membership,
                     field('source', $.term)
                 )
             )
@@ -428,11 +343,11 @@ module.exports = grammar({
                 ),
                 repeat1(
                     seq(
-                        token.immediate('.'), // LaTeX: reverse with \circ
-                        field(
-                            'name',
-                            $.identifier
-                        )
+                        choice(
+                            token.immediate('·'),
+                            token.immediate('.')
+                        ),
+                        field('name', $.identifier)
                     )
                 )
             )
@@ -444,7 +359,7 @@ module.exports = grammar({
         ),
 
         sequence_of_predicate_values: $ => choice(
-            field('empty', keyword('∅')),
+            field('empty', $._value_empty_sequence),
             seq(
                 optional($._sequence_value_constraints),
                 '[',
@@ -468,46 +383,24 @@ module.exports = grammar({
         // -----------------------------------------------------------------------
 
         constraint_environment: $ => seq(
+            keyword('with'),
             repeat1(
-                $.environment_def
+                $.function_def
             ),
-            $.constraint_environment_end,
         ),
-
-        environment_def: $ => seq(
-            keyword('def'),
-            field('name', $.identifier),
-            field(
-                'body',
-                choice(
-                    $.function_def,
-                    $.constant_def
-                )
-            )
-        ),
-
-        constraint_environment_end: $ => keyword('in'),
 
         function_def: $ => seq(
             field('signature', $.function_signature),
             field('body', $.function_body)
         ),
 
-        function_body: $ => seq(
-            $._by_definition,
-            $.constraint_sentence
-        ),
-
-        _by_definition: $ => choice(
-            operator(':='),
-            operator('≔'),
-        ),
-
         function_signature: $ => seq(
+            keyword('def'),
+            field('name', $.identifier),
             optional(
                 seq(
                     '(',
-                    repeat(field('parameter', $.function_parameter)),
+                    repeat1(field('parameter', $.function_parameter)),
                     ')'
                 )
             ),
@@ -520,7 +413,7 @@ module.exports = grammar({
         ),
 
         _function_type: $ => seq(
-            $._has_type,
+            $._type_op_has_type,
             optional(
                 field('cardinality', $.function_cardinality_expression)
             ),
@@ -547,15 +440,13 @@ module.exports = grammar({
             $.mapping_type
         ),
 
-        optional: $ => operator('?'),
-
-        constant_def: $ => seq(
-            $._by_definition,
+        function_body: $ => seq(
+            $.function_op_by_definition,
             field(
                 'body',
                 choice(
-                    $.predicate_value,
-                    $.constraint_sentence
+                    prec(10, $.constraint_sentence),
+                    prec(1, $.term)
                 )
             )
         ),
@@ -563,6 +454,7 @@ module.exports = grammar({
         // -----------------------------------------------------------------------
 
         sequence_builder: $ => seq(
+            // not the usual use of braces.
             '{',
             field(
                 'variable',
@@ -584,7 +476,7 @@ module.exports = grammar({
         mapping_variable: $ => seq(
             '(',
             field('domain', $.identifier),
-            $._has_type,
+            $._type_op_has_type,
             field('range', $.identifier),
             ')'
         ),
@@ -612,7 +504,7 @@ module.exports = grammar({
         ),
 
         sequence_of_values: $ => choice(
-            field('empty', keyword('∅')),
+            field('empty', $._value_empty_sequence),
             seq(
                 optional($._sequence_value_constraints),
                 '[',
@@ -646,7 +538,7 @@ module.exports = grammar({
 
         value_constructor: $ => seq(
             field('name', $.identifier_reference),
-           '(',
+            '(',
             field('value', $.simple_value),
             ')'
         ),
@@ -655,27 +547,85 @@ module.exports = grammar({
             field('domain', $.simple_value),
             prec.right(
                 seq(
-                    $._has_type,
+                    $._type_op_has_type,
                     field('range', $.value)
                 )
             ),
         ),
 
         builtin_simple_type: $ => choice(
+            $._owl_builtin_types,
+            $._builtin_primitive_datatypes,
+            $._derived_date_datetypes,
+            $._derived_numeric_datatypes,
+            $._derived_string_datatypes,
+        ),
+
+        _owl_builtin_types: $ => choice(
+            keyword('Thing'),
+            keyword('Nothing'),
+            keyword('real'),
+            keyword('rational'),
+        ),
+
+        _builtin_primitive_datatypes: $ => choice(
+            keyword('anyURI'), keyword('iri'),
+            keyword('base64Binary'),
             keyword('boolean'),
-            keyword('unsigned'),
-            keyword('integer'),
+            keyword('date'),
+            keyword('dateTime'),
             keyword('decimal'),
             keyword('double'),
-            keyword('string'),
-            keyword('iri'),
+            keyword('duration'),
+            keyword('float'),
+            keyword('gDay'),
+            keyword('gMonth'),
+            keyword('gMonthDay'),
+            keyword('gYearMonth'),
+            keyword('gYear'),
+            keyword('hexBinary'),
             keyword('binary'),
+            keyword('string'),
+            keyword('time')
+        ),
+
+        _derived_date_datetypes: $ => choice(
+            keyword('dateTimeStamp'),
+            keyword('dayTimeDuration'),
+            keyword('yearMonthDuration')
+        ),
+
+        _derived_numeric_datatypes: $ => choice(
+            keyword('integer'),
+            keyword('long'),
+            keyword('int'),
+            keyword('short'),
+            keyword('byte'),
+            keyword('nonNegativeInteger'),
+            keyword('positiveInteger'),
+            keyword('unsignedLong'),
+            keyword('unsignedInt'),
+            keyword('unsigned'),
+            keyword('unsignedShort'),
+            keyword('unsignedByte'),
+            keyword('nonPositiveInteger'),
+            keyword('negativeInteger')
+        ),
+
+        _derived_string_datatypes: $ => choice(
+            keyword('normalizedString'),
+            keyword('token'),
+            keyword('language')
+            // keyword('Name'),
+            // keyword('NCName'),
+            // keyword('NMTOKEN')
         ),
 
         simple_value: $ => choice(
             $.boolean,
             $.unsigned,
             $.integer,
+            $.rational,
             $.decimal,
             $.double,
             $.string,
@@ -762,6 +712,10 @@ module.exports = grammar({
             /[+\\-]?(0|[1-9][0-9]*)/
         ),
 
+        rational: $ => token(
+            /[+\-]?(?:0|[1-9][0-9]*)\/(?:[1-9][0-9]*)/
+        ),
+
         unsigned: $ => token(
             /0|[1-9][0-9]*/
         ),
@@ -802,21 +756,142 @@ module.exports = grammar({
         data_type_def: $ => seq(
             keyword('datatype'),
             field('name', $.identifier),
-            $._type_restriction,
-            optional(field('opaque', $.opaque)),
-            field(
-                'base',
-                $._data_type_base
+            $._type_op_type_restriction,
+            optional(
+                field('opaque', $.opaque)
             ),
-            optional(field('body', $.annotation_only_body))
+            field('base', $._datatype_base),
+            optional(
+                field('restriction', $.datatype_def_restriction)
+            ),
+            optional(
+                field('body', $.annotation_only_body)
+            )
         ),
 
         opaque: $ => keyword('opaque'),
 
-        _data_type_base: $ => choice(
+        _datatype_base: $ => choice(
             $.identifier_reference,
             $.builtin_simple_type
         ),
+
+        // _datatype_base: $ => choice(
+        //     $._datatype_single_base,
+        //     $.datatype_set_constructed_base
+        // ),
+
+        // _datatype_single_base: $ => choice(
+        //     $.identifier_reference,
+        //     $.builtin_simple_type
+        // ),
+
+        // datatype_set_constructed_base: $ => seq(
+        //     choice(
+        //         $.set_op_union,
+        //         $.set_op_intersection,
+        //         $.set_op_complement
+        //     ),
+        //     '[',
+        //     field('first', $._datatype_single_base),
+        //     field('rest', repeat1($._datatype_single_base)),
+        //     ']'
+        // ),
+
+        datatype_def_restriction: $ => seq(
+            '{',
+            repeat1($._restriction_facet),
+            '}'
+        ),
+
+        _restriction_facet: $ => choice(
+            $.length_restriction_facet,
+            $.digit_restriction_facet,
+            $.value_restriction_facet,
+            $.tz_restriction_facet,
+            $.pattern_restriction_facet
+        ),
+
+        length_restriction_facet: $ => seq(
+            field(
+                'facet',
+                choice(
+                    keyword('length'),
+                    keyword('maxLength'),
+                    keyword('minLength'),
+                )
+            ),
+            operator('='),
+            optional(field('is_fixed',$.kw_is_fixed)),
+            $.unsigned
+        ),
+
+        digit_restriction_facet: $ => seq(
+            field(
+                'facet',
+                choice(
+                    keyword('fractionDigits'),
+                    keyword('totalDigits'),
+                )
+            ),
+            operator('='),
+            optional(field('is_fixed',$.kw_is_fixed)),
+            $.unsigned
+        ),
+
+        value_restriction_facet: $ => seq(
+            field(
+                'facet',
+                choice(
+                    keyword('maxExclusive'),
+                    keyword('maxInclusive'),
+                    keyword('minExclusive'),
+                    keyword('minInclusive')
+                )
+            ),
+            operator('='),
+            optional(field('is_fixed',$.kw_is_fixed)),
+            $.restriction_value
+        ),
+
+        restriction_value: $ => choice (
+            $.simple_value,
+            $.value_constructor
+        ),
+
+        tz_restriction_facet: $ => seq(
+            keyword('explicitTimezone'),
+            operator('='),
+            optional(field('is_fixed',$.kw_is_fixed)),
+            field(
+                'value',
+                $.tz_restriction_value
+            )
+        ),
+
+        tz_restriction_value: $ => choice(
+            keyword('required'),
+            keyword('prohibited'),
+            keyword('optional'),
+        ),
+
+        pattern_restriction_facet: $ => seq(
+            keyword('pattern'),
+            operator('='),
+            field(
+                'value',
+                choice(
+                    $.quoted_string,
+                    seq(
+                        '[',
+                        repeat1($.quoted_string),
+                        ']'
+                    ),
+                )
+            )
+        ),
+
+        kw_is_fixed: $ => keyword('fixed'),
 
         annotation_only_body: $ => seq(
             keyword('is'),
@@ -851,12 +926,12 @@ module.exports = grammar({
             optional(
                 seq(
                     keyword('with'),
-                    $._identifier_or_list
+                    $._identifier_or_sequence
                 )
             )
         ),
 
-        _identifier_or_list: $ => choice(
+        _identifier_or_sequence: $ => choice(
             field('member', $.identifier),
             seq(
                 '[',
@@ -868,7 +943,7 @@ module.exports = grammar({
         dimension_parent: $ => seq(
             keyword('parent'),
             field('name', $.identifier),
-            $._has_type,
+            $._type_op_has_type,
             field('entity', $.identifier_reference),
             optional(field('body', $.annotation_only_body))
         ),
@@ -957,7 +1032,10 @@ module.exports = grammar({
         ),
 
         rdf_types: $ => seq(
-            keyword('type'),
+            choice(
+                keyword('a'),
+                keyword('type')
+            ),
             choice(
                 field('type', $.identifier_reference),
                 seq(
@@ -990,7 +1068,7 @@ module.exports = grammar({
         ),
 
        _type_variable_restriction: $ => seq(
-            $._has_type,
+            $._type_op_has_type,
             $.type_class_reference,
             repeat(
                 seq(
@@ -1024,18 +1102,8 @@ module.exports = grammar({
         ),
 
         method_def: $ => seq(
-            keyword('def'),
-            field('name', $.identifier),
-            field(
-                'signature',
-                $.function_signature
-            ),
-            optional(
-                field(
-                    'body',
-                    $.function_body
-                )
-            ),
+            field('signature', $.function_signature),
+            optional(field('body', $.function_body)),
             optional($.annotation_only_body)
         ),
 
@@ -1065,7 +1133,7 @@ module.exports = grammar({
         ),
 
         _type_expression_to: $ => seq(
-            $._has_type,
+            $._type_op_has_type,
             optional(
                 field('cardinality', $.cardinality_expression)
             ),
@@ -1079,19 +1147,19 @@ module.exports = grammar({
             $.mapping_type
         ),
 
+        unknown_type: $ => keyword('unknown'),
+
         mapping_type: $ => seq(
             "(",
             field('domain', $.type_reference),
             prec.right(
                 seq(
-                    $._has_type,
+                    $._type_op_has_type,
                     field('range', $.type_reference)
                 )
             ),
             ")"
         ),
-
-        unknown_type: $ => keyword('unknown'),
 
         cardinality_expression: $ => seq(
             '{',
@@ -1127,23 +1195,15 @@ module.exports = grammar({
             field('max', optional($.unsigned))
         ),
 
-        _has_type: $ => choice(
-            operator('→'),
-            operator('->'),
-        ),
-
-        _type_restriction: $ => choice(
-            operator('←'),
-            operator('<-'),
-        ),
-
         // -----------------------------------------------------------------------
         // Variants
         // -----------------------------------------------------------------------
 
         value_variant: $ => seq(
             field('name', $.identifier),
-            optional(field('body', $.annotation_only_body))
+            optional(
+                field('body', $.annotation_only_body)
+            )
         ),
 
         type_variant: $ => seq(
@@ -1151,19 +1211,134 @@ module.exports = grammar({
             optional(
                 seq(
                     keyword('as'),
-                    field(
-                        'rename',
-                        $.identifier,
-                    )
+                    field('rename', $.identifier)
                 )
             ),
             optional(
-                field(
-                    'body',
-                    $.annotation_only_body
-                )
+                field('body', $.annotation_only_body)
             )
         ),
+
+        // -----------------------------------------------------------------------
+        // Common Operators
+        // -----------------------------------------------------------------------
+
+        _op_equality: $ => operator('='),
+
+        op_inequality: $ => choice(
+            operator('/='),
+            operator('≠')
+        ),
+
+        op_less_than: $ => operator('<'),
+
+        op_greater_than: $ => operator('>'),
+
+        op_less_than_or_equal: $ => choice(
+            operator('<='),
+            operator('≤')
+        ),
+
+        op_greater_than_or_equal: $ => choice(
+            operator('>='),
+            operator('≥')
+        ),
+
+        logical_op_negation: $ => choice(
+            keyword('not'),
+            operator('¬') // LaTeX: \lnot
+        ),
+
+        logical_op_conjunction: $ => choice(
+            keyword('and'),
+            operator('∧') // LaTeX: \land
+        ),
+
+        logical_op_disjunction: $ => choice(
+            keyword('or'),
+            operator('∨') // LaTeX: \lor
+        ),
+
+        logical_op_exclusive_disjunction: $ => choice(
+            keyword('xor'),
+            operator('⊻') // LaTeX: \veebar
+            // maybe: operator('⊕')
+            // maybe: operator('⩛')
+            // maybe: operator('↮')
+        ),
+
+        logical_op_implication: $ => choice(
+            keyword('implies'),
+            operator('==>'),
+            operator('⇒') // LaTeX: \implies
+        ),
+
+        logical_op_biconditional: $ => choice(
+            keyword('iff'),
+            operator('<==>'),
+            operator('⇔') // LaTeX: \iff
+        ),
+
+        logical_quantifier_universal: $ => choice(
+            keyword('forall'),
+            operator('∀')
+        ),
+
+        logical_quantifier_existential: $ => seq(
+            choice(
+                keyword('exists'),
+                operator('∃')
+            ),
+        ),
+
+        set_op_union: $ => choice(
+            keyword('union'),
+            keyword('∪'),
+        ),
+
+        set_op_intersection: $ => choice(
+            keyword('intersection'),
+            keyword('∩'),
+        ),
+
+        set_op_complement: $ => choice(
+            keyword('complement'),
+            keyword('∖'),
+        ),
+
+        set_op_membership: $ => choice(
+            keyword('in'),
+            operator('∈')
+        ),
+
+        // -----------------------------------------------------------------------
+        // Common Function/Method-Related
+        // -----------------------------------------------------------------------
+
+        function_op_by_definition: $ => choice(
+            operator(':='),
+            operator('≔'),
+        ),
+
+        // -----------------------------------------------------------------------
+        // Common Type-Related
+        // -----------------------------------------------------------------------
+
+        _type_op_has_type: $ => choice(
+            operator('→'),
+            operator('->'),
+        ),
+
+        _type_op_type_restriction: $ => choice(
+            operator('←'),
+            operator('<-'),
+        ),
+
+        // -----------------------------------------------------------------------
+        // Common Value-Related
+        // -----------------------------------------------------------------------
+
+        _value_empty_sequence: $ => keyword('∅'),
 
         // -----------------------------------------------------------------------
         // Comments

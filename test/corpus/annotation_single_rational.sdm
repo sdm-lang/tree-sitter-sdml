@@ -1,0 +1,24 @@
+===========================
+Annotation, Single Rational
+===========================
+
+module Campaign is
+
+  @dc:some = 3/4
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (annotation
+      (annotation_property
+        name: (identifier_reference
+          (qualified_identifier
+            module: (identifier)
+            member: (identifier)))
+        value: (value
+          (simple_value
+            (rational)))))))

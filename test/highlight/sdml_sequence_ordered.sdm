@@ -111,16 +111,15 @@ module sdml_sequence_ordered is
     ;                                                      ^ operator
     ;                                                         ^ type
 
-      := take(drop(vs count) start) is
+      := take(drop(start) count) is
       ; <- operator
       ;  ^ function.call
       ;      ^ punctuation.bracket
-      ;       ^ function.call
       ;           ^ punctuation.bracket
       ;            ^ variable
-      ;                    ^ punctuation.bracket
-      ;                           ^ punctuation.bracket
-      ;                             ^ keyword
+      ;                 ^ punctuation.bracket
+      ;                        ^ punctuation.bracket
+      ;                          ^ keyword
 
       @skos:definition = "Return a sub-sequence of ~count~ elements starting at ~start~."@en
       ; <- property

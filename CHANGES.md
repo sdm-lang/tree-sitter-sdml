@@ -1,6 +1,6 @@
 # Changes for tree-sitter-sdml
 
-## Version 0.4.1
+## Version 0.4.2
 
 The primary aim of this release is to introduce a more streamlined syntax for
 datatype restrictions than the current use of annotation properties. Also, note
@@ -176,6 +176,10 @@ SimpleValue
 rational
     ::= ( [+-]? ( "0" | [1-9][0-9]* ) "/" [1-9][0-9]* )
 ```
+
+## Version: 0.4.1
+
+Internal fix release, Rust only.
 
 ## Version: 0.4.0
 

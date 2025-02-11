@@ -74,7 +74,7 @@ else
         CCFLAGS += -D LINUX
     else ifeq ($(UNAME_S),Darwin)
 		DYLIB_EXT := dylib
-        CCFLAGS += -D OSX
+        CCFLAGS += -D OSX -I /opt/homebrew/include
 	else
 $(error Unknown/unsupported platform: '$(UNAME_S)')
     endif
@@ -316,7 +316,7 @@ install_python:
 
 publish_python: $(BINDING_PYTHON_SDIST) $(BINDING_PYTHON_WHEEL) setup_twine
 	$(info -> uploading Python binding to PyPI)
-	@(twine --sign --identity $(GPG_SIGNER) --non-interactive upload $(PYTHON_DIST_DIR)/*)
+	@(twine upload --sign --identity $(GPG_SIGNER) --non-interactive $(PYTHON_DIST_DIR)/*)
 
 clean_python:
 	$(info -> removing Python binding files)

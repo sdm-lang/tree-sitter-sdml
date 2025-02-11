@@ -199,14 +199,14 @@ clean_parser:
 
 .PHONY: generate_for_emacs
 
-EMACS_TS_DIR ?= $(HOME)/.emacs.d/tree-sitter/
+EMACS_TS_DIR ?= $(HOME)/.tree-sitter/bin/
 EMACS_ABI := 13
 EMACS_BINDING := $(EMACS_TS_DIR)/$(SHORT_NAME).$(DYLIB_EXT)
 
 emacs: $(EMACS_BINDING) | $(BUILD_DIR)
 
 $(EMACS_BINDING): generate_for_emacs build_parser
-	$(info -> installing Emacs binding into $(EMACS_TS_DIR))
+	$(info -> installing Emacs binding into $(EMACS_TS_DIR)$(SHORT_NAME).$(DYLIB_EXT))
 	@(cp $(PARSER_LIB) $(EMACS_BINDING))
 
 generate_for_emacs:

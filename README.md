@@ -10,17 +10,17 @@ information on the language, see the [documentation](https://sdml.io/).
 ```sdml
 module campaign <https://advertising.amazon.com/api-model> is
 
-  import [dc skos xsd]
+  import [dc rdfs skos]
 
   @skos:prefLabel = "Campaign sub-domain"@en
   @skos:version = xsd:decimal(2)
 
-  datatype Name <- xsd:string {
+  datatype Name <- string {
     minLength = 5
     maxLength = 25
   }
 
-  datatype Identifier <- opaque xsd:string {
+  datatype Identifier <- opaque string {
     length = 20
   } is
     @dc:description = "An opaque, general, entity identifier."@en
@@ -35,8 +35,8 @@ module campaign <https://advertising.amazon.com/api-model> is
   end
 
   structure Tag is
-    key -> xsd:NMTOKEN
-    value -> {0..} rdfs:langStrings
+    key -> token
+    value -> {0..} rdfs:langString
   end
 
   entity Campaign is

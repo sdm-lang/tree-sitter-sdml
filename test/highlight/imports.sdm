@@ -1,0 +1,50 @@
+module imports is
+; <- keyword
+;      ^ module.definition
+;              ^ keyword
+
+  ;; import members from module paths.
+  from :: import xsd:base
+  ; <- keyword
+  ;    ^ punctuation.separator
+  ;       ^ keyword
+  ;              ^ type
+
+  from local::other import test
+  ; <- keyword
+  ;    ^ module.special
+  ;         ^ punctuation.separator
+  ;           ^ module.special
+  ;                 ^ keyword
+  ;                        ^ module
+
+  from xsd import facets:minLength
+  ; <- keyword
+  ;    ^ module.special
+  ;        ^ keyword
+  ;               ^ type
+
+  from ::xsd import facets:minLength
+  ; <- keyword
+  ;    ^ punctuation.separator
+  ;      ^ module.special
+  ;          ^ keyword
+  ;                 ^ type
+
+  from ::reporting::common import [
+  ; <- keyword
+  ;    ^ punctuation.separator
+  ;      ^ module.special
+  ;               ^ punctuation.separator
+  ;                 ^ module.special
+  ;                        ^ keyword
+  ;                               ^ punctuation.bracket
+    datatypes
+    ; <- module
+    enums:DayOfWeek
+    ; <- type
+  ]
+  ; <- punctuation.bracket
+
+end
+; <- keyword

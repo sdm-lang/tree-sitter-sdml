@@ -1,0 +1,13 @@
+module imports is
+
+  ;; import members from module paths.
+  from :: import xsd:base
+  from xsd import facets:minLength
+  from ::xsd import facets:minLength
+
+  from ::reporting::common import [
+    datatypes
+    enums:DayOfWeek
+  ]
+
+end

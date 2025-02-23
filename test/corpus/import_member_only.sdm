@@ -1,6 +1,6 @@
-====================
-Import single member
-====================
+=========================
+Import single member only
+=========================
 
 module Campaign is
 

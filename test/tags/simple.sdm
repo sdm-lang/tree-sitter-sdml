@@ -21,6 +21,11 @@ module invoice <https://example.com/rentals/> version "2023-12-21" <https://exam
   import vehicles
   ;      ^ reference.module
 
+  from ::gs1::location import gln
+  ;      ^ reference.module
+  ;           ^ reference.module
+  ;                           ^ reference.module
+
   @skos:release = xsd:date("2023-08-12")
   ;^ reference.type
   @skos:definition = "hello"

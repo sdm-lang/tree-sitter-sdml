@@ -864,6 +864,29 @@
     }
   },
   {
+    "type": "from_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "module_path_absolute",
+          "named": true
+        },
+        {
+          "type": "module_path_relative",
+          "named": true
+        },
+        {
+          "type": "module_path_root_only",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "function_body",
     "named": true,
     "fields": {
@@ -1158,6 +1181,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "from_clause",
+          "named": true
+        },
         {
           "type": "member_import",
           "named": true
@@ -1629,6 +1656,43 @@
         ]
       }
     }
+  },
+  {
+    "type": "module_path_absolute",
+    "named": true,
+    "fields": {
+      "segment": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "module_path_relative",
+    "named": true,
+    "fields": {
+      "segment": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "module_path_root_only",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "op_greater_than_or_equal",
@@ -2795,6 +2859,10 @@
     "named": false
   },
   {
+    "type": "::",
+    "named": false
+  },
+  {
     "type": ":=",
     "named": false
   },
@@ -2920,11 +2988,11 @@
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "def",
@@ -2984,6 +3052,10 @@
   },
   {
     "type": "fractionDigits",
+    "named": false
+  },
+  {
+    "type": "from",
     "named": false
   },
   {
@@ -3192,11 +3264,11 @@
   },
   {
     "type": "rational",
-    "named": false
+    "named": true
   },
   {
     "type": "rational",
-    "named": true
+    "named": false
   },
   {
     "type": "rdf",
@@ -3276,11 +3348,11 @@
   },
   {
     "type": "unsigned",
-    "named": false
+    "named": true
   },
   {
     "type": "unsigned",
-    "named": true
+    "named": false
   },
   {
     "type": "unsignedByte",

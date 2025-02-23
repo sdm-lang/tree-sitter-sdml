@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.4.3
+// Version:    0.4.4
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -97,6 +97,9 @@ module.exports = grammar({
         ),
 
         import_statement: $ => seq(
+            optional(
+                $.from_clause,
+            ),
             keyword('import'),
             choice(
                 $._import,
@@ -104,6 +107,38 @@ module.exports = grammar({
                     '[',
                     repeat1($._import),
                     ']'
+                )
+            )
+        ),
+
+        from_clause: $ => seq(
+            keyword('from'),
+            choice(
+                $.module_path_absolute,
+                $.module_path_relative,
+                $.module_path_root_only
+            )
+        ),
+
+        module_path_root_only: $ => token('::'),
+
+        module_path_absolute: $ => seq(
+            token('::'),
+            field('segment', $.identifier),
+            repeat(
+                seq(
+                    token.immediate('::'),
+                    field('segment', $.identifier)
+                )
+            )
+        ),
+
+        module_path_relative: $ => seq(
+            field('segment', $.identifier),
+            repeat(
+                seq(
+                    token.immediate('::'),
+                    field('segment', $.identifier)
                 )
             )
         ),

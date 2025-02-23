@@ -1,0 +1,40 @@
+=========================
+Import single member from
+=========================
+
+module Campaign is
+
+  from :: import xsd:base
+  from xsd import facets:minLength
+  from ::xsd import facets:minLength
+
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (import_statement
+      (from_clause
+        (module_path_root_only))
+      (member_import
+        (qualified_identifier
+          (identifier)
+          (identifier))))
+    (import_statement
+      (from_clause
+        (module_path_relative
+          (identifier)))
+      (member_import
+        (qualified_identifier
+          (identifier)
+          (identifier))))
+    (import_statement
+      (from_clause
+        (module_path_absolute
+          (identifier)))
+      (member_import
+        (qualified_identifier
+          (identifier)
+          (identifier))))))

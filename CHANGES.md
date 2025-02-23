@@ -1,5 +1,87 @@
 # Changes for tree-sitter-sdml
 
+## Version 0.4.4
+
+The primary aim of this release is the ability to prefix an `import` statement
+with a `from` clause indicating a relative or absolute module path to import from.
+This is a departure from the current fully flat notion of modules in SDML today,
+the from clause assumes that modules exist in some hierarchical structure with
+some number of root modules.
+
+Today the SDML library has used underscores to create a namespace-like
+structure, this change will allow the library to take advantage of a true
+hierarchy. A mapping from known/proposed  library modules to hierarchical forms
+is shown in the following table.
+
+| Old Name         | `::` Top | `::` 2nd | `::` 3rd   | `::` 4th |
+|------------------|----------|----------|------------|----------|
+| `sdml`           | `sdml`   |          |            |          |
+| `iso_639_1`      | `std`    | `iso`    | `iso639`   | `part1`  |
+| `iso_3166`       |          |          | `iso3166`  |          |
+| `iso_4217`       |          |          | `iso4217`  |          |
+| `iso_8601`       |          |          | `iso8601`  |          |
+| `iso_9362`       |          |          | `iso9362`  |          |
+| `iso_17442`      |          |          | `iso17442` |          |
+| `rdf`            |          | `w3c`    | `rdf`      |          |
+| `rdfs`           |          |          | `rdfs`     |          |
+| `owl`            |          |          | `owl`      |          |
+| `skos`           |          |          | `skos`     |          |
+| `void`           |          |          | `void`     |          |
+| `xsd`            |          |          | `xsd`      | `facets` |
+| `dc_elements`    |          | `dc`     | `elements` |          |
+| `dc`, `dc_terms` |          |          | `terms`    |          |
+| `gs1_gln`        |          | `gs1`    | `gln`      |          |
+| `gs1_gtin`       |          |          | `gtin`     |          |
+|                  |          | `ietf`   | `rfc6838`  |          |
+| `un_locode`      |          | `un`     | `locode`   |          |
+
+Example:
+
+``` sdml
+module example is
+
+  from ::std::iso import [ iso3166 iso4217 iso8601 ]
+  from ::std::gs1 import gtin
+
+end
+```
+
+### Detailed Changes
+
+* Feature: add an optional clause with a `from` keyword followed by a *module path*
+  at the start of any `import_statement`.
+  * A module path is an ordered list of module names separated by the token `::`.
+  * An absolute module path starts with a `::` token.
+  * The root module path is the `::` token with no following module name.
+  * A relative module path starts with a module name.
+* This **will** require documentation changes regarding the manner in which the
+  module loader and specifically the resolver works.
+* This **may** require documentation changes regarding the manner in which a
+  module's placement in a folder structure impacts mapping to a module URI.
+
+Changes for new datatype syntax in BNF form:
+
+``` ebnf
+ImportStatement
+    ::= FromClause? "import" ( Import | "[" Import+ "]" )
+
+FromClause
+    ::= "from"
+        ( ModulePathAbsolute | ModulePathRelative | ModulePathRootOnly )
+
+ModulePathAbsolute
+    ::= ModulePathPart+
+
+ModulePathRelative
+    ::= Identifier ModulePathPart*
+
+ModulePathRootOnly
+    ::= "::"
+
+ModulePathPart
+    ::= "::" Identifier
+```
+
 ## Version 0.4.3
 
 The primary aim of this release is to clean up the syntax of the formal
@@ -55,7 +137,7 @@ end
 | Facet              | Class    | Datatype                              | Maybe Fixed? |
 |--------------------|----------|---------------------------------------|--------------|
 | `fractionDigits`   | digits   | `unsigned`                            | Yes          |
-| `totalDigits`      | digits    | `unsigned`                            | Yes          |
+| `totalDigits`      | digits   | `unsigned`                            | Yes          |
 | `length`           | length   | `unsigned`                            | Yes          |
 | `maxLength`        | length   | `unsigned`                            | Yes          |
 | `minLength`        | length   | `unsigned`                            | Yes          |
@@ -73,9 +155,9 @@ end
   `builtin_simple_type` grammar rule. These may now be used without having to
   import the `xsd` module.
 * Feature: brought together the notion of function and method into a single rule
-  set and simplified. 
-  * A constant in an environment definition is simply a null-ary function and 
-    may be defined with a term, replacing the explicit constant rule that 
+  set and simplified.
+  * A constant in an environment definition is simply a null-ary function and
+    may be defined with a term, replacing the explicit constant rule that
     allowed a predicate value.
 * Feature: simplified the syntax for formal constraint environments using
   `with..is` instead of the less obvious `is..in` keywords.
@@ -198,11 +280,11 @@ rational
     ::= ( [+-]? ( "0" | [1-9][0-9]* ) "/" [1-9][0-9]* )
 ```
 
-## Version: 0.4.1
+## Version 0.4.1
 
 Internal fix release, Rust only.
 
-## Version: 0.4.0
+## Version 0.4.0
 
 The primary aim of this release is to introduce a new definition type, a
 *dimension*. This may be seen as a violation of SDML's goal of being technology or
@@ -247,7 +329,7 @@ end
 * Add `dimension_def` to the choice group in `definition`.
 * Add new `dimension_def` with name and optional `dimension_body`.
 * New `dimension_body` allows for *either* a source clause, or an identity clause.
-* New `dimension_body` allows a set of `parent_dimension` clauses before a set of 
+* New `dimension_body` allows a set of `parent_dimension` clauses before a set of
   `dimension_member` clauses.
 * A `parent_dimension` is a simplified name to identifier reference member with
   the keyword `parent`.
@@ -292,25 +374,24 @@ qualified names, and to use short, or more meaningful, names as appropriate.
 module example is
 
   import rentals_billing as billing
-
   import billing:Invoice as Invoice
 
 end
 ```
 
-## Version: 0.3.4
+## Version 0.3.4
 
 * Fix missing `byte` nodes in grammar for binary literals.
 
-## Version: 0.3.3
+## Version 0.3.3
 
-- Build: update version of dependent packages `cc` and `tree-sitter`.
+* Build: update version of dependent packages `cc` and `tree-sitter`.
 
-## Version: 0.3.2
+## Version 0.3.2
 
-- Feature: change `module`'s *well-formedness rules* to disallow the definitions
+* Feature: change `module`'s *well-formedness rules* to disallow the definitions
   `rdf_def` and `type_class_def` be added to a non-library module.
-- Feature: remove the rule `feature_reference` entirely, and it's reference in
+* Feature: remove the rule `feature_reference` entirely, and it's reference in
   rule `type_reference`.
 
 ``` js
@@ -323,13 +404,13 @@ type_reference: $ => choice(
 
 ```
 
-## Version: 0.3.1
+## Version 0.3.1
 
 * Fix: regular expression for characters inside a string.
   * Added `examples/escaped_strings.sdm` file for basic testing.
   * Added `test/corpus/escaped_strings.sdm` file for more complete testing.
 
-## Version: 0.3.0
+## Version 0.3.0
 
 * Feature: simplified property definitions.
   * Removed notion of role, a `property_def` is singular.
@@ -372,31 +453,31 @@ property_ref: $ => seq(
 ),
 ```
 
-## Version: 0.2.14-16
+## Version 0.2.14-16
 
 * Feature: simplified form of `rdf_def`.
 
-## Version: 0.2.13
+## Version 0.2.13
 
 * Feature: add `rdf_super_types` optional rule to `rdf_def`.
 
-## Version: 0.2.12
+## Version 0.2.12
 
 * Refactor: simplify the `rdf_thing_def` rule into `rdf_def`.
 
-## Version: 0.2.11
+## Version 0.2.11
 
 * Fix: rename field `uri` to `version_uri` on rule `module_import`.
 * Refactor: clean-up test case names to match those in sdml-parse Rust crate.
 
-## Version: 0.2.10
+## Version 0.2.10
 
 * Feature: add version support to modules.
   * Remove `base` keyword.
   * Add optional `version` keyword and string/IRI version information.
   * Add optional IRI after identifier for module imports.
 
-## Version: 0.2.8/0.2.9
+## Version 0.2.8/0.2.9
 
 * Feature: better support for RDF generation.
   * Add direct support for RDF structures and properties rather than using SDML
@@ -405,24 +486,24 @@ property_ref: $ => seq(
   * Remove keyword `"base"`, add new version clause on module definitions.
     * see file `test/corpus/module_empty_with_version.sdm`
 
-## Version: 0.2.7
+## Version 0.2.7
 
 * Remove member group from grammar, can't find a use that isn't better done by
   moving members to a structure of their own.
 
-## Version: 0.2.6
+## Version 0.2.6
 
 * Fix: test case typos.
 
-## Version: 0.2.5
+## Version 0.2.5
 
 * Feature: Inline type variables in type classes.
 
-## Version: 0.2.4
+## Version 0.2.4
 
 * Fix: tidy grammar for type classes.
 
-## Version: 0.2.3
+## Version 0.2.3
 
 * Feature: expand rule `sequence_of_predicate_values` to match `sequence_of_values`
   with value constructor, mapping value, and identifier reference choices.
@@ -435,7 +516,7 @@ property_ref: $ => seq(
 
 Along with minor changes in highlighting and examples.
 
-## Version: 0.2.2
+## Version 0.2.2
 
 * Feature: add rule `optional` for the operator "?" to allow for optional values.
   Also added to type reference rules.
@@ -446,7 +527,7 @@ Along with minor changes in highlighting and examples.
   * Remove: wildcard from top of rule `type_variable_restriction`.
   * Add: ability to have multiple types in a restriction separated by "+".
 
-## Version: 0.2.1
+## Version 0.2.1
 
 This release is primarily to implement *type classes* that allow a better
 description of the standard library for constraints. Adding this support
@@ -454,12 +535,14 @@ identified some simplifications in functional terms and sequence builders.
 
 ``` sdml
 module example is
+
   class Typed(T) is
     def has_type(v -> T) → Type is
       @skos:definition = "Returns the SDML type of the passed value."@en
       @skos:example = "~type_of(rentals:Customer) = sdml:Entity~"
     end
   end
+
 end
 
 ```
@@ -490,7 +573,7 @@ end
   * Rename: `_boolean_true` to `boolean_truth`.
   * Rename: `_boolean_false` to `boolean_falsity`.
 
-## Version: 0.2.0
+## Version 0.2.0
 
 This is a significant refactor intended to simplify the grammar, and reduce the
 number of constructs used where the differentiation is not as significant as it
@@ -518,7 +601,7 @@ looked previously.
     `_by_definition`.
 * Style: rename rule `_property_member` to `_property_reference`.
 
-## Version: 0.1.42
+## Version 0.1.42
 
 * Feature: simplified `features` definition to be or/xor only.
   * Replace: separate bodies with `UnionBody`.
@@ -529,18 +612,18 @@ FeatureSetDef
     ::= "features" Identifier Cardinality? UnionBody?
 ```
 
-## Version: 0.1.41
+## Version 0.1.41
 
--! Feature: add support for features from Product Line Engineering.
-  - Add new definition rule `feature_set_def` to rule `definition`.
-  - Add *and*, *or*, *xor* bodies to  `feature_set_def`.
-  - Add basic documentation to book.
-- Feature: updates to builtin simple types.
-  - Add the new type `unsigned`.
-  - Add the new type `binary`.
-  - Rename type `iri_reference` to `iri`.
+* Feature: add support for features from Product Line Engineering.
+  * Add new definition rule `feature_set_def` to rule `definition`.
+  * Add *and*, *or*, *xor* bodies to  `feature_set_def`.
+  * Add basic documentation to book.
+* Feature: updates to builtin simple types.
+  * Add the new type `unsigned`.
+  * Add the new type `binary`.
+  * Rename type `iri_reference` to `iri`.
 
-## Version: 0.1.40
+## Version 0.1.40
 
 * Feature: add the Unicode character `↦` to the rule `_has_type` which works better
   for some typesetting.
@@ -565,7 +648,7 @@ FeatureSetDef
   * Rename rule `quantifier_binding` to `quantifier_bound_names`.
 * Docs: add appendix with details of Unicode usage.
 
-## Version: 0.1.39
+## Version 0.1.39
 
 * Feature: allow multiple bindings at the head of quantified sentences.
 * Feature: made progress on local scopes in highlighting.
@@ -585,14 +668,14 @@ FeatureSetDef
 * Style: change the order of choices in rule `predicate_value` to match `value` and
   corresponding sequences.
 
-## Version: 0.1.38
+## Version 0.1.38
 
 * Feature: Update naming for iterators to make them consistent.
   * Rename rule `iterator_target` to `iterator_source`.
   * Rename field `from` in `type_iterator` to `source`.
   * Rename field `from` in `sequence_iterator` to `source`.
 
-## Version: 0.1.37
+## Version 0.1.37
 
 * Feature: update rule `function_cardinality_expression` to allow sequence
   constraints.
@@ -608,7 +691,7 @@ FeatureSetDef
     `sequence_of_predicate_values`.
   * Add optional `_sequence_value_constraints` to rule `sequence_of_values`.
 
-## Version: 0.1.36
+## Version 0.1.36
 
 * Feature: alter the rule `sequence_comprehension` to be more flexible.
   * Rename rule `sequence_comprehension` to  `sequence_builder`.
@@ -617,7 +700,7 @@ FeatureSetDef
   * Add rule `sequence_variable` to return distinct variables as a sequence.
   * Add rule `mapping_variable` to return two variables as a mapping.
 
-## Version: 0.1.35
+## Version 0.1.35
 
 * Feature: alter the rule `_property_member` to allow property names to be
   `identifier_reference`.
@@ -625,7 +708,7 @@ FeatureSetDef
   * Renamed keyword `in`, not `as`.
   * Renamed field `role` to `property` and made it's type `identifier_reference`.
 
-## Version: 0.1.34
+## Version 0.1.34
 
 * Feature: update property definitions to look more like members.
   * Update rule `property_role` to be a choice of three new rules.
@@ -633,7 +716,7 @@ FeatureSetDef
   * Add rule `role_by_value` which is a subset of `member_by_value`.
   * Add rule `role_by_reference` which is a subset of `member_by_reference`.
 
-## Version: 0.1.33
+## Version 0.1.33
 
 * Feature: renamed quantifier binding targets to be more consistent.
   * Rename rule `binding_target` to `iterator_target`.
@@ -657,58 +740,58 @@ FeatureSetDef
 * Feature: update queries `highlights`, `locals`, and `tags` for all changes above.
 * Docs: update BNF syntax and diagrams for all changes above.
   
-## Version: 0.1.32
+## Version 0.1.32
 
 * Feature: update environment definition sequence types to use the same syntax
   as member type and cardinality.
 
-## Version: 0.1.31
+## Version 0.1.31
 
 * Feature: update highlighting queries for constraints with support for locals.
 * Feature: add a `locals.scm` file with scopes for formal constraints.
 * Feature: add `∅` (empty set) as a synonym for `[]` in constraints.
 * Fix: update the mapping value test case to use domain/range field names.
 
-## Version: 0.1.30
+## Version 0.1.30
 
 * Feature (minor): added field names for the domain and range of mapping types
   and values.
 
-## Version: 0.1.29
+## Version 0.1.29
 
 * Fix: an apparent regression, the value for a constructor changed from
   `simple_value` to `value`. This changes it back.
 
-## Version: 0.1.28
+## Version 0.1.28
 
 * Feature: add a mapping type and corresponding value syntax.
 
-## Version: 0.1.27
+## Version 0.1.27
 
 * Feature: add *ordering* and *uniqueness* constraints into the cardinality
   expression. Used to constrain the sequence type of a member.
 
-## Version: 0.1.26
+## Version 0.1.26
 
 * Feature: applied same change as 0.1.25 but for property roles as well.
 
-## Version: 0.1.25
+## Version 0.1.25
 
 * Feature: changed grammar for reference members:
   * The production `source_cardinality` has been removed.
   * The production `member_inverse_name` has been added.
 
-## Version: 0.1.24
+## Version 0.1.24
 
 * Feature: constraint grammar changes
   * Add a *language-tag* to informal constraints.
   * Add a *wildcard type* for the constraint language.
 
-## Version: 0.1.23
+## Version 0.1.23
 
 * Feature: add highlighting test for constraints, had to tweak a few things.
 
-## Version: 0.1.22**
+## Version 0.1.22
 
 * Feature: clarify rules and associated meaning.
   * Rename the grammar rule `type_definition` to `definition` to address the fact
@@ -716,17 +799,17 @@ FeatureSetDef
   * Rename the grammar rule `enum_variant` to `value_variant` to align with
     `type_variant` on unions.
 
-## Version: 0.1.21
+## Version 0.1.21
 
 * Feature: add support for sequence builder support(set builder) syntax.
 * Fix: highlighting/indent/fold updated for constraints.
 * Style: a number of cosmetic changes to formal constraints.
 
-## Version: 0.1.19/0.1.20
+## Version 0.1.19/0.1.20
 
-* Fix: minor change to add a field name to the '..' range operator.
+* Fix: minor change to add a field name to the `..` range operator.
 
-## Version: 0.1.18
+## Version 0.1.18
 
 * Feature: added a constraint assertion construct. This allows for specific
   constraints to be documented for any model element.
@@ -746,39 +829,40 @@ FeatureSetDef
 ``` sdml
 module example is
 
-    import tag
+  import tag
 
-    structure Thing is
-    
-      inner -> {0..} InnerThing is
-        ;; informal
-        assert same_tags = "All inner tags contain a tag value \"This\"."
-        ;; formal
-        assert same_tags_formal is
-          forall self ( not_empty(self) and contains(self.tags "This") )
-        end
+  structure Thing is
+  
+    inner -> {0..} InnerThing is
+      ;; informal
+      assert same_tags = "All inner tags contain a tag value \"This\"."
+      ;; formal
+      assert same_tags_formal is
+        forall self ( not_empty(self) and contains(self.tags "This") )
       end
-      
     end
     
-    structure InnerThing is
-      tags -> {0..} tag:Tag
-    end
+  end
+  
+  structure InnerThing is
+    tags -> {0..} tag:Tag
+  end
     
 end
 ```
 
-## Version: 0.1.17
+## Version 0.1.17
 
 * Fixed: highlighting for properties.
 
-## Version: 0.1.16
+## Version 0.1.16
 
 * Feature: Adjusted property grammar.
 * Docs: Started on property documentation.
 
 ``` sdml
 module ddict is
+
   import account
   
   property accountId is
@@ -800,13 +884,14 @@ module ddict is
 end
 ```
 
-## Version: 0.1.15
+## Version 0.1.15
 
 * Feature: Added new structure to the grammar to allow data-dictionary style
   reusable property definitions.
 
 ``` sdml
 module ddict is
+
   import account
   
   property accountId -> account:AccountId is
@@ -829,7 +914,7 @@ end
 
 ```
 
-## Version: 0.1.14
+## Version 0.1.14
 
 * Added new rule named `builtin_simple_type` (choice of `string`, `double`, `decimal`,
   `integer`, `boolean`, and `iri`):
@@ -847,13 +932,14 @@ module example is
     name -> string
     age -> integer
   end
+
 end
 ```
 
 Where the keywords `string` and `integer` will be expanded into the qualified
 identifiers `sdml:string` and `sdml:integer` respectively.
 
-## Version: 0.1.13
+## Version 0.1.13
 
 * Added explicit `base` grammar for module rather than using `xml:base` as an
   attribute.
@@ -872,18 +958,20 @@ Which replaces the annotation form:
 
 ```sdml
 module example is
+
   import xml
   
   @xml:base = <https://example.org/v/example>
+
 end
 ```
 
-## Version: 0.1.12
+## Version 0.1.12
 
-- Fixed highlight issue for annotations with `IdentifierReference` values
-- Added field for `TypeVariant` name
+* Fixed highlight issue for annotations with `IdentifierReference` values
+* Added field for `TypeVariant` name
 
-## Version: 0.1.11
+## Version 0.1.11
 
 * Added a rename to optional value to `TypeVariant`
 * Fixed `annotation` and `language_tag` grammar rule conflict
@@ -897,32 +985,32 @@ module example is
     Variant1
     Variant1 as Alternative
   end
+
 end
 ```
 
 This allows the use of the same type as a variant more than once if the new
 identifier is unique within the same `union`.
 
-## Version: 0.1.10
+## Version 0.1.10
 
 * Cleaned up queries.
 
-## Version: 0.1.9
+## Version 0.1.9
 
 * Simplified the disjoint `UnionDef` type.
 
-## Version: 0.1.8
+## Version 0.1.8
 
 * Added a disjoint `UnionDef` type.
 
-## Version: 0.1.7
+## Version 0.1.7
 
 * Made field name `sourceCardinality` into `source_cardinality`.
 * Made field name `targetCardinality` into `target_cardinality`.
 * Added versioning annotations
 
-## Version: 0.1.6
+## Version 0.1.6
 
 * Made `_simple_value` into `simple_value` named rule.
 * Made `_type_reference` into `type_reference` named rule.
-  

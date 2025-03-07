@@ -2543,20 +2543,20 @@ static const TSFieldMapSlice ts_field_map_slices[PRODUCTION_ID_COUNT] = {
   [99] = {.index = 186, .length = 2},
   [100] = {.index = 188, .length = 2},
   [101] = {.index = 190, .length = 2},
-  [102] = {.index = 192, .length = 1},
-  [103] = {.index = 193, .length = 1},
-  [104] = {.index = 194, .length = 2},
-  [105] = {.index = 196, .length = 2},
-  [106] = {.index = 198, .length = 4},
-  [107] = {.index = 202, .length = 4},
-  [108] = {.index = 206, .length = 2},
-  [109] = {.index = 208, .length = 2},
-  [110] = {.index = 210, .length = 1},
-  [111] = {.index = 211, .length = 2},
-  [112] = {.index = 213, .length = 3},
-  [113] = {.index = 216, .length = 1},
-  [114] = {.index = 217, .length = 1},
-  [115] = {.index = 218, .length = 3},
+  [102] = {.index = 192, .length = 2},
+  [103] = {.index = 194, .length = 1},
+  [104] = {.index = 195, .length = 2},
+  [105] = {.index = 197, .length = 2},
+  [106] = {.index = 199, .length = 4},
+  [107] = {.index = 203, .length = 4},
+  [108] = {.index = 207, .length = 3},
+  [109] = {.index = 210, .length = 2},
+  [110] = {.index = 212, .length = 1},
+  [111] = {.index = 213, .length = 2},
+  [112] = {.index = 215, .length = 3},
+  [113] = {.index = 218, .length = 1},
+  [114] = {.index = 219, .length = 1},
+  [115] = {.index = 220, .length = 3},
 };
 
 static const TSFieldMapEntry ts_field_map_entries[] = {
@@ -2855,44 +2855,46 @@ static const TSFieldMapEntry ts_field_map_entries[] = {
     {field_parameter, 1, .inherited = true},
   [192] =
     {field_facet, 0},
-  [193] =
     {field_value, 2},
   [194] =
+    {field_value, 2},
+  [195] =
     {field_entity, 3},
     {field_name, 1},
-  [196] =
+  [197] =
     {field_domain, 1},
     {field_range, 3},
-  [198] =
+  [199] =
     {field_min, 3, .inherited = true},
     {field_ordering, 1},
     {field_range, 3, .inherited = true},
     {field_uniqueness, 2},
-  [202] =
+  [203] =
     {field_cardinality, 5, .inherited = true},
     {field_name, 1},
     {field_parameter, 3, .inherited = true},
     {field_target, 5, .inherited = true},
-  [206] =
+  [207] =
     {field_facet, 0},
-    {field_is_fixed, 2},
-  [208] =
     {field_is_fixed, 2},
     {field_value, 3},
   [210] =
-    {field_member, 1, .inherited = true},
-  [211] =
-    {field_member, 0, .inherited = true},
+    {field_is_fixed, 2},
+    {field_value, 3},
+  [212] =
     {field_member, 1, .inherited = true},
   [213] =
+    {field_member, 0, .inherited = true},
+    {field_member, 1, .inherited = true},
+  [215] =
     {field_body, 4},
     {field_entity, 3},
     {field_name, 1},
-  [216] =
-    {field_wildcard, 1},
-  [217] =
-    {field_variable, 1, .inherited = true},
   [218] =
+    {field_wildcard, 1},
+  [219] =
+    {field_variable, 1, .inherited = true},
+  [220] =
     {field_value, 2},
     {field_value, 3},
     {field_value, 4},

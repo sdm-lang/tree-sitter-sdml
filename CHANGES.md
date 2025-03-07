@@ -1,5 +1,15 @@
 # Changes for tree-sitter-sdml
 
+## Version 0.4.5
+
+* Fix: Make all values in datatype restrictions fields named 'value'.
+  * Added two new test cases for fixed/timezone restriction and pattern/sequence
+    restriction.
+
+This grammar fix allows grammar processors to use the tree-sitter query 
+`(datatype_def_restriction (value (_)) )` to select all values from all
+restrictions regardless of type.
+
 ## Version 0.4.4
 
 The primary aim of this release is the ability to prefix an `import` statement

@@ -1,0 +1,30 @@
+====================================
+Data Type, With Pattern Restrictions
+====================================
+
+module example is
+
+  datatype nameString <- string {
+    pattern = [
+      "A[A-Z0-9]{19}"
+      "C[A-Z0-9]{19}"
+      "X[A-Z0-9]{19}"
+    ]
+  }
+
+end
+
+---
+
+(module
+   (identifier)
+   (module_body
+     (definition
+       (data_type_def
+         (identifier)
+         (builtin_simple_type)
+         (datatype_def_restriction
+           (pattern_restriction_facet
+             (quoted_string)
+             (quoted_string)
+             (quoted_string)))))))

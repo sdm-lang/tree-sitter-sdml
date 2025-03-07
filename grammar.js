@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.4.4
+// Version:    0.4.5
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -843,7 +843,7 @@ module.exports = grammar({
             ),
             operator('='),
             optional(field('is_fixed',$.kw_is_fixed)),
-            $.unsigned
+            field('value', $.unsigned)
         ),
 
         digit_restriction_facet: $ => seq(
@@ -856,7 +856,7 @@ module.exports = grammar({
             ),
             operator('='),
             optional(field('is_fixed',$.kw_is_fixed)),
-            $.unsigned
+            field('value', $.unsigned)
         ),
 
         value_restriction_facet: $ => seq(
@@ -871,7 +871,7 @@ module.exports = grammar({
             ),
             operator('='),
             optional(field('is_fixed',$.kw_is_fixed)),
-            $.restriction_value
+            field('value', $.restriction_value)
         ),
 
         restriction_value: $ => choice (

@@ -4,32 +4,26 @@ Data Type, With Restrictions
 
 module example is
 
-  datatype nameString <- xsd:string is
-    @xsd:maxLength = 10
-  end
+  datatype unixUserId <- string {
+    minLength = 1
+    maxLength = 8
+  }
 
 end
 
 ---
 
 (module
-  name: (identifier)
-  body: (module_body
+  (identifier)
+  (module_body
     (definition
       (data_type_def
-        name: (identifier)
-        base: (identifier_reference
-          (qualified_identifier
-            module: (identifier)
-            member: (identifier)))
-        body: (annotation_only_body
-          (annotation
-            (annotation_property
-              name: (identifier_reference
-                (qualified_identifier
-                  module: (identifier)
-                  member: (identifier)))
-              value: (value
-                (simple_value
-                  (integer))))))))))
+        (identifier)
+        (builtin_simple_type)
+        (datatype_def_restriction
+          (length_restriction_facet
+            (unsigned))
+          (length_restriction_facet
+            (unsigned)))))))
+
 

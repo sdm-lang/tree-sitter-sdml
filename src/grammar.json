@@ -2875,8 +2875,12 @@
           ]
         },
         {
-          "type": "SYMBOL",
-          "name": "unsigned"
+          "type": "FIELD",
+          "name": "value",
+          "content": {
+            "type": "SYMBOL",
+            "name": "unsigned"
+          }
         }
       ]
     },
@@ -2942,8 +2946,12 @@
           ]
         },
         {
-          "type": "SYMBOL",
-          "name": "unsigned"
+          "type": "FIELD",
+          "name": "value",
+          "content": {
+            "type": "SYMBOL",
+            "name": "unsigned"
+          }
         }
       ]
     },
@@ -3031,8 +3039,12 @@
           ]
         },
         {
-          "type": "SYMBOL",
-          "name": "restriction_value"
+          "type": "FIELD",
+          "name": "value",
+          "content": {
+            "type": "SYMBOL",
+            "name": "restriction_value"
+          }
         }
       ]
     },

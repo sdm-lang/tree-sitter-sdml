@@ -34,15 +34,15 @@
 (module "module" @keyword name: (identifier) @module.definition)
 (module "version" @keyword)
 
-(import_statement "import" @keyword)
-(import_statement [ "[" "]" ] @punctuation.bracket)
-
 (from_clause "from" @keyword)
 
 (module_path_root_only "::" @punctuation.separator)
 (module_path_relative "::" @punctuation.separator)
 (module_path_relative segment: (identifier) @module.special)
 (module_path_absolute "::" @punctuation.separator segment: (identifier) @module.special)
+
+(import_statement "import" @keyword)
+(import_statement [ "[" "]" ] @punctuation.bracket)
 
 (member_import name: (qualified_identifier) @type)
 (member_import "as" @keyword rename: (identifier) @type)

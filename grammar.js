@@ -639,9 +639,6 @@ module.exports = grammar({
             keyword('normalizedString'),
             keyword('token'),
             keyword('language')
-            // keyword('Name'),
-            // keyword('NCName'),
-            // keyword('NMTOKEN')
         ),
 
         simple_value: $ => choice(

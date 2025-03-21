@@ -9,13 +9,13 @@ version = "0.4.6"
 keywords = ["incremental", "parsing", "tree-sitter", "sdml"]
 classifiers = [
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
   "Topic :: Software Development :: Compilers",
   "Topic :: Text Processing :: Linguistic",
   "Typing :: Typed"
 ]
 requires-python = ">=3.8"
 license = "Apache-2.0"
+license-files = ["LICENSE"]
 readme = "README.md"
 
 [project.urls]

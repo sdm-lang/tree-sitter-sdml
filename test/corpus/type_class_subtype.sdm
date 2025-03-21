@@ -18,10 +18,11 @@ end
         (identifier)
         (type_variable
           (identifier)
-          (type_class_reference
-            (identifier_reference
-              (identifier))
-            (type_class_arguments
-              (type_class_reference
-                (identifier_reference
-                  (identifier))))))))))
+          (type_variable_restriction
+            (type_class_reference
+              (identifier_reference
+                (identifier))
+              (type_class_arguments
+                (type_class_reference
+                  (identifier_reference
+                    (identifier)))))))))))

@@ -314,7 +314,7 @@ install_python:
 	$(info -> installing Python binding into local venv)
 	@($(VENV_PIP) install -e .)
 
-publish_python: $(BINDING_PYTHON_SDIST) $(BINDING_PYTHON_WHEEL) setup_twine
+publish_python: $(BINDING_PYTHON_SDIST) $(BINDING_PYTHON_WHEEL)
 	$(info -> uploading Python binding to PyPI)
 	@(twine upload --sign --identity $(GPG_SIGNER) --non-interactive $(PYTHON_DIST_DIR)/*)
 

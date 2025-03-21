@@ -483,7 +483,7 @@ module.exports = grammar({
         ),
 
         function_body: $ => seq(
-            $.function_op_by_definition,
+            $._function_op_by_definition,
             field(
                 'body',
                 choice(
@@ -1084,10 +1084,10 @@ module.exports = grammar({
                 field('cardinality', $.function_cardinality_expression)
             ),
             field('name', $.identifier),
-            optional($._type_variable_restriction)
+            field('restriction', optional($.type_variable_restriction))
         ),
 
-       _type_variable_restriction: $ => seq(
+       type_variable_restriction: $ => seq(
             $._type_op_has_type,
             $.type_class_reference,
             repeat(
@@ -1337,7 +1337,7 @@ module.exports = grammar({
         // Common Function/Method-Related
         // -----------------------------------------------------------------------
 
-        function_op_by_definition: $ => choice(
+        _function_op_by_definition: $ => choice(
             operator(':='),
             operator('≔'),
         ),

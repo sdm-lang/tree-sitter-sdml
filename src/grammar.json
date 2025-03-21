@@ -1511,7 +1511,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "function_op_by_definition"
+          "name": "_function_op_by_definition"
         },
         {
           "type": "FIELD",
@@ -4163,20 +4163,24 @@
           }
         },
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "_type_variable_restriction"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
+          "type": "FIELD",
+          "name": "restriction",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "type_variable_restriction"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          }
         }
       ]
     },
-    "_type_variable_restriction": {
+    "type_variable_restriction": {
       "type": "SEQ",
       "members": [
         {
@@ -5299,7 +5303,7 @@
         }
       }
     },
-    "function_op_by_definition": {
+    "_function_op_by_definition": {
       "type": "CHOICE",
       "members": [
         {

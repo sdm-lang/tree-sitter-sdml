@@ -73,7 +73,6 @@ end
               (function_type_reference
                 (builtin_simple_type)))
             (function_body
-              (function_op_by_definition)
                (term
                  (functional_term
                    (term

@@ -1,5 +1,12 @@
 # Changes for tree-sitter-sdml
 
+### Version 0.4.6
+
+* Fix: Rename grammar rule `function_op_by_definition` to
+  `_function_op_by_definition`.
+* Fix: Rename grammar rule `_type_variable_restriction` to
+  `type_variable_restriction`.
+  
 ## Version 0.4.5
 
 * Fix: Make all values in datatype restrictions fields named 'value'.

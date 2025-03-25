@@ -2,7 +2,7 @@
 Import and rename member
 ========================
 
-module Campaign is
+module corpus_test_import is
 
   import xsd:base as base
 

@@ -1,0 +1,29 @@
+===================================
+Structure, Cardinality zero to many
+===================================
+
+module corpus_test_cardinality is
+
+  structure Things is
+    thing -> {0..} integer
+  end
+
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (definition
+      (structure_def
+        (identifier)
+        (structure_body
+          (member
+            (member_def
+              (identifier)
+              (cardinality_expression
+                (unsigned)
+                (cardinality_range))
+              (type_reference
+                (builtin_simple_type)))))))))

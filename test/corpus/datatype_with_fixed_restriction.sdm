@@ -2,7 +2,7 @@
 Data Type, With Fixed Restriction
 =================================
 
-module example is
+module corpus_test_datatype is
 
   datatype timeChanged <- dateTime {
     explicitTimezone = fixed required

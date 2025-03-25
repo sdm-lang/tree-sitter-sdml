@@ -2,7 +2,7 @@
 Entity, With Members
 ====================
 
-module Campaign is
+module corpus_test_entity is
 
   entity Campaign is
 

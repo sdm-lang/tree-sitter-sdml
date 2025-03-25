@@ -2,7 +2,7 @@
 Import versioned module
 =======================
 
-module campaign is
+module corpus_test_import is
 
   import customer <https://example.org/v2/Customer#>
 

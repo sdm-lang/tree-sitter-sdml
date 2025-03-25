@@ -2,7 +2,7 @@
 Constraint, formal unary negation
 =================================
 
-module Example is
+module corpus_test_constraint is
 
   structure Outer is
 

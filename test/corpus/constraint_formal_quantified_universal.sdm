@@ -1,0 +1,107 @@
+=======================================
+Constraint, formal quantified universal
+=======================================
+
+module corpus_test_constraint is
+
+  structure Outer is
+
+    inner -> {0..} string is
+      assert not_empty is
+        forall x in inner, not is_empty(x)
+      end
+    end
+
+    inner_sym -> {0..} string is
+      assert not_empty is
+        ∀ x ∈ inner, ¬ is_empty(x)
+      end
+    end
+
+  end
+
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (definition
+      (structure_def
+        (identifier)
+        (structure_body
+          (member
+            (member_def
+              (identifier)
+              (cardinality_expression
+                (unsigned)
+                (cardinality_range))
+              (type_reference
+                (builtin_simple_type))
+              (annotation_only_body
+                (annotation
+                  (constraint
+                    (identifier)
+                    (formal_constraint
+                      (constraint_sentence
+                        (quantified_sentence
+                          (quantified_variable_binding
+                            (logical_quantifier_universal)
+                            (quantified_variable
+                              (variable
+                                (identifier))
+                              (set_op_membership)
+                              (term
+                                (identifier_reference
+                                  (identifier)))))
+                          (constraint_sentence
+                            (boolean_sentence
+                              (unary_boolean_sentence
+                                (logical_op_negation)
+                                (constraint_sentence
+                                  (simple_sentence
+                                    (atomic_sentence
+                                      (term
+                                        (identifier_reference
+                                          (identifier)))
+                                      (term
+                                        (identifier_reference
+                                          (identifier)))))))))))))))))
+          (member
+            (member_def
+              (identifier)
+              (cardinality_expression
+                (unsigned)
+                (cardinality_range))
+              (type_reference
+                (builtin_simple_type))
+              (annotation_only_body
+                (annotation
+                  (constraint
+                    (identifier)
+                    (formal_constraint
+                      (constraint_sentence
+                        (quantified_sentence
+                          (quantified_variable_binding
+                            (logical_quantifier_universal)
+                            (quantified_variable
+                              (variable
+                                (identifier))
+                              (set_op_membership)
+                              (term
+                                (identifier_reference
+                                  (identifier)))))
+                          (constraint_sentence
+                            (boolean_sentence
+                              (unary_boolean_sentence
+                                (logical_op_negation)
+                                (constraint_sentence
+                                  (simple_sentence
+                                    (atomic_sentence
+                                      (term
+                                        (identifier_reference
+                                          (identifier)))
+                                      (term
+                                        (identifier_reference
+                                          (identifier))))))))))))))))))))))

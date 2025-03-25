@@ -2,7 +2,7 @@
 Constraint, formal function composition
 =======================================
 
-module Example is
+module corpus_test_constraint is
 
   structure Outer is
 

@@ -2,7 +2,7 @@
 Type Class, with Methods
 ========================
 
-module sdml_core is
+module corpus_test_typeclass is
 
   class Any (T) is
     def is_structure(v -> T) -> boolean

@@ -2,7 +2,7 @@
 Structure, Simple Type Members
 ==============================
 
-module example is
+module corpus_test_structure is
 
   structure SimpleTypes is
     a -> string

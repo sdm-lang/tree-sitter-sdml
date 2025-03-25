@@ -2,7 +2,7 @@
 Data Type, From Simple Type
 ===========================
 
-module example is
+module corpus_test_datatype is
 
   datatype nameString <- string
 

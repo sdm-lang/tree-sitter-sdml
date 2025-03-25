@@ -2,7 +2,7 @@
 Escapes in annotation strings
 ============================
 
-module example is
+module corpus_test_annotation is
 
   @char_escape_a = "\a"
   @char_escape_b = "\b"

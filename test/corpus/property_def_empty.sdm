@@ -2,7 +2,7 @@
 Property Definition, Empty
 ==========================
 
-module ddict is
+module corpus_test_property is
   property accountId -> unknown
 end
 

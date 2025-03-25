@@ -2,7 +2,7 @@
 Dimension, With Source and Members
 ==================================
 
-module dimensions is
+module corpus_test_dimension is
 
   dimension Campaigns is
     source Campaign with status

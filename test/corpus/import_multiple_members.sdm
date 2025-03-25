@@ -2,7 +2,7 @@
 Import multiple members
 =======================
 
-module Campaign is
+module corpus_test_import is
 
   import [ xsd:base xml:lang ]
 

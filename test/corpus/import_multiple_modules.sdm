@@ -2,7 +2,7 @@
 Import multiple modules
 =======================
 
-module Campaign is
+module corpus_test_import is
 
   import [ xsd skos ]
 

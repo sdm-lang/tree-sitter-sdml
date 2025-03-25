@@ -2,7 +2,7 @@
 Annotation, Multiple Separate
 =============================
 
-module Campaign is
+module corpus_test_annotation is
 
   @skos:prefLabel = ""
 

@@ -1,0 +1,147 @@
+=======================================
+Constraint, formal binary biconditional
+=======================================
+
+module corpus_test_constraint is
+
+  structure Outer is
+
+    inner -> string is
+      assert not_empty is
+        inner = "hi" iff inner_sym = "bye"
+      end
+    end
+
+    inner_alt -> string is
+      assert not_empty is
+        inner = "hi" <==> inner_sym = "bye"
+      end
+    end
+
+    inner_sym -> string is
+      assert not_empty is
+        inner = "hi" ⇔ inner_sym = "bye"
+      end
+    end
+
+  end
+
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (definition
+      (structure_def
+        (identifier)
+        (structure_body
+          (member
+            (member_def
+              (identifier)
+              (type_reference
+                (builtin_simple_type))
+              (annotation_only_body
+                (annotation
+                  (constraint
+                    (identifier)
+                    (formal_constraint
+                      (constraint_sentence
+                        (boolean_sentence
+                          (binary_boolean_sentence
+                            (constraint_sentence
+                              (simple_sentence
+                                (equation
+                                  (term
+                                    (identifier_reference
+                                      (identifier)))
+                                  (term
+                                    (predicate_value
+                                      (simple_value
+                                        (string
+                                          (quoted_string))))))))
+                            (logical_op_biconditional)
+                            (constraint_sentence
+                              (simple_sentence
+                                (equation
+                                  (term
+                                    (identifier_reference
+                                      (identifier)))
+                                  (term
+                                    (predicate_value
+                                      (simple_value
+                                        (string
+                                          (quoted_string)))))))))))))))))
+          (member
+            (member_def
+              (identifier)
+              (type_reference
+                (builtin_simple_type))
+              (annotation_only_body
+                (annotation
+                  (constraint
+                    (identifier)
+                    (formal_constraint
+                      (constraint_sentence
+                        (boolean_sentence
+                          (binary_boolean_sentence
+                            (constraint_sentence
+                              (simple_sentence
+                                (equation
+                                  (term
+                                    (identifier_reference
+                                      (identifier)))
+                                  (term
+                                    (predicate_value
+                                      (simple_value
+                                        (string
+                                          (quoted_string))))))))
+                            (logical_op_biconditional)
+                            (constraint_sentence
+                              (simple_sentence
+                                (equation
+                                  (term
+                                    (identifier_reference
+                                      (identifier)))
+                                  (term
+                                    (predicate_value
+                                      (simple_value
+                                        (string
+                                          (quoted_string)))))))))))))))))
+          (member
+            (member_def
+              (identifier)
+              (type_reference
+                (builtin_simple_type))
+              (annotation_only_body
+                (annotation
+                  (constraint
+                    (identifier)
+                    (formal_constraint
+                      (constraint_sentence
+                        (boolean_sentence
+                          (binary_boolean_sentence
+                            (constraint_sentence
+                              (simple_sentence
+                                (equation
+                                  (term
+                                    (identifier_reference
+                                      (identifier)))
+                                  (term
+                                    (predicate_value
+                                      (simple_value
+                                        (string
+                                          (quoted_string))))))))
+                            (logical_op_biconditional)
+                            (constraint_sentence
+                              (simple_sentence
+                                (equation
+                                  (term
+                                    (identifier_reference
+                                      (identifier)))
+                                  (term
+                                    (predicate_value
+                                      (simple_value
+                                        (string
+                                          (quoted_string))))))))))))))))))))))

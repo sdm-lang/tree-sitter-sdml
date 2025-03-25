@@ -2,7 +2,7 @@
 Property Definition
 ===================
 
-module ddict is
+module corpus_test_property is
   property accountId -> {1} account:AccountId is
     @skos:definition = "a"@en
   end

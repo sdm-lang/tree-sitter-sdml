@@ -2,7 +2,7 @@
 Import and rename module
 ========================
 
-module Campaign is
+module corpus_test_import is
 
   import xsd as schema
 

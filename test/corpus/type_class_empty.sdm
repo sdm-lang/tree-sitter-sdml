@@ -2,7 +2,7 @@
 Type Class, Empty
 =================
 
-module sdml_core is
+module corpus_test_typeclass is
 
   class Any (T)
 

@@ -2,7 +2,7 @@
 Entity, With Constraints
 ========================
 
-module Campaign is
+module corpus_test_entity is
 
   entity Campaign is
 

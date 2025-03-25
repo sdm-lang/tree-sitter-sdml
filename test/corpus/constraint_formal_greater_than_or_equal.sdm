@@ -23,3 +23,55 @@ module Example is
 end
 
 ---
+
+(module
+  (identifier)
+  (module_body
+    (definition
+      (structure_def
+        (identifier)
+        (structure_body
+          (member
+            (member_def
+              (identifier)
+              (type_reference
+                (builtin_simple_type))
+              (annotation_only_body
+                (annotation
+                  (constraint
+                    (identifier)
+                    (formal_constraint
+                      (constraint_sentence
+                        (simple_sentence
+                          (inequation
+                            (term
+                              (identifier_reference
+                                (identifier)))
+                            (op_greater_than_or_equal)
+                            (term
+                              (predicate_value
+                                (simple_value
+                                  (string
+                                    (quoted_string))))))))))))))
+          (member
+            (member_def
+              (identifier)
+              (type_reference
+                (builtin_simple_type))
+              (annotation_only_body
+                (annotation
+                  (constraint
+                    (identifier)
+                    (formal_constraint
+                      (constraint_sentence
+                        (simple_sentence
+                          (inequation
+                            (term
+                              (identifier_reference
+                                (identifier)))
+                            (op_greater_than_or_equal)
+                            (term
+                              (predicate_value
+                                (simple_value
+                                  (string
+                                    (quoted_string)))))))))))))))))))

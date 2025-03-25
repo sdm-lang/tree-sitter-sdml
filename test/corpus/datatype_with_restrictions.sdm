@@ -2,7 +2,7 @@
 Data Type, With Restrictions
 ============================
 
-module example is
+module corpus_test_datatype is
 
   datatype unixUserId <- string {
     minLength = 1

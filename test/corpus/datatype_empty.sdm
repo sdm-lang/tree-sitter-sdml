@@ -2,9 +2,9 @@
 Data Type, Empty
 ================
 
-module campaign is
+module corpus_test_datatype is
 
-  datatype nameString <- xsd:string
+  datatype nameString <- string
 
 end
 

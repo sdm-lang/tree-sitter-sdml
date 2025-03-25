@@ -2,7 +2,7 @@
 Annotation, Single Language-Tagged String
 =========================================
 
-module Campaign is
+module corpus_test_annotation is
 
   @dc:title = "a test"@en-US
 

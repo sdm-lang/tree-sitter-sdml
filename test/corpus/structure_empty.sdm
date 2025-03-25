@@ -2,7 +2,7 @@
 Structure, Empty
 ================
 
-module Campaign is
+module corpus_test_structure is
 
   structure Duration
 

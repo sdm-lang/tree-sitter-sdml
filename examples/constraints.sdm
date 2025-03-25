@@ -2,6 +2,12 @@ module constraints is
 
   @skos:prefLabel = "Example"
 
+      assert tagged_with_foo_path with
+        def foo -> string := "foo"
+      is
+        self.tags.contains(foo)
+      end
+
   entity Campaign is
     identity a -> CampaignId
 

@@ -72,10 +72,9 @@ end
                                     (reserved_self)
                                     (identifier)
                                     (identifier)))
-                                (actual_arguments
-                                  (term
-                                    (predicate_value
-                                      (simple_value
-                                        (string
-                                          (quoted_string))))))))))))))))))))
+                                (term
+                                  (predicate_value
+                                    (simple_value
+                                      (string
+                                        (quoted_string)))))))))))))))))))
 

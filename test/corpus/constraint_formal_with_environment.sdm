@@ -57,7 +57,6 @@ end
                                     (reserved_self)
                                     (identifier)
                                     (identifier)))
-                                (actual_arguments
-                                  (term
-                                    (identifier_reference
-                                      (identifier))))))))))))))))))
+                                (term
+                                  (identifier_reference
+                                    (identifier)))))))))))))))))

@@ -753,11 +753,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "actual_arguments"
+          "name": "_actual_arguments"
         }
       ]
     },
-    "actual_arguments": {
+    "_actual_arguments": {
       "type": "SEQ",
       "members": [
         {
@@ -1122,7 +1122,7 @@
           },
           {
             "type": "SYMBOL",
-            "name": "actual_arguments"
+            "name": "_actual_arguments"
           }
         ]
       }
@@ -4163,20 +4163,20 @@
           }
         },
         {
-          "type": "FIELD",
-          "name": "restriction",
-          "content": {
-            "type": "CHOICE",
-            "members": [
-              {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "restriction",
+              "content": {
                 "type": "SYMBOL",
                 "name": "type_variable_restriction"
-              },
-              {
-                "type": "BLANK"
               }
-            ]
-          }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -5233,6 +5233,60 @@
             "content": {
               "type": "STRING",
               "value": "∩"
+            }
+          }
+        }
+      ]
+    },
+    "set_op_subset": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "subset"
+            }
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "⊂"
+            }
+          }
+        }
+      ]
+    },
+    "set_op_subset_or_equal": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "subseteq"
+            }
+          }
+        },
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "PREC",
+            "value": 2,
+            "content": {
+              "type": "STRING",
+              "value": "⊆"
             }
           }
         }

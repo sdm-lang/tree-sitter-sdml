@@ -1,21 +1,5 @@
 [
   {
-    "type": "actual_arguments",
-    "named": true,
-    "fields": {
-      "argument": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "term",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "annotation",
     "named": true,
     "fields": {},
@@ -79,6 +63,16 @@
     "type": "atomic_sentence",
     "named": true,
     "fields": {
+      "argument": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "term",
+            "named": true
+          }
+        ]
+      },
       "predicate": {
         "multiple": false,
         "required": true,
@@ -89,16 +83,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "actual_arguments",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1117,6 +1101,16 @@
     "type": "functional_term",
     "named": true,
     "fields": {
+      "argument": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "term",
+            "named": true
+          }
+        ]
+      },
       "function": {
         "multiple": false,
         "required": true,
@@ -1127,16 +1121,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "actual_arguments",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -3311,6 +3295,14 @@
     "named": false
   },
   {
+    "type": "subset",
+    "named": false
+  },
+  {
+    "type": "subseteq",
+    "named": false
+  },
+  {
     "type": "time",
     "named": false
   },
@@ -3348,11 +3340,11 @@
   },
   {
     "type": "unsigned",
-    "named": true
+    "named": false
   },
   {
     "type": "unsigned",
-    "named": false
+    "named": true
   },
   {
     "type": "unsignedByte",
@@ -3468,6 +3460,14 @@
   },
   {
     "type": "≥",
+    "named": false
+  },
+  {
+    "type": "⊂",
+    "named": false
+  },
+  {
+    "type": "⊆",
     "named": false
   },
   {

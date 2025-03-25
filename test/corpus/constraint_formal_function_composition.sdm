@@ -1,0 +1,44 @@
+=======================================
+Constraint, formal function composition
+=======================================
+
+module Example is
+
+  structure Outer is
+
+    inner -> string is
+      assert not_empty is
+        self.is_empty()
+      end
+    end
+
+  end
+
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (definition
+      (structure_def
+        (identifier)
+        (structure_body
+          (member
+            (member_def
+              (identifier)
+              (type_reference
+                (builtin_simple_type))
+              (annotation_only_body
+                (annotation
+                  (constraint
+                    (identifier)
+                    (formal_constraint
+                      (constraint_sentence
+                        (simple_sentence
+                          (atomic_sentence
+                            (term
+                              (function_composition
+                                (reserved_self)
+                                (identifier)))))))))))))))))

@@ -256,10 +256,10 @@ module.exports = grammar({
 
         atomic_sentence: $ => seq(
             field('predicate', $.term),
-            $.actual_arguments
+            $._actual_arguments
         ),
 
-        actual_arguments: $ => seq(
+        _actual_arguments: $ => seq(
            '(',
             repeat(field('argument', $.term)),
             ')'
@@ -369,7 +369,7 @@ module.exports = grammar({
             2,
             seq(
                 field('function', $.term),
-                $.actual_arguments
+                $._actual_arguments
             )
         ),
 
@@ -1084,7 +1084,9 @@ module.exports = grammar({
                 field('cardinality', $.function_cardinality_expression)
             ),
             field('name', $.identifier),
-            field('restriction', optional($.type_variable_restriction))
+            optional(
+                field('restriction', $.type_variable_restriction)
+            )
         ),
 
        type_variable_restriction: $ => seq(
@@ -1319,6 +1321,16 @@ module.exports = grammar({
         set_op_intersection: $ => choice(
             keyword('intersection'),
             keyword('∩'),
+        ),
+
+        set_op_subset: $ => choice(
+            keyword('subset'),
+            keyword('⊂'),
+        ),
+
+        set_op_subset_or_equal: $ => choice(
+            keyword('subseteq'),
+            keyword('⊆'),
         ),
 
         set_op_complement: $ => choice(

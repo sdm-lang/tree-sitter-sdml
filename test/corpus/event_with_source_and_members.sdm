@@ -1,0 +1,27 @@
+==============================
+Event, With Source and Members
+==============================
+
+module corpus_test_event is
+
+  event NameChanged is
+    source Campaign with [ name title status ]
+  end
+
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (definition
+      (event_def
+        (identifier)
+        (event_body
+          (source_entity
+            (identifier_reference
+              (identifier))
+            (identifier)
+            (identifier)
+            (identifier)))))))

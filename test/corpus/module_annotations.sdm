@@ -1,0 +1,55 @@
+=======================
+Module,with annotations
+=======================
+
+module corpus_test_module is
+
+  @xml:base = <https://example.org/>
+
+  @dc:version = 2
+
+  @skos:prefLang = [
+    "aa"@en
+    "bb"
+  ]
+
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (annotation
+      (annotation_property
+        (identifier_reference
+          (qualified_identifier
+            (identifier)
+            (identifier)))
+        (value
+          (simple_value
+            (iri)))))
+    (annotation
+      (annotation_property
+        (identifier_reference
+          (qualified_identifier
+            (identifier)
+            (identifier)))
+        (value
+          (simple_value
+            (integer)))))
+    (annotation
+      (annotation_property
+        (identifier_reference
+          (qualified_identifier
+            (identifier)
+            (identifier)))
+        (value
+          (sequence_of_values
+            (simple_value
+              (string
+                (quoted_string)
+                (language_tag)))
+            (simple_value
+              (string
+                (quoted_string)))))))))

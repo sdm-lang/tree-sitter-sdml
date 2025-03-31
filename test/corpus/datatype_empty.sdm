@@ -16,8 +16,5 @@ end
     (definition
       (data_type_def
         name: (identifier)
-        base: (identifier_reference
-          (qualified_identifier
-            module: (identifier)
-            member: (identifier)))))))
+        base: (builtin_simple_type)))))
 

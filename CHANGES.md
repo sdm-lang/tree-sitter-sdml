@@ -1,5 +1,35 @@
 # Changes for tree-sitter-sdml
 
+## Version 0.4.7
+
+* Fix: Grammar for rules `sequence_of_values` and `sequence_of_predicate_values` to
+  allow constraints on the empty symbol.
+* Fix: Grammar for rules `sequence_of_values` and `sequence_of_predicate_values` to
+  allow optional ordering and uniqueness constraints.
+* Test: Add tests for above.
+* Feat: Add highlighting rules for sequence constraints.
+
+Original Grammar:
+
+``` ebnf
+SequenceOfValues
+    ::= "∅" | Constraints? "[" Element* "]"
+
+Constraints
+    ::= "{" ( Ordering | Uniqueness | Ordering Uniqueness ) "}"
+```
+
+New Grammar:
+
+``` ebnf
+SequenceOfValues
+    ::= Constraints? ( "∅" | ( "[" Element* "]" ) )
+
+Constraints
+    ::= "{" ( ( Ordering Uniqueness? ) | ( Ordering? Uniqueness ) ) "}"
+```
+
+
 ### Version 0.4.6
 
 * Fix: Rename grammar rule `function_op_by_definition` to

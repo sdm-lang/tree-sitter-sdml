@@ -338,18 +338,18 @@ module.exports = grammar({
         quantified_variable: $ => prec.right(
             2,
             seq(
-                field('name', $.variable),
+                field('variable', $.variable),
                 $.set_op_membership,
                 field('source', $.term)
             )
         ),
 
         variable: $ => seq(
-            $.identifier,
+            field('name', $.identifier),
             optional(
                 seq(
                     $._type_op_has_type,
-                    field('range', $.identifier)
+                    field('range', $.identifier_reference)
                 )
             )
         ),
@@ -385,10 +385,7 @@ module.exports = grammar({
                 ),
                 repeat1(
                     seq(
-                        choice(
-                            token.immediate('·'),
-                            token.immediate('.')
-                        ),
+                        $._function_op_composition,
                         field('name', $.identifier)
                     )
                 )
@@ -400,23 +397,25 @@ module.exports = grammar({
             $.sequence_of_predicate_values,
         ),
 
-        sequence_of_predicate_values: $ => choice(
-            field('empty', $._value_empty_sequence),
-            seq(
-                optional($._sequence_value_constraints),
-                '[',
-                repeat(
-                    field(
-                        'element',
-                        choice(
-                            $.predicate_value,
-                            $.value_constructor,
-                            $.mapping_value,
-                            $.identifier_reference
+        sequence_of_predicate_values: $ => seq(
+            optional($._sequence_value_constraints),
+            choice(
+                field('empty', $._value_empty_sequence),
+                seq(
+                    '[',
+                    repeat(
+                        field(
+                            'element',
+                            choice(
+                                $.predicate_value,
+                                $.value_constructor,
+                                $.mapping_value,
+                                $.identifier_reference
+                            )
                         )
-                    )
-                ),
-                ']'
+                    ),
+                    ']'
+                )
             )
         ),
 
@@ -526,33 +525,37 @@ module.exports = grammar({
             $.sequence_of_values
         ),
 
-        sequence_of_values: $ => choice(
-            field('empty', $._value_empty_sequence),
-            seq(
-                optional($._sequence_value_constraints),
-                '[',
-                repeat(
-                    field(
-                        'element',
-                        choice(
-                            $.simple_value,
-                            $.value_constructor,
-                            $.mapping_value,
-                            $.identifier_reference
+        sequence_of_values: $ => seq(
+            optional($._sequence_value_constraints),
+            choice(
+                field('empty', $._value_empty_sequence),
+                seq(
+                    '[',
+                    repeat(
+                        field(
+                            'element',
+                            choice(
+                                $.simple_value,
+                                $.value_constructor,
+                                $.mapping_value,
+                                $.identifier_reference
+                            )
                         )
-                    )
-                ),
-                ']'
+                    ),
+                    ']'
+                )
             )
         ),
 
         _sequence_value_constraints: $ => seq(
             '{',
             choice(
-                field('ordering', $.sequence_ordering),
-                field('uniqueness', $.sequence_uniqueness),
                 seq(
                     field('ordering', $.sequence_ordering),
+                    optional(field('uniqueness', $.sequence_uniqueness)),
+                ),
+                seq(
+                    optional(field('ordering', $.sequence_ordering)),
                     field('uniqueness', $.sequence_uniqueness)
                 )
             ),
@@ -1348,6 +1351,11 @@ module.exports = grammar({
         // -----------------------------------------------------------------------
         // Common Function/Method-Related
         // -----------------------------------------------------------------------
+
+        _function_op_composition: $ => choice(
+            token.immediate('·'),
+            token.immediate('.')
+        ),
 
         _function_op_by_definition: $ => choice(
             operator(':='),

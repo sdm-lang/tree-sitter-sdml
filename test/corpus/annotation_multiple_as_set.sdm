@@ -1,0 +1,32 @@
+===========================
+Annotation, Multiple as set
+===========================
+
+module corpus_test_annotation is
+
+  @dc:seeAlso = {unordered unique} [
+      <https://www.dublincore.org/>
+      <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/>
+  ]
+
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (annotation
+      (annotation_property
+        (identifier_reference
+          (qualified_identifier
+            (identifier)
+            (identifier)))
+        (value
+          (sequence_of_values
+            (sequence_ordering)
+            (sequence_uniqueness)
+            (simple_value
+              (iri))
+            (simple_value
+              (iri))))))))

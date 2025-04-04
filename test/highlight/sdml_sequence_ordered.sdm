@@ -7,6 +7,23 @@ module sdml_sequence_ordered is
   ; <- keyword
   ;      ^ module
 
+  @skos:note = {unordered nonunique} [
+  ; <- property
+  ;^ property
+  ;          ^ operator
+  ;            ^ punctuation.bracket
+  ;             ^ keyword
+  ;                       ^ keyword
+  ;                                ^ punctuation.bracket
+  ;                                  ^ punctuation.bracket
+    "this" "is" "a" "test"
+    ; <- string
+    ;      ^ string
+    ;           ^ string
+    ;               ^ string
+  ]
+  ; <- punctuation.bracket
+
   class Ordered({ordered nonunique 0..} S) is
   ; <- keyword
   ;     ^ type.definition

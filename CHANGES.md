@@ -1,5 +1,56 @@
 # Changes for tree-sitter-sdml
 
+## Version 0.4.8
+
+* Feature: Add grammar rule to compound definitions to allow copying content
+  from another model element allowing a simple *copy-over* extension mechanism.
+
+Changes for new datatype syntax in BNF form:
+
+``` ebnf
+FromDefinition
+    ::= "from" IdentifierReference 
+        "with" ( "_" | Identifier | "[" Identifier+ "]" )
+
+EnumBody
+    ::= "is"
+        Annotation* FromDefinition? ValueVariant+
+        "end"
+
+StructureBody
+    ::= "is"
+        Annotation* FromDefinition? Member+
+        "end"
+```
+
+The grammar above includes the definition of some body rules as examples, the
+rest (dimension, entity, event, type class, and union) follow the same pattern.
+
+The example below demonstrates the use of this clause to extend the enumeration
+`Country` with additional values. Note that in this case the extension copies all
+values from the source definition by specifying the wildcard `"_"`.
+
+``` sdml
+module example is
+
+  enum Country of
+    US
+    CA
+    MX
+  end
+
+  enum ExtendedCountry of
+
+    from Country with _
+
+    UK
+    FR
+    DE
+  end
+  
+end
+```
+
 ## Version 0.4.7
 
 * Fix: Grammar for rules `sequence_of_values` and `sequence_of_predicate_values` to

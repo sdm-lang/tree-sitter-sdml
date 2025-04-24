@@ -1,0 +1,29 @@
+==============================
+Event, With From clause single
+==============================
+
+module corpus_test_event is
+
+  event NameChanged is
+    source Campaign
+    from Others with name
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (event_def
+        name: (identifier)
+        body: (event_body
+          identity: (source_entity
+            entity: (identifier_reference
+              (identifier)))
+          from: (from_definition_clause
+            from: (identifier_reference
+              (identifier))
+            member: (identifier)))))))

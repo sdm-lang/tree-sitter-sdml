@@ -1,0 +1,33 @@
+=================================
+Entity, With From clause wildcard
+=================================
+
+module corpus_test_entity is
+
+  entity Things is
+    identity id -> ThingId
+    from Others with _
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (entity_def
+        name: (identifier)
+        body: (entity_body
+          identity: (entity_identity
+            identity: (member
+              (member_def
+                name: (identifier)
+                target: (type_reference
+                  (identifier_reference
+                    (identifier))))))
+          from: (from_definition_clause
+            from: (identifier_reference
+              (identifier))
+            wildcard: (wildcard)))))))

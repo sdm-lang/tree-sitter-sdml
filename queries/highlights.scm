@@ -217,6 +217,13 @@
 
 (union_def "union" @keyword name: (identifier) @type.definition)
 
+(from_definition_clause
+ "from" @keyword
+ from: (identifier_reference) @type
+ "with" @keyword)
+(from_definition_clause wildcard: (_)  @type.builtin)
+(from_definition_clause member: (identifier)  @variable)
+
 (source_entity "source" @keyword entity: (identifier_reference) @type)
 (source_entity "with" @keyword)
 (source_entity [ "[" "]" ] @punctuation.bracket)

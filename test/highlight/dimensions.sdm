@@ -44,6 +44,12 @@ module dimensions is
     ;               ^ operator
     ;                  ^ type
 
+    from One with name
+    ; <- keyword
+    ;    ^ type
+    ;        ^ keyword
+    ;             ^ variable
+
     name -> Name
     ; <- variable.field
     ;    ^ operator

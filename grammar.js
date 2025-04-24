@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.4.7
+// Version:    0.4.8
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -939,6 +939,7 @@ module.exports = grammar({
                 )
             ),
             repeat($.dimension_parent),
+            optional(field('from', $.from_definition_clause)),
             repeat($.member),
             keyword('end')
         ),
@@ -955,6 +956,25 @@ module.exports = grammar({
         ),
 
         _identifier_or_sequence: $ => choice(
+            field('member', $.identifier),
+            seq(
+                '[',
+                repeat1(field('member', $.identifier)),
+                ']'
+            )
+        ),
+
+        from_definition_clause: $ => seq(
+            keyword('from'),
+            field('from', $.identifier_reference),
+            seq(
+                keyword('with'),
+                $._wildcard_or_identifier_or_sequence
+            )
+        ),
+
+        _wildcard_or_identifier_or_sequence: $ => choice(
+            field('wildcard', $.wildcard),
             field('member', $.identifier),
             seq(
                 '[',
@@ -981,6 +1001,7 @@ module.exports = grammar({
             keyword('is'),
             repeat($.annotation),
             field('identity', $.entity_identity),
+            optional(field('from', $.from_definition_clause)),
             repeat($.member),
             keyword('end')
         ),
@@ -994,6 +1015,7 @@ module.exports = grammar({
         enum_body: $ => seq(
             keyword('of'),
             repeat($.annotation),
+            optional(field('from', $.from_definition_clause)),
             repeat($.value_variant),
             keyword('end')
         ),
@@ -1008,6 +1030,7 @@ module.exports = grammar({
             keyword('is'),
             repeat($.annotation),
             field('identity', $.source_entity),
+            optional(field('from', $.from_definition_clause)),
             repeat($.member),
             keyword('end')
         ),
@@ -1026,6 +1049,7 @@ module.exports = grammar({
         structure_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
+            optional(field('from', $.from_definition_clause)),
             repeat($.member),
             keyword('end')
         ),
@@ -1039,6 +1063,7 @@ module.exports = grammar({
         union_body: $ => seq(
             keyword('of'),
             repeat($.annotation),
+            optional(field('from', $.from_definition_clause)),
             repeat($.type_variant),
             keyword('end')
         ),
@@ -1051,7 +1076,7 @@ module.exports = grammar({
             keyword('rdf'),
             field('name', $.identifier),
             optional(field('types', $.rdf_types)),
-            field('body', $.annotation_only_body)
+            optional(field('body', $.annotation_only_body))
         ),
 
         rdf_types: $ => seq(
@@ -1122,6 +1147,7 @@ module.exports = grammar({
         type_class_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
+            optional(field('from', $.from_definition_clause)),
             repeat(field('method', $.method_def)),
             keyword('end')
         ),

@@ -1,0 +1,25 @@
+====================================
+Structure, With From clause wildcard
+====================================
+
+module corpus_test_structure is
+
+  structure Things is
+    from Others with _
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (structure_def
+        name: (identifier)
+        body: (structure_body
+          from: (from_definition_clause
+            from: (identifier_reference
+              (identifier))
+            wildcard: (wildcard)))))))

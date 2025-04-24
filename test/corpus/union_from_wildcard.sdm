@@ -1,0 +1,29 @@
+================================
+Union, With From clause wildcard
+================================
+
+module corpus_test_union is
+
+  union NameKind of
+    from Names with _
+    External
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (union_def
+        name: (identifier)
+        body: (union_body
+          from: (from_definition_clause
+            from: (identifier_reference
+              (identifier))
+            wildcard: (wildcard))
+          (type_variant
+            name: (identifier_reference
+              (identifier))))))))

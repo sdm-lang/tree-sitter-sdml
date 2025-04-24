@@ -1,0 +1,25 @@
+=====================================
+Type Class, With From clause wildcard
+=====================================
+
+module corpus_test_typeclass is
+
+  class Things is
+    from Others with _
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (type_class_def
+        name: (identifier)
+        body: (type_class_body
+          from: (from_definition_clause
+            from: (identifier_reference
+              (identifier))
+            wildcard: (wildcard)))))))

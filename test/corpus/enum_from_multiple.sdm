@@ -1,0 +1,29 @@
+===============================
+Enum, With From clause multiple
+===============================
+
+module corpus_test_enum is
+
+  enum NameKind of
+    from Names with [ Internal Unknown ]
+    External
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (enum_def
+        name: (identifier)
+        body: (enum_body
+          from: (from_definition_clause
+            from: (identifier_reference
+              (identifier))
+            member: (identifier)
+            member: (identifier))
+          (value_variant
+            name: (identifier)))))))

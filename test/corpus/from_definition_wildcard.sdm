@@ -1,0 +1,25 @@
+==============================
+From Definition, with wildcard
+==============================
+
+module corpus_test_from_definition is
+
+  structure Example is
+    from Source with _
+  end
+
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (definition
+      (structure_def
+        (identifier)
+        (structure_body
+          (from_definition_clause
+            (identifier_reference
+              (identifier))
+            (wildcard)))))))

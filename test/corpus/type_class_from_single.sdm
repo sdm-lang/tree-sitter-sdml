@@ -1,0 +1,25 @@
+===================================
+Type Class, With From clause single
+===================================
+
+module corpus_test_typeclass is
+
+  class Things is
+    from Others with name
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (definition
+      (type_class_def
+        name: (identifier)
+        body: (type_class_body
+          from: (from_definition_clause
+            from: (identifier_reference
+              (identifier))
+            member: (identifier)))))))

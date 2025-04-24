@@ -526,6 +526,16 @@
     "type": "dimension_body",
     "named": true,
     "fields": {
+      "from": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "from_definition_clause",
+            "named": true
+          }
+        ]
+      },
       "identity": {
         "multiple": false,
         "required": true,
@@ -626,6 +636,16 @@
     "type": "entity_body",
     "named": true,
     "fields": {
+      "from": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "from_definition_clause",
+            "named": true
+          }
+        ]
+      },
       "identity": {
         "multiple": false,
         "required": true,
@@ -697,7 +717,18 @@
   {
     "type": "enum_body",
     "named": true,
-    "fields": {},
+    "fields": {
+      "from": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "from_definition_clause",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
@@ -769,6 +800,16 @@
     "type": "event_body",
     "named": true,
     "fields": {
+      "from": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "from_definition_clause",
+            "named": true
+          }
+        ]
+      },
       "identity": {
         "multiple": false,
         "required": true,
@@ -868,6 +909,42 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "from_definition_clause",
+    "named": true,
+    "fields": {
+      "from": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          }
+        ]
+      },
+      "member": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "wildcard": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "wildcard",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -1877,7 +1954,7 @@
     "fields": {
       "body": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "annotation_only_body",
@@ -2229,7 +2306,18 @@
   {
     "type": "structure_body",
     "named": true,
-    "fields": {},
+    "fields": {
+      "from": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "from_definition_clause",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
@@ -2336,6 +2424,16 @@
     "type": "type_class_body",
     "named": true,
     "fields": {
+      "from": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "from_definition_clause",
+            "named": true
+          }
+        ]
+      },
       "method": {
         "multiple": true,
         "required": false,
@@ -2603,7 +2701,18 @@
   {
     "type": "union_body",
     "named": true,
-    "fields": {},
+    "fields": {
+      "from": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "from_definition_clause",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
@@ -3340,11 +3449,11 @@
   },
   {
     "type": "unsigned",
-    "named": false
+    "named": true
   },
   {
     "type": "unsigned",
-    "named": true
+    "named": false
   },
   {
     "type": "unsignedByte",

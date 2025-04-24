@@ -1,5 +1,9 @@
 # Changes for tree-sitter-sdml
 
+## Version 0.4.9 (Rust only)
+
+* Build: update `tree-sitter` dependency from 0.24 to 0.25.3.
+
 ## Version 0.4.8
 
 * Feature: Add grammar rule to compound definitions to allow copying content

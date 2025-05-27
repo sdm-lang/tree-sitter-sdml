@@ -1,0 +1,24 @@
+module sdml_sequence_ordered is
+
+  import skos
+
+  class
+    Ordered (
+  ; ^ definition.class
+    S <- {ordered 0..}
+  ; ^ definition.class
+    Any
+  ; ^ reference.class
+  ) is
+
+    def drop (self -> S count -> unsigned) -> S is
+      ; ^ definition.method
+      ;       ^ definition.variable
+      ;                 ^ definition.variable
+      ;                                       ^ reference.type
+      @skos:definition = "Drop ~count~ items from the beginning of the sequence and return the rest."@en
+    end
+
+  end
+
+end

@@ -25,5 +25,5 @@ end
               (identifier)))
           (dimension_parent
             name: (identifier)
-            entity: (identifier_reference
+            parent: (identifier_reference
               (identifier))))))))

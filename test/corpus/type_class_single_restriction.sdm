@@ -1,0 +1,23 @@
+===================================
+Type Class, With Single Restriction
+===================================
+
+module corpus_test_typeclass is
+
+  class Option (T <- Any)
+
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (definition
+      (type_class_def
+        (identifier)
+        (type_parameter
+          (identifier)
+          (type_parameter_restriction
+            (identifier_reference
+              (identifier))))))))

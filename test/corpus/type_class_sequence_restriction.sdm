@@ -1,0 +1,25 @@
+=====================================
+Type Class, With Sequence Restriction
+=====================================
+
+module corpus_test_typeclass is
+
+  class Option (T <- {ordered} Any)
+
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (definition
+      (type_class_def
+        (identifier)
+        (type_parameter
+          (identifier)
+          (type_parameter_restriction
+            (cardinality_reference_expression
+              (sequence_ordering))
+            (identifier_reference
+              (identifier))))))))

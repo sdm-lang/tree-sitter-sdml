@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.4.8
+// Version:    0.4.10
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -182,7 +182,7 @@ module.exports = grammar({
         ),
 
         // -----------------------------------------------------------------------
-        // Annotations and Constraints
+        // Annotations
         // -----------------------------------------------------------------------
 
         annotation: $ => choice(
@@ -209,6 +209,20 @@ module.exports = grammar({
             )
         ),
 
+        // -----------------------------------------------------------------------
+        // Annotations ❯ Annotation Only Body
+        // -----------------------------------------------------------------------
+
+        annotation_only_body: $ => seq(
+            keyword('is'),
+            repeat1($.annotation),
+            keyword('end')
+        ),
+
+        // -----------------------------------------------------------------------
+        // Annotations ❯ Informal Constraints
+        // -----------------------------------------------------------------------
+
         informal_constraint: $ => seq(
             operator('='),
             field('value', $.quoted_string),
@@ -223,7 +237,7 @@ module.exports = grammar({
         ),
 
         // -----------------------------------------------------------------------
-        // Formal Constraints
+        // Annotations ❯ Formal Constraints
         // -----------------------------------------------------------------------
 
         formal_constraint: $ => seq(
@@ -235,6 +249,8 @@ module.exports = grammar({
             keyword('end'),
         ),
 
+        // -----------------------------------------------------------------------
+        // Annotations ❯ Formal Constraints ❯ Sentences
         // -----------------------------------------------------------------------
 
         constraint_sentence: $ => choice(
@@ -355,6 +371,8 @@ module.exports = grammar({
         ),
 
         // -----------------------------------------------------------------------
+        // Annotations ❯ Formal Constraints ❯ Terms
+        // -----------------------------------------------------------------------
 
         term: $ => choice(
             $.sequence_builder,
@@ -422,6 +440,8 @@ module.exports = grammar({
         reserved_self: $ =>  keyword('self'),
 
         // -----------------------------------------------------------------------
+        // Annotations ❯ Formal Constraints ❯ Environments
+        // -----------------------------------------------------------------------
 
         constraint_environment: $ => seq(
             keyword('with'),
@@ -456,23 +476,9 @@ module.exports = grammar({
         _function_type: $ => seq(
             $._type_op_has_type,
             optional(
-                field('cardinality', $.function_cardinality_expression)
+                field('cardinality', $.cardinality_reference_expression)
             ),
             field('target', $.function_type_reference)
-        ),
-
-        function_cardinality_expression: $ => seq(
-            '{',
-            optional(
-                field('ordering', $.sequence_ordering)
-            ),
-            optional(
-                field('uniqueness', $.sequence_uniqueness)
-            ),
-            optional(
-                $._cardinality_inner
-            ),
-            '}'
         ),
 
         function_type_reference: $ => choice(
@@ -492,6 +498,8 @@ module.exports = grammar({
             )
         ),
 
+        // -----------------------------------------------------------------------
+        // Annotations ❯ Formal Constraints ❯ Sequence Builder
         // -----------------------------------------------------------------------
 
         sequence_builder: $ => seq(
@@ -525,124 +533,9 @@ module.exports = grammar({
             $.sequence_of_values
         ),
 
-        sequence_of_values: $ => seq(
-            optional($._sequence_value_constraints),
-            choice(
-                field('empty', $._value_empty_sequence),
-                seq(
-                    '[',
-                    repeat(
-                        field(
-                            'element',
-                            choice(
-                                $.simple_value,
-                                $.value_constructor,
-                                $.mapping_value,
-                                $.identifier_reference
-                            )
-                        )
-                    ),
-                    ']'
-                )
-            )
-        ),
-
-        _sequence_value_constraints: $ => seq(
-            '{',
-            choice(
-                seq(
-                    field('ordering', $.sequence_ordering),
-                    optional(field('uniqueness', $.sequence_uniqueness)),
-                ),
-                seq(
-                    optional(field('ordering', $.sequence_ordering)),
-                    field('uniqueness', $.sequence_uniqueness)
-                )
-            ),
-            '}'
-        ),
-
-        value_constructor: $ => seq(
-            field('name', $.identifier_reference),
-            '(',
-            field('value', $.simple_value),
-            ')'
-        ),
-
-        mapping_value: $ => seq(
-            field('domain', $.simple_value),
-            prec.right(
-                seq(
-                    $._type_op_has_type,
-                    field('range', $.value)
-                )
-            ),
-        ),
-
-        builtin_simple_type: $ => choice(
-            $._owl_builtin_types,
-            $._builtin_primitive_datatypes,
-            $._derived_date_datetypes,
-            $._derived_numeric_datatypes,
-            $._derived_string_datatypes,
-        ),
-
-        _owl_builtin_types: $ => choice(
-            keyword('Thing'),
-            keyword('Nothing'),
-            keyword('real'),
-            keyword('rational'),
-        ),
-
-        _builtin_primitive_datatypes: $ => choice(
-            keyword('anyURI'), keyword('iri'),
-            keyword('base64Binary'),
-            keyword('boolean'),
-            keyword('date'),
-            keyword('dateTime'),
-            keyword('decimal'),
-            keyword('double'),
-            keyword('duration'),
-            keyword('float'),
-            keyword('gDay'),
-            keyword('gMonth'),
-            keyword('gMonthDay'),
-            keyword('gYearMonth'),
-            keyword('gYear'),
-            keyword('hexBinary'),
-            keyword('binary'),
-            keyword('string'),
-            keyword('time')
-        ),
-
-        _derived_date_datetypes: $ => choice(
-            keyword('dateTimeStamp'),
-            keyword('dayTimeDuration'),
-            keyword('yearMonthDuration')
-        ),
-
-        _derived_numeric_datatypes: $ => choice(
-            keyword('integer'),
-            keyword('long'),
-            keyword('int'),
-            keyword('short'),
-            keyword('byte'),
-            keyword('nonNegativeInteger'),
-            keyword('positiveInteger'),
-            keyword('unsignedLong'),
-            keyword('unsignedInt'),
-            keyword('unsigned'),
-            keyword('unsignedShort'),
-            keyword('unsignedByte'),
-            keyword('nonPositiveInteger'),
-            keyword('negativeInteger')
-        ),
-
-        _derived_string_datatypes: $ => choice(
-            keyword('normalizedString'),
-            keyword('token'),
-            keyword('language')
-        ),
+        // -----------------------------------------------------------------------
+        // Values ❯ Simple
+        // -----------------------------------------------------------------------
 
         simple_value: $ => choice(
             $.boolean,
@@ -759,7 +652,142 @@ module.exports = grammar({
         ),
 
         // -----------------------------------------------------------------------
-        // Top-Level Definitions
+        // Values ❯ Constructors
+        // -----------------------------------------------------------------------
+
+        value_constructor: $ => seq(
+            field('name', $.identifier_reference),
+            '(',
+            field('value', $.simple_value),
+            ')'
+        ),
+
+        // -----------------------------------------------------------------------
+        // Values ❯ Mappings
+        // -----------------------------------------------------------------------
+
+        mapping_value: $ => seq(
+            field('domain', $.simple_value),
+            prec.right(
+                seq(
+                    $._type_op_has_type,
+                    field('range', $.value)
+                )
+            ),
+        ),
+
+        // -----------------------------------------------------------------------
+        // Values ❯ Sequences
+        // -----------------------------------------------------------------------
+
+        sequence_of_values: $ => seq(
+            optional($._sequence_value_constraints),
+            choice(
+                field('empty', $._value_empty_sequence),
+                seq(
+                    '[',
+                    repeat(
+                        field(
+                            'element',
+                            choice(
+                                $.simple_value,
+                                $.value_constructor,
+                                $.mapping_value,
+                                $.identifier_reference
+                            )
+                        )
+                    ),
+                    ']'
+                )
+            )
+        ),
+
+        _sequence_value_constraints: $ => seq(
+            '{',
+            choice(
+                seq(
+                    field('ordering', $.sequence_ordering),
+                    optional(field('uniqueness', $.sequence_uniqueness)),
+                ),
+                seq(
+                    optional(field('ordering', $.sequence_ordering)),
+                    field('uniqueness', $.sequence_uniqueness)
+                )
+            ),
+            '}'
+        ),
+
+        // -----------------------------------------------------------------------
+        // Datatype Names
+        // -----------------------------------------------------------------------
+
+        builtin_simple_type: $ => choice(
+            $._owl_builtin_types,
+            $._builtin_primitive_datatypes,
+            $._derived_date_datetypes,
+            $._derived_numeric_datatypes,
+            $._derived_string_datatypes,
+        ),
+
+        _owl_builtin_types: $ => choice(
+            keyword('Thing'),
+            keyword('Nothing'),
+            keyword('real'),
+            keyword('rational'),
+        ),
+
+        _builtin_primitive_datatypes: $ => choice(
+            keyword('anyURI'), keyword('iri'),
+            keyword('base64Binary'),
+            keyword('boolean'),
+            keyword('date'),
+            keyword('dateTime'),
+            keyword('decimal'),
+            keyword('double'),
+            keyword('duration'),
+            keyword('float'),
+            keyword('gDay'),
+            keyword('gMonth'),
+            keyword('gMonthDay'),
+            keyword('gYearMonth'),
+            keyword('gYear'),
+            keyword('hexBinary'),
+            keyword('binary'),
+            keyword('string'),
+            keyword('time')
+        ),
+
+        _derived_date_datetypes: $ => choice(
+            keyword('dateTimeStamp'),
+            keyword('dayTimeDuration'),
+            keyword('yearMonthDuration')
+        ),
+
+        _derived_numeric_datatypes: $ => choice(
+            keyword('integer'),
+            keyword('long'),
+            keyword('int'),
+            keyword('short'),
+            keyword('byte'),
+            keyword('nonNegativeInteger'),
+            keyword('positiveInteger'),
+            keyword('unsignedLong'),
+            keyword('unsignedInt'),
+            keyword('unsigned'),
+            keyword('unsignedShort'),
+            keyword('unsignedByte'),
+            keyword('nonPositiveInteger'),
+            keyword('negativeInteger')
+        ),
+
+        _derived_string_datatypes: $ => choice(
+            keyword('normalizedString'),
+            keyword('token'),
+            keyword('language')
+        ),
+
+        // -----------------------------------------------------------------------
+        // Top-Level Definitions ❯ Definition
         // -----------------------------------------------------------------------
 
         definition: $ => choice(
@@ -775,6 +803,52 @@ module.exports = grammar({
             $.rdf_def,
             $.type_class_def
         ),
+
+        // -----------------------------------------------------------------------
+        // Top-Level Definitions ❯ From Definition
+        // -----------------------------------------------------------------------
+
+        from_definition_clause: $ => seq(
+            keyword('from'),
+            field('from', $.identifier_reference),
+            choice(
+                $.from_definition_with,
+                $.from_definition_without
+            )
+        ),
+
+        from_definition_with: $ => seq(
+            keyword('with'),
+            $._wildcard_or_identifier_or_sequence
+        ),
+
+        from_definition_without: $ => seq(
+            keyword('without'),
+            $._identifier_or_sequence
+        ),
+
+        _wildcard_or_identifier_or_sequence: $ => choice(
+            field('wildcard', $.wildcard),
+            field('member', $.identifier),
+            seq(
+                '[',
+                repeat1(field('member', $.identifier)),
+                ']'
+            )
+        ),
+
+        _identifier_or_sequence: $ => choice(
+            field('member', $.identifier),
+            seq(
+                '[',
+                repeat1(field('member', $.identifier)),
+                ']'
+            )
+        ),
+
+        // -----------------------------------------------------------------------
+        // Top-Level Definitions ❯ Datatype
+        // -----------------------------------------------------------------------
 
         data_type_def: $ => seq(
             keyword('datatype'),
@@ -826,6 +900,10 @@ module.exports = grammar({
             repeat1($._restriction_facet),
             '}'
         ),
+
+        // -----------------------------------------------------------------------
+        // Top-Level Definitions ❯ Datatype ❯ Facets
+        // -----------------------------------------------------------------------
 
         _restriction_facet: $ => choice(
             $.length_restriction_facet,
@@ -916,15 +994,14 @@ module.exports = grammar({
 
         kw_is_fixed: $ => keyword('fixed'),
 
-        annotation_only_body: $ => seq(
-            keyword('is'),
-            repeat1($.annotation),
-            keyword('end')
-        ),
+        // -----------------------------------------------------------------------
+        // Top-Level Definitions ❯ Dimension
+        // -----------------------------------------------------------------------
 
         dimension_def: $ => seq(
             keyword('dimension'),
             field('name', $.identifier),
+            optional(field('from', $.from_definition_clause)),
             optional(field('body', $.dimension_body))
         ),
 
@@ -939,7 +1016,6 @@ module.exports = grammar({
                 )
             ),
             repeat($.dimension_parent),
-            optional(field('from', $.from_definition_clause)),
             repeat($.member),
             keyword('end')
         ),
@@ -955,45 +1031,22 @@ module.exports = grammar({
             )
         ),
 
-        _identifier_or_sequence: $ => choice(
-            field('member', $.identifier),
-            seq(
-                '[',
-                repeat1(field('member', $.identifier)),
-                ']'
-            )
-        ),
-
-        from_definition_clause: $ => seq(
-            keyword('from'),
-            field('from', $.identifier_reference),
-            seq(
-                keyword('with'),
-                $._wildcard_or_identifier_or_sequence
-            )
-        ),
-
-        _wildcard_or_identifier_or_sequence: $ => choice(
-            field('wildcard', $.wildcard),
-            field('member', $.identifier),
-            seq(
-                '[',
-                repeat1(field('member', $.identifier)),
-                ']'
-            )
-        ),
-
         dimension_parent: $ => seq(
             keyword('parent'),
             field('name', $.identifier),
             $._type_op_has_type,
-            field('entity', $.identifier_reference),
+            field('parent', $.identifier_reference),
             optional(field('body', $.annotation_only_body))
         ),
+
+        // -----------------------------------------------------------------------
+        // Top-Level Definitions ❯ Entity
+        // -----------------------------------------------------------------------
 
         entity_def: $ => seq(
             keyword('entity'),
             field('name', $.identifier),
+            optional(field('from', $.from_definition_clause)),
             optional(field('body', $.entity_body))
         ),
 
@@ -1001,28 +1054,36 @@ module.exports = grammar({
             keyword('is'),
             repeat($.annotation),
             field('identity', $.entity_identity),
-            optional(field('from', $.from_definition_clause)),
             repeat($.member),
             keyword('end')
         ),
 
+        // -----------------------------------------------------------------------
+        // Top-Level Definitions ❯ Enum
+        // -----------------------------------------------------------------------
+
         enum_def: $ => seq(
             keyword('enum'),
             field('name', $.identifier),
+            optional(field('from', $.from_definition_clause)),
             optional(field('body', $.enum_body))
         ),
 
         enum_body: $ => seq(
             keyword('of'),
             repeat($.annotation),
-            optional(field('from', $.from_definition_clause)),
             repeat($.value_variant),
             keyword('end')
         ),
 
+        // -----------------------------------------------------------------------
+        // Top-Level Definitions ❯ Event
+        // -----------------------------------------------------------------------
+
         event_def: $ => seq(
             keyword('event'),
             field('name', $.identifier),
+            optional(field('from', $.from_definition_clause)),
             optional(field('body', $.event_body))
         ),
 
@@ -1030,46 +1091,21 @@ module.exports = grammar({
             keyword('is'),
             repeat($.annotation),
             field('identity', $.source_entity),
-            optional(field('from', $.from_definition_clause)),
             repeat($.member),
             keyword('end')
         ),
+
+        // -----------------------------------------------------------------------
+        // Top-Level Definitions ❯ Property
+        // -----------------------------------------------------------------------
 
         property_def: $ => seq(
             keyword('property'),
             field('member', $.member_def)
         ),
 
-        structure_def: $ => seq(
-            keyword('structure'),
-            field('name', $.identifier),
-            optional(field('body', $.structure_body))
-        ),
-
-        structure_body: $ => seq(
-            keyword('is'),
-            repeat($.annotation),
-            optional(field('from', $.from_definition_clause)),
-            repeat($.member),
-            keyword('end')
-        ),
-
-        union_def: $ => seq(
-            keyword('union'),
-            field('name', $.identifier),
-            optional(field('body', $.union_body))
-        ),
-
-        union_body: $ => seq(
-            keyword('of'),
-            repeat($.annotation),
-            optional(field('from', $.from_definition_clause)),
-            repeat($.type_variant),
-            keyword('end')
-        ),
-
         // -----------------------------------------------------------------------
-        // Library Definitions
+        // Top-Level Definitions ❯ RDF
         // -----------------------------------------------------------------------
 
         rdf_def: $ => seq(
@@ -1094,52 +1130,78 @@ module.exports = grammar({
             )
         ),
 
+        // -----------------------------------------------------------------------
+        // Top-Level Definitions ❯ Structure
+        // -----------------------------------------------------------------------
+
+        structure_def: $ => seq(
+            keyword('structure'),
+            field('name', $.identifier),
+            optional(field('from', $.from_definition_clause)),
+            optional(field('body', $.structure_body))
+        ),
+
+        structure_body: $ => seq(
+            keyword('is'),
+            repeat($.annotation),
+            repeat($.member),
+            keyword('end')
+        ),
+
+        // -----------------------------------------------------------------------
+        // Top-Level Definitions ❯ TypeClass
+        // -----------------------------------------------------------------------
+
         type_class_def: $ => seq(
             keyword('class'),
             field('name', $.identifier),
             optional(
                 seq(
                     '(',
-                    repeat1(field('variable', $.type_variable)),
+                    repeat1(field('parameter', $.type_parameter)),
                     ')',
                 )
             ),
+            optional(field('from', $.from_definition_clause)),
             optional(field('body', $.type_class_body))
         ),
 
-        type_variable: $ => seq(
-            optional(
-                field('cardinality', $.function_cardinality_expression)
-            ),
+        type_parameter: $ => seq(
             field('name', $.identifier),
             optional(
-                field('restriction', $.type_variable_restriction)
-            )
-        ),
-
-       type_variable_restriction: $ => seq(
-            $._type_op_has_type,
-            $.type_class_reference,
-            repeat(
                 seq(
-                    $.type_op_combiner,
-                    $.type_class_reference
+                    $._type_op_type_restriction,
+                    $.type_parameter_restriction,
+                    repeat(
+                        seq(
+                            $.type_op_combiner,
+                            $.type_parameter_restriction,
+                        )
+                    )
                 )
             )
         ),
 
-        type_class_reference: $ => seq(
-            field('name', $.identifier_reference),
-            optional(field('arguments', $.type_class_arguments)),
+        type_parameter_restriction: $ => seq(
+            optional(
+                field('cardinality', $.cardinality_reference_expression)
+            ),
+            field('class', $.identifier_reference),
+            // Actual arguments to match the parameters for the class 'class'.
+            optional(
+                seq(
+                    "(",
+                    repeat1(
+                        field('argument',$.type_restriction_argument)
+                    ),
+                    ")"
+                )
+            )
         ),
 
-        type_class_arguments: $ => seq(
-            '(',
-            choice(
-                field('wildcard', $.wildcard),
-                repeat1(field('variable', $.type_class_reference)),
-                ),
-            ')',
+        type_restriction_argument: $ => choice(
+            $.identifier,
+            $.wildcard
         ),
 
         wildcard: $ => operator('_'),
@@ -1147,7 +1209,6 @@ module.exports = grammar({
         type_class_body: $ => seq(
             keyword('is'),
             repeat($.annotation),
-            optional(field('from', $.from_definition_clause)),
             repeat(field('method', $.method_def)),
             keyword('end')
         ),
@@ -1156,6 +1217,24 @@ module.exports = grammar({
             field('signature', $.function_signature),
             optional(field('body', $.function_body)),
             optional($.annotation_only_body)
+        ),
+
+        // -----------------------------------------------------------------------
+        // Top-Level Definitions ❯ Union
+        // -----------------------------------------------------------------------
+
+        union_def: $ => seq(
+            keyword('union'),
+            field('name', $.identifier),
+            optional(field('from', $.from_definition_clause)),
+            optional(field('body', $.union_body))
+        ),
+
+        union_body: $ => seq(
+            keyword('of'),
+            repeat($.annotation),
+            repeat($.type_variant),
+            keyword('end')
         ),
 
         // -----------------------------------------------------------------------
@@ -1182,6 +1261,10 @@ module.exports = grammar({
             keyword('ref'),
             field('property', $.identifier_reference),
         ),
+
+        // -----------------------------------------------------------------------
+        // Members ❯ Type Expressions
+        // -----------------------------------------------------------------------
 
         _type_expression_to: $ => seq(
             $._type_op_has_type,
@@ -1212,6 +1295,10 @@ module.exports = grammar({
             ")"
         ),
 
+        // -----------------------------------------------------------------------
+        // Members ❯ Cardinality
+        // -----------------------------------------------------------------------
+
         cardinality_expression: $ => seq(
             '{',
             optional(
@@ -1221,6 +1308,20 @@ module.exports = grammar({
                 field('uniqueness', $.sequence_uniqueness)
             ),
             $._cardinality_inner,
+            '}'
+        ),
+
+        cardinality_reference_expression: $ => seq(
+            '{',
+            optional(
+                field('ordering', $.sequence_ordering)
+            ),
+            optional(
+                field('uniqueness', $.sequence_uniqueness)
+            ),
+            optional(
+                $._cardinality_inner
+            ),
             '}'
         ),
 

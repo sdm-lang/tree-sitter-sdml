@@ -34,22 +34,21 @@ module dimensions is
   end
   ; <- keyword
 
-  dimension Two is
+  dimension Two from One with name is
   ; <- keyword
   ;         ^ type.definition
   ;             ^ keyword
-    identity source -> SourceEntity
+  ;                  ^ type
+  ;                      ^ keyword
+  ;                           ^ variable
+  ;                                ^ keyword
+
+   identity source -> SourceEntity
     ; <- keyword
     ;        ^ variable.field
     ;               ^ operator
     ;                  ^ type
-
-    from One with name
-    ; <- keyword
-    ;    ^ type
-    ;        ^ keyword
-    ;             ^ variable
-
+n
     name -> Name
     ; <- variable.field
     ;    ^ operator

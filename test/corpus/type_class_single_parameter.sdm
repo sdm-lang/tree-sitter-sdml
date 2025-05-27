@@ -1,0 +1,20 @@
+=================================
+Type Class, With Single Parameter
+=================================
+
+module corpus_test_typeclass is
+
+  class Option (T)
+
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (definition
+      (type_class_def
+        (identifier)
+         (type_parameter
+           (identifier))))))

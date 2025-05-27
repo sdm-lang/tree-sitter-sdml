@@ -1,0 +1,24 @@
+module dimensions is
+
+  import [ sales stores ]
+
+  dimension Location from Named with name is
+    ;       ^ definition.dimension
+    ;                     ^ reference.type
+    ;                                ^ reference.field
+    source sales:Sale with [ store city ]
+    ;      ^ reference.entity
+    ;                        ^ reference.field
+    ;                              ^ reference.field
+
+    parent region -> Region
+    ;      ^ definition.field
+    ;                ^ reference.dimension
+
+    state -> stores:State
+    country -> stores:Country
+  end
+
+  event Foo
+
+end

@@ -4,9 +4,8 @@ Event, With From clause wildcard
 
 module corpus_test_event is
 
-  event NameChanged is
+  event NameChanged from Others with _ is
     source Campaign
-    from Others with _
   end
 
 end
@@ -19,12 +18,13 @@ end
     (definition
       (event_def
         name: (identifier)
+        from: (from_definition_clause
+          from: (identifier_reference
+            (identifier))
+          (from_definition_with
+            wildcard: (wildcard)))
         body: (event_body
           identity: (source_entity
             entity: (identifier_reference
-              (identifier)))
-          from: (from_definition_clause
-            from: (identifier_reference
-              (identifier))
-            wildcard: (wildcard)))))))
+              (identifier))))))))
 

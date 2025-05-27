@@ -4,8 +4,7 @@ Enum, With From clause multiple
 
 module corpus_test_enum is
 
-  enum NameKind of
-    from Names with [ Internal Unknown ]
+  enum NameKind from Names with [ Internal Unknown ] of
     External
   end
 
@@ -19,11 +18,12 @@ end
     (definition
       (enum_def
         name: (identifier)
-        body: (enum_body
-          from: (from_definition_clause
-            from: (identifier_reference
-              (identifier))
+        from: (from_definition_clause
+          from: (identifier_reference
+            (identifier))
+          (from_definition_with
             member: (identifier)
-            member: (identifier))
+            member: (identifier)))
+        body: (enum_body
           (value_variant
             name: (identifier)))))))

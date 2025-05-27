@@ -23,7 +23,7 @@ end
     (definition
       (type_class_def
         (identifier)
-        (type_variable (identifier))
+        (type_parameter (identifier))
         (type_class_body
           (method_def
             (function_signature

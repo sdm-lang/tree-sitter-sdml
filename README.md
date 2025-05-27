@@ -1,4 +1,4 @@
-# Tree-Sitter grammar for SDML
+g# Tree-Sitter grammar for SDML
 
 ![SDML Logo Text](https://raw.githubusercontent.com/sdm-lang/.github/main/profile/horizontal-text.svg)
 

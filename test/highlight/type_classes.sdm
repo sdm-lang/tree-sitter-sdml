@@ -1,0 +1,73 @@
+module type_classes is
+
+  class Empty
+  ; <- keyword
+  ;     ^ type.definition
+
+  class OneSimpleParameter (A)
+  ; <- keyword
+  ;     ^ type.definition
+  ;                        ^ punctuation.bracket
+  ;                         ^ type.definition
+  ;                          ^ punctuation.bracket
+
+  class SimpleTypeRestriction (A <- Any)
+  ; <- keyword
+  ;     ^ type.definition
+  ;                           ^ punctuation.bracket
+  ;                            ^ type.definition
+  ;                              ^ operator
+  ;                                 ^ type
+  ;                                    ^ punctuation.bracket
+
+  class SequenceTypeRestriction (A <- {ordered} Any)
+  ; <- keyword
+  ;     ^ type.definition
+  ;                             ^ punctuation.bracket
+  ;                              ^ type.definition
+  ;                                ^ operator
+  ;                                   ^ punctuation.bracket
+  ;                                    ^ keyword
+  ;                                           ^ punctuation.bracket
+  ;                                             ^ type
+  ;                                                ^ punctuation.bracket
+
+  class NestedSequences (
+  ; <- keyword
+  ;     ^ type.definition
+  ;                     ^ punctuation.bracket
+    A <- {ordered} Eq(B)
+  ; ^ type.definition
+  ;   ^ operator
+  ;      ^ punctuation.bracket
+  ;       ^ keyword
+  ;              ^ punctuation.bracket
+  ;                ^ type
+  ;                  ^ punctuation.bracket
+  ;                   ^ type.definition
+  ;                    ^ punctuation.bracket
+    B <- {unique} Any
+  ; ^ type.definition
+  ;   ^ operator
+  ;      ^ punctuation.bracket
+  ;       ^ keyword
+  ;             ^ punctuation.bracket
+  ;               ^ type
+  )
+  ; <- punctuation.bracket
+
+  class TypeCombinators (Integer <- PartialEq + Eq + PartialOrd + Ord)
+  ; <- keyword
+  ;     ^ type.definition
+  ;                     ^ punctuation.bracket
+  ;                      ^ type.definition
+  ;                              ^ operator
+  ;                                 ^ type
+  ;                                           ^ operator
+  ;                                             ^ type
+  ;                                                ^ operator
+  ;                                                  ^ type
+  ;                                                             ^ operator
+  ;                                                               ^ type
+
+end

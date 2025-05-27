@@ -4,9 +4,8 @@ Event, With From clause single
 
 module corpus_test_event is
 
-  event NameChanged is
+  event NameChanged from Others with name is
     source Campaign
-    from Others with name
   end
 
 end
@@ -19,11 +18,12 @@ end
     (definition
       (event_def
         name: (identifier)
+        from: (from_definition_clause
+          from: (identifier_reference
+            (identifier))
+          (from_definition_with
+            member: (identifier)))
         body: (event_body
           identity: (source_entity
             entity: (identifier_reference
-              (identifier)))
-          from: (from_definition_clause
-            from: (identifier_reference
-              (identifier))
-            member: (identifier)))))))
+              (identifier))))))))

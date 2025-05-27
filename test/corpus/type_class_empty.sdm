@@ -4,7 +4,7 @@ Type Class, Empty
 
 module corpus_test_typeclass is
 
-  class Any (T)
+  class Any
 
 end
 
@@ -15,6 +15,4 @@ end
   (module_body
     (definition
       (type_class_def
-        (identifier)
-        (type_variable
-          (identifier))))))
+        (identifier)))))

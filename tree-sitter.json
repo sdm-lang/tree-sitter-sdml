@@ -1,0 +1,49 @@
+{
+  "grammars": [
+    {
+      "name": "sdml",
+      "camelcase": "Sdml",
+      "scope": "source.sdml",
+      "path": ".",
+      "file-types": [
+        "sdml",
+        "sdm"
+      ],
+      "highlights": [
+        "queries/highlights.scm"
+      ],
+      "injections": [
+        "queries/injections.scm"
+      ],
+      "locals": [
+        "queries/locals.scm"
+      ],
+      "tags": [
+        "queries/tags.scm"
+      ],
+      "injection-regex": "^sdml$"
+    }
+  ],
+  "metadata": {
+    "version": "0.4.10",
+    "license": "Apache-2.0",
+    "description": "Tree-Sitter grammar for Simple Domain Modeling Language",
+    "authors": [
+      {
+        "name": "Simon Johnston",
+        "email": "johnstonskj@gmail.com"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/johnstonskj/tree-sitter-smdl"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true
+  }
+}

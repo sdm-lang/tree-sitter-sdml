@@ -1,0 +1,84 @@
+module constraints is
+
+  @skos:prefLabel = "Example"
+
+  assert just_testing with
+    def has_pref_label(anns -> {0..} Annotation) -> boolean :=
+      ∃ a ∈ anns, name(a) = skos:prefLabel ∧ ¬empty(value(a))
+    def foo := "foo"
+  is
+    self.tags.contains(foo)
+  end
+
+  entity Campaign is
+    identity a -> CampaignId
+
+    b -> xsd:string is
+      assert not_null = "self is not empty"
+    end
+
+    c -> Target is
+      assert tagged_with_foo is
+        self.tags.contains(1)
+      end
+    end
+
+    d -> Target is
+      assert tagged_with_foo_path with
+        def foo -> string := "foo"
+      is
+        self.tags.contains(foo)
+      end
+    end
+
+    e -> Target is
+      assert tagged_with_foo_builder is
+        not is_empty({ t |exists t in self.tags, t = "foo" })
+      end
+    end
+
+    f -> Target is
+      assert tagged_with_foo_builder_2 is
+        ¬ is_empty({ t |∃ t ∈ self.tags, t = "foo" ∧ color(t) = red })
+      end
+    end
+
+    g -> Target is
+      assert tagged_with_foo_builder_3 is
+        ¬ is_empty({ t |∀ t ∈ self.tags, t = "foo" ∨ t = "bar" })
+      end
+    end
+
+    h -> Target is
+      assert tagged_with_foo_builder_4 is
+        not is_empty( { t |forall t in self.tags, exists x in self.container.tags, contains(x t) })
+      end
+    end
+
+    i -> Target is
+      assert tagged_with_foo_builder_5 is
+        exists x in self.container.tags, not is_empty({ t |∀ t ∈ self.tags, contains(x t) })
+      end
+    end
+
+    j -> Target is
+      assert tagged_with_foo_builder_6 is
+        ∃ x ∈ self.container.tags,
+          ¬ {
+              t
+            |
+              ∀ t ∈ self.tags, contains(x t)
+            } = ∅
+      end
+    end
+
+    k -> Target is
+      assert tagged_with_parent_tags is
+        ∃ tag ∈ self.container.tags,
+          self.tags.contains(tag)
+      end
+    end
+
+  end
+
+end

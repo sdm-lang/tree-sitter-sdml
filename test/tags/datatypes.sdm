@@ -1,0 +1,51 @@
+module datatypes is
+
+  import skos
+
+  datatype shortName <- string {
+    ;      ^ definition.datatype
+    ;                   ^ reference.datatype
+    minLength = fixed 2
+    ; <- reference.facet
+    maxLength = 20
+    ; <- reference.facet
+  } is
+    @skos:prefLabel = "short name"
+    ;^ reference.type
+    @skos:definition = "A short descriptive name"
+    ;^ reference.type
+  end
+
+  datatype eventOcurred <- dateTime {
+    ;      ^ definition.datatype
+    ;                      ^ reference.datatype
+    explicitTimezone = fixed required
+    ; <- reference.facet
+  }
+
+  datatype thing <- string {
+    ;      ^ definition.datatype
+    ;               ^ reference.datatype
+    pattern = ""
+    ; <- reference.facet
+  }
+
+  datatype uuid <- string {
+    ;      ^ definition.datatype
+    ;               ^ reference.datatype
+    pattern = [
+    ; <- reference.facet
+      "^(?:[[:xdigit:]]{32})$"
+      "^(?:[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12})$"
+      "^(?:\\{[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}\\})$"
+      "^(?:\\([[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}\\))$"
+      "^(?:\\{0x[[:xdigit:]]{8},(?:0x[[:xdigit:]]{4},){2}\\{(?:0x[[:xdigit:]]{2},){7}0x[[:xdigit:]]{2}\\}\\})$"
+    ]
+  } is
+    @skos:prefLabel = "UUID"@en
+    ;^ reference.type
+    @dc:description = "The string form of a UUID, conforming to one of 5 standard patterns."@en
+    ;^ reference.type
+  end
+
+end

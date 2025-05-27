@@ -4,8 +4,7 @@ Union, With From clause multiple
 
 module corpus_test_union is
 
-  union NameKind of
-    from Names with [ Internal Unknown ]
+  union NameKind from Names with [ Internal Unknown ] of
     External
   end
 
@@ -19,12 +18,13 @@ end
     (definition
       (union_def
         name: (identifier)
-        body: (union_body
-          from: (from_definition_clause
-            from: (identifier_reference
-              (identifier))
+        from: (from_definition_clause
+          from: (identifier_reference
+            (identifier))
+          (from_definition_with
             member: (identifier)
-            member: (identifier))
+            member: (identifier)))
+        body: (union_body
           (type_variant
             name: (identifier_reference
               (identifier))))))))

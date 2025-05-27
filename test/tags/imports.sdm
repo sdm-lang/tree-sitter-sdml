@@ -1,0 +1,27 @@
+module imports is
+
+  from :: import xsd:base
+  ;              ^ reference.module
+  ;                  ^ reference.type
+
+  from xsd import facets:minLength
+  ;    ^ reference.module
+  ;               ^ reference.module
+  ;                      ^ reference.type
+
+  from ::xsd import facets:minLength
+  ;      ^ reference.module
+  ;                 ^ reference.module
+  ;                        ^ reference.type
+
+  from ::reporting::common import [
+  ;      ^ reference.module
+  ;                 ^ reference.module
+    datatypes
+  ; ^ reference.module
+    enums:DayOfWeek
+  ; ^ reference.module
+  ;       ^ reference.type
+  ]
+
+end

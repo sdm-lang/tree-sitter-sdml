@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-sdml",
-  "version": "0.4.8",
+  "version": "0.4.10",
   "description": "Tree-Sitter grammar for Simple Domain Modeling Language",
   "main": "bindings/node",
   "types": "bindings/node",
@@ -48,33 +48,5 @@
   },
   "directories": {
     "test": "test"
-  },
-  "tree-sitter": [
-    {
-      "scope": "source.sdml",
-      "file-types": [
-        "sdml",
-        "sdm"
-      ],
-      "folds": [
-        "queries/folds.scm"
-      ],
-      "highlights": [
-        "queries/highlights.scm"
-      ],
-      "indent": [
-        "queries/indent.scm"
-      ],
-      "injections": [
-        "queries/injections.scm"
-      ],
-      "locals": [
-        "queries/locals.scm"
-      ],
-      "tags": [
-        "queries/tags.scm"
-      ],
-      "injection-regex": "^sdml$"
-    }
-  ]
+  }
 }

@@ -113,7 +113,7 @@ module Campaign is
           ¬is_empty(
           ; <- operator
           ; ^ function.call
-          ;         ^ punctuation.bracket
+          ;        ^ punctuation.bracket
 
             {t | t in self.tags, t = "foo"}
             ; <- punctuation.bracket
@@ -147,13 +147,14 @@ module Campaign is
 
           ∃ tag ∈ self.container.tags,
           ;<- operator
-          ;   ^ variable
-          ;       ^ operator
-          ;           ^ variable.builtin
-          ;               ^ operator
-          ;                ^ function.call
-          ;                         ^ operator
-          ;                          ^ function.call
+          ; ^ variable
+          ;     ^ operator
+          ;       ^ variable.builtin
+          ;           ^ operator
+          ;             ^ function.call
+          ;                     ^ operator
+          ;                       ^ function.call
+          ;                          ^ punctuation.separator
 
             self.tags.contains(tag)
             ; <- variable.builtin

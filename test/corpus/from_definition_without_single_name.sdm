@@ -1,10 +1,10 @@
-=================================
-From Definition, with single name
-=================================
+====================================
+From Definition, without single name
+====================================
 
 module corpus_test_from_definition is
 
-  structure Example from Source with name
+  structure Example from Source without name
 
 end
 
@@ -19,5 +19,5 @@ end
         from: (from_definition_clause
           from: (identifier_reference
             (identifier))
-          (from_definition_with
+          (from_definition_without
             member: (identifier)))))))

@@ -4,23 +4,21 @@ From Definition, with multiple names
 
 module corpus_test_from_definition is
 
-  structure Example is
-    from Source with [ name description ]
-  end
+  structure Example from Source with [ name description ]
 
 end
 
 ---
 
 (module
-  (identifier)
-  (module_body
+  name: (identifier)
+  body: (module_body
     (definition
       (structure_def
-        (identifier)
-        (structure_body
-          (from_definition_clause
-            (identifier_reference
-              (identifier))
-            (identifier)
-            (identifier)))))))
+        name: (identifier)
+        from: (from_definition_clause
+          from: (identifier_reference
+            (identifier))
+          (from_definition_with
+            member: (identifier)
+            member: (identifier)))))))

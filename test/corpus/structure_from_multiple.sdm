@@ -4,8 +4,8 @@ Structure, With From clause multiple
 
 module corpus_test_structure is
 
-  structure Things is
-    from Others with [ name address ]
+  structure Things from Others with [ name address ] is
+    description -> string
   end
 
 end
@@ -18,9 +18,15 @@ end
     (definition
       (structure_def
         name: (identifier)
-        body: (structure_body
-          from: (from_definition_clause
-            from: (identifier_reference
-              (identifier))
+        from: (from_definition_clause
+          from: (identifier_reference
+            (identifier))
+          (from_definition_with
             member: (identifier)
-            member: (identifier)))))))
+            member: (identifier)))
+      body: (structure_body
+        (member
+          (member_def
+            name: (identifier)
+            target: (type_reference
+              (builtin_simple_type)))))))))

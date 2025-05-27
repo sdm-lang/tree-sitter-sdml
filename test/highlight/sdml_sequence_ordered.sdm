@@ -7,35 +7,18 @@ module sdml_sequence_ordered is
   ; <- keyword
   ;      ^ module
 
-  @skos:note = {unordered nonunique} [
-  ; <- property
-  ;^ property
-  ;          ^ operator
-  ;            ^ punctuation.bracket
-  ;             ^ keyword
-  ;                       ^ keyword
-  ;                                ^ punctuation.bracket
-  ;                                  ^ punctuation.bracket
-    "this" "is" "a" "test"
-    ; <- string
-    ;      ^ string
-    ;           ^ string
-    ;               ^ string
-  ]
-  ; <- punctuation.bracket
-
-  class Ordered({ordered nonunique 0..} S) is
+  class Ordered (S <- {ordered} T) is
   ; <- keyword
   ;     ^ type.definition
-  ;            ^ punctuation.bracket
   ;             ^ punctuation.bracket
-  ;              ^ keyword
-  ;                      ^ keyword
-  ;                                ^ number
-  ;                                 ^ operator
-  ;                                   ^ punctuation.bracket
-  ;                                      ^ punctuation.bracket
-  ;                                        ^ keyword
+  ;              ^ type.definition
+  ;                ^ operator
+  ;                   ^ punctuation.bracket
+  ;                    ^ keyword
+  ;                           ^ punctuation.bracket
+  ;                             ^ type
+  ;                              ^ punctuation.bracket
+  ;                                ^ keyword
 
     def drop(vs -> S count → unsigned) → S is
     ; <- keyword
@@ -47,10 +30,10 @@ module sdml_sequence_ordered is
     ;                ^ variable.parameter
     ;                      ^ operator
     ;                          ^ type.builtin
-    ;                                  ^ punctuation.bracket
-    ;                                    ^ operator
-    ;                                        ^ type
-    ;                                          ^ keyword
+    ;                                ^ punctuation.bracket
+    ;                                  ^ operator
+    ;                                    ^ type
+    ;                                      ^ keyword
 
       @skos:definition = "Drop ~count~ items from the beginning of the sequence and return the rest."@en
       ; <- property
@@ -61,7 +44,7 @@ module sdml_sequence_ordered is
     end
     ; <- keyword
 
-    def get(vs -> S index -> unsigned) -> {0..1} S is
+    def get(vs -> S index -> unsigned) -> {0..1} T is
     ; <- keyword
     ;   ^ method.definition
     ;      ^ punctuation.bracket

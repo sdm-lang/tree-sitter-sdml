@@ -1,0 +1,26 @@
+module properties is
+
+  import [
+    account
+    skos
+  ]
+
+  property accountId -> {1} account:AccountId is
+    ;      ^ definition.field
+    ;                       ^ reference.type
+    @skos:prefLabel = "account identifier"
+    ;^ reference.type
+    @skos:definition = "an account Identifier."@en
+    ;^ reference.type
+  end
+
+  structure Account is
+
+    ref accountId
+    ;   ^ reference.field
+
+    name -> string
+
+  end
+
+end

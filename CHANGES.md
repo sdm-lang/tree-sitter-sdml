@@ -1,5 +1,50 @@
 # Changes for tree-sitter-sdml
 
+## Version 0.4.10
+
+* Fix: Grammar rule for `type_class_def` changed signifiantly for type parameters.
+  * The term *type variable* is replaced by *type parameter* and a type class may
+    have zero or more type parameters.
+  * A type parameter is a name, introducing a new class within the scope of the
+    outer class definition, with an optional restriction expression.
+  * A parameter restriction expression may restrict the cardinality of a
+    sequence type, and may restrict the class of the parameter to implement one
+    or more other classes.
+
+New Grammar:
+
+```ebnf
+TypeClassDef
+    ::= "class" Identifier TypeParameterList?
+        FromDefinitionClause? TYpeClassBody?
+
+TypeParameterList
+    ::= "(" TypeParameter+ ")"
+
+TypeParameter
+    ::= Identifier ( "<-" TypeParameterRestrictionList )?
+
+TypeParameterRestrictionList
+    ::= TypeParameterRestriction ( "+" TypeParameterRestriction)*
+    
+TypeParameterRestriction
+    ::= CardinalityReferenceExpression?
+        IdentifierReference TypeParameterArgumentList?
+
+TypeParameterArgumentList
+    ::= "(" Identifier+ ")"
+```
+
+This allows the expression of a number of specific forms required by the SDML
+standard library, such as:
+
+| Pattern         | Example                                  | Comments                                                                                     |
+|-----------------+------------------------------------------+----------------------------------------------------------------------------------------------|
+| Parameterless   | `class Any`                                | No parameters are required for the `Any` class as it makes no reference to any other class.    |
+| Mixin Reference | `class Number <- Eq + Ord + Add + Sub + Mul + Div`   | Mixins allow for simple behavior to be described and implemented across differernt classes. |
+| Sequence Types  | `class Unique {unique} Eq` | Denotes a class restricted to a sequence of any value that implements `Eq`, allowing the sequence to have the constraint `unique`. |
+| Ordered Types  | `class Ordered {ordered} Ord` | Denotes a class restricted to a sequence of any value that implements `Ord`, allowing the sequence to have the constraint `ordered`. |
+
 ## Version 0.4.9 (Rust only)
 
 * Build: update `tree-sitter` dependency from 0.24 to 0.25.3.

@@ -4,9 +4,7 @@ Type Class, With From clause single
 
 module corpus_test_typeclass is
 
-  class Things is
-    from Others with name
-  end
+  class Things from Others with name is end
 
 end
 
@@ -18,8 +16,9 @@ end
     (definition
       (type_class_def
         name: (identifier)
-        body: (type_class_body
-          from: (from_definition_clause
-            from: (identifier_reference
-              (identifier))
-            member: (identifier)))))))
+        from: (from_definition_clause
+          from: (identifier_reference
+            (identifier))
+          (from_definition_with
+            member: (identifier)))
+        body: (type_class_body)))))

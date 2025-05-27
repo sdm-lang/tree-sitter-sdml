@@ -1,0 +1,25 @@
+===============================================
+Type Class, With Restriction and Named Argument
+===============================================
+
+module corpus_test_typeclass is
+
+  class Any (T <- None(T))
+
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (definition
+      (type_class_def
+        (identifier)
+        (type_parameter
+          (identifier)
+          (type_parameter_restriction
+            (identifier_reference
+              (identifier))
+            (type_restriction_argument
+              (identifier))))))))

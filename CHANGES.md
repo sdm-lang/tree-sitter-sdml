@@ -1,5 +1,10 @@
 # Changes for tree-sitter-sdml
 
+## Version 0.4.11
+
+* Update: Minor grammar change, pull out the type parameter restriction 
+  argument into it's own rule which makes parsing much simpler.
+
 ## Version 0.4.10
 
 * Fix: Grammar rule for `type_class_def` changed signifiantly for type parameters.

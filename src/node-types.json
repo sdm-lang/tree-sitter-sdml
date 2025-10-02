@@ -168,19 +168,33 @@
     ]
   },
   {
+    "type": "set_membership",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "set_op_is_member",
+        "named": true
+      },
+      {
+        "type": "set_op_is_not_member",
+        "named": true
+      }
+    ]
+  },
+  {
     "type": "set_operator",
     "named": true,
     "subtypes": [
+      {
+        "type": "set_membership",
+        "named": true
+      },
       {
         "type": "set_op_complement",
         "named": true
       },
       {
         "type": "set_op_intersection",
-        "named": true
-      },
-      {
-        "type": "set_op_membership",
         "named": true
       },
       {
@@ -2203,7 +2217,7 @@
       "required": true,
       "types": [
         {
-          "type": "set_op_membership",
+          "type": "set_membership",
           "named": true
         }
       ]
@@ -2514,9 +2528,28 @@
     "fields": {}
   },
   {
-    "type": "set_op_membership",
+    "type": "set_op_is_member",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "set_op_is_not_member",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "logical_op_negation",
+          "named": true
+        },
+        {
+          "type": "set_op_is_member",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "set_op_product",
@@ -3464,11 +3497,11 @@
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "duration",
@@ -3732,11 +3765,11 @@
   },
   {
     "type": "rational",
-    "named": false
+    "named": true
   },
   {
     "type": "rational",
-    "named": true
+    "named": false
   },
   {
     "type": "rdf",
@@ -3932,6 +3965,10 @@
   },
   {
     "type": "∈",
+    "named": false
+  },
+  {
+    "type": "∉",
     "named": false
   },
   {

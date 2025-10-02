@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.4.12
+// Version:    0.4.13
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -195,12 +195,11 @@ const NUM_BYTE_HEX            = /[0-9A-Fa-f]{2}/;
 // Lexer Constant Strings
 // =================================================================================================
 
-const KW_A                    = 'a'; // rdf:type
-const KW_AND                  = 'and';
+const KW_ARITH_MODULO         = 'mod';
 const KW_AS                   = 'as';
 const KW_ASSERT               = 'assert';
+const KW_BICONDITIONAL        = 'iff';
 const KW_CLASS                = 'class';
-const KW_COMPLEMENT           = 'complement';
 const KW_DATATYPE             = 'datatype';
 const KW_DEF                  = 'def';
 const KW_DIMENSION            = 'dimension';
@@ -208,46 +207,48 @@ const KW_END                  = 'end';
 const KW_ENTITY               = 'entity';
 const KW_ENUM                 = 'enum';
 const KW_EVENT                = 'event';
-const KW_EXISTS               = 'exists';
-const KW_EXISTS_1             = 'exists!';
-const KW_FORALL               = 'forall';
+const KW_EXISTENTIAL          = 'exists';
+const KW_EXISTENTIAL_1        = 'exists!';
 const KW_FROM                 = 'from';
 const KW_IDENTITY             = 'identity';
-const KW_IFF                  = 'iff';
-const KW_IMPLIES              = 'implies';
+const KW_IMPLICATION          = 'implies';
 const KW_IMPORT               = 'import';
-const KW_IN                   = 'in';
-const KW_INTERSECTION         = 'intersects';
 const KW_IS                   = 'is';
-const KW_MOD                  = 'mod';
+const KW_LOGICAL_AND          = 'and';
+const KW_LOGICAL_OR           = 'or';
+const KW_LOGICAL_XOR          = 'xor';
 const KW_MODULE               = 'module';
+const KW_NEGATION             = 'not';
 const KW_NONUNIQUE            = 'nonunique';
-const KW_NOT                  = 'not';
 const KW_OF                   = 'of';
 const KW_OPAQUE               = 'opaque';
-const KW_OR                   = 'or';
 const KW_ORDERED              = 'ordered';
 const KW_PARENT               = 'parent';
-const KW_PRODUCT              = 'product';
 const KW_PROPERTY             = 'property';
 const KW_RDF                  = 'rdf';
+const KW_RDF_A                = 'a';
+const KW_RDF_TYPE             = 'type';
 const KW_REF                  = 'ref';
 const KW_SELF                 = 'self';
+const KW_SET_COMPLEMENT       = 'complement';
+const KW_SET_INTERSECTION     = 'intersects';
+const KW_SET_MEMBERSHIP       = 'in';
+const KW_SET_PRODUCT          = 'product';
+const KW_SET_SUBSET           = 'subset';
+const KW_SET_SUBSETEQ         = 'subseteq';
+const KW_SET_SUPSET           = 'supset';
+const KW_SET_SUPSETEQ         = 'supseteq';
+const KW_SET_UNION            = 'union';
 const KW_SOURCE               = 'source';
 const KW_STRUCTURE            = 'structure';
-const KW_SUBSET               = 'subset';
-const KW_SUBSETEQ             = 'subseteq';
-const KW_SUPSET               = 'supset';
-const KW_SUPSETEQ             = 'supseteq';
-const KW_TYPE                 = 'type'; // rdf:type
 const KW_UNION                = 'union';
 const KW_UNIQUE               = 'unique';
+const KW_UNIVERSAL            = 'forall';
 const KW_UNKNOWN              = 'unknown';
 const KW_UNORDERED            = 'unordered';
 const KW_VERSION              = 'version';
 const KW_WITH                 = 'with';
 const KW_WITHOUT              = 'without';
-const KW_XOR                  = 'xor';
 
 // Pseudo-Keywords for XSD datatype facets
 const KWF_EXPLICIT_TIMEZONE   = 'explicitTimezone';
@@ -349,6 +350,7 @@ const OP_BICONDITIONAL_ALT    = '⇔';  // LaTeX: \iff | U+21D4 (LEFT RIGHT DOUB
 const OP_EQUATION             = OP_ASSIGNMENT;
 const OP_EXISTENTIAL_ALT      = '∃';  // LaTeX: \exists | U+2203 (THERE EXISTS)
 const OP_EXISTENTIAL_1_ALT    = '∃!'; // LaTeX: \exists1
+const OP_NEG_EXISTENTIAL_ALT  = '∄';  // LaTeX: \nexists | U+2204 (THERE DOES NOT EXIST)
 const OP_FN_COMPOSITION       = '.';
 const OP_FN_COMPOSITION_ALT   = '∘';   // LaTeX \circ | U+2218 (RING OPERATOR)
 const OP_FN_DEFINITION        = ':=';
@@ -373,6 +375,7 @@ const OP_RANGE_ALT            = '⋯';  // LaTeX \cdots | U+22EF (MIDLINE HORIZO
 const OP_SET_COMPLEMENT_ALT   = '∖';   // LaTeX \setminus | U+2216 (SET MINUS)
 const OP_SET_INTERSECTION_ALT = '∩';  // LaTeX \cap | U+2229 (INTERSECTION)
 const OP_SET_MEMBERSHIP_ALT   = '∈';  // LaTeX \in | U+2208 (ELEMENT OF)
+const OP_SET_NOT_MEMBERSHIP_ALT = '∉';  // LaTeX \notin | U+2209 (NOT AN ELEMENT OF)
 const OP_SET_PRODUCT_ALT      = '⨉';  // LaTeX \bigtimes | U+2A09 (N-ARY TIMES OPERATOR)
 const OP_SET_PRODUCT_ALT2     = '∏';  // LaTeX \prod | U+220F (N-ARY PRODUCT)
 const OP_SET_SUBSETEQ_ALT     = '⊆';  // LaTeX \subseteq | U+2286 (SUBSET OF OR EQUAL TO)
@@ -385,7 +388,7 @@ const OP_TY_HAS_TYPE          = '->';
 const OP_TY_HAS_TYPE_ALT      = '→';  // LaTeX \rightarrow | U+2192 (RIGHTWARDS ARROW)
 const OP_TY_RESTRICT          = '<-';
 const OP_TY_RESTRICT_ALT      = '←';  // LaTeX \leftarrow |	U+2190 (LEFTWARDS ARROW)
-const OP_UNIVERAL_ALT         = '∀';  // LaTeX: \forall | U+2200 (FOR ALL)
+const OP_UNIVERSAL_ALT         = '∀';  // LaTeX: \forall | U+2200 (FOR ALL)
 
 const WILDCARD                = '_';
 
@@ -405,9 +408,6 @@ const VALUE_EMPTY             = '∅'; // LaTeX \emptyset | U+2205 (EMPTY SET)
 // | ≝   | Equal by definition          | \stackrel\scriptscriptstyle\mathrm{def}}{=} | U+225D | EQUAL TO BY DEFINITION |
 // | ⊼   | Logical nand                 | \barwedge  | U+22BC   | NAND                                 |
 // | ⊽   | Logical nor                  | \barvee    | U+22BD   | NOR                                  |
-// | ∄   | Not exist (quantifier)       | \nexists   | U+2204   | THERE DOES NOT EXIST                 |
-// |     | Exists uniquely              | \ exists!  |          |                                      |
-// | ∉   | Not element of               | \notin     | U+2209   | NOT AN ELEMENT OF                    |
 // | ∞   | Unbounded cardinality (1..∞) | \infty     | U+221E   | INFINITY                             |
 // | □   | End of formal constraint     | \Box       | U+25A1   | WHITE SQUARE                         |
 // | ↑ ^ | Parent                       | \uparrow   | U+2191   | UPWARDS ARROW                        |
@@ -609,8 +609,8 @@ module.exports = grammar({
         ],
         rdf_def: $ => [
             ...RW_GLOBAL,
-            KW_A,
-            KW_TYPE
+            KW_RDF_A,
+            KW_RDF_TYPE
         ],
         structure_def: $ => [
             ...RW_GLOBAL,
@@ -661,25 +661,25 @@ module.exports = grammar({
             KW_DEF,
             KW_WITH,
             // keyword operators
-            KW_AND,
-            KW_COMPLEMENT,
-            KW_IFF,
-            KW_IMPLIES,
-            KW_IN,
-            KW_INTERSECTION,
-            KW_MOD,
-            KW_NOT,
-            KW_OR,
-            KW_PRODUCT,
+            KW_LOGICAL_AND,
+            KW_SET_COMPLEMENT,
+            KW_BICONDITIONAL,
+            KW_IMPLICATION,
+            KW_SET_MEMBERSHIP,
+            KW_SET_INTERSECTION,
+            KW_ARITH_MODULO,
+            KW_NEGATION,
+            KW_LOGICAL_OR,
+            KW_SET_PRODUCT,
             KW_SELF,
-            KW_SUBSET,
-            KW_SUBSETEQ,
-            KW_SUPSET,
-            KW_SUPSETEQ,
-            KW_XOR,
+            KW_SET_SUBSET,
+            KW_SET_SUBSETEQ,
+            KW_SET_SUPSET,
+            KW_SET_SUPSETEQ,
+            KW_LOGICAL_XOR,
             // quantifiers
-            KW_EXISTS,
-            KW_FORALL,
+            KW_EXISTENTIAL,
+            KW_UNIVERSAL,
         ],
     },
 
@@ -716,6 +716,7 @@ module.exports = grammar({
         $.logical_quantifier,
         $.math_operator,
         $.restriction_facet,
+        $.set_membership,
         $.set_operator
     ],
 
@@ -986,7 +987,7 @@ module.exports = grammar({
             2,
             seq(
                 field(F_VARIABLE, $.variable),
-                $.set_op_membership,
+                $.set_membership,
                 field(F_SOURCE, $.term)
             )
         ),
@@ -1662,8 +1663,8 @@ module.exports = grammar({
 
         _rdf_types: $ => seq(
             choice(
-                KW_A,
-                KW_TYPE
+                KW_RDF_A,
+                KW_RDF_TYPE
             ),
             choice(
                 field(F_TYPE, $.identifier_reference),
@@ -1930,7 +1931,7 @@ module.exports = grammar({
         // -----------------------------------------------------------------------------------------
 
         logical_op_negation: $ => choice(
-            KW_NOT,
+            KW_NEGATION,
             OP_NEGATION_ALT
         ),
 
@@ -1947,28 +1948,28 @@ module.exports = grammar({
         ),
 
         logical_conjunction: $ => choice(
-            KW_AND,
+            KW_LOGICAL_AND,
             OP_LOGICAL_AND_ALT
         ),
 
         logical_disjunction: $ => choice(
-            KW_OR,
+            KW_LOGICAL_OR,
             OP_LOGICAL_OR_ALT
         ),
 
         logical_exclusive_disjunction: $ => choice(
-            KW_XOR,
+            KW_LOGICAL_XOR,
             OP_LOGICAL_XOR_ALT
         ),
 
         logical_implication: $ => choice(
-            KW_IMPLIES,
+            KW_IMPLICATION,
             OP_IMPLICATION,
             OP_IMPLICATION_ALT
         ),
 
         logical_biconditional: $ => choice(
-            KW_IFF,
+            KW_BICONDITIONAL,
             OP_BICONDITIONAL,
             OP_BICONDITIONAL_ALT
         ),
@@ -1984,17 +1985,25 @@ module.exports = grammar({
         ),
 
         logical_quantifier_universal: $ => choice(
-            KW_FORALL,
-            OP_UNIVERAL_ALT
+            KW_UNIVERSAL,
+            OP_UNIVERSAL_ALT
         ),
 
         logical_quantifier_existential: $ => choice(
-            KW_EXISTS,
+            KW_EXISTENTIAL,
             OP_EXISTENTIAL_ALT
         ),
 
+        logical_quantifier_neg_existential: $ => choice(
+            seq(
+                $.logical_op_negation,
+                $.logical_quantifier_existential
+            ),
+            OP_NEG_EXISTENTIAL_ALT
+        ),
+
         logical_quantifier_existential_one: $ => choice(
-            KW_EXISTS_1,
+            KW_EXISTENTIAL_1,
             OP_EXISTENTIAL_1_ALT
         ),
 
@@ -2011,52 +2020,65 @@ module.exports = grammar({
             $.set_op_supset_or_equal,
             $.set_op_complement,
             $.set_op_product,
-            $.set_op_membership
+            $.set_membership
         ),
 
         set_op_union: $ => choice(
-            KW_UNION,
+            KW_SET_UNION,
             OP_SET_UNION_ALT
         ),
 
         set_op_intersection: $ => choice(
-            KW_INTERSECTION,
+            KW_SET_INTERSECTION,
             OP_SET_INTERSECTION_ALT
         ),
 
         set_op_subset: $ => choice(
-            KW_SUBSET,
+            KW_SET_SUBSET,
             OP_SET_SUBSET_ALT
         ),
 
         set_op_subset_or_equal: $ => choice(
-            KW_SUBSETEQ,
+            KW_SET_SUBSETEQ,
             OP_SET_SUBSETEQ_ALT
         ),
 
         set_op_supset: $ => choice(
-            KW_SUPSET,
+            KW_SET_SUPSET,
             OP_SET_SUPSET_ALT
         ),
 
         set_op_supset_or_equal: $ => choice(
-            KW_SUPSETEQ,
+            KW_SET_SUPSETEQ,
             OP_SET_SUPSETEQ_ALT
         ),
 
         set_op_complement: $ => choice(
-            KW_COMPLEMENT,
+            KW_SET_COMPLEMENT,
             OP_SET_COMPLEMENT_ALT
         ),
 
         set_op_product: $ => choice(
-            KW_PRODUCT,
+            KW_SET_PRODUCT,
             OP_SET_PRODUCT_ALT
         ),
 
-        set_op_membership: $ => choice(
-            KW_IN,
+        set_membership: $ => choice(
+            $.set_op_is_member,
+            $.set_op_is_not_member
+        ),
+
+        set_op_is_member: $ => choice(
+            KW_SET_MEMBERSHIP,
             OP_SET_MEMBERSHIP_ALT
+        ),
+
+        set_op_is_not_member: $ => choice(
+            seq(
+                $.logical_op_negation,
+                $.set_op_is_member
+            ),
+            OP_SET_NOT_MEMBERSHIP_ALT
         ),
 
         // -----------------------------------------------------------------------------------------
@@ -2088,7 +2110,7 @@ module.exports = grammar({
         ),
 
         math_op_modulo: $ => choice(
-            KW_MOD,
+            KW_ARITH_MODULO,
             OP_ARITH_MODULO
         ),
 

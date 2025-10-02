@@ -13,6 +13,5 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (definition
-      (union_def
-        name: (identifier)))))
+    (union_def
+      name: (identifier))))

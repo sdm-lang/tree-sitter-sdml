@@ -13,13 +13,12 @@ end
 (module
   (identifier)
   (module_body
-    (definition
-      (type_class_def
+    (type_class_def
+      (identifier)
+      (type_parameter
         (identifier)
-        (type_parameter
-          (identifier)
-          (type_parameter_restriction
-            (cardinality_reference_expression
-              (sequence_ordering))
-            (identifier_reference
-              (identifier))))))))
+        (type_parameter_restriction
+          (cardinality_reference_expression
+            (sequence_ordering))
+          (identifier_reference
+            (identifier)))))))

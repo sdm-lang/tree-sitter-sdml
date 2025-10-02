@@ -15,13 +15,12 @@ end
 (module
   (identifier)
   (module_body
-    (definition
-      (event_def
-        (identifier)
-        (event_body
-          (source_entity
-            (identifier_reference
-              (identifier))
-            (identifier)
-            (identifier)
-            (identifier)))))))
+    (event_def
+      (identifier)
+      (event_body
+        (source_entity
+          (identifier_reference
+            (identifier))
+          (identifier)
+          (identifier)
+          (identifier))))))

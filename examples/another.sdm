@@ -13,8 +13,8 @@ module another is
   end
 
   datatype myByte ← integer {
-  minInclusive = 0
-  maxInclusive = 256
+    minInclusive = 0
+    maxInclusive = 256
   }
 
   structure Foo is

@@ -12,9 +12,9 @@ module Campaign is end
 ---
 
 (module
-  (line_comment)
-  (line_comment)
-  (line_comment)
-  (line_comment)
+  (line_comment (comment_page))
+  (line_comment (comment_page))
+  (line_comment (comment_local))
+  (line_comment (comment_local))
   name: (identifier)
   body: (module_body))

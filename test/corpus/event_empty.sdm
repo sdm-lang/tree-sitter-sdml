@@ -13,6 +13,5 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (definition
-      (event_def
-        name: (identifier)))))
+    (event_def
+      name: (identifier))))

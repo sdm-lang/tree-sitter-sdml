@@ -269,3 +269,4 @@ dmypy.json
 
 .editorconfig
 .gitattributes
+.build/

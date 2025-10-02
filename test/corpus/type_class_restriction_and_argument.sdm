@@ -13,13 +13,12 @@ end
 (module
   (identifier)
   (module_body
-    (definition
-      (type_class_def
+    (type_class_def
+      (identifier)
+      (type_parameter
         (identifier)
-        (type_parameter
-          (identifier)
-          (type_parameter_restriction
-            (identifier_reference
-              (identifier))
-            (type_restriction_argument
-              (identifier))))))))
+        (type_parameter_restriction
+          (identifier_reference
+            (identifier))
+          (type_restriction_argument
+            (identifier)))))))

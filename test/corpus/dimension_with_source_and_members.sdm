@@ -17,21 +17,20 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (definition
-      (dimension_def
-        name: (identifier)
-        body: (dimension_body
-          identity: (source_entity
-            entity: (identifier_reference
-              (identifier))
-            member: (identifier))
-          (member
-            (member_def
-              name: (identifier)
-              target: (type_reference
-                (identifier_reference
-                  (identifier)))))
-          (member
-            (property_ref
-              property: (identifier_reference
-                (identifier)))))))))
+    (dimension_def
+      name: (identifier)
+      body: (dimension_body
+        identity: (source_entity
+          entity: (identifier_reference
+            (identifier))
+          member: (identifier))
+        (member
+          (member_def
+            name: (identifier)
+            target: (type_reference
+              (identifier_reference
+                (identifier)))))
+        (member
+          (property_ref
+            property: (identifier_reference
+              (identifier))))))))

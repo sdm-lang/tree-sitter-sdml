@@ -28,53 +28,51 @@ end
     (module
       (identifier)
       (module_body
-        (definition
-          (entity_def
-            (identifier)
-            (entity_body
-              (entity_identity
-                (member
-                  (member_def
-                    (identifier)
-                    (type_reference
-                      (identifier_reference
-                        (identifier))))))
+        (entity_def
+          (identifier)
+          (entity_body
+            (entity_identity
               (member
                 (member_def
                   (identifier)
                   (type_reference
                     (identifier_reference
-                      (qualified_identifier
-                        (identifier)
-                        (identifier))))
-                  (annotation_only_body
-                    (annotation
-                      (constraint
-                        (identifier)
-                        (informal_constraint
-                          (quoted_string)))))))
-              (member
-                (member_def
-                  (identifier)
-                  (type_reference
-                    (identifier_reference
-                      (identifier)))
-                  (annotation_only_body
-                    (annotation
-                      (constraint
-                        (identifier)
-                        (formal_constraint
-                          (constraint_sentence
-                            (simple_sentence
-                              (atomic_sentence
-                                (term
-                                  (function_composition
-                                    (reserved_self)
-                                    (identifier)
-                                    (identifier)))
-                                (term
-                                  (predicate_value
-                                    (simple_value
-                                      (string
-                                        (quoted_string)))))))))))))))))))
-
+                      (identifier))))))
+            (member
+              (member_def
+                (identifier)
+                (type_reference
+                  (identifier_reference
+                    (qualified_identifier
+                      (identifier)
+                      (identifier))))
+                (annotation_only_body
+                  (annotation
+                    (constraint
+                      (identifier)
+                      (informal_constraint
+                        (quoted_string)))))))
+            (member
+              (member_def
+                (identifier)
+                (type_reference
+                  (identifier_reference
+                    (identifier)))
+                (annotation_only_body
+                  (annotation
+                    (constraint
+                      (identifier)
+                      (formal_constraint
+                        (constraint_sentence
+                          (simple_sentence
+                            (atomic_sentence
+                              (term
+                                (function_composition
+                                  (reserved_self)
+                                  (identifier)
+                                  (identifier)))
+                              (term
+                                (predicate_value
+                                  (simple_value
+                                    (string
+                                      (quoted_string))))))))))))))))))

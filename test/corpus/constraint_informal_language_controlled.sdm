@@ -17,4 +17,3 @@ end
          (informal_constraint
            (quoted_string)
            (controlled_language_tag))))))
-

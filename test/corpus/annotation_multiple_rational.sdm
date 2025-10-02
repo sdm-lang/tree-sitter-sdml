@@ -1,0 +1,26 @@
+==============================
+Annotation, Multiple Rationals
+==============================
+
+module corpus_test_annotation is
+
+  @dc:version = [ 1/2 2/1 -12/31 ]
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (annotation
+      (annotation_property
+        name: (identifier_reference
+          (qualified_identifier
+            module: (identifier)
+            member: (identifier)))
+        value: (value
+          (sequence_of_values
+            element: (simple_value (rational))
+            element: (simple_value (rational))
+            element: (simple_value (rational))))))))

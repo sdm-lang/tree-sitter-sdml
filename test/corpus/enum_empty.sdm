@@ -13,6 +13,5 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (definition
-      (enum_def
-        name: (identifier)))))
+    (enum_def
+      name: (identifier))))

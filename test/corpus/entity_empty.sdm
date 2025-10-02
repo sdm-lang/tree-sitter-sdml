@@ -13,6 +13,5 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (definition
-      (entity_def
-        name: (identifier)))))
+    (entity_def
+      name: (identifier))))

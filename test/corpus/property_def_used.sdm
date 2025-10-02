@@ -13,11 +13,10 @@ end
     (module
       (identifier)
       (module_body
-        (definition
-          (structure_def
-            (identifier)
-            (structure_body
-              (member
-                (property_ref
-                  (identifier_reference
-                    (identifier)))))))))
+        (structure_def
+          (identifier)
+          (structure_body
+            (member
+              (property_ref
+                (identifier_reference
+                  (identifier))))))))

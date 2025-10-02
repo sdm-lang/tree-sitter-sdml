@@ -115,18 +115,19 @@ module Campaign is
           ; ^ function.call
           ;        ^ punctuation.bracket
 
-            {t | t in self.tags, t = "foo"}
+            {t | forall t in self.tags, t = "foo"}
             ; <- punctuation.bracket
             ;^ variable
             ;  ^ punctuation.separator
-            ;    ^ variable
-            ;      ^ keyword
-            ;         ^ variable.builtin
+            ;    ^ operator
+            ;           ^ variable
             ;             ^ operator
-            ;              ^ function.call
-            ;                      ^ operator
-            ;                        ^ string
-            ;                             ^ punctuation.bracket
+            ;                ^ variable.builtin
+            ;                    ^ operator
+            ;                     ^ function.call
+            ;                             ^ operator
+            ;                               ^ string
+            ;                                    ^ punctuation.bracket
           )
         ; ^ punctuation.bracket
       end

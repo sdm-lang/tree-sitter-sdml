@@ -39,7 +39,7 @@
 
 (sequence_of_values "[" @indent "]" @indent.end)
 
-(sequence_builder (set_op_builder) @indent.branch)
+(sequence_builder (seq_builder_separator) @indent.branch)
 
-(method_def
+(class_function_def
  (annotation_only_body "is" @indent.branch))

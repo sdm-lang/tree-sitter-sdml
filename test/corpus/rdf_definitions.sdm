@@ -41,7 +41,6 @@ end
          (identifier))
        (module_import
          (identifier)))
-     (definition
        (rdf_def
          (identifier)
          (annotation_only_body
@@ -68,15 +67,13 @@ end
                (value
                  (simple_value
                    (string
-                     (quoted_string)))))))))
-     (definition
+                     (quoted_string))))))))
        (rdf_def
          (identifier)
-         (rdf_types
-           (identifier_reference
-             (qualified_identifier
-               (identifier)
-               (identifier))))
+         (identifier_reference
+           (qualified_identifier
+             (identifier)
+             (identifier)))
          (annotation_only_body
            (annotation
              (annotation_property
@@ -114,19 +111,17 @@ end
                (value
                  (simple_value
                    (string
-                     (quoted_string)))))))))
-     (definition
+                     (quoted_string))))))))
        (rdf_def
          (identifier)
-         (rdf_types
-           (identifier_reference
-             (qualified_identifier
-               (identifier)
-               (identifier)))
-           (identifier_reference
-             (qualified_identifier
-               (identifier)
-               (identifier))))
+         (identifier_reference
+           (qualified_identifier
+             (identifier)
+             (identifier)))
+         (identifier_reference
+           (qualified_identifier
+             (identifier)
+             (identifier)))
          (annotation_only_body
            (annotation
              (annotation_property
@@ -164,4 +159,4 @@ end
                (value
                  (simple_value
                    (string
-                     (quoted_string)))))))))))
+                     (quoted_string))))))))))

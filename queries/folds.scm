@@ -1,5 +1,5 @@
 [
- (data_type_def)
+ (datatype_def)
  (dimension_def)
  (entity_def)
  (enum_def)

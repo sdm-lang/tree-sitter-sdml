@@ -1,6 +1,6 @@
-=======================================
-Constraint, formal quantified universal
-=======================================
+=========================================
+Constraint, formal quantified existential
+=========================================
 
 module corpus_test_constraint is
 
@@ -8,13 +8,13 @@ module corpus_test_constraint is
 
     inner -> {0..} string is
       assert not_empty is
-        forall x in inner, not is_empty(x)
+        exists! x in inner, not is_empty(x)
       end
     end
 
     inner_sym -> {0..} string is
       assert not_empty is
-        ∀ x ∈ inner, ¬ is_empty(x)
+        ∃! x ∈ inner, ¬ is_empty(x)
       end
     end
 
@@ -46,7 +46,7 @@ end
                     (constraint_sentence
                       (quantified_sentence
                         (quantified_variable_binding
-                          (logical_quantifier_universal)
+                          (logical_quantifier_existential_one)
                           (quantified_variable
                             (variable
                               (identifier))
@@ -83,7 +83,7 @@ end
                     (constraint_sentence
                       (quantified_sentence
                         (quantified_variable_binding
-                          (logical_quantifier_universal)
+                          (logical_quantifier_existential_one)
                           (quantified_variable
                             (variable
                               (identifier))

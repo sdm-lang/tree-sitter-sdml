@@ -13,6 +13,5 @@ end
 (module
   (identifier)
   (module_body
-    (definition
-      (type_class_def
-        (identifier)))))
+    (type_class_def
+      (identifier))))

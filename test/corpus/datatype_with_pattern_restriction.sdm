@@ -19,12 +19,11 @@ end
 (module
    (identifier)
    (module_body
-     (definition
-       (data_type_def
-         (identifier)
-         (builtin_simple_type)
-         (datatype_def_restriction
-           (pattern_restriction_facet
-             (quoted_string)
-             (quoted_string)
-             (quoted_string)))))))
+     (datatype_def
+       (identifier)
+       (builtin_types)
+       (datatype_def_restriction
+         (pattern_restriction_facet
+           (quoted_string)
+           (quoted_string)
+           (quoted_string))))))

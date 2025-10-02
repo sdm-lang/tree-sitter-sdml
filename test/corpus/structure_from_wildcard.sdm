@@ -15,17 +15,16 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (definition
-      (structure_def
-        name: (identifier)
-        from: (from_definition_clause
-          from: (identifier_reference
-            (identifier))
-          (from_definition_with
-            wildcard: (wildcard)))
-      body: (structure_body
-        (member
-          (member_def
-            name: (identifier)
-            target: (type_reference
-              (builtin_simple_type)))))))))
+    (structure_def
+      name: (identifier)
+      from: (from_definition_clause
+        from: (identifier_reference
+          (identifier))
+        (from_definition_with
+          wildcard: (wildcard)))
+    body: (structure_body
+      (member
+        (member_def
+          name: (identifier)
+          target: (type_reference
+            (builtin_types))))))))

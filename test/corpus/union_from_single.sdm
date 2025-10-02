@@ -15,15 +15,14 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (definition
-      (union_def
-        name: (identifier)
-        from: (from_definition_clause
-          from: (identifier_reference
-            (identifier))
-          (from_definition_with
-            member: (identifier)))
-        body: (union_body
-          (type_variant
-            name: (identifier_reference
-              (identifier))))))))
+    (union_def
+      name: (identifier)
+      from: (from_definition_clause
+        from: (identifier_reference
+          (identifier))
+        (from_definition_with
+          member: (identifier)))
+      body: (union_body
+        (type_variant
+          name: (identifier_reference
+            (identifier)))))))

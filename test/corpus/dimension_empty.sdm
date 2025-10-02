@@ -13,6 +13,5 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (definition
-      (dimension_def
-        name: (identifier)))))
+    (dimension_def
+      name: (identifier))))

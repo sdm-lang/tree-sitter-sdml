@@ -1,0 +1,138 @@
+module
+  invoice
+  <kjhsfgjkh>
+  version
+  ""
+  <khsdfgkjh>
+is
+
+  ; Part of a larger example.
+
+  import [
+   skos
+    xsd:decimal
+    xsd:date
+    xsd:string
+  ]
+
+  from :: import customers:foo
+  import finance
+  import vehicles
+
+  @skos:release = xsd:date("2023-08-12")
+  @skos:definition = "hello"
+
+  datatype DatatypeSimple <- string is
+    @skos:prefLabel = "hello"
+    ; just a test
+  end
+
+  datatype DatatypeSimpleBlock <- string
+    is
+      @skos:prefLabel = "hello"
+      ; just a test
+  end
+
+  datatype DatatypeName <- opaque xsd:string {
+    minLength = fixed 1
+    maxLength = 25
+  }
+
+  datatype DatatypeName <- opaque xsd:string {
+      minLength = fixed 1
+      maxLength = 25
+  } is
+    @skos:prefLabel = "Name"@en
+  end
+
+  datatype DatatypeNameBlock
+    <-
+    opaque
+    xsd:string {
+      minLength = fixed 1
+      maxLength = 25
+  }
+    is
+    @skos:prefLabel = "Name"@en
+  end
+
+  enum EnumTerms of
+    Immediate is
+      @skos:preLabel = "NOW"
+    end
+    ThirtyDays
+    SixtyDays
+  end
+
+  enum EnumTermsBlock
+  of
+     Immediate
+      is
+        @skos:preLabel = "NOW"
+    end
+    ThirtyDays
+    SixtyDays
+  end
+
+  entity EntityInvoice is
+   identity id -> integer
+
+      customer -> customers:Customer
+   vehicle -> vehicles:Vehicle
+  end
+
+  event EventInvoiceCreated is
+    source Invoice
+      at -> xsd:dateTime
+  end
+
+  event EventInvoiceCreatedBlock
+  is
+    source Invoice
+     at -> xsd:dateTime
+  end
+
+  structure StructSimple is
+    ; comment
+    foo -> Foo
+  end
+
+  structure StructSimpleBlock
+  is
+    ; comment
+     foo -> Foo
+  end
+
+  structure StructDateRange is
+    assert valid_date_range is
+       self.end_date >= self.start_date
+    end
+     start_date -> xsd:date
+    end_date -> xsd:date
+  end
+
+  structure StructDateRangeBlock
+  is
+    assert valid_date_range
+      is
+      self.end_date >= self.start_date
+    end
+    start_date -> xsd:date
+    end_date -> xsd:date
+  end
+
+  union PaymentKind of
+     Cash
+    Card
+ as Plastic
+  end
+
+
+  union PaymentKindBlock
+  of
+     Cash
+    Card
+      as Plastic
+  end
+
+end

@@ -43,7 +43,9 @@ INSTALL_INCLUDE_DIR := $(INSTALL_ROOT_DIR)/include
 TS_CLI := tree-sitter
 TS_GENERATE_ABI ?=latest
 TS_GENERATE := generate --abi=$(TS_GENERATE_ABI)
+TS_PARSE := parse
 TS_TEST := test
+TS_TEST_FLAGS :=
 
 # ----------------------------------------------------------------------------
 # Config ❯ Build Flags
@@ -55,7 +57,6 @@ ifeq ($(BUILD_KIND), debug)
 	NODE_BUILD_TYPE := Debug
 	RUST_BUILD_MODE :=
 else ifeq ($(BUILD_KIND), release)
-	TS_TEST_FLAGS :=
 	NODE_BUILD_TYPE := Release
 	RUST_BUILD_MODE := --release
 else
@@ -105,7 +106,8 @@ BINDING_RUST := $(RUST_TARGET_DIR)/$(BUILD_KIND)/$(BINDING_RUST_LIB)
 BINDING_WASM_LIB := $(BASE_NAME).wasm
 BINDING_WASM := $(BUILD_DIR)/$(BINDING_WASM_LIB)
 
-ALL_BINDINGS := $(BINDING_NODE) $(BINDING_RUST) $(BINDING_WASM) # $(BINDING_PYTHON_SDIST) $(BINDING_PYTHON_WHEEL)
+ALL_BINDINGS := $(BINDING_NODE) $(BINDING_RUST) $(BINDING_WASM)
+#  FIXME:       $(BINDING_PYTHON_SDIST) $(BINDING_PYTHON_WHEEL)
 
 # ----------------------------------------------------------------------------
 # Start Here
@@ -155,7 +157,7 @@ test_grammar: clean_grammar $(SRC_DIR)/grammar.json
 	$(info -> running grammar tests)
 	$(TS_CLI) $(TS_TEST) $(TS_TEST_FLAGS)
 	$(info -> parsing grammar examples)
-	$(TS_CLI) parse examples/*.sdm --quiet --time
+	$(TS_CLI) $(TS_PARSE) examples/*.sdm --quiet --time
 
 clean_grammar:
 	$(info -> removing grammar cruft)
@@ -199,14 +201,14 @@ clean_parser:
 
 .PHONY: generate_for_emacs
 
-EMACS_TS_DIR ?= $(HOME)/.tree-sitter/bin/
-EMACS_ABI := 13
-EMACS_BINDING := $(EMACS_TS_DIR)/$(SHORT_NAME).$(DYLIB_EXT)
+EMACS_TS_DIR ?= $(HOME)/.emacs.d/tree-sitter/
+EMACS_ABI := 14
+EMACS_BINDING := $(EMACS_TS_DIR)/$(PARSER_LIB_FILE)
 
 emacs: $(EMACS_BINDING) | $(BUILD_DIR)
 
 $(EMACS_BINDING): generate_for_emacs build_parser
-	$(info -> installing Emacs binding into $(EMACS_TS_DIR)$(SHORT_NAME).$(DYLIB_EXT))
+	$(info -> installing Emacs binding into $(EMACS_BINDING))
 	@(cp $(PARSER_LIB) $(EMACS_BINDING))
 
 generate_for_emacs:

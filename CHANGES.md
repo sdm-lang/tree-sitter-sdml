@@ -1,9 +1,81 @@
 # Changes for tree-sitter-sdml
 
+## Version 0.4.12
+
+This is significant change in the structure of the grammar to clean-up and make
+maintenance easier. It pulls out all strings into constants and introduces a set
+of functions with more meaningful names for higher-level parser constructs.
+Additionally, this grammar uses the `reserved`, `inline`, and `super-types` fields to
+do some more of the heavy lifting and while it does introduce a *little*
+redundancy in having a keyword constant, a reserved word constant and an entry in the
+`reserved` field, it does allow us to manage nested or scoped keywords correctly
+in the grammar now.
+
+* Features
+  * Grammar rule `line_comment` is now a *super-type* rule and has three
+    sub-rules: `comment_aligned` (starts with ';'), `comment_local` (starts
+    with ';;'), and `comment_page` (starts with ';;;' or more) that follow
+    the ELisp conventions allowing grammar based highlighting and indentation.
+  * The set of globally reserved words is now fixed at 14 with additional
+    keywords added to scopes as needed.
+  * The anonymous grammar rule within `module` after `KW_VERSION` has been
+    extracted into the new rule `module_version`.
+  * Added new `logical_quantifier`, `logical_quantifier_existential_one` with
+    operators `exists!` and `∃!`.
+  * Build: bumped minimum Emacs ABI from 13 to 14.
+* Potentially Breaking
+  * Grammar rule `definition` is now a super-type and so doesn't appear in
+    the parse tree, but it is there for queries.
+  * All operator grammar rules are now super-types and so don't appear in
+    the parse tree, but are is there for queries: `definition`,`inequality_relation`,
+    `logical_connective`, `logical_quantifier`, `math_operator`,
+    `restriction_facet`, and `set_operator`.
+  * The grammar rule `builtin_simple_type` has been renamed simple `builtin_types`.
+  * The grammar field `byte` on the rule `binary` has been renamed `element` inline
+    with other sequence types.
+  * The grammar rules `logical_op_conjunction`, `logical_op_disjunction`,
+    `logical_op_exclusive_disjunction`, `logical_op_implication`, and
+    `logical_op_biconditional` have been renamed to remove `_op` as these are
+    connectives and not operators.
+  * The rule `op_equality` is no longer in the parse tree for the rule `equation`
+    as there can be no other value.
+  * The rule `rdf_types` is no longer in the parse tree for the rule `rdf_def`,
+    however each type is a field on the parent so is easily queried as
+    `(rdf_type type: (identifier_reference))`.
+  * The grammar rule `method_def` has been renamed `class_function_def` for
+    consistency.
+  * The grammar rule `data_type_def` has been renamed `datatype_def` for
+    consistency.
+* Fixes
+  * Fixed highlight/constraint test as the assertion `tagged_with_foo_builder`
+    was missing the operator `forall` in a sequence builder. Additionally, the
+    keyword `in` for membership is now an operator.
+  * Fixed highlight/dimensions test as it had a stray character breaking the
+    JavaScript parser.
+* Refactors
+  * Moved most regular expressions into the top of the file as constants. This
+    includes constructing the numeric expressions from each other explicitly.
+  * Moved all keyword strings into constants with `KW_` prefix.
+  * Moved all facet name strings into constants with `KWF_` prefix.
+  * Moved all built-in type name strings into constants with `KWT_` prefix.
+  * Moved all punctuation strings into constants with `P_` prefix.
+  * Moved all operator strings into constants with `OP_` prefix.
+  * Moved all value name strings into constants with `VALUE_` prefix.
+  * Moved all grammar field name strings into constants with `F_` prefix.
+  * Created constant arrays for reserved word groupings with `RW_` prefix.
+  * Created helper functions for higher-level parser constructs.
+    * Generic: `join`, `kw_rule`, `kw_optional_rule`.
+    * Lists: `sep1_immediate`, `sep1_immediate_absolute`.
+    * Fields: `optional_field`, `kw_field`, `kw_optional_field`.
+    * Bracketed: `parameters`, `expression`, `sequence_of`, `sequence_of_many`,
+      `sequence_of_many1`.
+    * Definitions: `definition_with`, `is_block`, `of_block`,
+      `is_body_with_annotations`, `of_body_with_annotations`.
+  
 ## Version 0.4.11
 
-* Update: Minor grammar change, pull out the type parameter restriction 
-  argument into it's own rule which makes parsing much simpler.
+* Update: Minor grammar change, pull out the type parameter restriction argument
+  into it's own rule which makes parsing much simpler.
 
 ## Version 0.4.10
 
@@ -134,7 +206,6 @@ Constraints
     ::= "{" ( ( Ordering Uniqueness? ) | ( Ordering? Uniqueness ) ) "}"
 ```
 
-
 ### Version 0.4.6
 
 * Fix: Rename grammar rule `function_op_by_definition` to
@@ -148,7 +219,7 @@ Constraints
   * Added two new test cases for fixed/timezone restriction and pattern/sequence
     restriction.
 
-This grammar fix allows grammar processors to use the tree-sitter query 
+This grammar fix allows grammar processors to use the tree-sitter query
 `(datatype_def_restriction (value (_)) )` to select all values from all
 restrictions regardless of type.
 

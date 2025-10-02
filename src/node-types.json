@@ -1,5 +1,215 @@
 [
   {
+    "type": "definition",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "datatype_def",
+        "named": true
+      },
+      {
+        "type": "dimension_def",
+        "named": true
+      },
+      {
+        "type": "entity_def",
+        "named": true
+      },
+      {
+        "type": "enum_def",
+        "named": true
+      },
+      {
+        "type": "event_def",
+        "named": true
+      },
+      {
+        "type": "property_def",
+        "named": true
+      },
+      {
+        "type": "rdf_def",
+        "named": true
+      },
+      {
+        "type": "structure_def",
+        "named": true
+      },
+      {
+        "type": "type_class_def",
+        "named": true
+      },
+      {
+        "type": "union_def",
+        "named": true
+      }
+    ]
+  },
+  {
+    "type": "inequality_relation",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "op_greater_than",
+        "named": true
+      },
+      {
+        "type": "op_greater_than_or_equal",
+        "named": true
+      },
+      {
+        "type": "op_inequality",
+        "named": true
+      },
+      {
+        "type": "op_less_than",
+        "named": true
+      },
+      {
+        "type": "op_less_than_or_equal",
+        "named": true
+      }
+    ]
+  },
+  {
+    "type": "logical_connective",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "logical_biconditional",
+        "named": true
+      },
+      {
+        "type": "logical_conjunction",
+        "named": true
+      },
+      {
+        "type": "logical_disjunction",
+        "named": true
+      },
+      {
+        "type": "logical_exclusive_disjunction",
+        "named": true
+      },
+      {
+        "type": "logical_implication",
+        "named": true
+      }
+    ]
+  },
+  {
+    "type": "logical_quantifier",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "logical_quantifier_existential",
+        "named": true
+      },
+      {
+        "type": "logical_quantifier_existential_one",
+        "named": true
+      },
+      {
+        "type": "logical_quantifier_universal",
+        "named": true
+      }
+    ]
+  },
+  {
+    "type": "math_operator",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "math_op_add",
+        "named": true
+      },
+      {
+        "type": "math_op_divide",
+        "named": true
+      },
+      {
+        "type": "math_op_modulo",
+        "named": true
+      },
+      {
+        "type": "math_op_multiply",
+        "named": true
+      },
+      {
+        "type": "math_op_subtract",
+        "named": true
+      }
+    ]
+  },
+  {
+    "type": "restriction_facet",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "digit_restriction_facet",
+        "named": true
+      },
+      {
+        "type": "length_restriction_facet",
+        "named": true
+      },
+      {
+        "type": "pattern_restriction_facet",
+        "named": true
+      },
+      {
+        "type": "tz_restriction_facet",
+        "named": true
+      },
+      {
+        "type": "value_restriction_facet",
+        "named": true
+      }
+    ]
+  },
+  {
+    "type": "set_operator",
+    "named": true,
+    "subtypes": [
+      {
+        "type": "set_op_complement",
+        "named": true
+      },
+      {
+        "type": "set_op_intersection",
+        "named": true
+      },
+      {
+        "type": "set_op_membership",
+        "named": true
+      },
+      {
+        "type": "set_op_product",
+        "named": true
+      },
+      {
+        "type": "set_op_subset",
+        "named": true
+      },
+      {
+        "type": "set_op_subset_or_equal",
+        "named": true
+      },
+      {
+        "type": "set_op_supset",
+        "named": true
+      },
+      {
+        "type": "set_op_supset_or_equal",
+        "named": true
+      },
+      {
+        "type": "set_op_union",
+        "named": true
+      }
+    ]
+  },
+  {
     "type": "annotation",
     "named": true,
     "fields": {},
@@ -60,6 +270,42 @@
     }
   },
   {
+    "type": "arithmetic_expression_sentence",
+    "named": true,
+    "fields": {
+      "lhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "term",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "math_operator",
+            "named": true
+          }
+        ]
+      },
+      "rhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "term",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "atomic_sentence",
     "named": true,
     "fields": {
@@ -89,7 +335,7 @@
     "type": "binary",
     "named": true,
     "fields": {
-      "byte": {
+      "element": {
         "multiple": true,
         "required": false,
         "types": [
@@ -120,23 +366,7 @@
         "required": true,
         "types": [
           {
-            "type": "logical_op_biconditional",
-            "named": true
-          },
-          {
-            "type": "logical_op_conjunction",
-            "named": true
-          },
-          {
-            "type": "logical_op_disjunction",
-            "named": true
-          },
-          {
-            "type": "logical_op_exclusive_disjunction",
-            "named": true
-          },
-          {
-            "type": "logical_op_implication",
+            "type": "logical_connective",
             "named": true
           }
         ]
@@ -202,7 +432,7 @@
     "fields": {}
   },
   {
-    "type": "builtin_simple_type",
+    "type": "builtin_types",
     "named": true,
     "fields": {}
   },
@@ -315,6 +545,42 @@
     }
   },
   {
+    "type": "class_function_def",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "function_body",
+            "named": true
+          }
+        ]
+      },
+      "signature": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "function_signature",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "annotation_only_body",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "constraint",
     "named": true,
     "fields": {
@@ -376,6 +642,10 @@
           "named": true
         },
         {
+          "type": "expression_sentence",
+          "named": true
+        },
+        {
           "type": "quantified_sentence",
           "named": true
         },
@@ -387,7 +657,7 @@
     }
   },
   {
-    "type": "data_type_def",
+    "type": "datatype_def",
     "named": true,
     "fields": {
       "base": {
@@ -395,7 +665,7 @@
         "required": true,
         "types": [
           {
-            "type": "builtin_simple_type",
+            "type": "builtin_types",
             "named": true
           },
           {
@@ -455,74 +725,7 @@
       "required": true,
       "types": [
         {
-          "type": "digit_restriction_facet",
-          "named": true
-        },
-        {
-          "type": "length_restriction_facet",
-          "named": true
-        },
-        {
-          "type": "pattern_restriction_facet",
-          "named": true
-        },
-        {
-          "type": "tz_restriction_facet",
-          "named": true
-        },
-        {
-          "type": "value_restriction_facet",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "definition",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "data_type_def",
-          "named": true
-        },
-        {
-          "type": "dimension_def",
-          "named": true
-        },
-        {
-          "type": "entity_def",
-          "named": true
-        },
-        {
-          "type": "enum_def",
-          "named": true
-        },
-        {
-          "type": "event_def",
-          "named": true
-        },
-        {
-          "type": "property_def",
-          "named": true
-        },
-        {
-          "type": "rdf_def",
-          "named": true
-        },
-        {
-          "type": "structure_def",
-          "named": true
-        },
-        {
-          "type": "type_class_def",
-          "named": true
-        },
-        {
-          "type": "union_def",
+          "type": "restriction_facet",
           "named": true
         }
       ]
@@ -839,6 +1042,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "op_equality",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -905,6 +1118,25 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "expression_sentence",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "arithmetic_expression_sentence",
+          "named": true
+        },
+        {
+          "type": "set_expression_sentence",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1195,7 +1427,7 @@
       "required": true,
       "types": [
         {
-          "type": "builtin_simple_type",
+          "type": "builtin_types",
           "named": true
         },
         {
@@ -1296,23 +1528,7 @@
         "required": true,
         "types": [
           {
-            "type": "op_greater_than",
-            "named": true
-          },
-          {
-            "type": "op_greater_than_or_equal",
-            "named": true
-          },
-          {
-            "type": "op_inequality",
-            "named": true
-          },
-          {
-            "type": "op_less_than",
-            "named": true
-          },
-          {
-            "type": "op_less_than_or_equal",
+            "type": "inequality_relation",
             "named": true
           }
         ]
@@ -1405,27 +1621,51 @@
     }
   },
   {
-    "type": "logical_op_biconditional",
+    "type": "line_comment",
+    "named": true,
+    "extra": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "comment_aligned",
+          "named": true
+        },
+        {
+          "type": "comment_local",
+          "named": true
+        },
+        {
+          "type": "comment_page",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "logical_biconditional",
     "named": true,
     "fields": {}
   },
   {
-    "type": "logical_op_conjunction",
+    "type": "logical_conjunction",
     "named": true,
     "fields": {}
   },
   {
-    "type": "logical_op_disjunction",
+    "type": "logical_disjunction",
     "named": true,
     "fields": {}
   },
   {
-    "type": "logical_op_exclusive_disjunction",
+    "type": "logical_exclusive_disjunction",
     "named": true,
     "fields": {}
   },
   {
-    "type": "logical_op_implication",
+    "type": "logical_implication",
     "named": true,
     "fields": {}
   },
@@ -1436,6 +1676,11 @@
   },
   {
     "type": "logical_quantifier_existential",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "logical_quantifier_existential_one",
     "named": true,
     "fields": {}
   },
@@ -1495,6 +1740,26 @@
         ]
       }
     }
+  },
+  {
+    "type": "math_op_add",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "math_op_divide",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "math_op_modulo",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "math_op_multiply",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "member",
@@ -1588,42 +1853,6 @@
     }
   },
   {
-    "type": "method_def",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "function_body",
-            "named": true
-          }
-        ]
-      },
-      "signature": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "function_signature",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "annotation_only_body",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "module",
     "named": true,
     "root": true,
@@ -1657,27 +1886,17 @@
             "named": true
           }
         ]
-      },
-      "version_info": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "quoted_string",
-            "named": true
-          }
-        ]
-      },
-      "version_uri": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "iri",
-            "named": true
-          }
-        ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "module_version",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1777,12 +1996,48 @@
     "fields": {}
   },
   {
+    "type": "module_version",
+    "named": true,
+    "fields": {
+      "version_info": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "quoted_string",
+            "named": true
+          }
+        ]
+      },
+      "version_uri": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "iri",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "op_equality",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "op_greater_than_or_equal",
     "named": true,
     "fields": {}
   },
   {
     "type": "op_inequality",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "op_less_than",
     "named": true,
     "fields": {}
   },
@@ -1973,11 +2228,7 @@
         "required": true,
         "types": [
           {
-            "type": "logical_quantifier_existential",
-            "named": true
-          },
-          {
-            "type": "logical_quantifier_universal",
+            "type": "logical_quantifier",
             "named": true
           }
         ]
@@ -2008,22 +2259,6 @@
           }
         ]
       },
-      "types": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "rdf_types",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "rdf_types",
-    "named": true,
-    "fields": {
       "type": {
         "multiple": true,
         "required": false,
@@ -2085,7 +2320,7 @@
       "required": true,
       "types": [
         {
-          "type": "set_op_builder",
+          "type": "seq_builder_separator",
           "named": true
         }
       ]
@@ -2137,8 +2372,8 @@
         "required": false,
         "types": [
           {
-            "type": "∅",
-            "named": false
+            "type": "value_empty_sequence",
+            "named": true
           }
         ]
       },
@@ -2195,8 +2430,8 @@
         "required": false,
         "types": [
           {
-            "type": "∅",
-            "named": false
+            "type": "value_empty_sequence",
+            "named": true
           }
         ]
       },
@@ -2233,7 +2468,83 @@
     "fields": {}
   },
   {
+    "type": "set_expression_sentence",
+    "named": true,
+    "fields": {
+      "lhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "term",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "set_operator",
+            "named": true
+          }
+        ]
+      },
+      "rhs": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "term",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "set_op_complement",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "set_op_intersection",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "set_op_membership",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "set_op_product",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "set_op_subset",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "set_op_subset_or_equal",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "set_op_supset",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "set_op_supset_or_equal",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "set_op_union",
     "named": true,
     "fields": {}
   },
@@ -2453,12 +2764,12 @@
     "type": "type_class_body",
     "named": true,
     "fields": {
-      "method": {
+      "function": {
         "multiple": true,
         "required": false,
         "types": [
           {
-            "type": "method_def",
+            "type": "class_function_def",
             "named": true
           }
         ]
@@ -2601,7 +2912,7 @@
       "required": true,
       "types": [
         {
-          "type": "builtin_simple_type",
+          "type": "builtin_types",
           "named": true
         },
         {
@@ -2948,11 +3259,19 @@
     "named": false
   },
   {
+    "type": "%",
+    "named": false
+  },
+  {
     "type": "(",
     "named": false
   },
   {
     "type": ")",
+    "named": false
+  },
+  {
+    "type": "*",
     "named": false
   },
   {
@@ -2973,6 +3292,10 @@
   },
   {
     "type": "..",
+    "named": false
+  },
+  {
+    "type": "/",
     "named": false
   },
   {
@@ -3084,6 +3407,22 @@
     "named": false
   },
   {
+    "type": "comment_aligned",
+    "named": true
+  },
+  {
+    "type": "comment_local",
+    "named": true
+  },
+  {
+    "type": "comment_page",
+    "named": true
+  },
+  {
+    "type": "complement",
+    "named": false
+  },
+  {
     "type": "controlled_language_tag",
     "named": true
   },
@@ -3153,6 +3492,10 @@
   },
   {
     "type": "exists",
+    "named": false
+  },
+  {
+    "type": "exists!",
     "named": false
   },
   {
@@ -3237,10 +3580,14 @@
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "integer",
+    "named": true
+  },
+  {
+    "type": "intersects",
     "named": false
   },
   {
@@ -3268,12 +3615,12 @@
     "named": false
   },
   {
-    "type": "line_comment",
-    "named": true
-  },
-  {
     "type": "long",
     "named": false
+  },
+  {
+    "type": "math_op_subtract",
+    "named": true
   },
   {
     "type": "maxExclusive",
@@ -3297,6 +3644,10 @@
   },
   {
     "type": "minLength",
+    "named": false
+  },
+  {
+    "type": "mod",
     "named": false
   },
   {
@@ -3336,10 +3687,6 @@
     "named": true
   },
   {
-    "type": "op_less_than",
-    "named": true
-  },
-  {
     "type": "opaque",
     "named": true
   },
@@ -3365,6 +3712,10 @@
   },
   {
     "type": "positiveInteger",
+    "named": false
+  },
+  {
+    "type": "product",
     "named": false
   },
   {
@@ -3408,7 +3759,7 @@
     "named": true
   },
   {
-    "type": "set_op_builder",
+    "type": "seq_builder_separator",
     "named": true
   },
   {
@@ -3425,6 +3776,22 @@
   },
   {
     "type": "structure",
+    "named": false
+  },
+  {
+    "type": "subset",
+    "named": false
+  },
+  {
+    "type": "subseteq",
+    "named": false
+  },
+  {
+    "type": "supset",
+    "named": false
+  },
+  {
+    "type": "supseteq",
     "named": false
   },
   {
@@ -3488,6 +3855,10 @@
     "named": false
   },
   {
+    "type": "value_empty_sequence",
+    "named": true
+  },
+  {
     "type": "version",
     "named": false
   },
@@ -3524,7 +3895,11 @@
     "named": false
   },
   {
-    "type": "·",
+    "type": "×",
+    "named": false
+  },
+  {
+    "type": "÷",
     "named": false
   },
   {
@@ -3552,11 +3927,19 @@
     "named": false
   },
   {
-    "type": "∅",
+    "type": "∃!",
     "named": false
   },
   {
     "type": "∈",
+    "named": false
+  },
+  {
+    "type": "∖",
+    "named": false
+  },
+  {
+    "type": "∘",
     "named": false
   },
   {
@@ -3565,6 +3948,14 @@
   },
   {
     "type": "∨",
+    "named": false
+  },
+  {
+    "type": "∩",
+    "named": false
+  },
+  {
+    "type": "∪",
     "named": false
   },
   {
@@ -3584,7 +3975,19 @@
     "named": false
   },
   {
-    "type": "⊕",
+    "type": "⊂",
+    "named": false
+  },
+  {
+    "type": "⊃",
+    "named": false
+  },
+  {
+    "type": "⊆",
+    "named": false
+  },
+  {
+    "type": "⊇",
     "named": false
   },
   {
@@ -3597,6 +4000,10 @@
   },
   {
     "type": "⊻",
+    "named": false
+  },
+  {
+    "type": "⨉",
     "named": false
   }
 ]

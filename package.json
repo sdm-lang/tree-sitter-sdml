@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-sdml",
-  "version": "0.4.11",
+  "version": "0.4.12",
   "description": "Tree-Sitter grammar for Simple Domain Modeling Language",
   "main": "bindings/node",
   "types": "bindings/node",
@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "node-addon-api": "^7.1.0",
+    "node-gyp": "^11.2.0",
     "node-gyp-build": "^4.8.0"
   },
   "peerDependencies": {
@@ -48,5 +49,11 @@
   },
   "directories": {
     "test": "test"
-  }
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.sdml",
+      "injection-regex": "^sdml$"
+    }
+  ]
 }

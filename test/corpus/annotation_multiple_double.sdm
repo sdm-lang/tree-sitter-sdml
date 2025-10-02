@@ -4,7 +4,7 @@ Annotation, Multiple Doubles
 
 module corpus_test_annotation is
 
-  @dc:some = [ 3.1e+101 1.2e-10 0.01E+10 ]
+  @dc:some = [ 3.1e+101 13.1e+101 1.2e-10 0.01E+10 ]
 
 end
 
@@ -21,6 +21,7 @@ end
           member: (identifier)))
           value: (value
             (sequence_of_values
+              element: (simple_value (double))
               element: (simple_value (double))
               element: (simple_value (double))
               element: (simple_value (double))))))))

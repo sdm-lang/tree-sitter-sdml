@@ -11,6 +11,7 @@ end
 (module
   name: (identifier)
   base: (iri)
-  version_info: (quoted_string)
-  version_uri: (iri)
+  (module_version
+    version_info: (quoted_string)
+    version_uri: (iri))
   body: (module_body))

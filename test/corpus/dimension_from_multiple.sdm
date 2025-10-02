@@ -15,20 +15,19 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (definition
-      (dimension_def
-        name: (identifier)
-        from: (from_definition_clause
-          from: (identifier_reference
-            (identifier))
-          (from_definition_with
-            member: (identifier)
-            member: (identifier)))
-        body: (dimension_body
-          identity: (entity_identity
-            identity: (member
-              (member_def
-                name: (identifier)
-                target: (type_reference
-                  (identifier_reference
-                    (identifier)))))))))))
+    (dimension_def
+      name: (identifier)
+      from: (from_definition_clause
+        from: (identifier_reference
+          (identifier))
+        (from_definition_with
+          member: (identifier)
+          member: (identifier)))
+      body: (dimension_body
+        identity: (entity_identity
+          identity: (member
+            (member_def
+              name: (identifier)
+              target: (type_reference
+                (identifier_reference
+                  (identifier))))))))))

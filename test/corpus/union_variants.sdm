@@ -16,13 +16,12 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (definition
-      (union_def
-        name: (identifier)
-        body: (union_body
-          (type_variant
-            name: (identifier_reference
-              (identifier)))
-          (type_variant
-            name: (identifier_reference
-              (identifier))))))))
+    (union_def
+      name: (identifier)
+      body: (union_body
+        (type_variant
+          name: (identifier_reference
+            (identifier)))
+        (type_variant
+          name: (identifier_reference
+            (identifier)))))))

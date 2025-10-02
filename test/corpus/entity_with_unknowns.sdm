@@ -19,18 +19,17 @@ end
     (module
       (identifier)
       (module_body
-        (definition
-          (entity_def
-            (identifier)
-            (entity_body
-              (entity_identity
-                (member
-                  (member_def
-                    (identifier)
-                    (type_reference
-                      (unknown_type)))))
+        (entity_def
+          (identifier)
+          (entity_body
+            (entity_identity
               (member
                 (member_def
                   (identifier)
                   (type_reference
-                    (unknown_type)))))))))
+                    (unknown_type)))))
+            (member
+              (member_def
+                (identifier)
+                (type_reference
+                  (unknown_type))))))))

@@ -21,32 +21,31 @@ end
     (module
       (identifier)
       (module_body
-        (definition
-          (entity_def
-            (identifier)
-            (entity_body
-              (entity_identity
-                (member
-                  (member_def
-                    (identifier)
-                    (type_reference
-                      (identifier_reference
-                        (identifier))))))
+        (entity_def
+          (identifier)
+          (entity_body
+            (entity_identity
               (member
                 (member_def
                   (identifier)
                   (type_reference
                     (identifier_reference
-                      (qualified_identifier
-                        (identifier)
-                        (identifier))))))
-              (member
-                (member_def
-                  (identifier)
-                  (cardinality_expression
-                    (unsigned)
-                    (cardinality_range
-                      (unsigned)))
-                  (type_reference
-                    (identifier_reference
-                      (identifier))))))))))
+                      (identifier))))))
+            (member
+              (member_def
+                (identifier)
+                (type_reference
+                  (identifier_reference
+                    (qualified_identifier
+                      (identifier)
+                      (identifier))))))
+            (member
+              (member_def
+                (identifier)
+                (cardinality_expression
+                  (unsigned)
+                  (cardinality_range
+                    (unsigned)))
+                (type_reference
+                  (identifier_reference
+                    (identifier)))))))))

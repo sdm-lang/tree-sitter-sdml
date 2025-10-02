@@ -13,11 +13,10 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (definition
-      (structure_def
-        name: (identifier)
-        from: (from_definition_clause
-          from: (identifier_reference
-            (identifier))
-          (from_definition_with
-            wildcard: (wildcard)))))))
+    (structure_def
+      name: (identifier)
+      from: (from_definition_clause
+        from: (identifier_reference
+          (identifier))
+        (from_definition_with
+          wildcard: (wildcard))))))

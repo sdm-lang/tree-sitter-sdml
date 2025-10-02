@@ -11,10 +11,8 @@ end
     (module
       (identifier)
       (module_body
-        (definition
-          (property_def
-            (member_def
-              (identifier)
-              (type_reference
-                (unknown_type)))))))
-
+        (property_def
+          (member_def
+            (identifier)
+            (type_reference
+              (unknown_type))))))

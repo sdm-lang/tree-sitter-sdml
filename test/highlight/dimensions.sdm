@@ -48,7 +48,7 @@ module dimensions is
     ;        ^ variable.field
     ;               ^ operator
     ;                  ^ type
-n
+
     name -> Name
     ; <- variable.field
     ;    ^ operator

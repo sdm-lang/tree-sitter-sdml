@@ -27,9 +27,9 @@
 ;; Types
 ;; ---------------------------------------------------------------------------
 
-(data_type_def name: (identifier) @name) @definition.datatype
-(data_type_def base: (_) @name) @reference.datatype
-(data_type_def base: (_) @name) @reference.datatype
+(datatype_def name: (identifier) @name) @definition.datatype
+(datatype_def base: (_) @name) @reference.datatype
+(datatype_def base: (_) @name) @reference.datatype
 (length_restriction_facet
  ["length" "maxLength" "minLength"] @name) @reference.facet
 (digit_restriction_facet
@@ -80,7 +80,7 @@
 (member_def name: (identifier) @name) @definition.field
 
 (type_reference (identifier_reference) @name) @reference.type
-(type_reference (builtin_simple_type) @name) @reference.type
+(type_reference (builtin_types) @name) @reference.type
 
 (property_ref property: (identifier_reference) @name) @reference.field
 
@@ -129,7 +129,7 @@
 
 (function_signature (function_type_reference) @name) @reference.type
 
-(method_def
+(class_function_def
  (function_signature name: (identifier) @name) @definition.method)
 
 (function_parameter name: (identifier) @name) @definition.variable

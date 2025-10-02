@@ -15,15 +15,14 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (definition
-      (enum_def
-        name: (identifier)
-        from: (from_definition_clause
-          from: (identifier_reference
-            (identifier))
-          (from_definition_with
-            member: (identifier)
-            member: (identifier)))
-        body: (enum_body
-          (value_variant
-            name: (identifier)))))))
+    (enum_def
+      name: (identifier)
+      from: (from_definition_clause
+        from: (identifier_reference
+          (identifier))
+        (from_definition_with
+          member: (identifier)
+          member: (identifier)))
+      body: (enum_body
+        (value_variant
+          name: (identifier))))))

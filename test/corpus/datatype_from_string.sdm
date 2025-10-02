@@ -13,8 +13,6 @@ end
 (module
   name: (identifier)
   body: (module_body
-    (definition
-      (data_type_def
-        name: (identifier)
-        base: (builtin_simple_type)))))
-
+    (datatype_def
+      name: (identifier)
+      base: (builtin_types))))

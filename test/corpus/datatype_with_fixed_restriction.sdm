@@ -15,13 +15,10 @@ end
 (module
   (identifier)
   (module_body
-    (definition
-      (data_type_def
-        (identifier)
-        (builtin_simple_type)
-        (datatype_def_restriction
-          (tz_restriction_facet
-            (kw_is_fixed)
-            (tz_restriction_value)))))))
-
-
+    (datatype_def
+      (identifier)
+      (builtin_types)
+      (datatype_def_restriction
+        (tz_restriction_facet
+          (kw_is_fixed)
+          (tz_restriction_value))))))

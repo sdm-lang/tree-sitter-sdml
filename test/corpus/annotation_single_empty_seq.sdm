@@ -1,0 +1,34 @@
+============================
+Annotation, Single Empty Seq
+============================
+
+module corpus_test_annotation is
+
+  @dc:authors = []
+
+  @dc:authors = ∅
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (annotation
+      (annotation_property
+        name: (identifier_reference
+        (qualified_identifier
+          module: (identifier)
+          member: (identifier)))
+        value: (value
+          (sequence_of_values))))
+    (annotation
+      (annotation_property
+        name: (identifier_reference
+        (qualified_identifier
+          module: (identifier)
+          member: (identifier)))
+        value: (value
+          (sequence_of_values
+            empty: (value_empty_sequence)))))))

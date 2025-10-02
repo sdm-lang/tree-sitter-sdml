@@ -20,65 +20,63 @@ end
 (module
   (identifier)
   (module_body
-    (definition
-      (type_class_def
-        (identifier)
-        (type_parameter (identifier))
-        (type_class_body
-          (method_def
-            (function_signature
-              (identifier)
-              (function_parameter
-                (identifier)
-                (function_type_reference
-                  (identifier_reference
-                    (identifier))))
-              (function_type_reference
-                (builtin_simple_type))))
-          (method_def
-            (function_signature
+    (type_class_def
+      (identifier)
+      (type_parameter (identifier))
+      (type_class_body
+        (class_function_def
+          (function_signature
+            (identifier)
+            (function_parameter
               (identifier)
               (function_type_reference
                 (identifier_reference
-                  (identifier)))))
-          (method_def
-            (function_signature
+                  (identifier))))
+            (function_type_reference
+              (builtin_types))))
+        (class_function_def
+          (function_signature
+            (identifier)
+            (function_type_reference
+              (identifier_reference
+                (identifier)))))
+        (class_function_def
+          (function_signature
+            (identifier)
+            (function_parameter
               (identifier)
-              (function_parameter
-                (identifier)
-                (function_type_reference
-                  (identifier_reference
-                    (identifier))))
               (function_type_reference
-                (builtin_simple_type)))
-            (annotation_only_body
-              (annotation
-                (annotation_property
-                  (identifier_reference
-                    (qualified_identifier
-                      (identifier)
-                      (identifier)))
-                  (value
-                    (simple_value
-                      (string
-                        (quoted_string))))))))
-          (method_def
-            (function_signature
+                (identifier_reference
+                  (identifier))))
+            (function_type_reference
+              (builtin_types)))
+          (annotation_only_body
+            (annotation
+              (annotation_property
+                (identifier_reference
+                  (qualified_identifier
+                    (identifier)
+                    (identifier)))
+                (value
+                  (simple_value
+                    (string
+                      (quoted_string))))))))
+        (class_function_def
+          (function_signature
+            (identifier)
+            (function_parameter
               (identifier)
-              (function_parameter
-                (identifier)
-                (function_type_reference
-                  (identifier_reference
-                    (identifier))))
               (function_type_reference
-                (builtin_simple_type)))
-            (function_body
-               (term
-                 (functional_term
-                   (term
-                     (identifier_reference
-                       (identifier)))
-                   (term
-                     (identifier_reference
-                       (identifier))))))))))))
-
+                (identifier_reference
+                  (identifier))))
+            (function_type_reference
+              (builtin_types)))
+          (function_body
+             (term
+               (functional_term
+                 (term
+                   (identifier_reference
+                     (identifier)))
+                 (term
+                   (identifier_reference
+                     (identifier)))))))))))

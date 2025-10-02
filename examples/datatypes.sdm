@@ -10,7 +10,7 @@ module datatypes is
     @skos:definition = "A short descriptive name"
   end
 
-  datatype eventOcurred <- dateTime {
+  datatype eventOcurred <- opaque dateTime {
     explicitTimezone = fixed required
   }
 

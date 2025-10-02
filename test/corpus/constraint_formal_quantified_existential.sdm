@@ -50,7 +50,7 @@ end
                           (quantified_variable
                             (variable
                               (identifier))
-                            (set_op_membership)
+                            (set_op_is_member)
                             (term
                               (identifier_reference
                                 (identifier)))))
@@ -87,7 +87,7 @@ end
                           (quantified_variable
                             (variable
                               (identifier))
-                            (set_op_membership)
+                            (set_op_is_member)
                             (term
                               (identifier_reference
                                 (identifier)))))

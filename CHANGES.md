@@ -1,5 +1,31 @@
 # Changes for tree-sitter-sdml
 
+## Version 0.4.13
+
+* Feature: Added new `logical_quantifier_neg_existential` rule to the super-type
+  `logical_quantifier` which allows for *not exists* quantification.
+* Feature: Replaced `set_op_membership` with `set_membership` which is in turn a
+  super-type of a renamed `set_op_is_member` and a new `set_op_is_not_member` to
+  easily account for *not a member* quantification bindings.
+* Refactor: Renamed operator keywords to reflect operator names so `KW_AND` is
+  now `KW_LOGICAL_AND`.
+
+Example updated grammar:
+
+```ebnf
+LogicalQuantifierNegExistential
+    ::= (LogicalOpNegation LogicalQuantifierExistential) | "∄"
+
+SetMembership
+    ::= SetOpIsMember | SetOpIsNotMember
+
+SetOpIsMember
+    ::= "in" | "∈"
+
+SetOpIsNotMember
+    ::= (LogicalOpNegation SetOpIsMember) | "∉"
+```
+
 ## Version 0.4.12
 
 This is significant change in the structure of the grammar to clean-up and make

@@ -103,7 +103,7 @@
 (quantified_variable_binding
  (logical_quantifier) @operator)
 
-(quantified_variable (set_op_membership) @operator)
+(quantified_variable (set_membership) @operator)
 
 (set_expression_sentence
  (set_operator) @operator)

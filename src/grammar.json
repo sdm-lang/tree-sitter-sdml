@@ -1015,7 +1015,7 @@
           },
           {
             "type": "SYMBOL",
-            "name": "set_op_membership"
+            "name": "set_membership"
           },
           {
             "type": "FIELD",
@@ -4611,6 +4611,28 @@
         }
       ]
     },
+    "logical_quantifier_neg_existential": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "logical_op_negation"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "logical_quantifier_existential"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "∄"
+        }
+      ]
+    },
     "logical_quantifier_existential_one": {
       "type": "CHOICE",
       "members": [
@@ -4661,7 +4683,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "set_op_membership"
+          "name": "set_membership"
         }
       ]
     },
@@ -4769,7 +4791,20 @@
         }
       ]
     },
-    "set_op_membership": {
+    "set_membership": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "set_op_is_member"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "set_op_is_not_member"
+        }
+      ]
+    },
+    "set_op_is_member": {
       "type": "CHOICE",
       "members": [
         {
@@ -4779,6 +4814,28 @@
         {
           "type": "STRING",
           "value": "∈"
+        }
+      ]
+    },
+    "set_op_is_not_member": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "logical_op_negation"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "set_op_is_member"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "∉"
         }
       ]
     },
@@ -5008,6 +5065,7 @@
     "logical_quantifier",
     "math_operator",
     "restriction_facet",
+    "set_membership",
     "set_operator"
   ],
   "reserved": {

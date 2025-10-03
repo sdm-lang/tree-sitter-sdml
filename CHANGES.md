@@ -12,18 +12,18 @@
 
 Example updated grammar:
 
-```ebnf
+```text
 LogicalQuantifierNegExistential
-    ::= (LogicalOpNegation LogicalQuantifierExistential) | "∄"
+    ::= (LogicalOpNegation LogicalQuantifierExistential) | '∄'
 
 SetMembership
     ::= SetOpIsMember | SetOpIsNotMember
 
 SetOpIsMember
-    ::= "in" | "∈"
+    ::= 'in' | '∈'
 
 SetOpIsNotMember
-    ::= (LogicalOpNegation SetOpIsMember) | "∉"
+    ::= (LogicalOpNegation SetOpIsMember) | '∉'
 ```
 
 ## Version 0.4.12
@@ -116,26 +116,26 @@ in the grammar now.
 
 New Grammar:
 
-```ebnf
+```text
 TypeClassDef
-    ::= "class" Identifier TypeParameterList?
+    ::= 'class' Identifier TypeParameterList?
         FromDefinitionClause? TYpeClassBody?
 
 TypeParameterList
-    ::= "(" TypeParameter+ ")"
+    ::= '(' TypeParameter+ ')'
 
 TypeParameter
-    ::= Identifier ( "<-" TypeParameterRestrictionList )?
+    ::= Identifier ( ('<-' | '←') TypeParameterRestrictionList )?
 
 TypeParameterRestrictionList
-    ::= TypeParameterRestriction ( "+" TypeParameterRestriction)*
+    ::= TypeParameterRestriction ( '+' TypeParameterRestriction )*
     
 TypeParameterRestriction
     ::= CardinalityReferenceExpression?
         IdentifierReference TypeParameterArgumentList?
 
 TypeParameterArgumentList
-    ::= "(" Identifier+ ")"
+    ::= '(' Identifier+ ')'
 ```
 
 This allows the expression of a number of specific forms required by the SDML

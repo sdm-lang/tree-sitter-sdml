@@ -737,7 +737,6 @@ module.exports = grammar({
             )
         ),
 
-        // Added (0.4.12): Allows easier navigation for indentation.
         module_version: $ => kw_rule(
             KW_VERSION,
             seq(
@@ -1138,13 +1137,8 @@ module.exports = grammar({
                 )
             ),
             $.seq_builder_separator,
-            field(F_BODY, $.sequence_builder_body),
+            field(F_BODY, $.quantified_sentence),
             P_SEQ_BUILD_END,
-        ),
-
-        sequence_builder_body: $ => choice(
-            // WFR: Quantified variable names MUST be in builder variables
-            $.quantified_sentence,
         ),
 
         // =========================================================================================
@@ -1198,7 +1192,8 @@ module.exports = grammar({
             prec(1, STRING_LANG_TAG)
         ),
 
-        // From <https://github.com/BonaBeavis/tree-sitter-turtle/blob/main/grammar.js>
+        // The regular expressions below are taken from the Turtle grammar found in the tree-sitter
+        // repository at <https://github.com/BonaBeavis/tree-sitter-turtle/blob/main/grammar.js>.
         iri: $ => seq(
             P_IRI_START,
             token.immediate(
@@ -1647,7 +1642,13 @@ module.exports = grammar({
 
         property_def: $ => seq(
             KW_PROPERTY,
-            field(F_MEMBER, $.member_def)
+            field(
+                F_MEMBER,
+                choice(
+                    $.annotation_member_def,
+                    $.member_def
+                )
+            )
         ),
 
         // -----------------------------------------------------------------------------------------
@@ -1668,10 +1669,8 @@ module.exports = grammar({
             ),
             choice(
                 field(F_TYPE, $.identifier_reference),
-                seq(
-                    P_SEQ_START,
-                    repeat(field(F_TYPE, $.identifier_reference)),
-                    P_SEQ_END
+                sequence_of_many1(
+                    field(F_TYPE, $.identifier_reference)
                 )
             )
         ),
@@ -1793,6 +1792,11 @@ module.exports = grammar({
             field(F_NAME, $.identifier),
             $._type_expression_to,
             optional_field(F_BODY, $.annotation_only_body)
+        ),
+
+        annotation_member_def: $ => seq(
+            token(P_ANNOTATE_PRE),
+            $.member_def
         ),
 
         property_ref: $ => kw_field(KW_REF, F_PROPERTY, $.identifier_reference),

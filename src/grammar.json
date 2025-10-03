@@ -1481,21 +1481,12 @@
           "name": "body",
           "content": {
             "type": "SYMBOL",
-            "name": "sequence_builder_body"
+            "name": "quantified_sentence"
           }
         },
         {
           "type": "STRING",
           "value": "}"
-        }
-      ]
-    },
-    "sequence_builder_body": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "quantified_sentence"
         }
       ]
     },
@@ -3330,8 +3321,17 @@
           "type": "FIELD",
           "name": "member",
           "content": {
-            "type": "SYMBOL",
-            "name": "member_def"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "annotation_member_def"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "member_def"
+              }
+            ]
           }
         }
       ]
@@ -3421,7 +3421,7 @@
                   "value": "["
                 },
                 {
-                  "type": "REPEAT",
+                  "type": "REPEAT1",
                   "content": {
                     "type": "FIELD",
                     "name": "type",
@@ -3973,6 +3973,22 @@
               "type": "BLANK"
             }
           ]
+        }
+      ]
+    },
+    "annotation_member_def": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "TOKEN",
+          "content": {
+            "type": "STRING",
+            "value": "@"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "member_def"
         }
       ]
     },

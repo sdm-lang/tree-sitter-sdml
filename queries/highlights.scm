@@ -250,6 +250,10 @@
  name: (identifier) @variable.field
  target: (type_reference) @type)
 
+(annotation_member_def
+ "@" @property.definition
+ (member_def name: (identifier) @property.definition))
+
 (property_ref
  "ref" @keyword
  property: (identifier_reference) @variable.field)

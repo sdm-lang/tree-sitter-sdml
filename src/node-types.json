@@ -243,6 +243,21 @@
     }
   },
   {
+    "type": "annotation_member_def",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "member_def",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "annotation_only_body",
     "named": true,
     "fields": {},
@@ -2112,6 +2127,10 @@
         "required": true,
         "types": [
           {
+            "type": "annotation_member_def",
+            "named": true
+          },
+          {
             "type": "member_def",
             "named": true
           }
@@ -2313,7 +2332,7 @@
         "required": true,
         "types": [
           {
-            "type": "sequence_builder_body",
+            "type": "quantified_sentence",
             "named": true
           }
         ]
@@ -2335,21 +2354,6 @@
       "types": [
         {
           "type": "seq_builder_separator",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "sequence_builder_body",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "quantified_sentence",
           "named": true
         }
       ]

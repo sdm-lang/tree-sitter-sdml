@@ -1,0 +1,35 @@
+================================
+Property Definition - Annotation
+================================
+
+module corpus_test_property is
+  property @deprecatedSince -> {1} string is
+    @skos:definition = "Used to denote when"@en
+  end
+end
+
+---
+
+    (module
+      (identifier)
+      (module_body
+        (property_def
+          (annotation_member_def
+            (member_def
+              (identifier)
+              (cardinality_expression
+                (unsigned))
+              (type_reference
+                (builtin_types))
+              (annotation_only_body
+                (annotation
+                  (annotation_property
+                    (identifier_reference
+                      (qualified_identifier
+                        (identifier)
+                        (identifier)))
+                    (value
+                      (simple_value
+                        (string
+                          (quoted_string)
+                          (language_tag))))))))))))

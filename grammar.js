@@ -773,20 +773,24 @@ module.exports = grammar({
             choice(
                 $.module_path_absolute,
                 $.module_path_relative,
-                $.module_path_root_only
             )
         ),
 
-        module_path_root_only: $ => P_PATH_SEP,
-
-        module_path_absolute: $ => sep1_immediate_absolute(
+        module_path_absolute: $ => seq(
             P_PATH_SEP,
-            field(F_SEGMENT, $.identifier)
+            optional($._module_path_actual)
         ),
 
-        module_path_relative: $ => sep1_immediate(
-            P_PATH_SEP,
-            field(F_SEGMENT, $.identifier)
+        module_path_relative: $ => $._module_path_actual,
+
+        _module_path_actual: $ => seq(
+            field(F_SEGMENT, $.identifier),
+            repeat(
+                seq(
+                    P_PATH_SEP,
+                    field(F_SEGMENT, $.identifier)
+                )
+            )
         ),
 
         _import: $ => choice(

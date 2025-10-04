@@ -17,7 +17,7 @@ end
   (module_body
     (import_statement
       (from_clause
-        (module_path_root_only))
+        (module_path_absolute))
       (member_import
         (qualified_identifier
           (identifier)

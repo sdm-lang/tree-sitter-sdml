@@ -37,7 +37,7 @@ module constraints is
 
     f -> Target is
       assert tagged_with_foo_builder_2 is
-        ¬ is_empty({ t |∃ t ∈ self.tags, t = "foo" ∧ color(t) = red })
+        ¬ is_empty({ t | ∃ t ∈ self.tags, t = "foo" ∧ color(t) = red })
       end
     end
 
@@ -61,11 +61,11 @@ module constraints is
 
     j -> Target is
       assert tagged_with_foo_builder_6 is
-        ∃ x ∈ self.container.tags,
+        ∃ T ∈ self.container.tags,
           ¬ {
               t
             |
-              ∀ t ∈ self.tags, contains(x t)
+              ∀ t ∈ self.tags, contains(T t)
             } = ∅
       end
     end

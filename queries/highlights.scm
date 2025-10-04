@@ -43,7 +43,7 @@
  ".."
  "="
  (op_equality)
-] @operator
+ ] @operator
 
 ;; ---------------------------------------------------------------------------
 ;; Global Punctuation
@@ -65,12 +65,11 @@
 (module name: (identifier) @module.definition)
 (module_version "version" @keyword)
 
-(module_path_root_only "::" @punctuation.separator)
+(module_path_absolute "::" @punctuation.separator)
+(module_path_absolute segment: (identifier) @module)
+
 (module_path_relative "::" @punctuation.separator)
-(module_path_relative segment: (identifier) @module.special)
-(module_path_absolute
- "::" @punctuation.separator
- segment: (identifier) @module.special)
+(module_path_relative segment: (identifier) @module)
 
 (member_import name: (qualified_identifier) @type)
 (member_import rename: (identifier) @type)

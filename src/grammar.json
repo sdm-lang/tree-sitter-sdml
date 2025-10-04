@@ -208,18 +208,10 @@
             {
               "type": "SYMBOL",
               "name": "module_path_relative"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "module_path_root_only"
             }
           ]
         }
       ]
-    },
-    "module_path_root_only": {
-      "type": "STRING",
-      "value": "::"
     },
     "module_path_absolute": {
       "type": "SEQ",
@@ -229,44 +221,24 @@
           "value": "::"
         },
         {
-          "type": "SEQ",
+          "type": "CHOICE",
           "members": [
             {
-              "type": "FIELD",
-              "name": "segment",
-              "content": {
-                "type": "SYMBOL",
-                "name": "identifier"
-              }
+              "type": "SYMBOL",
+              "name": "_module_path_actual"
             },
             {
-              "type": "REPEAT",
-              "content": {
-                "type": "SEQ",
-                "members": [
-                  {
-                    "type": "IMMEDIATE_TOKEN",
-                    "content": {
-                      "type": "STRING",
-                      "value": "::"
-                    }
-                  },
-                  {
-                    "type": "FIELD",
-                    "name": "segment",
-                    "content": {
-                      "type": "SYMBOL",
-                      "name": "identifier"
-                    }
-                  }
-                ]
-              }
+              "type": "BLANK"
             }
           ]
         }
       ]
     },
     "module_path_relative": {
+      "type": "SYMBOL",
+      "name": "_module_path_actual"
+    },
+    "_module_path_actual": {
       "type": "SEQ",
       "members": [
         {
@@ -283,11 +255,8 @@
             "type": "SEQ",
             "members": [
               {
-                "type": "IMMEDIATE_TOKEN",
-                "content": {
-                  "type": "STRING",
-                  "value": "::"
-                }
+                "type": "STRING",
+                "value": "::"
               },
               {
                 "type": "FIELD",

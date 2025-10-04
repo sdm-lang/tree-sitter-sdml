@@ -10,6 +10,13 @@ module properties is
   ;                ^ module
   ;                     ^ punctuation.bracket
 
+  property @deprecated -> boolean
+  ; <- keyword
+  ;        ^ property.definition
+  ;         ^ property.definition
+  ;                    ^ operator
+  ;                       ^ type.builtin
+
   property accountId -> {1} account:AccountId is
   ; <- keyword
   ;        ^ variable.field
@@ -20,12 +27,11 @@ module properties is
   ;                         ^ type
   ;                                           ^ keyword
 
-    @skos:definition = "a"@en
+    @skos:definition = "An account identifier"@en
     ; <- property
     ;^ property
     ;                ^ operator
     ;                  ^ string
-    ;                     ^ property
 
   end
   ; <- keyword

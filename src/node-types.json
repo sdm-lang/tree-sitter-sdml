@@ -1209,10 +1209,6 @@
         {
           "type": "module_path_relative",
           "named": true
-        },
-        {
-          "type": "module_path_root_only",
-          "named": true
         }
       ]
     }
@@ -1993,7 +1989,7 @@
     "fields": {
       "segment": {
         "multiple": true,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "identifier",
@@ -2018,11 +2014,6 @@
         ]
       }
     }
-  },
-  {
-    "type": "module_path_root_only",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "module_version",
@@ -3501,11 +3492,11 @@
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "duration",
@@ -3617,11 +3608,11 @@
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "intersects",
@@ -3769,11 +3760,11 @@
   },
   {
     "type": "rational",
-    "named": true
+    "named": false
   },
   {
     "type": "rational",
-    "named": false
+    "named": true
   },
   {
     "type": "rdf",

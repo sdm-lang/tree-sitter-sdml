@@ -83,7 +83,7 @@ module Campaign is
         is
         ; <- keyword
 
-        self.tags.contains(foo)
+        self.tags∘contains(foo)
         ; <- variable.builtin
         ;   ^ operator
         ;    ^ function.call

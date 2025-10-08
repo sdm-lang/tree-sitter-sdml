@@ -21,6 +21,7 @@
  "from"
  "import"
  "is"
+ "metric"
  "module"
  "of"
  "property"
@@ -169,9 +170,9 @@
 (datatype_def
  "datatype" @keyword
  name: (identifier) @type.definition)
-(datatype_def base: (identifier_reference) @type)
-(datatype_def base: (builtin_types) @type.builtin)
 (datatype_def opaque: (opaque) @keyword)
+(datatype_base_type_reference (identifier_reference) @type)
+(datatype_base_type_reference (builtin_types) @type.builtin)
 
 (length_restriction_facet
  [ "length" "maxLength" "minLength" ] @property)
@@ -195,6 +196,14 @@
 (enum_def name: (identifier) @type.definition)
 
 (event_def name: (identifier) @type.definition)
+
+(metric_group_def "group" @keyword)
+(metric_group_def name: (identifier) @type.definition)
+(metric_event_binding "on" @keyword)
+(metric_event_binding name: (identifier) @variable.field)
+(metric_event_binding (identifier_reference) @type)
+
+(metric_ref "ref" @keyword)
 
 (structure_def name: (identifier) @type.definition)
 

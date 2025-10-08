@@ -29,7 +29,6 @@
 
 (datatype_def name: (identifier) @name) @definition.datatype
 (datatype_def base: (_) @name) @reference.datatype
-(datatype_def base: (_) @name) @reference.datatype
 (length_restriction_facet
  ["length" "maxLength" "minLength"] @name) @reference.facet
 (digit_restriction_facet

@@ -2180,6 +2180,18 @@
         },
         {
           "type": "SYMBOL",
+          "name": "metric_def"
+        },
+        {
+          "type": "RESERVED",
+          "content": {
+            "type": "SYMBOL",
+            "name": "metric_group_def"
+          },
+          "context_name": "metric_group_def"
+        },
+        {
+          "type": "SYMBOL",
           "name": "property_def"
         },
         {
@@ -2373,7 +2385,7 @@
                   "name": "base",
                   "content": {
                     "type": "SYMBOL",
-                    "name": "_datatype_base"
+                    "name": "datatype_base_type_reference"
                   }
                 },
                 {
@@ -2384,7 +2396,7 @@
                       "name": "restriction",
                       "content": {
                         "type": "SYMBOL",
-                        "name": "datatype_def_restriction"
+                        "name": "datatype_type_restrictions"
                       }
                     },
                     {
@@ -2418,7 +2430,7 @@
       "type": "STRING",
       "value": "opaque"
     },
-    "_datatype_base": {
+    "datatype_base_type_reference": {
       "type": "CHOICE",
       "members": [
         {
@@ -2435,7 +2447,7 @@
         }
       ]
     },
-    "datatype_def_restriction": {
+    "datatype_type_restrictions": {
       "type": "SEQ",
       "members": [
         {
@@ -3276,6 +3288,256 @@
         {
           "type": "STRING",
           "value": "end"
+        }
+      ]
+    },
+    "metric_def": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "metric"
+        },
+        {
+          "type": "FIELD",
+          "name": "signature",
+          "content": {
+            "type": "SYMBOL",
+            "name": "metric_function_signature"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "annotation_only_body"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "metric_function_signature": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "("
+                },
+                {
+                  "type": "REPEAT1",
+                  "content": {
+                    "type": "FIELD",
+                    "name": "parameter",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "function_parameter"
+                    }
+                  }
+                },
+                {
+                  "type": "STRING",
+                  "value": ")"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_function_type"
+        }
+      ]
+    },
+    "metric_group_def": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "metric"
+            },
+            {
+              "type": "STRING",
+              "value": "group"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "metric_event_binding"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "FIELD",
+                  "name": "body",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "metric_group_body"
+                  }
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "metric_event_binding": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "on"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "FIELD",
+                  "name": "name",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "identifier"
+                  }
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_type_op_has_type"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier_reference"
+        }
+      ]
+    },
+    "metric_group_body": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "is"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "REPEAT",
+              "content": {
+                "type": "SYMBOL",
+                "name": "annotation"
+              }
+            },
+            {
+              "type": "REPEAT",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "inline_metric_def"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "metric_ref"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "end"
+        }
+      ]
+    },
+    "inline_metric_def": {
+      "type": "SYMBOL",
+      "name": "class_function_def"
+    },
+    "metric_ref": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "ref"
+            },
+            {
+              "type": "FIELD",
+              "name": "referent",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier_reference"
+              }
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "body",
+              "content": {
+                "type": "SYMBOL",
+                "name": "function_body"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -5081,6 +5343,10 @@
       },
       {
         "type": "STRING",
+        "value": "metric"
+      },
+      {
+        "type": "STRING",
         "value": "module"
       },
       {
@@ -5136,6 +5402,10 @@
       {
         "type": "STRING",
         "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
       },
       {
         "type": "STRING",
@@ -5215,6 +5485,10 @@
       },
       {
         "type": "STRING",
+        "value": "metric"
+      },
+      {
+        "type": "STRING",
         "value": "module"
       },
       {
@@ -5274,6 +5548,10 @@
       {
         "type": "STRING",
         "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
       },
       {
         "type": "STRING",
@@ -5367,6 +5645,10 @@
       },
       {
         "type": "STRING",
+        "value": "metric"
+      },
+      {
+        "type": "STRING",
         "value": "module"
       },
       {
@@ -5433,6 +5715,10 @@
       },
       {
         "type": "STRING",
+        "value": "metric"
+      },
+      {
+        "type": "STRING",
         "value": "module"
       },
       {
@@ -5488,6 +5774,72 @@
         "value": "ref"
       }
     ],
+    "metric_group_def": [
+      {
+        "type": "STRING",
+        "value": "as"
+      },
+      {
+        "type": "STRING",
+        "value": "assert"
+      },
+      {
+        "type": "STRING",
+        "value": "datatype"
+      },
+      {
+        "type": "STRING",
+        "value": "dimension"
+      },
+      {
+        "type": "STRING",
+        "value": "end"
+      },
+      {
+        "type": "STRING",
+        "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
+      },
+      {
+        "type": "STRING",
+        "value": "module"
+      },
+      {
+        "type": "STRING",
+        "value": "of"
+      },
+      {
+        "type": "STRING",
+        "value": "property"
+      },
+      {
+        "type": "STRING",
+        "value": "rdf"
+      },
+      {
+        "type": "STRING",
+        "value": "structure"
+      },
+      {
+        "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
+        "value": "union"
+      },
+      {
+        "type": "STRING",
+        "value": "unknown"
+      },
+      {
+        "type": "STRING",
+        "value": "on"
+      }
+    ],
     "rdf_def": [
       {
         "type": "STRING",
@@ -5512,6 +5864,10 @@
       {
         "type": "STRING",
         "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
       },
       {
         "type": "STRING",
@@ -5578,6 +5934,10 @@
       {
         "type": "STRING",
         "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
       },
       {
         "type": "STRING",
@@ -5655,6 +6015,10 @@
       },
       {
         "type": "STRING",
+        "value": "metric"
+      },
+      {
+        "type": "STRING",
         "value": "module"
       },
       {
@@ -5726,6 +6090,10 @@
       {
         "type": "STRING",
         "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
       },
       {
         "type": "STRING",
@@ -6052,6 +6420,10 @@
       {
         "type": "STRING",
         "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
       },
       {
         "type": "STRING",

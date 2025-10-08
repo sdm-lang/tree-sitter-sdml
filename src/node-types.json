@@ -24,6 +24,14 @@
         "named": true
       },
       {
+        "type": "metric_def",
+        "named": true
+      },
+      {
+        "type": "metric_group_def",
+        "named": true
+      },
+      {
         "type": "property_def",
         "named": true
       },
@@ -686,6 +694,25 @@
     }
   },
   {
+    "type": "datatype_base_type_reference",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "builtin_types",
+          "named": true
+        },
+        {
+          "type": "identifier_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "datatype_def",
     "named": true,
     "fields": {
@@ -694,11 +721,7 @@
         "required": true,
         "types": [
           {
-            "type": "builtin_types",
-            "named": true
-          },
-          {
-            "type": "identifier_reference",
+            "type": "datatype_base_type_reference",
             "named": true
           }
         ]
@@ -738,7 +761,7 @@
         "required": false,
         "types": [
           {
-            "type": "datatype_def_restriction",
+            "type": "datatype_type_restrictions",
             "named": true
           }
         ]
@@ -746,7 +769,7 @@
     }
   },
   {
-    "type": "datatype_def_restriction",
+    "type": "datatype_type_restrictions",
     "named": true,
     "fields": {},
     "children": {
@@ -1597,6 +1620,21 @@
     }
   },
   {
+    "type": "inline_metric_def",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "class_function_def",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "iri",
     "named": true,
     "fields": {}
@@ -1871,6 +1909,189 @@
         "types": [
           {
             "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "metric_def",
+    "named": true,
+    "fields": {
+      "signature": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "metric_function_signature",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "annotation_only_body",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "metric_event_binding",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "metric_function_signature",
+    "named": true,
+    "fields": {
+      "cardinality": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "cardinality_reference_expression",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "parameter": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "function_parameter",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "function_type_reference",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "metric_group_body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "annotation",
+          "named": true
+        },
+        {
+          "type": "inline_metric_def",
+          "named": true
+        },
+        {
+          "type": "metric_ref",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "metric_group_def",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "metric_group_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "metric_event_binding",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "metric_ref",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "function_body",
+            "named": true
+          }
+        ]
+      },
+      "referent": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier_reference",
             "named": true
           }
         ]
@@ -3476,11 +3697,11 @@
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "def",
@@ -3571,6 +3792,10 @@
     "named": false
   },
   {
+    "type": "group",
+    "named": false
+  },
+  {
     "type": "hexBinary",
     "named": false
   },
@@ -3608,11 +3833,11 @@
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "intersects",
@@ -3663,6 +3888,10 @@
     "named": false
   },
   {
+    "type": "metric",
+    "named": false
+  },
+  {
     "type": "minExclusive",
     "named": false
   },
@@ -3708,6 +3937,10 @@
   },
   {
     "type": "of",
+    "named": false
+  },
+  {
+    "type": "on",
     "named": false
   },
   {
@@ -3760,11 +3993,11 @@
   },
   {
     "type": "rational",
-    "named": false
+    "named": true
   },
   {
     "type": "rational",
-    "named": true
+    "named": false
   },
   {
     "type": "rdf",
@@ -3860,11 +4093,11 @@
   },
   {
     "type": "unsigned",
-    "named": true
+    "named": false
   },
   {
     "type": "unsigned",
-    "named": false
+    "named": true
   },
   {
     "type": "unsignedByte",

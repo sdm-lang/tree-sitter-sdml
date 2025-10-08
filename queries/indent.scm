@@ -15,7 +15,7 @@
 
 (import_statement "[" @indent "]" @indent.end)
 
-(datatype_def_restriction "{" @indent "}" @indent.end)
+(datatype_type_restrictions "{" @indent "}" @indent.end)
 
 (from_definition_with "[" @indent "]" @indent.end)
 (from_definition_without "[" @indent "]" @indent.end)

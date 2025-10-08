@@ -17,13 +17,14 @@ end
 ---
 
 (module
-   (identifier)
-   (module_body
-     (datatype_def
-       (identifier)
-       (builtin_types)
-       (datatype_def_restriction
-         (pattern_restriction_facet
-           (quoted_string)
-           (quoted_string)
-           (quoted_string))))))
+  (identifier)
+  (module_body
+    (datatype_def
+      (identifier)
+      (datatype_base_type_reference
+        (builtin_types))
+      (datatype_type_restrictions
+        (pattern_restriction_facet
+          (quoted_string)
+          (quoted_string)
+          (quoted_string))))))

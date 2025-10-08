@@ -1,0 +1,68 @@
+module example_metrics is
+; <- keyword
+;      ^ module.definition
+;                      ^ keyword
+
+  entity Ad is
+  ; <- keyword
+  ;      ^ type.definition
+  ;         ^ keyword
+    identity adId -> long
+    ; <- keyword
+    ;        ^ variable.field
+    ;              operator
+    ;                ^ type
+  end
+  ; <- keyword
+
+  event Impression is
+  ; <- keyword
+  ;     ^ type.definition
+  ;                ^ keyword
+    source Ad
+    ; <- keyword
+    ;      ^ type
+  end
+  ; <- keyword
+
+  metric group Impressions on Impression is
+  ; <- keyword
+  ;      ^ keyword
+  ;            ^ type.definition
+  ;                        ^ keyword
+  ;                           ^ type
+  ;                                      ^ keyword
+    def grossImpressions -> count := count(self)
+    def invalidImpressions -> count
+    def impressions -> count := grossImpressions - invalidImpressions
+  end
+  ; <- keyword
+
+  event Click is
+  ; <- keyword
+  ;     ^ type.definition
+  ;           ^ keyword
+    source Ad
+    ; <- keyword
+    ;      ^ type
+  end
+  ; <- keyword
+
+  metric group Impressions on ev -> Impression is
+  ; <- keyword
+  ;      ^ keyword
+  ;            ^ type.definition
+  ;                        ^ keyword
+  ;                           ^ variable.field
+  ;                              ^ operator
+  ;                                 ^ type
+  ;                                            ^ keyword
+    def grossClicks -> count := count(self)
+    def invalidClicks -> count
+    def clicks -> count := grossClicks - invalidClicks
+    def ctr(impressions -> Impressions) -> percentageRate := clicks / impressions.impressions
+  end
+  ; <- keyword
+
+end
+; <- keyword

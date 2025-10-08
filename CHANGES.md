@@ -1,5 +1,46 @@
 # Changes for tree-sitter-sdml
 
+## Version 0.4.14
+
+* Feature: Added new `metric` and `metric group` definitions to modules allowing for
+  the capture of metrics that leverage the existing event types. These will be
+  described in the SDML reference as soon as feasible.
+  * Added test case `metric_empty`, `metric_group_empty`, and `metric_used`.
+* Feature: Added syntactic sugar for defining new annotation properties. This
+  makes the task much easier and without the need for any additional RDF
+  knowledge.
+  * Added test case `property_def_annotation`.
+* Refactor: datatype grammar renaming continues,
+  * Rule `_datatype_base` now `datatype_base_type_reference` to match other type
+    reference names.
+  * Rule `datatype_def_restriction` now `datatype_type_restrictions` for simplicity.
+  * Updated test cases.
+
+New metric grammar:
+
+```text
+MetricDef
+    ::= 'metric' MetricFunctionSignature AnnorationOnlyBody?
+
+MetricFunctionSignature
+    ::= Identifier ( '('  FunctionParameter')' )? 
+
+MetricGroupsDef
+    ::= 'metric' 'group' Identifier MetricEventBinding MetricGroupBody?
+
+MetricEventBinding
+    ::= 'on' ( Identifier  ( '->' | '→' ) )? IdentifierReference
+
+MetricGroupBody
+    ::= 'is' Annotation* ( InlineMetricDef | MetricRef )*
+
+InlineMetricDef
+    ::= ClassFunctionDef
+
+MetricRef
+    ::= 'ref' IdentifierReference AnnotationOnlyBody?
+```
+
 ## Version 0.4.13
 
 * Feature: Added new `logical_quantifier_neg_existential` rule to the super-type
@@ -33,9 +74,9 @@ maintenance easier. It pulls out all strings into constants and introduces a set
 of functions with more meaningful names for higher-level parser constructs.
 Additionally, this grammar uses the `reserved`, `inline`, and `super-types` fields to
 do some more of the heavy lifting and while it does introduce a *little*
-redundancy in having a keyword constant, a reserved word constant and an entry in the
-`reserved` field, it does allow us to manage nested or scoped keywords correctly
-in the grammar now.
+redundancy in having a keyword constant, a reserved word constant and an entry
+in the `reserved` field, it does allow us to manage nested or scoped keywords
+correctly in the grammar now.
 
 * Features
   * Grammar rule `line_comment` is now a *super-type* rule and has three

@@ -1,0 +1,39 @@
+==============================
+Metric Definition, Empty
+==============================
+
+module corpus_test_metrics is
+  metric totalSales -> currency
+
+  metric group RetailSales on ev -> RetailSale is
+    ref totalSales := ev.total.sum
+  end
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (metric_def
+      (metric_function_signature
+        (identifier)
+        (function_type_reference
+          (identifier_reference
+            (identifier)))))
+    (metric_group_def
+      (identifier)
+      (metric_event_binding
+        (identifier)
+        (identifier_reference
+          (identifier)))
+      (metric_group_body
+        (metric_ref
+          (identifier_reference
+            (identifier))
+          (function_body
+            (term
+              (function_composition
+                (identifier)
+                (identifier)
+                (identifier)))))))))

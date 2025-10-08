@@ -1,0 +1,19 @@
+==============================
+Metric Definition, Empty
+==============================
+
+module corpus_test_metrics is
+  metric accountId -> count
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (metric_def
+      (metric_function_signature
+        (identifier)
+        (function_type_reference
+          (identifier_reference
+            (identifier)))))))

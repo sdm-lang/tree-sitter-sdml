@@ -1,0 +1,18 @@
+==============================
+Metric Group Definition, Empty
+==============================
+
+module corpus_test_metrics is
+  metric group accountId on Event
+end
+
+---
+
+    (module
+      (identifier)
+      (module_body
+        (metric_group_def
+          (identifier)
+          (metric_event_binding
+            (identifier_reference
+              (identifier))))))

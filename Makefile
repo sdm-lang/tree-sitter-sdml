@@ -41,8 +41,9 @@ INSTALL_INCLUDE_DIR := $(INSTALL_ROOT_DIR)/include
 # ----------------------------------------------------------------------------
 
 TS_CLI := tree-sitter
+TS_BUILD := build
 TS_GENERATE_ABI ?=latest
-TS_GENERATE := generate --abi=$(TS_GENERATE_ABI)
+TS_GENERATE := generate --log --abi=$(TS_GENERATE_ABI)
 TS_PARSE := parse
 TS_TEST := test
 TS_TEST_FLAGS :=
@@ -177,7 +178,7 @@ build_parser: $(PARSER_LIB)
 
 $(PARSER_LIB): $(PARSER_SRC_FILE) $(PARSER_HDR_FILE) | $(BUILD_DIR)
 	$(info -> building parser library into $(PARSER_LIB))
-	@($(TS_CLI) build -o $(PARSER_LIB))
+	@($(TS_CLI) $(TS_BUILD) -o $(PARSER_LIB))
 
 install_parser: $(INSTALL_LIB_DIR)/$(PARSER_LIB_FILE) $(INSTALL_INCLUDE_DIR)/parser.h
 
@@ -337,7 +338,7 @@ clean_python:
 
 $(BINDING_WASM): $(PARSER_LIB) $(SRC_DIR)/grammar.json | $(BUILD_DIR)
 	$(info -> building WASM binding file into $(BINDING_WASM))
-	@($(TS_CLI) build --wasm --output $(BINDING_WASM))
+	@($(TS_CLI) $(TS_BUILD) --wasm --output $(BINDING_WASM))
 
 clean_wasm:
 	$(info -> removing WASM binding file)

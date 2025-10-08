@@ -1,0 +1,46 @@
+module example_metrics is
+
+  import [ dc mads skos ]
+
+  entity Ad is
+    identity adId -> long
+  end
+
+  event Impression is
+    source Ad
+  end
+
+  event Click is
+    source Ad
+  end
+
+  metric group Impressions on ev -> Impression is
+    @mads:metricType = "Traffic"
+    @mads:metricCategory = "Delivery"
+
+    def grossImpressions -> count := ev.count is
+      @skos:prefLabel = "Gross impressions"@en
+      @dc:description = "The total number of times the ad was displayed. This can include valid as well as invalid impressions."@en
+    end
+    def invalidImpressions -> count is
+      @skos:prefLabel = "Invalid impressions"@en
+      @dc:description = "The number of impressions that were removed because they were deemed invalid by traffic quality filters."@en
+    end
+    def impressions -> count := grossImpressions - invalidImpressions is
+      @skos:prefLabel = "Impressions"@en
+      @dc:description = "The number of times the ad was displayed. This excludes impressions that were deemed invalid by traffic quality filters."@en
+      @skos:definition = "Impressions = gross impressions - invalid impressions"@en
+    end
+  end
+
+  metric group Impressions on ev -> Impression is
+    @mads:metricType = "Traffic"
+    @mads:metricCategory = "Delivery"
+
+    def grossClicks -> count := ev.count
+    def invalidClicks -> count
+    def clicks -> count := grossClicks - invalidClicks
+    def ctr(impressions -> Impressions) -> percentageRate := clicks / impressions.impressions
+  end
+
+end

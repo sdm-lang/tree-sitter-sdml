@@ -18,7 +18,7 @@
  (structure_body)
  (type_class_body)
  (union_body)
- (datatype_def_restriction)
+ (datatype_type_restrictions)
  ;; ----------------
  (formal_constraint)
  (constraint_environment)

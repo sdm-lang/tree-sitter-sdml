@@ -2,7 +2,7 @@
 //
 // Project:    tree-sitter-sdml
 // Author:     Simon Johnston <johntonskj@gmail.com>
-// Version:    0.4.13
+// Version:    0.4.14
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
 // License:    Apache 2.0 (see LICENSE file)
 // Copyright:  Copyright (c) 2023 Simon Johnston
@@ -210,6 +210,7 @@ const KW_EVENT                = 'event';
 const KW_EXISTENTIAL          = 'exists';
 const KW_EXISTENTIAL_1        = 'exists!';
 const KW_FROM                 = 'from';
+const KW_GROUP                = 'group';
 const KW_IDENTITY             = 'identity';
 const KW_IMPLICATION          = 'implies';
 const KW_IMPORT               = 'import';
@@ -218,9 +219,11 @@ const KW_LOGICAL_AND          = 'and';
 const KW_LOGICAL_OR           = 'or';
 const KW_LOGICAL_XOR          = 'xor';
 const KW_MODULE               = 'module';
+const KW_METRIC               = 'metric';
 const KW_NEGATION             = 'not';
 const KW_NONUNIQUE            = 'nonunique';
 const KW_OF                   = 'of';
+const KW_ON                   = 'on';
 const KW_OPAQUE               = 'opaque';
 const KW_ORDERED              = 'ordered';
 const KW_PARENT               = 'parent';
@@ -432,6 +435,7 @@ const F_ELEMENT               = 'element';
 const F_EMPTY                 = 'empty';
 const F_ENTITY                = 'entity';
 const F_ENVIRONMENT           = 'environment';
+const F_EVENT                 = 'event';
 const F_FACET                 = 'facet';
 const F_FROM                  = 'from';
 const F_FUNCTION              = 'function';
@@ -453,6 +457,7 @@ const F_PREDICATE             = 'predicate';
 const F_PROPERTY              = 'property';
 const F_QUANTIFIER            = 'quantifier';
 const F_RANGE                 = 'range';
+const F_REFERENT              = 'referent';
 const F_RELATION              = 'relation';
 const F_RENAME                = 'rename';
 const F_RESTRICTION           = 'restriction';
@@ -481,6 +486,7 @@ const RW_GLOBAL = [
     KW_DIMENSION,
     KW_END,
     KW_IS,
+    KW_METRIC,
     KW_MODULE,
     KW_OF,
     KW_PROPERTY,
@@ -607,6 +613,10 @@ module.exports = grammar({
             ...RW_SOURCE_ENTITY,
             KW_REF
         ],
+        metric_group_def: $ => [
+            ...RW_GLOBAL,
+            KW_ON
+        ],
         rdf_def: $ => [
             ...RW_GLOBAL,
             KW_RDF_A,
@@ -710,6 +720,7 @@ module.exports = grammar({
     // ---------------------------------------------------------------------------------------------
 
     supertypes: $ => [
+        // not yet $.annotation,
         $.definition,
         $.inequality_relation,
         $.logical_connective,
@@ -1386,6 +1397,8 @@ module.exports = grammar({
             reserved('entity_def', $.entity_def),
             $.enum_def,
             reserved('event_def', $.event_def),
+            $.metric_def,
+            reserved('metric_group_def', $.metric_group_def),
             $.property_def,
             reserved('rdf_def', $.rdf_def),
             reserved('structure_def', $.structure_def),
@@ -1435,20 +1448,20 @@ module.exports = grammar({
             seq(
                 $._type_op_type_restriction,
                 optional_field(F_OPAQUE, $.opaque),
-                field(F_BASE, $._datatype_base),
-                optional_field(F_RESTRICTION, $.datatype_def_restriction)
+                field(F_BASE, $.datatype_base_type_reference),
+                optional_field(F_RESTRICTION, $.datatype_type_restrictions)
             ),
             $.annotation_only_body
         ),
 
         opaque: $ => KW_OPAQUE,
 
-        _datatype_base: $ => choice(
+        datatype_base_type_reference: $ => choice(
             $.identifier_reference,
             reserved('builtin_types', $.builtin_types)
         ),
 
-        datatype_def_restriction: $ => restriction(
+        datatype_type_restrictions: $ => restriction(
             repeat1($.restriction_facet),
         ),
 
@@ -1637,6 +1650,65 @@ module.exports = grammar({
                 field(F_IDENTITY, $.source_entity),
                 repeat($.member)
             )
+        ),
+
+        // -----------------------------------------------------------------------------------------
+        // Top-Level Definitions ❱ Metric
+        // -----------------------------------------------------------------------------------------
+
+        metric_def: $ => seq(
+            KW_METRIC,
+            field(F_SIGNATURE, $.metric_function_signature),
+            optional($.annotation_only_body)
+        ),
+
+        metric_function_signature: $ => seq(
+            field(F_NAME, $.identifier),
+            optional(
+                parameters(
+                    repeat1(field(F_PARAMETER, $.function_parameter))
+                )
+            ),
+            $._function_type
+        ),
+
+        // -----------------------------------------------------------------------------------------
+        // Top-Level Definitions ❱ Metric Group
+        // -----------------------------------------------------------------------------------------
+
+        metric_group_def: $ => definition_with(
+            $,
+            seq(KW_METRIC, KW_GROUP),
+            $.metric_event_binding,
+            optional($.metric_group_body)
+        ),
+
+        metric_event_binding: $ => seq(
+            KW_ON,
+            optional(
+                seq(
+                    field(F_NAME, $.identifier),
+                    $._type_op_has_type
+                )
+            ),
+            $.identifier_reference
+        ),
+
+        metric_group_body: $ => is_body_with_annotations(
+            $,
+            repeat(
+                choice(
+                    $.inline_metric_def,
+                    $.metric_ref
+                )
+            )
+        ),
+
+        inline_metric_def: $ => $.class_function_def,
+
+        metric_ref: $ => seq(
+            kw_field(KW_REF, F_REFERENT, $.identifier_reference),
+            optional_field(F_BODY, $.function_body),
         ),
 
         // -----------------------------------------------------------------------------------------

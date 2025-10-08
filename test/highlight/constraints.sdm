@@ -20,10 +20,10 @@ module Campaign is
     ;          ^ operator
     ;             ^ type
 
-    b -> xsd:string is
+    b -> string is
     ; <- variable.field
     ; ^ operator
-    ;    ^ type
+    ;    ^ type.builtin
     ;               ^ keyword
 
       assert not_null = "self is not null"

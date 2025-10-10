@@ -2287,12 +2287,8 @@
           "value": "from"
         },
         {
-          "type": "FIELD",
-          "name": "mixin",
-          "content": {
-            "type": "SYMBOL",
-            "name": "mixin_clause"
-          }
+          "type": "SYMBOL",
+          "name": "mixin_clause"
         }
       ]
     },
@@ -2308,17 +2304,46 @@
           }
         },
         {
+          "type": "SYMBOL",
+          "name": "_mixin_member_choice"
+        }
+      ]
+    },
+    "mixin_optional_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "from",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier_reference"
+          }
+        },
+        {
           "type": "CHOICE",
           "members": [
             {
               "type": "SYMBOL",
-              "name": "mixin_with_members"
+              "name": "_mixin_member_choice"
             },
             {
-              "type": "SYMBOL",
-              "name": "mixin_without_members"
+              "type": "BLANK"
             }
           ]
+        }
+      ]
+    },
+    "_mixin_member_choice": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "mixin_with_members"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "mixin_without_members"
         }
       ]
     },
@@ -3065,38 +3090,8 @@
           "value": "source"
         },
         {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "FIELD",
-              "name": "entity",
-              "content": {
-                "type": "SYMBOL",
-                "name": "identifier_reference"
-              }
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "mixin_with_members"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "mixin_without_members"
-                    }
-                  ]
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            }
-          ]
+          "type": "SYMBOL",
+          "name": "mixin_optional_clause"
         }
       ]
     },
@@ -5303,6 +5298,7 @@
     "_function_op_composition",
     "_function_type",
     "_import",
+    "_mixin_member_choice",
     "_mixin_member_or_sequence",
     "_predicate_sequence_member",
     "_rdf_types",
@@ -5310,7 +5306,9 @@
     "_sequence_value_constraints",
     "_type_expression_to",
     "_type_op_has_type",
-    "_type_op_type_restriction"
+    "_type_op_type_restriction",
+    "mixin_clause",
+    "mixin_optional_clause"
   ],
   "supertypes": [
     "definition",
@@ -5334,6 +5332,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -5346,7 +5348,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -5379,10 +5397,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -5404,6 +5418,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -5416,7 +5434,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -5449,10 +5483,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -5478,6 +5508,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -5490,7 +5524,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -5523,10 +5573,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -5560,6 +5606,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -5572,7 +5622,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -5605,10 +5671,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -5634,6 +5696,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -5646,7 +5712,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -5679,10 +5761,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -5716,6 +5794,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -5728,7 +5810,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -5761,10 +5859,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -5822,6 +5916,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -5834,7 +5932,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -5867,10 +5981,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -5904,6 +6014,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -5916,7 +6030,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -5949,10 +6079,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -5994,6 +6120,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -6006,7 +6136,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -6039,10 +6185,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -6076,6 +6218,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -6088,7 +6234,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -6121,10 +6283,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -6158,6 +6316,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -6170,7 +6332,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -6203,10 +6381,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -6256,6 +6430,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -6268,7 +6446,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -6301,10 +6495,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -6342,6 +6532,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -6354,7 +6548,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -6387,10 +6597,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -6420,6 +6626,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -6432,7 +6642,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -6465,10 +6691,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -6502,6 +6724,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -6514,7 +6740,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -6547,10 +6789,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -6588,6 +6826,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -6600,7 +6842,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -6633,10 +6891,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -6670,6 +6924,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -6682,7 +6940,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -6715,10 +6989,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -6756,6 +7026,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -6768,7 +7042,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -6801,10 +7091,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",
@@ -6838,6 +7124,10 @@
       },
       {
         "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
         "value": "datatype"
       },
       {
@@ -6850,7 +7140,23 @@
       },
       {
         "type": "STRING",
+        "value": "entity"
+      },
+      {
+        "type": "STRING",
+        "value": "enum"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "group"
       },
       {
         "type": "STRING",
@@ -6883,10 +7189,6 @@
       {
         "type": "STRING",
         "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
       },
       {
         "type": "STRING",

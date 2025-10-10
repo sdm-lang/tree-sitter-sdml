@@ -19,5 +19,5 @@ end
       name: (identifier)
       body: (event_body
         identity: (source_entity
-          entity: (identifier_reference
+          from: (identifier_reference
             (identifier)))))))

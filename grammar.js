@@ -480,10 +480,15 @@ const F_WILDCARD              = 'wildcard';
 const RW_GLOBAL = [
     KW_AS,
     KW_ASSERT,
+    KW_CLASS,
     KW_DATATYPE,
     KW_DIMENSION,
     KW_END,
+    KW_ENTITY,
+    KW_ENUM,
+    KW_EVENT,
     KW_FROM,
+    KW_GROUP,
     KW_IMPORT,
     KW_IS,
     KW_METRIC,
@@ -492,7 +497,6 @@ const RW_GLOBAL = [
     KW_PROPERTY,
     KW_RDF,
     KW_STRUCTURE,
-    KW_CLASS,
     KW_UNION,
     KW_UNKNOWN
 ];
@@ -757,6 +761,7 @@ module.exports = grammar({
         $._function_op_composition,
         $._function_type,
         $._import,
+        $._mixin_member_choice,
         $._mixin_member_or_sequence,
         $._predicate_sequence_member,
         $._rdf_types,
@@ -764,7 +769,9 @@ module.exports = grammar({
         $._sequence_value_constraints,
         $._type_expression_to,
         $._type_op_has_type,
-        $._type_op_type_restriction
+        $._type_op_type_restriction,
+        $.mixin_clause,
+        $.mixin_optional_clause
     ],
 
     // ---------------------------------------------------------------------------------------------
@@ -1494,15 +1501,22 @@ module.exports = grammar({
             //      the kind of the parent definition.
             //
             KW_FROM,
-            field(F_MIXIN, $.mixin_clause)
+            $.mixin_clause
         ),
 
         mixin_clause: $ => seq(
             field(F_FROM, $.identifier_reference),
-            choice(
+            $._mixin_member_choice,
+        ),
+
+        mixin_optional_clause: $ => seq(
+            field(F_FROM, $.identifier_reference),
+            optional($._mixin_member_choice),
+        ),
+
+        _mixin_member_choice: $ => choice(
                 $.mixin_with_members,
                 $.mixin_without_members
-            )
         ),
 
         mixin_with_members: $ => kw_rule(
@@ -1709,18 +1723,7 @@ module.exports = grammar({
 
         source_entity: $ => kw_rule(
             KW_SOURCE,
-            seq(
-                //
-                // WFR:type_mismatch `entity: (_)` `entity`
-                //
-                field(F_ENTITY, $.identifier_reference),
-                optional(
-                    choice(
-                        $.mixin_with_members,
-                        $.mixin_without_members
-                    )
-                )
-            )
+            $.mixin_optional_clause
         ),
 
         // -----------------------------------------------------------------------------------------

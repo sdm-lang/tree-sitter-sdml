@@ -1183,16 +1183,30 @@
     "type": "from_definition_clause",
     "named": true,
     "fields": {
-      "mixin": {
+      "from": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "mixin_clause",
+            "type": "identifier_reference",
             "named": true
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "mixin_with_members",
+          "named": true
+        },
+        {
+          "type": "mixin_without_members",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1939,36 +1953,6 @@
           }
         ]
       }
-    }
-  },
-  {
-    "type": "mixin_clause",
-    "named": true,
-    "fields": {
-      "from": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier_reference",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "mixin_with_members",
-          "named": true
-        },
-        {
-          "type": "mixin_without_members",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -2843,7 +2827,7 @@
     "type": "source_entity",
     "named": true,
     "fields": {
-      "entity": {
+      "from": {
         "multiple": false,
         "required": true,
         "types": [
@@ -3817,11 +3801,11 @@
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "intersects",

@@ -61,12 +61,11 @@
 
 (union_def name: (identifier) @name) @definition.union
 
-(mixin_clause from: (identifier_reference) @name) @reference.type
 (mixin_member member: (identifier)  @name) @reference.field
 (mixin_member rename: (identifier)  @name) @definition.field
 
-;; common to dimension and event
-(source_entity entity: (identifier_reference) @name) @reference.entity
+(from_definition_clause from: (identifier_reference) @name) @reference.type
+(source_entity from: (identifier_reference) @name) @reference.entity
 
 ;; ---------------------------------------------------------------------------
 ;; Members

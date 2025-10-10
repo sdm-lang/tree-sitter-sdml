@@ -16,11 +16,10 @@ end
     (structure_def
       name: (identifier)
       from: (from_definition_clause
-        mixin: (mixin_clause
-          from: (identifier_reference
-            (identifier))
-          (mixin_without_members
-            member: (mixin_member
-              member: (identifier))
-            member: (mixin_member
-              member: (identifier))))))))
+        from: (identifier_reference
+          (identifier))
+        (mixin_without_members
+          member: (mixin_member
+            member: (identifier))
+          member: (mixin_member
+            member: (identifier)))))))

@@ -66,6 +66,10 @@
 (module name: (identifier) @module.definition)
 (module_version "version" @keyword)
 
+;; ---------------------------------------------------------------------------
+;; Module ❱ Imports
+;; ---------------------------------------------------------------------------
+
 (module_path_absolute "::" @punctuation.separator)
 (module_path_absolute segment: (identifier) @module)
 
@@ -79,17 +83,25 @@
 (module_import rename: (identifier) @module)
 
 ;; ---------------------------------------------------------------------------
-;; Annotations and Constraints
+;; Annotation ❱ Properties
 ;; ---------------------------------------------------------------------------
 
 (annotation_property "@" @property name: (identifier_reference) @property)
 
 (annotation_property value: (value (identifier_reference) @type))
 
+;; ---------------------------------------------------------------------------
+;; Annotation ❱ Constraints
+;; ---------------------------------------------------------------------------
+
 (constraint name: (identifier) @property)
 
 (informal_constraint (quoted_string) @embedded)
 (informal_constraint language: (controlled_language_tag) @property)
+
+;; ---------------------------------------------------------------------------
+;; Annotation ❱ Constraints ❱ Formal
+;; ---------------------------------------------------------------------------
 
 (inequation
  (inequality_relation) @operator)
@@ -126,35 +138,36 @@
 
 (function_body [ ":=" "≔" ] @operator)
 
-(function_composition subject: (reserved_self) @variable.builtin)
-(function_composition name: (identifier) @function.call)
-(function_composition [ "." "∘" ] @operator)
-
 (atomic_sentence
  predicate: (term (identifier_reference) @function.call))
 (atomic_sentence
  argument: (term (identifier_reference (identifier) @variable)))
 
-(term [ (reserved_self) (reserved_event) ] @variable.builtin)
+(equation (term (identifier_reference) @variable))
+(inequation (term (identifier_reference) @variable))
 
-(reserved_event "event"  @variable.builtin)
-
-((equation lhs: (term (identifier_reference) @variable)) (#is-not? local))
-
-((equation rhs: (term (identifier_reference) @variable)) (#is-not? local))
+(set_expression_sentence (term (identifier_reference) @variable))
+(arithmetic_expression_sentence (term (identifier_reference) @variable))
 
 (quantified_sentence "," @punctuation.separator)
-
 (variable (identifier) @variable)
 (variable range: (identifier_reference) @type)
+
+(sequence_builder
+ (seq_builder_separator) @punctuation.separator)
 
 (functional_term
  function: (term (identifier_reference) @function.call))
 (functional_term
  argument: (term (identifier_reference (identifier) @variable)))
 
-(sequence_builder
- (seq_builder_separator) @punctuation.separator)
+(function_composition subject: [ (reserved_self) (reserved_event) ] @variable.builtin)
+(function_composition subject: (identifier) @variable)
+(function_composition name: (identifier) @function.call)
+(function_composition [ "." "∘" ] @operator)
+
+(term [ (reserved_self) (reserved_event) ] @variable.builtin)
+(reserved_event "event"  @variable.builtin)
 
 (sequence_of_predicate_values (sequence_ordering) @keyword)
 (sequence_of_predicate_values (sequence_uniqueness) @keyword)
@@ -168,6 +181,23 @@
  (builtin_types)
  (unknown_type)
  ] @type.builtin
+
+;; ---------------------------------------------------------------------------
+;; Definition
+;; ---------------------------------------------------------------------------
+
+(mixin_with_members "with" @keyword)
+(mixin_with_members wildcard: (_)  @type.builtin)
+(mixin_without_members "without" @keyword)
+(mixin_member member: (identifier)  @variable.field)
+(mixin_member rename: (identifier)  @variable.field)
+
+(from_definition_clause "from" @keyword from: (identifier_reference) @type)
+(source_entity "source" @keyword from: (identifier_reference) @type)
+
+;; ---------------------------------------------------------------------------
+;; Definition ❱ Datatype
+;; ---------------------------------------------------------------------------
 
 (datatype_def
  "datatype" @keyword
@@ -191,13 +221,33 @@
 
 (kw_is_fixed) @keyword
 
+;; ---------------------------------------------------------------------------
+;; Definition ❱ Dimension
+;; ---------------------------------------------------------------------------
+
 (dimension_def name: (identifier) @type.definition)
+
+;; ---------------------------------------------------------------------------
+;; Definition ❱ Entity
+;; ---------------------------------------------------------------------------
 
 (entity_def name: (identifier) @type.definition)
 
+;; ---------------------------------------------------------------------------
+;; Definition ❱ Enum
+;; ---------------------------------------------------------------------------
+
 (enum_def name: (identifier) @type.definition)
 
+;; ---------------------------------------------------------------------------
+;; Definition ❱ Event
+;; ---------------------------------------------------------------------------
+
 (event_def name: (identifier) @type.definition)
+
+;; ---------------------------------------------------------------------------
+;; Definition ❱ Metrics
+;; ---------------------------------------------------------------------------
 
 (metric_group_def "group" @keyword)
 (metric_group_def name: (identifier) @type.definition)
@@ -206,23 +256,8 @@
 
 (metric_ref "ref" @keyword)
 
-(structure_def name: (identifier) @type.definition)
-
-(union_def name: (identifier) @type.definition)
-
-(from_definition_clause "from" @keyword)
-
-(mixin_clause from: (identifier_reference) @type)
-(mixin_with_members "with" @keyword)
-(mixin_with_members wildcard: (_)  @type.builtin)
-(mixin_without_members "without" @keyword)
-(mixin_member member: (identifier)  @variable.field)
-(mixin_member rename: (identifier)  @variable.field)
-
-(source_entity "source" @keyword entity: (identifier_reference) @type)
-
 ;; ---------------------------------------------------------------------------
-;; RDF Definitions
+;; Definition ❱ Rdf
 ;; ---------------------------------------------------------------------------
 
 (rdf_def "rdf" @keyword name: (identifier) @type.definition)
@@ -230,7 +265,13 @@
 (rdf_def type: (identifier_reference) @type)
 
 ;; ---------------------------------------------------------------------------
-;; Type Classes
+;; Definition ❱ Structure
+;; ---------------------------------------------------------------------------
+
+(structure_def name: (identifier) @type.definition)
+
+;; ---------------------------------------------------------------------------
+;; Definition ❱ Type Class
 ;; ---------------------------------------------------------------------------
 
 (type_class_def "class" @keyword name: (identifier) @type.definition)
@@ -245,10 +286,14 @@
 (wildcard) @type.builtin
 
 ;; ---------------------------------------------------------------------------
-;; Members
+;; Definition ❱ Union
 ;; ---------------------------------------------------------------------------
 
-(entity_identity "identity" @keyword)
+(union_def name: (identifier) @type.definition)
+
+;; ---------------------------------------------------------------------------
+;; Members
+;; ---------------------------------------------------------------------------
 
 (member_def
  name: (identifier) @variable.field
@@ -262,15 +307,29 @@
  "ref" @keyword
  property: (identifier_reference) @variable.field)
 
+;; ---------------------------------------------------------------------------
+;; Members ❱ Specials
+;; ---------------------------------------------------------------------------
+
+(entity_identity "identity" @keyword)
+
 (dimension_parent
  "parent" @keyword
  name: (identifier) @variable.field
  parent: (identifier_reference) @type)
 
+;; ---------------------------------------------------------------------------
+;; Members ❱ Variants
+;; ---------------------------------------------------------------------------
+
 (value_variant name: (identifier) @constant)
 
 (type_variant name: (identifier_reference) @type.definition)
 (type_variant rename: (identifier) @type)
+
+;; ---------------------------------------------------------------------------
+;; Members ❱ Cardinality
+;; ---------------------------------------------------------------------------
 
 (cardinality_expression (sequence_ordering) @keyword)
 (cardinality_expression (sequence_uniqueness) @keyword)

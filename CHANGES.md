@@ -124,13 +124,43 @@ TypeClassBody
 
 ### New mix-in grammar
 
-```text
+The new *mix-in* grammar is intended to replace the following two rules,
+`FromDefinitionClause` and `SourceEntity` which are similar but not identical.
+
+``` sdmltext
 FromDefinitionClause
-    ::= 'from' MixinClause
+    ::= 'from' IdentifierReference 
+        ( FromDefinitionWith | FromDefinitionWithout )
 
+FromDefinitionWith
+    ::= 'with' ( '_' | ( Identifier | '[' Identifier+ ']' )
+
+FromDefinitionWithout
+    ::= 'without' Identifier | '[' Identifier+ ']'
+
+SourceEntity
+    ::= 'source' IdentifierReference
+        ( 'with' ( Identifier | '[' Identifier+ ']' ) )?
+```
+
+The new grammar shown below and based in the notion that in both cases we are
+bringing members from another definition into scope within the current one.
+There are obviously some additional semantics associated with `source`, but these
+aren't important at the grammar level. We define a `MixinClause` as the reference
+of the type to copy from and then either the with/without rule to copy members
+as listed. Note also that this version also allows renames using the same form
+already employed in imports and unions.
+
+```text
 MixinClause
-    ::= IdentifierReference ( MixinWithMembers | MixinWithoutMembers )
+    ::= IdentifierReference MixinWithMembers
 
+MixinOptionalClause
+    ::= IdentifierReference MixinWithMembers?
+
+MixinMemberChoice
+    ::= MixinWithMembers | MixinWithoutMembers
+    
 MixinWithMembers
     ::= 'with' ( '_' | MixinMemberSequence )
 
@@ -138,16 +168,23 @@ MixinWithoutMembers
     ::= 'without' MixinMemberSequence
 
 MixinMemberSequence
-    ::= ( MixinMember | '[' MixinMember+ ']')
+    ::= ( MixinMember | '[' MixinMember+ ']' )
 
 MixinMember
     ::= Identifier ( 'as' Identifier )?
 ```
 
+This allows the redefinition of our original two rules as follows. By requiring
+the enclosing rule to determine the preceding keyword we may be able to
+accommodate additional examples in the future.
+
 ```text
+FromDefinitionClause
+    ::= 'from' MixinClause
+
 SourceEntity
-    ::= 'source' IdentifierReference ( MixinWithMembers | MixinWithoutMembers )?
-    ```
+    ::= 'source' MixinOptionalClause
+```
 
 ## Version 0.4.13
 

@@ -16,9 +16,8 @@ end
     (type_class_def
       name: (identifier)
       from: (from_definition_clause
-        mixin: (mixin_clause
-          from: (identifier_reference
-            (identifier))
-          (mixin_with_members
-            wildcard: (wildcard))))
+        from: (identifier_reference
+          (identifier))
+        (mixin_with_members
+          wildcard: (wildcard)))
       body: (type_class_body))))

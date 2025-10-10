@@ -43,7 +43,19 @@ module example_metrics is
     ;                                         ^ variable.builtin
     ;                                              ^ punctuation.bracket
     metric invalidImpressions -> count
+    ; <- keyword
+    ;      ^ function.definition
+    ;                         ^ operator
+    ;                            ^ type
     metric impressions -> count := grossImpressions - invalidImpressions
+    ; <- keyword
+    ;      ^ function.definition
+    ;                  ^ operator
+    ;                     ^ type
+    ;                           ^ operator
+    ;                              ^ variable
+    ;                                               ^ operator
+    ;                                                 ^ variable
   end
   ; <- keyword
 
@@ -65,9 +77,46 @@ module example_metrics is
   ;                           ^ type
   ;                                      ^ keyword
     metric grossClicks -> count := count(event)
+    ; <- keyword
+    ;      ^ function.definition
+    ;                  ^ operator
+    ;                     ^ type
+    ;                           ^ operator
+    ;                              ^ function.call
+    ;                                   ^ punctuation.bracket
+    ;                                    ^ variable.builtin
+    ;                                         ^ punctuation.bracket
     metric invalidClicks -> count
+    ; <- keyword
+    ;      ^ function.definition
+    ;                    ^ operator
+    ;                       ^ type
     metric clicks -> count := grossClicks - invalidClicks
-    metric ctr(impressions -> Impressions) -> percentageRate := clicks / impressions.impressions
+    ; <- keyword
+    ;      ^ function.definition
+    ;             ^ operator
+    ;                ^ type
+    ;                      ^ operator
+    ;                         ^ variable
+    ;                                     ^ operator
+    ;                                       ^ variable
+    metric ctr(impressions -> Impressions) -> percentageRate
+    ; <- keyword
+    ;      ^ function.definition
+    ;         ^ punctuation.bracket
+    ;          ^ variable.parameter
+    ;                      ^ operator
+    ;                         ^ type
+    ;                                    ^ punctuation.bracket
+    ;                                      ^ operator
+    ;                                         ^ type
+       := clicks / impressions.impressions
+       ; <- operator
+       ;  ^ variable
+       ;         ^ operator
+       ;           ^ variable
+       ;                      ^ operator
+       ;                       ^ function.call
   end
   ; <- keyword
 

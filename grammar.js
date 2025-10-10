@@ -24,6 +24,20 @@
 //
 // =================================================================================================
 
+// Well-Formedness Rules
+//
+// WFR:absolute_uri query
+//   => `query` *must* be an absolute IRI.
+//
+// WFR:string_not_empty query
+//   => `query` *must* not be an empty or spaces-only string.
+//
+// WFR:unique_sequence query
+//   => The sequence `query` *should* be `{unique}`.
+//
+// WFR:type_mismatch query expected
+//   => The definition identified by `query` *must* be of kind `expected`.
+//
 // =================================================================================================
 // Rule helper functions
 // =================================================================================================
@@ -214,6 +228,7 @@ const KW_GROUP                = 'group';
 const KW_IDENTITY             = 'identity';
 const KW_IMPLICATION          = 'implies';
 const KW_IMPORT               = 'import';
+const KW_FOR                  = 'for';
 const KW_IS                   = 'is';
 const KW_LOGICAL_AND          = 'and';
 const KW_LOGICAL_OR           = 'or';
@@ -339,86 +354,68 @@ const P_SEQ_BUILD_SEP         = '|'; // ‘Such that’ marker in set-builder no
 
 const OP_ARITH_ADD            = '+';
 const OP_ARITH_DIVIDE         = '/';
-const OP_ARITH_DIVIDE_ALT     = '÷';  // LaTeX \div | U+00F7
+const OP_ARITH_DIVIDE_ALT     = '÷';
 const OP_ARITH_MODULO         = '%';
 const OP_ARITH_MULTIPLY       = '*';
-const OP_ARITH_MULTIPLY_ALT   = '×';  // LaTeX \times | U+00D7 (MULTIPLICATION SIGN)
-const OP_ARITH_MULTIPLY_ALT2  = '⋅';  // LaTeX \cdot | U+22C5 (DOT OPERATOR)
-const OP_ARITH_MULTIPLY_ALT3  = '✕'; // | U+2715 (MULTIPLICATION X)
-const OP_ARITH_MULTIPLY_ALT4  = '⁢';  // | U+2062 (INVISIBLE TIMES)
+const OP_ARITH_MULTIPLY_ALT   = '×';
+const OP_ARITH_MULTIPLY_ALT2  = '⋅';
+const OP_ARITH_MULTIPLY_ALT3  = '✕';
+const OP_ARITH_MULTIPLY_ALT4  = '⁢';
 const OP_ARITH_SUBTRACT       = '-';
 const OP_ASSIGNMENT           = "=";
 const OP_BICONDITIONAL        = '<==>';
-const OP_BICONDITIONAL_ALT    = '⇔';  // LaTeX: \iff | U+21D4 (LEFT RIGHT DOUBLE ARROW)
+const OP_BICONDITIONAL_ALT    = '⇔';
 const OP_EQUATION             = OP_ASSIGNMENT;
-const OP_EXISTENTIAL_ALT      = '∃';  // LaTeX: \exists | U+2203 (THERE EXISTS)
-const OP_EXISTENTIAL_1_ALT    = '∃!'; // LaTeX: \exists1
-const OP_NEG_EXISTENTIAL_ALT  = '∄';  // LaTeX: \nexists | U+2204 (THERE DOES NOT EXIST)
+const OP_EXISTENTIAL_ALT      = '∃';
+const OP_EXISTENTIAL_1_ALT    = '∃!';
+const OP_NEG_EXISTENTIAL_ALT  = '∄';
 const OP_FN_COMPOSITION       = '.';
-const OP_FN_COMPOSITION_ALT   = '∘';   // LaTeX \circ | U+2218 (RING OPERATOR)
+const OP_FN_COMPOSITION_ALT   = '∘';
 const OP_FN_DEFINITION        = ':=';
-const OP_FN_DEFINITION_ALT    = '≔';  // LaTeX \coloneqq | U+2254 (COLON EQUALS)
+const OP_FN_DEFINITION_ALT    = '≔';
 const OP_IMPLICATION          = '==>';
-const OP_IMPLICATION_ALT      = '⇒'; // LaTeX: \implies | U+21D2 (RIGHTWARDS DOUBLE ARROW)
+const OP_IMPLICATION_ALT      = '⇒';
 const OP_INEQUAL_GT           = '>';
 const OP_INEQUAL_GTEQ         = '>=';
-const OP_INEQUAL_GTEQ_ALT     = '≥';  // LaTeX \geq	| U+2265 (GREATER-THAN OR EQUAL TO)
+const OP_INEQUAL_GTEQ_ALT     = '≥';
 const OP_INEQUAL_LT           = '<';
 const OP_INEQUAL_LTEQ         = '<=';
-const OP_INEQUAL_LTEQ_ALT     = '≤';  // LaTeX \leq | U+2264 (LESS-THAN OR EQUAL TO)
+const OP_INEQUAL_LTEQ_ALT     = '≤';
 const OP_INEQUAL_NE           = '/=';
-const OP_INEQUAL_NE_ALT       = '≠';  // LaTeX \neq | U+226	(NOT EQUAL TO)
-const OP_LOGICAL_AND_ALT      = '∧';  // LaTeX: \land | U+2227 (LOGICAL AND)
-const OP_LOGICAL_OR_ALT       = '∨';  // LaTeX: \lor | U+2228 (LOGICAL OR)
-const OP_LOGICAL_XOR_ALT      = '⊻';  // LaTeX: \veebar | U+22BB (XOR)
-const OP_LOGICAL_XOR_ALT2     = '⊕';  // LaTeX \oplus | U+2295 (CIRCLED PLUS)
-const OP_NEGATION_ALT         = '¬';  // LaTeX: \lnot | U+00AC (NOT SIGN)
+const OP_INEQUAL_NE_ALT       = '≠';
+const OP_LOGICAL_AND_ALT      = '∧';
+const OP_LOGICAL_OR_ALT       = '∨';
+const OP_LOGICAL_XOR_ALT      = '⊻';
+const OP_LOGICAL_XOR_ALT2     = '⊕';
+const OP_NEGATION_ALT         = '¬';
 const OP_RANGE                = '..';
-const OP_RANGE_ALT            = '⋯';  // LaTeX \cdots | U+22EF (MIDLINE HORIZONTAL ELLIPSIS)
-const OP_SET_COMPLEMENT_ALT   = '∖';   // LaTeX \setminus | U+2216 (SET MINUS)
-const OP_SET_INTERSECTION_ALT = '∩';  // LaTeX \cap | U+2229 (INTERSECTION)
-const OP_SET_MEMBERSHIP_ALT   = '∈';  // LaTeX \in | U+2208 (ELEMENT OF)
-const OP_SET_NOT_MEMBERSHIP_ALT = '∉';  // LaTeX \notin | U+2209 (NOT AN ELEMENT OF)
-const OP_SET_PRODUCT_ALT      = '⨉';  // LaTeX \bigtimes | U+2A09 (N-ARY TIMES OPERATOR)
-const OP_SET_PRODUCT_ALT2     = '∏';  // LaTeX \prod | U+220F (N-ARY PRODUCT)
-const OP_SET_SUBSETEQ_ALT     = '⊆';  // LaTeX \subseteq | U+2286 (SUBSET OF OR EQUAL TO)
-const OP_SET_SUBSET_ALT       = '⊂';  // LaTeX \subset | U+2282	(SUBSET OF)
-const OP_SET_SUPSETEQ_ALT     = '⊇';  // LaTeX \supseteq | U+2287 (SUPERSET OF OR EQUAL TO)
-const OP_SET_SUPSET_ALT       = '⊃';  // LaTeX \supset | U+2283	(SUPERSET OF)
-const OP_SET_UNION_ALT        = '∪';  // LaTeX \cup | U+222A (UNION)
+const OP_RANGE_ALT            = '⋯';
+const OP_SET_COMPLEMENT_ALT   = '∖';
+const OP_SET_INTERSECTION_ALT = '∩';
+const OP_SET_MEMBERSHIP_ALT   = '∈';
+const OP_SET_NOT_MEMBERSHIP_ALT = '∉';
+const OP_SET_PRODUCT_ALT      = '⨉';
+const OP_SET_PRODUCT_ALT2     = '∏';
+const OP_SET_SUBSETEQ_ALT     = '⊆';
+const OP_SET_SUBSET_ALT       = '⊂';
+const OP_SET_SUPSETEQ_ALT     = '⊇';
+const OP_SET_SUPSET_ALT       = '⊃';
+const OP_SET_UNION_ALT        = '∪';
 const OP_TY_COMBINES          = '+';
 const OP_TY_HAS_TYPE          = '->';
-const OP_TY_HAS_TYPE_ALT      = '→';  // LaTeX \rightarrow | U+2192 (RIGHTWARDS ARROW)
+const OP_TY_HAS_TYPE_ALT      = '→';
 const OP_TY_RESTRICT          = '<-';
-const OP_TY_RESTRICT_ALT      = '←';  // LaTeX \leftarrow |	U+2190 (LEFTWARDS ARROW)
-const OP_UNIVERSAL_ALT         = '∀';  // LaTeX: \forall | U+2200 (FOR ALL)
+const OP_TY_RESTRICT_ALT      = '←';
+const OP_UNIVERSAL_ALT         = '∀';
 
 const WILDCARD                = '_';
 
 const VALUE_FALSE             = 'false';
-const VALUE_FALSE_ALT         = '⊥'; // LaTeX \bot | U+22A5 (UP TACK)
+const VALUE_FALSE_ALT         = '⊥';
 const VALUE_TRUE              = 'true';
-const VALUE_TRUE_ALT          = '⊤'; // LaTeX \top | U+22A4 (DOWN TACK)
+const VALUE_TRUE_ALT          = '⊤';
 
-const VALUE_EMPTY             = '∅'; // LaTeX \emptyset | U+2205 (EMPTY SET)
-
-
-// Other operators of interest:
-//
-// | Sym | Meaning                      | LaTeX      | Unicode  | Name                                 |
-// |-----+------------------------------+------------+----------+--------------------------------------|
-// | 𝔻   | Domain of discource.         | \mathbb{D} | U+1D53B  | MATHEMATICAL DOUBLE-STRUCK CAPITAL D |
-// | ≝   | Equal by definition          | \stackrel\scriptscriptstyle\mathrm{def}}{=} | U+225D | EQUAL TO BY DEFINITION |
-// | ⊼   | Logical nand                 | \barwedge  | U+22BC   | NAND                                 |
-// | ⊽   | Logical nor                  | \barvee    | U+22BD   | NOR                                  |
-// | ∞   | Unbounded cardinality (1..∞) | \infty     | U+221E   | INFINITY                             |
-// | □   | End of formal constraint     | \Box       | U+25A1   | WHITE SQUARE                         |
-// | ↑ ^ | Parent                       | \uparrow   | U+2191   | UPWARDS ARROW                        |
-// | ≡   | Equivalence                  | \equiv     | U+2261   | IDENTICAL TO                         |
-// | ⊔   | Disjoint union               | \equiv     | U+2294   | SQUARE CUP                           |
-// | △   | Symmetric difference         | \triangle  | U+25B3   | WHITE UP-POINTING TRIANGLE           |
-// | ⊖   | same^                        | \ominus    | U+2296   | CIRCLED MINUS                        |
-
+const VALUE_EMPTY             = '∅';
 
 // =================================================================================================
 // Grammar field names, internal
@@ -446,6 +443,7 @@ const F_LHS                   = 'lhs';
 const F_MAX                   = 'max';
 const F_MEMBER                = 'member';
 const F_MIN                   = 'min';
+const F_MIXIN                 = 'mixin';
 const F_MODULE                = 'module';
 const F_NAME                  = 'name';
 const F_OPAQUE                = 'opaque';
@@ -485,6 +483,8 @@ const RW_GLOBAL = [
     KW_DATATYPE,
     KW_DIMENSION,
     KW_END,
+    KW_FROM,
+    KW_IMPORT,
     KW_IS,
     KW_METRIC,
     KW_MODULE,
@@ -497,15 +497,19 @@ const RW_GLOBAL = [
     KW_UNKNOWN
 ];
 
-const RW_DEFN_FROM = [
-    KW_FROM,
+const RW_MIXIN_CLAUSE = [
     KW_WITH,
     KW_WITHOUT
 ];
 
+const RW_DEFN_FROM = [
+    ...RW_MIXIN_CLAUSE,
+    KW_FROM
+];
+
 const RW_SOURCE_ENTITY = [
-    KW_SOURCE,
-    KW_WITH,
+    ...RW_MIXIN_CLAUSE,
+    KW_SOURCE
 ];
 
 const RW_BUILTIN_TYPES = [
@@ -562,6 +566,25 @@ const RW_BUILTIN_TYPES = [
     KWT_IRI     // synonym for anyURI
 ];
 
+const RW_OPERATORS_AND_QUANTIFIERS = [
+    KW_ARITH_MODULO,
+    KW_BICONDITIONAL,
+    KW_EXISTENTIAL,
+    KW_IMPLICATION,
+    KW_LOGICAL_AND,
+    KW_LOGICAL_OR,
+    KW_LOGICAL_XOR,
+    KW_NEGATION,
+    KW_SET_COMPLEMENT,
+    KW_SET_INTERSECTION,
+    KW_SET_MEMBERSHIP,
+    KW_SET_PRODUCT,
+    KW_SET_SUBSET,
+    KW_SET_SUBSETEQ,
+    KW_SET_SUPSET,
+    KW_SET_SUPSETEQ,
+    KW_UNIVERSAL,
+];
 
 // =================================================================================================
 // Actual Grammar
@@ -589,12 +612,21 @@ module.exports = grammar({
             ...RW_GLOBAL,
             KW_VERSION
         ],
-        from_definition_clause: $ => RW_DEFN_FROM,
+        import_statement: $ => [
+            ...RW_GLOBAL,
+            KW_FROM,
+            KW_IMPORT,
+            KW_AS
+        ],
         datatype_def: $ => [
             ...RW_GLOBAL,
             KW_OPAQUE
         ],
         dimension_def: $ => [
+            ...RW_GLOBAL,
+            ...RW_DEFN_FROM,
+        ],
+        dimension_body: $ =>  [
             ...RW_GLOBAL,
             ...RW_DEFN_FROM,
             ...RW_SOURCE_ENTITY,
@@ -604,10 +636,23 @@ module.exports = grammar({
         ],
         entity_def: $ => [
             ...RW_GLOBAL,
+            ...RW_DEFN_FROM
+        ],
+        entity_body: $ => [
+            ...RW_GLOBAL,
+            ...RW_DEFN_FROM,
             KW_IDENTITY,
             KW_REF
         ],
+        enum_def: $ => [
+            ...RW_GLOBAL,
+            ...RW_DEFN_FROM
+        ],
         event_def: $ => [
+            ...RW_GLOBAL,
+            ...RW_DEFN_FROM
+        ],
+        event_body: $ => [
             ...RW_GLOBAL,
             ...RW_DEFN_FROM,
             ...RW_SOURCE_ENTITY,
@@ -615,6 +660,7 @@ module.exports = grammar({
         ],
         metric_group_def: $ => [
             ...RW_GLOBAL,
+            ...RW_DEFN_FROM,
             KW_ON
         ],
         rdf_def: $ => [
@@ -624,10 +670,18 @@ module.exports = grammar({
         ],
         structure_def: $ => [
             ...RW_GLOBAL,
+            ...RW_DEFN_FROM
+        ],
+        structure_body: $ => [
+            ...RW_GLOBAL,
             ...RW_DEFN_FROM,
             KW_REF
         ],
         type_class_def: $ => [
+            ...RW_GLOBAL,
+            ...RW_DEFN_FROM
+        ],
+        type_class_body: $ => [
             ...RW_GLOBAL,
             ...RW_DEFN_FROM,
             KW_DEF
@@ -635,6 +689,11 @@ module.exports = grammar({
         union_def: $ => [
             ...RW_GLOBAL,
             ...RW_DEFN_FROM
+        ],
+        union_body: $ => [
+            ...RW_GLOBAL,
+            ...RW_DEFN_FROM,
+            KW_AS
         ],
         builtin_types: $ => RW_BUILTIN_TYPES,
         length_restriction_facet: $ => [
@@ -666,31 +725,24 @@ module.exports = grammar({
             KWF_PATTERN
         ],
         formal_constraint: $ => [
-            ...RW_GLOBAL,
+            ...RW_OPERATORS_AND_QUANTIFIERS,
             // environment
             KW_DEF,
             KW_WITH,
-            // keyword operators
-            KW_LOGICAL_AND,
-            KW_SET_COMPLEMENT,
-            KW_BICONDITIONAL,
-            KW_IMPLICATION,
-            KW_SET_MEMBERSHIP,
-            KW_SET_INTERSECTION,
-            KW_ARITH_MODULO,
-            KW_NEGATION,
-            KW_LOGICAL_OR,
-            KW_SET_PRODUCT,
-            KW_SELF,
-            KW_SET_SUBSET,
-            KW_SET_SUBSETEQ,
-            KW_SET_SUPSET,
-            KW_SET_SUPSETEQ,
-            KW_LOGICAL_XOR,
-            // quantifiers
-            KW_EXISTENTIAL,
-            KW_UNIVERSAL,
+            KW_FOR,
+            KW_END,
+            // builtin values
+            KW_SELF
         ],
+        function_body: $ => [
+            ...RW_OPERATORS_AND_QUANTIFIERS,
+            // annotation-only body
+            KW_IS,
+            KW_END,
+            // builtin values
+            KW_SELF,
+            KW_EVENT
+        ]
     },
 
     // ---------------------------------------------------------------------------------------------
@@ -704,8 +756,8 @@ module.exports = grammar({
         $._function_op_by_definition,
         $._function_op_composition,
         $._function_type,
-        $._identifier_or_sequence,
         $._import,
+        $._mixin_member_or_sequence,
         $._predicate_sequence_member,
         $._rdf_types,
         $._rename_import,
@@ -740,6 +792,9 @@ module.exports = grammar({
             KW_MODULE,
             seq(
                 field(F_NAME, $.identifier),
+                //
+                // WFR:absolute_uri: `base: (iri)`
+                //
                 optional_field(F_BASE, $.iri),
                 optional(
                     reserved('module_version', $.module_version)
@@ -751,7 +806,17 @@ module.exports = grammar({
         module_version: $ => kw_rule(
             KW_VERSION,
             seq(
+                //
+                // TODO: rename `version_info` to `label`
+                //
+                // WFR:string_not_empty `version_info: (quoted_string)`
+                //
                 optional_field(F_VERSION_INFO, $.quoted_string),
+                //
+                // TODO: rename `version_info` to `base`
+                //
+                // WFR:absolute_uri `base: (version_iri)`
+                //
                 field(F_VERSION_URI, $.iri)
             )
         ),
@@ -775,6 +840,9 @@ module.exports = grammar({
             KW_IMPORT,
             choice(
                 $._import,
+                //
+                // WFR:unique_sequence .
+                //
                 sequence_of(repeat1($._import))
             )
         ),
@@ -815,6 +883,10 @@ module.exports = grammar({
         ),
 
         member_import: $ => seq(
+            //
+            // WFR: `member: (identifier)` must be the name of a definition within the module
+            //      identified by `module: (identifier)`.
+            //
             field(F_NAME, $.qualified_identifier),
             optional($._rename_import)
         ),
@@ -900,23 +972,19 @@ module.exports = grammar({
         // Annotations ❱ Formal Constraints
         // -----------------------------------------------------------------------------------------
 
-        formal_constraint: $ => seq(
-            optional_field(F_ENVIRONMENT, $.constraint_environment),
-            is_block(
-                field(F_BODY, $.constraint_sentence)
-            )
-        ),
+        formal_constraint: $ => is_block(field(F_BODY, $.constraint_sentence)),
 
         // -----------------------------------------------------------------------------------------
         // Annotations ❱ Formal Constraints ❱ Sentences
         // -----------------------------------------------------------------------------------------
 
         constraint_sentence: $ => choice(
-            prec(4, $.simple_sentence),
-            prec(3, $.boolean_sentence),
-            prec(2, $.expression_sentence),
-            prec(1, $.quantified_sentence),
-            expression($.constraint_sentence)
+            prec(6, $.simple_sentence),
+            prec(5, $.boolean_sentence),
+            prec(4, $.expression_sentence),
+            prec(3, $.quantified_sentence),
+            prec(2, expression($.constraint_sentence)),
+            prec(1, $.sentence_with_environment),
         ),
 
         simple_sentence: $ => choice(
@@ -1026,6 +1094,7 @@ module.exports = grammar({
             $.function_composition,
             $.identifier_reference,
             $.reserved_self,
+            $.reserved_event,
             $.predicate_value
         ),
 
@@ -1044,6 +1113,7 @@ module.exports = grammar({
                     F_SUBJECT,
                     choice(
                         $.reserved_self,
+                        $.reserved_event,
                         $.identifier,
                     )
                 ),
@@ -1083,31 +1153,39 @@ module.exports = grammar({
 
         reserved_self: $ =>  KW_SELF,
 
+        reserved_event: $ =>  KW_EVENT,
+
         // -----------------------------------------------------------------------------------------
         // Annotations ❱ Formal Constraints ❱ Environments
         // -----------------------------------------------------------------------------------------
 
-        constraint_environment: $ => kw_rule(
+        sentence_with_environment: $ => seq(
             KW_WITH,
-            repeat1($.function_def),
+            repeat1($.keyword_function_def),
+            KW_FOR,
+            field(F_BODY, $.constraint_sentence),
+            KW_END
+        ),
+
+        keyword_function_def: $ => kw_rule(
+            KW_DEF,
+            $.function_def
         ),
 
         function_def: $ => seq(
             field(F_SIGNATURE, $.function_signature),
-            field(F_BODY, $.function_body)
+            optional_field(F_BODY, $.function_body),
+            optional($.annotation_only_body)
         ),
 
-        function_signature: $ => kw_rule(
-            KW_DEF,
-            seq(
-                field(F_NAME, $.identifier),
-                optional(
-                    parameters(
-                        repeat1(field(F_PARAMETER, $.function_parameter))
-                    )
-                ),
-                $._function_type
-            )
+        function_signature: $ => seq(
+            field(F_NAME, $.identifier),
+            optional(
+                parameters(
+                    repeat1(field(F_PARAMETER, $.function_parameter))
+                )
+            ),
+            $._function_type
         ),
 
         function_parameter: $ => seq(
@@ -1132,7 +1210,7 @@ module.exports = grammar({
             field(
                 F_BODY,
                 choice(
-                    prec(10, $.constraint_sentence),
+                    prec(10, reserved('function_body', $.constraint_sentence)),
                     prec(1, $.term)
                 )
             )
@@ -1395,7 +1473,7 @@ module.exports = grammar({
             reserved('datatype_def', $.datatype_def),
             reserved('dimension_def', $.dimension_def),
             reserved('entity_def', $.entity_def),
-            $.enum_def,
+            reserved('enum_def', $.enum_def),
             reserved('event_def', $.event_def),
             $.metric_def,
             reserved('metric_group_def', $.metric_group_def),
@@ -1407,36 +1485,56 @@ module.exports = grammar({
         ),
 
         // -----------------------------------------------------------------------------------------
-        // Definitions ❱ From Definition
+        // Definitions ❱ From Definition & Mixins
         // -----------------------------------------------------------------------------------------
 
         from_definition_clause: $ => kw_rule(
+            //
+            // WFR: The type of the definition identified by field `from` *must* by the same kind as
+            //      the kind of the parent definition.
+            //
             KW_FROM,
-            seq(
-                field(F_FROM, $.identifier_reference),
-                choice(
-                    $.from_definition_with,
-                    $.from_definition_without
-                )
+            field(F_MIXIN, $.mixin_clause)
+        ),
+
+        mixin_clause: $ => seq(
+            field(F_FROM, $.identifier_reference),
+            choice(
+                $.mixin_with_members,
+                $.mixin_without_members
             )
         ),
 
-        from_definition_with: $ => kw_rule(
+        mixin_with_members: $ => kw_rule(
             KW_WITH,
             choice(
                 field(F_WILDCARD, $.wildcard),
-                $._identifier_or_sequence
+                $._mixin_member_or_sequence
             )
         ),
 
-        from_definition_without: $ => kw_rule(
+        mixin_without_members: $ => kw_rule(
             KW_WITHOUT,
-            $._identifier_or_sequence
+            $._mixin_member_or_sequence
         ),
 
-        _identifier_or_sequence: $ => choice(
+        _mixin_member_or_sequence: $ => choice(
+            //
+            // WFR:unique_sequence `member: (_)
+            // WFR: all identifiers *must* name members of the selected definition.
+            //
+            field(F_MEMBER, $.mixin_member),
+            sequence_of_many1(field(F_MEMBER, $.mixin_member))
+        ),
+
+        mixin_member: $ => seq(
             field(F_MEMBER, $.identifier),
-            sequence_of_many1(field(F_MEMBER, $.identifier))
+            optional(
+                seq(
+                    KW_AS,
+                    field(F_RENAME, $.identifier)
+                )
+            )
         ),
 
         // -----------------------------------------------------------------------------------------
@@ -1449,6 +1547,9 @@ module.exports = grammar({
                 $._type_op_type_restriction,
                 optional_field(F_OPAQUE, $.opaque),
                 field(F_BASE, $.datatype_base_type_reference),
+                //
+                // WFR: restrictions should match the root base type of this datatype.
+                //
                 optional_field(F_RESTRICTION, $.datatype_type_restrictions)
             ),
             $.annotation_only_body
@@ -1457,6 +1558,9 @@ module.exports = grammar({
         opaque: $ => KW_OPAQUE,
 
         datatype_base_type_reference: $ => choice(
+            //
+            // WFR: Any type identified by either rule *must* itself be a datatype.
+            //
             $.identifier_reference,
             reserved('builtin_types', $.builtin_types)
         ),
@@ -1469,6 +1573,9 @@ module.exports = grammar({
         // Definitions ❱ Datatype ❱ Facets
         // -----------------------------------------------------------------------------------------
 
+        //
+        // WFR: cannot set a facet if it's parent has set `fixed` as true.
+        //
         restriction_facet: $ => choice(
             reserved('length_restriction_facet', $.length_restriction_facet),
             reserved('digit_restriction_facet', $.digit_restriction_facet),
@@ -1520,6 +1627,9 @@ module.exports = grammar({
         ),
 
         restriction_value: $ => choice (
+            //
+            // WFR: ensure value matches datatype
+            //
             $.simple_value,
             $.value_constructor
         ),
@@ -1543,6 +1653,10 @@ module.exports = grammar({
             field(
                 F_VALUE,
                 choice(
+                    //
+                    // WFR:unique_sequence
+                    // WFR: each string *must* contain a valid regular expression.
+                    //
                     $.quoted_string,
                     sequence_of(repeat1($.quoted_string)),
                 )
@@ -1555,10 +1669,11 @@ module.exports = grammar({
         // Top-Level Definitions ❱ Dimension
         // -----------------------------------------------------------------------------------------
 
-        dimension_def: $ => definition_with($,
+        dimension_def: $ => definition_with(
+            $,
             KW_DIMENSION,
             optional_field(F_FROM, $.from_definition_clause),
-            $.dimension_body
+            reserved('dimension_body', $.dimension_body)
         ),
 
         dimension_body: $ => is_body_with_annotations($,
@@ -1580,6 +1695,9 @@ module.exports = grammar({
             seq(
                 field(F_NAME, $.identifier),
                 $._type_op_has_type,
+                //
+                // WFR:type_mismatch `parent: (_)` `dimension`
+                //
                 field(F_PARENT, $.identifier_reference),
                 optional_field(F_BODY, $.annotation_only_body)
             )
@@ -1592,11 +1710,14 @@ module.exports = grammar({
         source_entity: $ => kw_rule(
             KW_SOURCE,
             seq(
+                //
+                // WFR:type_mismatch `entity: (_)` `entity`
+                //
                 field(F_ENTITY, $.identifier_reference),
                 optional(
-                    seq(
-                        KW_WITH,
-                        $._identifier_or_sequence
+                    choice(
+                        $.mixin_with_members,
+                        $.mixin_without_members
                     )
                 )
             )
@@ -1606,10 +1727,11 @@ module.exports = grammar({
         // Top-Level Definitions ❱ Entity
         // -----------------------------------------------------------------------------------------
 
-        entity_def: $ => definition_with($,
+        entity_def: $ => definition_with(
+            $,
             KW_ENTITY,
             optional_field(F_FROM, $.from_definition_clause),
-            $.entity_body
+            reserved('entity_body', $.entity_body)
         ),
 
         entity_body: $ => is_body_with_annotations($,
@@ -1626,7 +1748,7 @@ module.exports = grammar({
         enum_def: $ => definition_with(
             $,
             KW_ENUM,
-            optional_field(F_FROM, reserved('from_definition_clause', $.from_definition_clause)),
+            optional_field(F_FROM, $.from_definition_clause),
             $.enum_body
         ),
 
@@ -1641,8 +1763,8 @@ module.exports = grammar({
         event_def: $ => definition_with(
             $,
             KW_EVENT,
-            optional_field(F_FROM, reserved('from_definition_clause', $.from_definition_clause)),
-            $.event_body
+            optional_field(F_FROM, $.from_definition_clause),
+            reserved('event_body', $.event_body)
         ),
 
         event_body: $ => is_body_with_annotations($,
@@ -1656,20 +1778,9 @@ module.exports = grammar({
         // Top-Level Definitions ❱ Metric
         // -----------------------------------------------------------------------------------------
 
-        metric_def: $ => seq(
+        metric_def: $ => kw_rule(
             KW_METRIC,
-            field(F_SIGNATURE, $.metric_function_signature),
-            optional($.annotation_only_body)
-        ),
-
-        metric_function_signature: $ => seq(
-            field(F_NAME, $.identifier),
-            optional(
-                parameters(
-                    repeat1(field(F_PARAMETER, $.function_parameter))
-                )
-            ),
-            $._function_type
+            $.function_def
         ),
 
         // -----------------------------------------------------------------------------------------
@@ -1679,18 +1790,18 @@ module.exports = grammar({
         metric_group_def: $ => definition_with(
             $,
             seq(KW_METRIC, KW_GROUP),
-            $.metric_event_binding,
+            seq(
+                $.metric_event_binding,
+                optional_field(F_FROM,  $.from_definition_clause)
+            ),
             optional($.metric_group_body)
         ),
 
         metric_event_binding: $ => seq(
             KW_ON,
-            optional(
-                seq(
-                    field(F_NAME, $.identifier),
-                    $._type_op_has_type
-                )
-            ),
+            //
+            // WFR:type_mismatch `.` `event`
+            //
             $.identifier_reference
         ),
 
@@ -1698,15 +1809,16 @@ module.exports = grammar({
             $,
             repeat(
                 choice(
-                    $.inline_metric_def,
+                    $.metric_def,
                     $.metric_ref
                 )
             )
         ),
 
-        inline_metric_def: $ => $.class_function_def,
-
         metric_ref: $ => seq(
+            //
+            // WFR:type_mismatch `referent: (_)` `metric`
+            //
             kw_field(KW_REF, F_REFERENT, $.identifier_reference),
             optional_field(F_BODY, $.function_body),
         ),
@@ -1758,7 +1870,7 @@ module.exports = grammar({
             $,
             KW_STRUCTURE,
             optional_field(F_FROM, $.from_definition_clause),
-            $.structure_body
+            reserved('structure_body', $.structure_body)
         ),
 
         structure_body: $ => is_body_with_annotations($,
@@ -1776,17 +1888,11 @@ module.exports = grammar({
                 optional($._class_type_parameters),
                 optional_field(F_FROM, $.from_definition_clause)
             ),
-            $.type_class_body
+            reserved('type_class_body', $.type_class_body)
         ),
 
         type_class_body: $ => is_body_with_annotations($,
-            repeat(field(F_FUNCTION, $.class_function_def))
-        ),
-
-        class_function_def: $ => seq(
-            field(F_SIGNATURE, $.function_signature),
-            optional_field(F_BODY, $.function_body),
-            optional($.annotation_only_body)
+            repeat(field(F_FUNCTION, $.keyword_function_def))
         ),
 
         // -----------------------------------------------------------------------------------------
@@ -1841,7 +1947,7 @@ module.exports = grammar({
             $,
             KW_UNION,
             optional_field(F_FROM, $.from_definition_clause),
-            $.union_body
+            reserved('union_body', $.union_body)
         ),
 
         union_body: $ => of_body_with_annotations(
@@ -1874,6 +1980,9 @@ module.exports = grammar({
             $.member_def
         ),
 
+        //
+        // WFR: definition identified by this reference *must* be a property definition.
+        //
         property_ref: $ => kw_field(KW_REF, F_PROPERTY, $.identifier_reference),
 
         // -----------------------------------------------------------------------------------------

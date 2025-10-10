@@ -1,9 +1,9 @@
 module example_metrics is
 
-  import [ dc mads skos ]
+  import [ dc skos ]
 
   entity Ad is
-    identity adId -> long
+    identity adId → long
   end
 
   event Impression is
@@ -14,33 +14,55 @@ module example_metrics is
     source Ad
   end
 
-  metric group Impressions on ev -> Impression is
-    @mads:metricType = "Traffic"
-    @mads:metricCategory = "Delivery"
+  metric group Impressions on Impression is
 
-    def grossImpressions -> count := ev.count is
+    metric grossImpressions → count ≔ count(event) is
       @skos:prefLabel = "Gross impressions"@en
       @dc:description = "The total number of times the ad was displayed. This can include valid as well as invalid impressions."@en
     end
-    def invalidImpressions -> count is
+    metric invalidImpressions → count is
       @skos:prefLabel = "Invalid impressions"@en
       @dc:description = "The number of impressions that were removed because they were deemed invalid by traffic quality filters."@en
     end
-    def impressions -> count := grossImpressions - invalidImpressions is
+    metric impressions → count ≔ self.grossImpressions - self.invalidImpressions is
       @skos:prefLabel = "Impressions"@en
       @dc:description = "The number of times the ad was displayed. This excludes impressions that were deemed invalid by traffic quality filters."@en
       @skos:definition = "Impressions = gross impressions - invalid impressions"@en
     end
   end
 
-  metric group Impressions on ev -> Impression is
-    @mads:metricType = "Traffic"
-    @mads:metricCategory = "Delivery"
+  metric group Impressions on Impression is
 
-    def grossClicks -> count := ev.count
-    def invalidClicks -> count
-    def clicks -> count := grossClicks - invalidClicks
-    def ctr(impressions -> Impressions) -> percentageRate := clicks / impressions.impressions
+   metric grossClicks → count := count(event)
+   metric invalidClicks → count
+   metric clicks → count ≔ self.grossClicks - self.invalidClicks
+   metric ctr(denom → Impressions) -> percentageRate  ≔ clicks ÷ denum.impressions
+  end
+
+  ;; Do the same again but with references to common metrics.
+
+  metric grossCount → count ≔ count(event) is
+    @dc:description = "The total number of times this event occured. This can include valid as well as invalid occurrences."@en
+  end
+
+  metric invalidCount → count is
+    @dc:description = "The number of occurences that were removed because they were deemed invalid by traffic quality filters."@en
+  end
+
+  metric netCount → count ≔ self.grossCount - self.netCount is
+    @dc:description = "The number of occurences of this event, after excluding those that were deemed invalid by traffic quality filters."@en
+  end
+
+  metric group RefImpressions on Impression is
+    ref grossCount
+    ref invalidCount
+    ref netCount
+  end
+
+  metric group RefClicks on Click is
+    ref grossCount
+    ref invalidCount
+    ref netCount
   end
 
 end

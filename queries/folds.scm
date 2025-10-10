@@ -21,7 +21,7 @@
  (datatype_type_restrictions)
  ;; ----------------
  (formal_constraint)
- (constraint_environment)
+ (sentence_with_environment)
  (function_body)
  (constraint_sentence)
  (sequence_builder)

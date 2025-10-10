@@ -12,7 +12,7 @@ module sdml_sequence_ordered is
   ) is
 
     def drop (self -> S count -> unsigned) -> S is
-      ; ^ definition.method
+      ; ^ definition.function
       ;       ^ definition.variable
       ;                 ^ definition.variable
       ;                                       ^ reference.type

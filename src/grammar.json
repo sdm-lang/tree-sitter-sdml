@@ -576,41 +576,20 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "FIELD",
-              "name": "environment",
-              "content": {
-                "type": "SYMBOL",
-                "name": "constraint_environment"
-              }
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
+          "type": "STRING",
+          "value": "is"
         },
         {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "is"
-            },
-            {
-              "type": "FIELD",
-              "name": "body",
-              "content": {
-                "type": "SYMBOL",
-                "name": "constraint_sentence"
-              }
-            },
-            {
-              "type": "STRING",
-              "value": "end"
-            }
-          ]
+          "type": "FIELD",
+          "name": "body",
+          "content": {
+            "type": "SYMBOL",
+            "name": "constraint_sentence"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "end"
         }
       ]
     },
@@ -619,7 +598,7 @@
       "members": [
         {
           "type": "PREC",
-          "value": 4,
+          "value": 6,
           "content": {
             "type": "SYMBOL",
             "name": "simple_sentence"
@@ -627,7 +606,7 @@
         },
         {
           "type": "PREC",
-          "value": 3,
+          "value": 5,
           "content": {
             "type": "SYMBOL",
             "name": "boolean_sentence"
@@ -635,7 +614,7 @@
         },
         {
           "type": "PREC",
-          "value": 2,
+          "value": 4,
           "content": {
             "type": "SYMBOL",
             "name": "expression_sentence"
@@ -643,28 +622,40 @@
         },
         {
           "type": "PREC",
-          "value": 1,
+          "value": 3,
           "content": {
             "type": "SYMBOL",
             "name": "quantified_sentence"
           }
         },
         {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "("
-            },
-            {
-              "type": "SYMBOL",
-              "name": "constraint_sentence"
-            },
-            {
-              "type": "STRING",
-              "value": ")"
-            }
-          ]
+          "type": "PREC",
+          "value": 2,
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "("
+              },
+              {
+                "type": "SYMBOL",
+                "name": "constraint_sentence"
+              },
+              {
+                "type": "STRING",
+                "value": ")"
+              }
+            ]
+          }
+        },
+        {
+          "type": "PREC",
+          "value": 1,
+          "content": {
+            "type": "SYMBOL",
+            "name": "sentence_with_environment"
+          }
         }
       ]
     },
@@ -1060,6 +1051,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "reserved_event"
+        },
+        {
+          "type": "SYMBOL",
           "name": "predicate_value"
         }
       ]
@@ -1100,6 +1095,10 @@
                 {
                   "type": "SYMBOL",
                   "name": "reserved_self"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "reserved_event"
                 },
                 {
                   "type": "SYMBOL",
@@ -1223,7 +1222,11 @@
       "type": "STRING",
       "value": "self"
     },
-    "constraint_environment": {
+    "reserved_event": {
+      "type": "STRING",
+      "value": "event"
+    },
+    "sentence_with_environment": {
       "type": "SEQ",
       "members": [
         {
@@ -1234,8 +1237,37 @@
           "type": "REPEAT1",
           "content": {
             "type": "SYMBOL",
-            "name": "function_def"
+            "name": "keyword_function_def"
           }
+        },
+        {
+          "type": "STRING",
+          "value": "for"
+        },
+        {
+          "type": "FIELD",
+          "name": "body",
+          "content": {
+            "type": "SYMBOL",
+            "name": "constraint_sentence"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "end"
+        }
+      ]
+    },
+    "keyword_function_def": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "def"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "function_def"
         }
       ]
     },
@@ -1251,12 +1283,32 @@
           }
         },
         {
-          "type": "FIELD",
-          "name": "body",
-          "content": {
-            "type": "SYMBOL",
-            "name": "function_body"
-          }
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "body",
+              "content": {
+                "type": "SYMBOL",
+                "name": "function_body"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "annotation_only_body"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -1264,57 +1316,48 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "def"
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
         },
         {
-          "type": "SEQ",
+          "type": "CHOICE",
           "members": [
             {
-              "type": "FIELD",
-              "name": "name",
-              "content": {
-                "type": "SYMBOL",
-                "name": "identifier"
-              }
-            },
-            {
-              "type": "CHOICE",
+              "type": "SEQ",
               "members": [
                 {
-                  "type": "SEQ",
-                  "members": [
-                    {
-                      "type": "STRING",
-                      "value": "("
-                    },
-                    {
-                      "type": "REPEAT1",
-                      "content": {
-                        "type": "FIELD",
-                        "name": "parameter",
-                        "content": {
-                          "type": "SYMBOL",
-                          "name": "function_parameter"
-                        }
-                      }
-                    },
-                    {
-                      "type": "STRING",
-                      "value": ")"
-                    }
-                  ]
+                  "type": "STRING",
+                  "value": "("
                 },
                 {
-                  "type": "BLANK"
+                  "type": "REPEAT1",
+                  "content": {
+                    "type": "FIELD",
+                    "name": "parameter",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "function_parameter"
+                    }
+                  }
+                },
+                {
+                  "type": "STRING",
+                  "value": ")"
                 }
               ]
             },
             {
-              "type": "SYMBOL",
-              "name": "_function_type"
+              "type": "BLANK"
             }
           ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_function_type"
         }
       ]
     },
@@ -1406,8 +1449,12 @@
                 "type": "PREC",
                 "value": 10,
                 "content": {
-                  "type": "SYMBOL",
-                  "name": "constraint_sentence"
+                  "type": "RESERVED",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "constraint_sentence"
+                  },
+                  "context_name": "function_body"
                 }
               },
               {
@@ -2167,8 +2214,12 @@
           "context_name": "entity_def"
         },
         {
-          "type": "SYMBOL",
-          "name": "enum_def"
+          "type": "RESERVED",
+          "content": {
+            "type": "SYMBOL",
+            "name": "enum_def"
+          },
+          "context_name": "enum_def"
         },
         {
           "type": "RESERVED",
@@ -2236,34 +2287,42 @@
           "value": "from"
         },
         {
-          "type": "SEQ",
+          "type": "FIELD",
+          "name": "mixin",
+          "content": {
+            "type": "SYMBOL",
+            "name": "mixin_clause"
+          }
+        }
+      ]
+    },
+    "mixin_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "from",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier_reference"
+          }
+        },
+        {
+          "type": "CHOICE",
           "members": [
             {
-              "type": "FIELD",
-              "name": "from",
-              "content": {
-                "type": "SYMBOL",
-                "name": "identifier_reference"
-              }
+              "type": "SYMBOL",
+              "name": "mixin_with_members"
             },
             {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "from_definition_with"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "from_definition_without"
-                }
-              ]
+              "type": "SYMBOL",
+              "name": "mixin_without_members"
             }
           ]
         }
       ]
     },
-    "from_definition_with": {
+    "mixin_with_members": {
       "type": "SEQ",
       "members": [
         {
@@ -2283,13 +2342,13 @@
             },
             {
               "type": "SYMBOL",
-              "name": "_identifier_or_sequence"
+              "name": "_mixin_member_or_sequence"
             }
           ]
         }
       ]
     },
-    "from_definition_without": {
+    "mixin_without_members": {
       "type": "SEQ",
       "members": [
         {
@@ -2298,11 +2357,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "_identifier_or_sequence"
+          "name": "_mixin_member_or_sequence"
         }
       ]
     },
-    "_identifier_or_sequence": {
+    "_mixin_member_or_sequence": {
       "type": "CHOICE",
       "members": [
         {
@@ -2310,7 +2369,7 @@
           "name": "member",
           "content": {
             "type": "SYMBOL",
-            "name": "identifier"
+            "name": "mixin_member"
           }
         },
         {
@@ -2327,13 +2386,51 @@
                 "name": "member",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "identifier"
+                  "name": "mixin_member"
                 }
               }
             },
             {
               "type": "STRING",
               "value": "]"
+            }
+          ]
+        }
+      ]
+    },
+    "mixin_member": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "member",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "as"
+                },
+                {
+                  "type": "FIELD",
+                  "name": "rename",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "identifier"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
             }
           ]
         }
@@ -2832,8 +2929,12 @@
                   "type": "FIELD",
                   "name": "body",
                   "content": {
-                    "type": "SYMBOL",
-                    "name": "dimension_body"
+                    "type": "RESERVED",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "dimension_body"
+                    },
+                    "context_name": "dimension_body"
                   }
                 },
                 {
@@ -2978,15 +3079,15 @@
               "type": "CHOICE",
               "members": [
                 {
-                  "type": "SEQ",
+                  "type": "CHOICE",
                   "members": [
                     {
-                      "type": "STRING",
-                      "value": "with"
+                      "type": "SYMBOL",
+                      "name": "mixin_with_members"
                     },
                     {
                       "type": "SYMBOL",
-                      "name": "_identifier_or_sequence"
+                      "name": "mixin_without_members"
                     }
                   ]
                 },
@@ -3040,8 +3141,12 @@
                   "type": "FIELD",
                   "name": "body",
                   "content": {
-                    "type": "SYMBOL",
-                    "name": "entity_body"
+                    "type": "RESERVED",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "entity_body"
+                    },
+                    "context_name": "entity_body"
                   }
                 },
                 {
@@ -3123,12 +3228,8 @@
                   "type": "FIELD",
                   "name": "from",
                   "content": {
-                    "type": "RESERVED",
-                    "content": {
-                      "type": "SYMBOL",
-                      "name": "from_definition_clause"
-                    },
-                    "context_name": "from_definition_clause"
+                    "type": "SYMBOL",
+                    "name": "from_definition_clause"
                   }
                 },
                 {
@@ -3213,12 +3314,8 @@
                   "type": "FIELD",
                   "name": "from",
                   "content": {
-                    "type": "RESERVED",
-                    "content": {
-                      "type": "SYMBOL",
-                      "name": "from_definition_clause"
-                    },
-                    "context_name": "from_definition_clause"
+                    "type": "SYMBOL",
+                    "name": "from_definition_clause"
                   }
                 },
                 {
@@ -3233,8 +3330,12 @@
                   "type": "FIELD",
                   "name": "body",
                   "content": {
-                    "type": "SYMBOL",
-                    "name": "event_body"
+                    "type": "RESERVED",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "event_body"
+                    },
+                    "context_name": "event_body"
                   }
                 },
                 {
@@ -3299,73 +3400,8 @@
           "value": "metric"
         },
         {
-          "type": "FIELD",
-          "name": "signature",
-          "content": {
-            "type": "SYMBOL",
-            "name": "metric_function_signature"
-          }
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "annotation_only_body"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        }
-      ]
-    },
-    "metric_function_signature": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "name",
-          "content": {
-            "type": "SYMBOL",
-            "name": "identifier"
-          }
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "("
-                },
-                {
-                  "type": "REPEAT1",
-                  "content": {
-                    "type": "FIELD",
-                    "name": "parameter",
-                    "content": {
-                      "type": "SYMBOL",
-                      "name": "function_parameter"
-                    }
-                  }
-                },
-                {
-                  "type": "STRING",
-                  "value": ")"
-                }
-              ]
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
           "type": "SYMBOL",
-          "name": "_function_type"
+          "name": "function_def"
         }
       ]
     },
@@ -3397,8 +3433,29 @@
               }
             },
             {
-              "type": "SYMBOL",
-              "name": "metric_event_binding"
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "metric_event_binding"
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "FIELD",
+                      "name": "from",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "from_definition_clause"
+                      }
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                }
+              ]
             },
             {
               "type": "CHOICE",
@@ -3407,8 +3464,16 @@
                   "type": "FIELD",
                   "name": "body",
                   "content": {
-                    "type": "SYMBOL",
-                    "name": "metric_group_body"
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "metric_group_body"
+                      },
+                      {
+                        "type": "BLANK"
+                      }
+                    ]
                   }
                 },
                 {
@@ -3426,31 +3491,6 @@
         {
           "type": "STRING",
           "value": "on"
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "FIELD",
-                  "name": "name",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "identifier"
-                  }
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "_type_op_has_type"
-                }
-              ]
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
         },
         {
           "type": "SYMBOL",
@@ -3482,7 +3522,7 @@
                 "members": [
                   {
                     "type": "SYMBOL",
-                    "name": "inline_metric_def"
+                    "name": "metric_def"
                   },
                   {
                     "type": "SYMBOL",
@@ -3498,10 +3538,6 @@
           "value": "end"
         }
       ]
-    },
-    "inline_metric_def": {
-      "type": "SYMBOL",
-      "name": "class_function_def"
     },
     "metric_ref": {
       "type": "SEQ",
@@ -3713,8 +3749,12 @@
                   "type": "FIELD",
                   "name": "body",
                   "content": {
-                    "type": "SYMBOL",
-                    "name": "structure_body"
+                    "type": "RESERVED",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "structure_body"
+                    },
+                    "context_name": "structure_body"
                   }
                 },
                 {
@@ -3816,8 +3856,12 @@
                   "type": "FIELD",
                   "name": "body",
                   "content": {
-                    "type": "SYMBOL",
-                    "name": "type_class_body"
+                    "type": "RESERVED",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "type_class_body"
+                    },
+                    "context_name": "type_class_body"
                   }
                 },
                 {
@@ -3853,7 +3897,7 @@
                 "name": "function",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "class_function_def"
+                  "name": "keyword_function_def"
                 }
               }
             }
@@ -3862,47 +3906,6 @@
         {
           "type": "STRING",
           "value": "end"
-        }
-      ]
-    },
-    "class_function_def": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "signature",
-          "content": {
-            "type": "SYMBOL",
-            "name": "function_signature"
-          }
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "FIELD",
-              "name": "body",
-              "content": {
-                "type": "SYMBOL",
-                "name": "function_body"
-              }
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "annotation_only_body"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
         }
       ]
     },
@@ -4099,8 +4102,12 @@
                   "type": "FIELD",
                   "name": "body",
                   "content": {
-                    "type": "SYMBOL",
-                    "name": "union_body"
+                    "type": "RESERVED",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "union_body"
+                    },
+                    "context_name": "union_body"
                   }
                 },
                 {
@@ -5295,8 +5302,8 @@
     "_function_op_by_definition",
     "_function_op_composition",
     "_function_type",
-    "_identifier_or_sequence",
     "_import",
+    "_mixin_member_or_sequence",
     "_predicate_sequence_member",
     "_rdf_types",
     "_rename_import",
@@ -5336,6 +5343,14 @@
       {
         "type": "STRING",
         "value": "end"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
       },
       {
         "type": "STRING",
@@ -5401,6 +5416,14 @@
       },
       {
         "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
         "value": "is"
       },
       {
@@ -5444,18 +5467,86 @@
         "value": "version"
       }
     ],
-    "from_definition_clause": [
+    "import_statement": [
+      {
+        "type": "STRING",
+        "value": "as"
+      },
+      {
+        "type": "STRING",
+        "value": "assert"
+      },
+      {
+        "type": "STRING",
+        "value": "datatype"
+      },
+      {
+        "type": "STRING",
+        "value": "dimension"
+      },
+      {
+        "type": "STRING",
+        "value": "end"
+      },
       {
         "type": "STRING",
         "value": "from"
       },
       {
         "type": "STRING",
-        "value": "with"
+        "value": "import"
       },
       {
         "type": "STRING",
-        "value": "without"
+        "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
+      },
+      {
+        "type": "STRING",
+        "value": "module"
+      },
+      {
+        "type": "STRING",
+        "value": "of"
+      },
+      {
+        "type": "STRING",
+        "value": "property"
+      },
+      {
+        "type": "STRING",
+        "value": "rdf"
+      },
+      {
+        "type": "STRING",
+        "value": "structure"
+      },
+      {
+        "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
+        "value": "union"
+      },
+      {
+        "type": "STRING",
+        "value": "unknown"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
+        "value": "as"
       }
     ],
     "datatype_def": [
@@ -5478,6 +5569,14 @@
       {
         "type": "STRING",
         "value": "end"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
       },
       {
         "type": "STRING",
@@ -5547,6 +5646,14 @@
       },
       {
         "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
         "value": "is"
       },
       {
@@ -5587,6 +5694,96 @@
       },
       {
         "type": "STRING",
+        "value": "with"
+      },
+      {
+        "type": "STRING",
+        "value": "without"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      }
+    ],
+    "dimension_body": [
+      {
+        "type": "STRING",
+        "value": "as"
+      },
+      {
+        "type": "STRING",
+        "value": "assert"
+      },
+      {
+        "type": "STRING",
+        "value": "datatype"
+      },
+      {
+        "type": "STRING",
+        "value": "dimension"
+      },
+      {
+        "type": "STRING",
+        "value": "end"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
+        "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
+      },
+      {
+        "type": "STRING",
+        "value": "module"
+      },
+      {
+        "type": "STRING",
+        "value": "of"
+      },
+      {
+        "type": "STRING",
+        "value": "property"
+      },
+      {
+        "type": "STRING",
+        "value": "rdf"
+      },
+      {
+        "type": "STRING",
+        "value": "structure"
+      },
+      {
+        "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
+        "value": "union"
+      },
+      {
+        "type": "STRING",
+        "value": "unknown"
+      },
+      {
+        "type": "STRING",
+        "value": "with"
+      },
+      {
+        "type": "STRING",
+        "value": "without"
+      },
+      {
+        "type": "STRING",
         "value": "from"
       },
       {
@@ -5600,10 +5797,6 @@
       {
         "type": "STRING",
         "value": "source"
-      },
-      {
-        "type": "STRING",
-        "value": "with"
       },
       {
         "type": "STRING",
@@ -5641,6 +5834,14 @@
       },
       {
         "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
         "value": "is"
       },
       {
@@ -5681,11 +5882,187 @@
       },
       {
         "type": "STRING",
+        "value": "with"
+      },
+      {
+        "type": "STRING",
+        "value": "without"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      }
+    ],
+    "entity_body": [
+      {
+        "type": "STRING",
+        "value": "as"
+      },
+      {
+        "type": "STRING",
+        "value": "assert"
+      },
+      {
+        "type": "STRING",
+        "value": "datatype"
+      },
+      {
+        "type": "STRING",
+        "value": "dimension"
+      },
+      {
+        "type": "STRING",
+        "value": "end"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
+        "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
+      },
+      {
+        "type": "STRING",
+        "value": "module"
+      },
+      {
+        "type": "STRING",
+        "value": "of"
+      },
+      {
+        "type": "STRING",
+        "value": "property"
+      },
+      {
+        "type": "STRING",
+        "value": "rdf"
+      },
+      {
+        "type": "STRING",
+        "value": "structure"
+      },
+      {
+        "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
+        "value": "union"
+      },
+      {
+        "type": "STRING",
+        "value": "unknown"
+      },
+      {
+        "type": "STRING",
+        "value": "with"
+      },
+      {
+        "type": "STRING",
+        "value": "without"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
         "value": "identity"
       },
       {
         "type": "STRING",
         "value": "ref"
+      }
+    ],
+    "enum_def": [
+      {
+        "type": "STRING",
+        "value": "as"
+      },
+      {
+        "type": "STRING",
+        "value": "assert"
+      },
+      {
+        "type": "STRING",
+        "value": "datatype"
+      },
+      {
+        "type": "STRING",
+        "value": "dimension"
+      },
+      {
+        "type": "STRING",
+        "value": "end"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
+        "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
+      },
+      {
+        "type": "STRING",
+        "value": "module"
+      },
+      {
+        "type": "STRING",
+        "value": "of"
+      },
+      {
+        "type": "STRING",
+        "value": "property"
+      },
+      {
+        "type": "STRING",
+        "value": "rdf"
+      },
+      {
+        "type": "STRING",
+        "value": "structure"
+      },
+      {
+        "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
+        "value": "union"
+      },
+      {
+        "type": "STRING",
+        "value": "unknown"
+      },
+      {
+        "type": "STRING",
+        "value": "with"
+      },
+      {
+        "type": "STRING",
+        "value": "without"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
       }
     ],
     "event_def": [
@@ -5711,6 +6088,14 @@
       },
       {
         "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
         "value": "is"
       },
       {
@@ -5751,6 +6136,96 @@
       },
       {
         "type": "STRING",
+        "value": "with"
+      },
+      {
+        "type": "STRING",
+        "value": "without"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      }
+    ],
+    "event_body": [
+      {
+        "type": "STRING",
+        "value": "as"
+      },
+      {
+        "type": "STRING",
+        "value": "assert"
+      },
+      {
+        "type": "STRING",
+        "value": "datatype"
+      },
+      {
+        "type": "STRING",
+        "value": "dimension"
+      },
+      {
+        "type": "STRING",
+        "value": "end"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
+        "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
+      },
+      {
+        "type": "STRING",
+        "value": "module"
+      },
+      {
+        "type": "STRING",
+        "value": "of"
+      },
+      {
+        "type": "STRING",
+        "value": "property"
+      },
+      {
+        "type": "STRING",
+        "value": "rdf"
+      },
+      {
+        "type": "STRING",
+        "value": "structure"
+      },
+      {
+        "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
+        "value": "union"
+      },
+      {
+        "type": "STRING",
+        "value": "unknown"
+      },
+      {
+        "type": "STRING",
+        "value": "with"
+      },
+      {
+        "type": "STRING",
+        "value": "without"
+      },
+      {
+        "type": "STRING",
         "value": "from"
       },
       {
@@ -5764,10 +6239,6 @@
       {
         "type": "STRING",
         "value": "source"
-      },
-      {
-        "type": "STRING",
-        "value": "with"
       },
       {
         "type": "STRING",
@@ -5797,6 +6268,14 @@
       },
       {
         "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
         "value": "is"
       },
       {
@@ -5837,6 +6316,18 @@
       },
       {
         "type": "STRING",
+        "value": "with"
+      },
+      {
+        "type": "STRING",
+        "value": "without"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
         "value": "on"
       }
     ],
@@ -5860,6 +6351,14 @@
       {
         "type": "STRING",
         "value": "end"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
       },
       {
         "type": "STRING",
@@ -5933,6 +6432,14 @@
       },
       {
         "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
         "value": "is"
       },
       {
@@ -5973,7 +6480,85 @@
       },
       {
         "type": "STRING",
+        "value": "with"
+      },
+      {
+        "type": "STRING",
+        "value": "without"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      }
+    ],
+    "structure_body": [
+      {
+        "type": "STRING",
+        "value": "as"
+      },
+      {
+        "type": "STRING",
+        "value": "assert"
+      },
+      {
+        "type": "STRING",
+        "value": "datatype"
+      },
+      {
+        "type": "STRING",
+        "value": "dimension"
+      },
+      {
+        "type": "STRING",
+        "value": "end"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
+        "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
+      },
+      {
+        "type": "STRING",
+        "value": "module"
+      },
+      {
+        "type": "STRING",
+        "value": "of"
+      },
+      {
+        "type": "STRING",
+        "value": "property"
+      },
+      {
+        "type": "STRING",
+        "value": "rdf"
+      },
+      {
+        "type": "STRING",
+        "value": "structure"
+      },
+      {
+        "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
+        "value": "union"
+      },
+      {
+        "type": "STRING",
+        "value": "unknown"
       },
       {
         "type": "STRING",
@@ -5982,6 +6567,10 @@
       {
         "type": "STRING",
         "value": "without"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
       },
       {
         "type": "STRING",
@@ -6011,6 +6600,14 @@
       },
       {
         "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
         "value": "is"
       },
       {
@@ -6051,7 +6648,85 @@
       },
       {
         "type": "STRING",
+        "value": "with"
+      },
+      {
+        "type": "STRING",
+        "value": "without"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      }
+    ],
+    "type_class_body": [
+      {
+        "type": "STRING",
+        "value": "as"
+      },
+      {
+        "type": "STRING",
+        "value": "assert"
+      },
+      {
+        "type": "STRING",
+        "value": "datatype"
+      },
+      {
+        "type": "STRING",
+        "value": "dimension"
+      },
+      {
+        "type": "STRING",
+        "value": "end"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
+        "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
+      },
+      {
+        "type": "STRING",
+        "value": "module"
+      },
+      {
+        "type": "STRING",
+        "value": "of"
+      },
+      {
+        "type": "STRING",
+        "value": "property"
+      },
+      {
+        "type": "STRING",
+        "value": "rdf"
+      },
+      {
+        "type": "STRING",
+        "value": "structure"
+      },
+      {
+        "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
+        "value": "union"
+      },
+      {
+        "type": "STRING",
+        "value": "unknown"
       },
       {
         "type": "STRING",
@@ -6060,6 +6735,10 @@
       {
         "type": "STRING",
         "value": "without"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
       },
       {
         "type": "STRING",
@@ -6089,6 +6768,14 @@
       },
       {
         "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
         "value": "is"
       },
       {
@@ -6129,7 +6816,85 @@
       },
       {
         "type": "STRING",
+        "value": "with"
+      },
+      {
+        "type": "STRING",
+        "value": "without"
+      },
+      {
+        "type": "STRING",
         "value": "from"
+      }
+    ],
+    "union_body": [
+      {
+        "type": "STRING",
+        "value": "as"
+      },
+      {
+        "type": "STRING",
+        "value": "assert"
+      },
+      {
+        "type": "STRING",
+        "value": "datatype"
+      },
+      {
+        "type": "STRING",
+        "value": "dimension"
+      },
+      {
+        "type": "STRING",
+        "value": "end"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "import"
+      },
+      {
+        "type": "STRING",
+        "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "metric"
+      },
+      {
+        "type": "STRING",
+        "value": "module"
+      },
+      {
+        "type": "STRING",
+        "value": "of"
+      },
+      {
+        "type": "STRING",
+        "value": "property"
+      },
+      {
+        "type": "STRING",
+        "value": "rdf"
+      },
+      {
+        "type": "STRING",
+        "value": "structure"
+      },
+      {
+        "type": "STRING",
+        "value": "class"
+      },
+      {
+        "type": "STRING",
+        "value": "union"
+      },
+      {
+        "type": "STRING",
+        "value": "unknown"
       },
       {
         "type": "STRING",
@@ -6138,6 +6903,14 @@
       {
         "type": "STRING",
         "value": "without"
+      },
+      {
+        "type": "STRING",
+        "value": "from"
+      },
+      {
+        "type": "STRING",
+        "value": "as"
       }
     ],
     "builtin_types": [
@@ -6399,79 +7172,7 @@
     "formal_constraint": [
       {
         "type": "STRING",
-        "value": "as"
-      },
-      {
-        "type": "STRING",
-        "value": "assert"
-      },
-      {
-        "type": "STRING",
-        "value": "datatype"
-      },
-      {
-        "type": "STRING",
-        "value": "dimension"
-      },
-      {
-        "type": "STRING",
-        "value": "end"
-      },
-      {
-        "type": "STRING",
-        "value": "is"
-      },
-      {
-        "type": "STRING",
-        "value": "metric"
-      },
-      {
-        "type": "STRING",
-        "value": "module"
-      },
-      {
-        "type": "STRING",
-        "value": "of"
-      },
-      {
-        "type": "STRING",
-        "value": "property"
-      },
-      {
-        "type": "STRING",
-        "value": "rdf"
-      },
-      {
-        "type": "STRING",
-        "value": "structure"
-      },
-      {
-        "type": "STRING",
-        "value": "class"
-      },
-      {
-        "type": "STRING",
-        "value": "union"
-      },
-      {
-        "type": "STRING",
-        "value": "unknown"
-      },
-      {
-        "type": "STRING",
-        "value": "def"
-      },
-      {
-        "type": "STRING",
-        "value": "with"
-      },
-      {
-        "type": "STRING",
-        "value": "and"
-      },
-      {
-        "type": "STRING",
-        "value": "complement"
+        "value": "mod"
       },
       {
         "type": "STRING",
@@ -6479,23 +7180,15 @@
       },
       {
         "type": "STRING",
+        "value": "exists"
+      },
+      {
+        "type": "STRING",
         "value": "implies"
       },
       {
         "type": "STRING",
-        "value": "in"
-      },
-      {
-        "type": "STRING",
-        "value": "intersects"
-      },
-      {
-        "type": "STRING",
-        "value": "mod"
-      },
-      {
-        "type": "STRING",
-        "value": "not"
+        "value": "and"
       },
       {
         "type": "STRING",
@@ -6503,11 +7196,27 @@
       },
       {
         "type": "STRING",
-        "value": "product"
+        "value": "xor"
       },
       {
         "type": "STRING",
-        "value": "self"
+        "value": "not"
+      },
+      {
+        "type": "STRING",
+        "value": "complement"
+      },
+      {
+        "type": "STRING",
+        "value": "intersects"
+      },
+      {
+        "type": "STRING",
+        "value": "in"
+      },
+      {
+        "type": "STRING",
+        "value": "product"
       },
       {
         "type": "STRING",
@@ -6527,7 +7236,37 @@
       },
       {
         "type": "STRING",
-        "value": "xor"
+        "value": "forall"
+      },
+      {
+        "type": "STRING",
+        "value": "def"
+      },
+      {
+        "type": "STRING",
+        "value": "with"
+      },
+      {
+        "type": "STRING",
+        "value": "for"
+      },
+      {
+        "type": "STRING",
+        "value": "end"
+      },
+      {
+        "type": "STRING",
+        "value": "self"
+      }
+    ],
+    "function_body": [
+      {
+        "type": "STRING",
+        "value": "mod"
+      },
+      {
+        "type": "STRING",
+        "value": "iff"
       },
       {
         "type": "STRING",
@@ -6535,7 +7274,75 @@
       },
       {
         "type": "STRING",
+        "value": "implies"
+      },
+      {
+        "type": "STRING",
+        "value": "and"
+      },
+      {
+        "type": "STRING",
+        "value": "or"
+      },
+      {
+        "type": "STRING",
+        "value": "xor"
+      },
+      {
+        "type": "STRING",
+        "value": "not"
+      },
+      {
+        "type": "STRING",
+        "value": "complement"
+      },
+      {
+        "type": "STRING",
+        "value": "intersects"
+      },
+      {
+        "type": "STRING",
+        "value": "in"
+      },
+      {
+        "type": "STRING",
+        "value": "product"
+      },
+      {
+        "type": "STRING",
+        "value": "subset"
+      },
+      {
+        "type": "STRING",
+        "value": "subseteq"
+      },
+      {
+        "type": "STRING",
+        "value": "supset"
+      },
+      {
+        "type": "STRING",
+        "value": "supseteq"
+      },
+      {
+        "type": "STRING",
         "value": "forall"
+      },
+      {
+        "type": "STRING",
+        "value": "is"
+      },
+      {
+        "type": "STRING",
+        "value": "end"
+      },
+      {
+        "type": "STRING",
+        "value": "self"
+      },
+      {
+        "type": "STRING",
+        "value": "event"
       }
     ]
   }

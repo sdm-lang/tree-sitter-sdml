@@ -111,11 +111,11 @@
 (arithmetic_expression_sentence
  (math_operator) @operator)
 
-(constraint_environment "with" @keyword)
+(sentence_with_environment [ "with" "for" ] @keyword)
 
-(function_def (function_signature name: (identifier) @function.definition))
+(keyword_function_def "def" @keyword)
 
-(function_signature "def" @keyword)
+(function_signature name: (identifier) @function.definition)
 (function_signature target: (_) @type)
 
 (function_parameter name: (identifier) @variable.parameter)
@@ -135,7 +135,9 @@
 (atomic_sentence
  argument: (term (identifier_reference (identifier) @variable)))
 
-(term (reserved_self) @variable.builtin)
+(term [ (reserved_self) (reserved_event) ] @variable.builtin)
+
+(reserved_event "event"  @variable.builtin)
 
 ((equation lhs: (term (identifier_reference) @variable)) (#is-not? local))
 
@@ -200,7 +202,6 @@
 (metric_group_def "group" @keyword)
 (metric_group_def name: (identifier) @type.definition)
 (metric_event_binding "on" @keyword)
-(metric_event_binding name: (identifier) @variable.field)
 (metric_event_binding (identifier_reference) @type)
 
 (metric_ref "ref" @keyword)
@@ -209,18 +210,16 @@
 
 (union_def name: (identifier) @type.definition)
 
-(from_definition_clause "from" @keyword from: (identifier_reference) @type)
+(from_definition_clause "from" @keyword)
 
-(from_definition_with "with" @keyword)
-(from_definition_with wildcard: (_)  @type.builtin)
-(from_definition_with member: (identifier)  @variable)
-
-(from_definition_without "without" @keyword)
-(from_definition_without member: (identifier)  @variable)
+(mixin_clause from: (identifier_reference) @type)
+(mixin_with_members "with" @keyword)
+(mixin_with_members wildcard: (_)  @type.builtin)
+(mixin_without_members "without" @keyword)
+(mixin_member member: (identifier)  @variable.field)
+(mixin_member rename: (identifier)  @variable.field)
 
 (source_entity "source" @keyword entity: (identifier_reference) @type)
-(source_entity "with" @keyword)
-(source_entity member: (identifier) @variable.field)
 
 ;; ---------------------------------------------------------------------------
 ;; RDF Definitions
@@ -242,9 +241,6 @@
 (type_parameter_restriction class: (identifier_reference) @type)
 
 (type_restriction_argument (identifier) @type.definition)
-
-(class_function_def
- (function_signature name: (identifier) @method.definition))
 
 (wildcard) @type.builtin
 

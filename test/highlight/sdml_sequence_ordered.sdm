@@ -22,7 +22,7 @@ module sdml_sequence_ordered is
 
     def drop(vs -> S count → unsigned) → S is
     ; <- keyword
-    ;   ^ method.definition
+    ;   ^ function.definition
     ;       ^ punctuation.bracket
     ;        ^ variable.parameter
     ;           ^ operator
@@ -46,7 +46,7 @@ module sdml_sequence_ordered is
 
     def get(vs -> S index -> unsigned) -> {0..1} T is
     ; <- keyword
-    ;   ^ method.definition
+    ;   ^ function.definition
     ;      ^ punctuation.bracket
     ;       ^ variable.parameter
     ;          ^ operator
@@ -75,7 +75,7 @@ module sdml_sequence_ordered is
 
     def reverse(vs -> S) -> S is
     ; <- keyword
-    ;   ^ method.definition
+    ;   ^ function.definition
     ;          ^ punctuation.bracket
     ;           ^ variable.parameter
     ;              ^ operator
@@ -96,7 +96,7 @@ module sdml_sequence_ordered is
 
     def slice(vs -> S start -> unsigned count -> unsigned) -> S
     ; <- keyword
-    ;   ^ method.definition
+    ;   ^ function.definition
     ;        ^ punctuation.bracket
     ;         ^ variable.parameter
     ;            ^ operator
@@ -132,7 +132,7 @@ module sdml_sequence_ordered is
 
     def take(vs -> S count -> unsigned) -> S is
     ; <- keyword
-    ;   ^ method.definition
+    ;   ^ function.definition
     ;       ^ punctuation.bracket
     ;        ^ variable.parameter
     ;           ^ operator

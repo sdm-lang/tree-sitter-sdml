@@ -32,9 +32,18 @@ module example_metrics is
   ;                        ^ keyword
   ;                           ^ type
   ;                                      ^ keyword
-    def grossImpressions -> count := count(self)
-    def invalidImpressions -> count
-    def impressions -> count := grossImpressions - invalidImpressions
+    metric grossImpressions -> count := count(event)
+    ; <- keyword
+    ;      ^ function.definition
+    ;                       ^ operator
+    ;                          ^ type
+    ;                                ^ operator
+    ;                                   ^ function.call
+    ;                                        ^ punctuation.bracket
+    ;                                         ^ variable.builtin
+    ;                                              ^ punctuation.bracket
+    metric invalidImpressions -> count
+    metric impressions -> count := grossImpressions - invalidImpressions
   end
   ; <- keyword
 
@@ -48,19 +57,17 @@ module example_metrics is
   end
   ; <- keyword
 
-  metric group Impressions on ev -> Impression is
+  metric group Impressions on Impression is
   ; <- keyword
   ;      ^ keyword
   ;            ^ type.definition
   ;                        ^ keyword
-  ;                           ^ variable.field
-  ;                              ^ operator
-  ;                                 ^ type
-  ;                                            ^ keyword
-    def grossClicks -> count := count(self)
-    def invalidClicks -> count
-    def clicks -> count := grossClicks - invalidClicks
-    def ctr(impressions -> Impressions) -> percentageRate := clicks / impressions.impressions
+  ;                           ^ type
+  ;                                      ^ keyword
+    metric grossClicks -> count := count(event)
+    metric invalidClicks -> count
+    metric clicks -> count := grossClicks - invalidClicks
+    metric ctr(impressions -> Impressions) -> percentageRate := clicks / impressions.impressions
   end
   ; <- keyword
 

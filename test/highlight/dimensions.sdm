@@ -40,7 +40,7 @@ module dimensions is
   ;             ^ keyword
   ;                  ^ type
   ;                      ^ keyword
-  ;                           ^ variable
+  ;                           ^ variable.field
   ;                                ^ keyword
 
    identity source -> SourceEntity

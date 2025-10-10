@@ -18,10 +18,12 @@ end
     (enum_def
       name: (identifier)
       from: (from_definition_clause
-        from: (identifier_reference
-          (identifier))
-        (from_definition_with
-          member: (identifier)))
+        mixin: (mixin_clause
+          from: (identifier_reference
+            (identifier))
+          (mixin_with_members
+            member: (mixin_member
+              member: (identifier)))))
       body: (enum_body
         (value_variant
           name: (identifier))))))

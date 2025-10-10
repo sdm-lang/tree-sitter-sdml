@@ -7,10 +7,12 @@ module corpus_test_constraint is
   structure Outer is
 
     inner -> string is
-      assert tagged_with_foo_path with
-        def foo -> string := "foo"
-      is
-        self.tags.contains(foo)
+      assert tagged_with_foo_path is
+        with
+          def foo -> string := "foo"
+        for
+          self.tags.contains(foo)
+        end
       end
     end
 
@@ -20,23 +22,25 @@ end
 
 ---
 
-   (module
+(module
+  (identifier)
+  (module_body
+    (structure_def
       (identifier)
-      (module_body
-        (structure_def
-          (identifier)
-          (structure_body
-            (member
-              (member_def
-                (identifier)
-                (type_reference
-                  (builtin_types))
-                (annotation_only_body
-                  (annotation
-                    (constraint
-                      (identifier)
-                      (formal_constraint
-                        (constraint_environment
+      (structure_body
+        (member
+          (member_def
+            (identifier)
+            (type_reference
+              (builtin_types))
+            (annotation_only_body
+              (annotation
+                (constraint
+                  (identifier)
+                  (formal_constraint
+                    (constraint_sentence
+                      (sentence_with_environment
+                        (keyword_function_def
                           (function_def
                             (function_signature
                               (identifier)
@@ -58,4 +62,4 @@ end
                                   (identifier)))
                               (term
                                 (identifier_reference
-                                  (identifier))))))))))))))))
+                                  (identifier))))))))))))))))))

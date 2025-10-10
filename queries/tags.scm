@@ -61,13 +61,12 @@
 
 (union_def name: (identifier) @name) @definition.union
 
-(from_definition_clause from: (identifier_reference) @name) @reference.type
-(from_definition_with member: (identifier)  @name) @reference.field
-(from_definition_without member: (identifier)  @name) @reference.field
+(mixin_clause from: (identifier_reference) @name) @reference.type
+(mixin_member member: (identifier)  @name) @reference.field
+(mixin_member rename: (identifier)  @name) @definition.field
 
 ;; common to dimension and event
 (source_entity entity: (identifier_reference) @name) @reference.entity
-(source_entity member: (identifier) @name) @reference.field
 
 ;; ---------------------------------------------------------------------------
 ;; Members
@@ -123,14 +122,8 @@
 ;;Methods/Functions
 ;; ---------------------------------------------------------------------------
 
-(function_def
- (function_signature name: (identifier) @name) @definition.function)
-
+(function_signature name: (identifier) @name) @definition.function
 (function_signature (function_type_reference) @name) @reference.type
-
-(class_function_def
- (function_signature name: (identifier) @name) @definition.method)
-
 (function_parameter name: (identifier) @name) @definition.variable
 
 

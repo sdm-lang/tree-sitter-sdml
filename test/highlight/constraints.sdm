@@ -66,32 +66,37 @@ module Campaign is
     ;    ^ type
     ;           ^ keyword
 
-      assert tagged_with_foo_path with
+      assert tagged_with_foo_path is
       ; <- keyword
       ;      ^ property
       ;                           ^ keyword
 
-
-        def foo -> string := "foo"
-        ; <- keyword
-        ;   ^ function.definition
-        ;       ^ operator
-        ;          ^ type.builtin
-        ;                 ^ operator
-        ;                     ^ string
-
-        is
+        with
         ; <- keyword
 
-        self.tags∘contains(foo)
-        ; <- variable.builtin
-        ;   ^ operator
-        ;    ^ function.call
-        ;        ^ operator
-        ;         ^ function.call
-        ;                 ^ punctuation.bracket
-        ;                  ^ variable
-        ;                     ^ punctuation.bracket
+          def foo -> string := "foo"
+          ; <- keyword
+          ;   ^ function.definition
+          ;       ^ operator
+          ;          ^ type.builtin
+          ;                 ^ operator
+          ;                     ^ string
+
+        for
+        ; <- keyword
+
+          self.tags∘contains(foo)
+          ; <- variable.builtin
+          ;   ^ operator
+          ;    ^ function.call
+          ;        ^ operator
+          ;         ^ function.call
+          ;                 ^ punctuation.bracket
+          ;                  ^ variable
+          ;                     ^ punctuation.bracket
+
+        end
+        ; <- keyword
 
       end
       ; <- keyword

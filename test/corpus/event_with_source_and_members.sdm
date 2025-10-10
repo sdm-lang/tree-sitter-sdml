@@ -21,6 +21,10 @@ end
         (source_entity
           (identifier_reference
             (identifier))
-          (identifier)
-          (identifier)
-          (identifier))))))
+          (mixin_with_members
+            (mixin_member
+              (identifier))
+            (mixin_member
+              (identifier))
+            (mixin_member
+              (identifier))))))))

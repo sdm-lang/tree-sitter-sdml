@@ -582,42 +582,6 @@
     }
   },
   {
-    "type": "class_function_def",
-    "named": true,
-    "fields": {
-      "body": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "function_body",
-            "named": true
-          }
-        ]
-      },
-      "signature": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "function_signature",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "annotation_only_body",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "constraint",
     "named": true,
     "fields": {
@@ -648,21 +612,6 @@
     }
   },
   {
-    "type": "constraint_environment",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "function_def",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "constraint_sentence",
     "named": true,
     "fields": {},
@@ -684,6 +633,10 @@
         },
         {
           "type": "quantified_sentence",
+          "named": true
+        },
+        {
+          "type": "sentence_with_environment",
           "named": true
         },
         {
@@ -1204,16 +1157,6 @@
             "named": true
           }
         ]
-      },
-      "environment": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "constraint_environment",
-            "named": true
-          }
-        ]
       }
     }
   },
@@ -1240,68 +1183,12 @@
     "type": "from_definition_clause",
     "named": true,
     "fields": {
-      "from": {
+      "mixin": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "identifier_reference",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "from_definition_with",
-          "named": true
-        },
-        {
-          "type": "from_definition_without",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "from_definition_with",
-    "named": true,
-    "fields": {
-      "member": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "wildcard": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "wildcard",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "from_definition_without",
-    "named": true,
-    "fields": {
-      "member": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
+            "type": "mixin_clause",
             "named": true
           }
         ]
@@ -1351,6 +1238,10 @@
             "named": true
           },
           {
+            "type": "reserved_event",
+            "named": true
+          },
+          {
             "type": "reserved_self",
             "named": true
           }
@@ -1364,7 +1255,7 @@
     "fields": {
       "body": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "function_body",
@@ -1382,6 +1273,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "annotation_only_body",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -1620,7 +1521,12 @@
     }
   },
   {
-    "type": "inline_metric_def",
+    "type": "iri",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "keyword_function_def",
     "named": true,
     "fields": {},
     "children": {
@@ -1628,16 +1534,11 @@
       "required": true,
       "types": [
         {
-          "type": "class_function_def",
+          "type": "function_def",
           "named": true
         }
       ]
     }
-  },
-  {
-    "type": "iri",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "length_restriction_facet",
@@ -1918,24 +1819,13 @@
   {
     "type": "metric_def",
     "named": true,
-    "fields": {
-      "signature": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "metric_function_signature",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": false,
-      "required": false,
+      "required": true,
       "types": [
         {
-          "type": "annotation_only_body",
+          "type": "function_def",
           "named": true
         }
       ]
@@ -1944,18 +1834,7 @@
   {
     "type": "metric_event_binding",
     "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": false,
       "required": true,
@@ -1965,52 +1844,6 @@
           "named": true
         }
       ]
-    }
-  },
-  {
-    "type": "metric_function_signature",
-    "named": true,
-    "fields": {
-      "cardinality": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "cardinality_reference_expression",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "parameter": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "function_parameter",
-            "named": true
-          }
-        ]
-      },
-      "target": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "function_type_reference",
-            "named": true
-          }
-        ]
-      }
     }
   },
   {
@@ -2026,7 +1859,7 @@
           "named": true
         },
         {
-          "type": "inline_metric_def",
+          "type": "metric_def",
           "named": true
         },
         {
@@ -2046,6 +1879,16 @@
         "types": [
           {
             "type": "metric_group_body",
+            "named": true
+          }
+        ]
+      },
+      "from": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "from_definition_clause",
             "named": true
           }
         ]
@@ -2092,6 +1935,104 @@
         "types": [
           {
             "type": "identifier_reference",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "mixin_clause",
+    "named": true,
+    "fields": {
+      "from": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "mixin_with_members",
+          "named": true
+        },
+        {
+          "type": "mixin_without_members",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "mixin_member",
+    "named": true,
+    "fields": {
+      "member": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "rename": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "mixin_with_members",
+    "named": true,
+    "fields": {
+      "member": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "mixin_member",
+            "named": true
+          }
+        ]
+      },
+      "wildcard": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "wildcard",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "mixin_without_members",
+    "named": true,
+    "fields": {
+      "member": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "mixin_member",
             "named": true
           }
         ]
@@ -2517,6 +2458,11 @@
     }
   },
   {
+    "type": "reserved_event",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "restriction_value",
     "named": true,
     "fields": {},
@@ -2530,6 +2476,32 @@
         },
         {
           "type": "value_constructor",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sentence_with_environment",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "constraint_sentence",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "keyword_function_def",
           "named": true
         }
       ]
@@ -2880,17 +2852,21 @@
             "named": true
           }
         ]
-      },
-      "member": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "mixin_with_members",
+          "named": true
+        },
+        {
+          "type": "mixin_without_members",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -2999,6 +2975,10 @@
           "named": true
         },
         {
+          "type": "reserved_event",
+          "named": true
+        },
+        {
           "type": "reserved_self",
           "named": true
         },
@@ -3018,7 +2998,7 @@
         "required": false,
         "types": [
           {
-            "type": "class_function_def",
+            "type": "keyword_function_def",
             "named": true
           }
         ]
@@ -3713,11 +3693,11 @@
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "duration",
@@ -3757,6 +3737,10 @@
   },
   {
     "type": "float",
+    "named": false
+  },
+  {
+    "type": "for",
     "named": false
   },
   {
@@ -3833,11 +3817,11 @@
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "intersects",
@@ -3993,11 +3977,11 @@
   },
   {
     "type": "rational",
-    "named": true
+    "named": false
   },
   {
     "type": "rational",
-    "named": false
+    "named": true
   },
   {
     "type": "rdf",
@@ -4093,11 +4077,11 @@
   },
   {
     "type": "unsigned",
-    "named": false
+    "named": true
   },
   {
     "type": "unsigned",
-    "named": true
+    "named": false
   },
   {
     "type": "unsignedByte",

@@ -18,11 +18,14 @@ end
     (dimension_def
       name: (identifier)
       from: (from_definition_clause
-        from: (identifier_reference
-          (identifier))
-        (from_definition_with
-          member: (identifier)
-          member: (identifier)))
+        mixin: (mixin_clause
+          from: (identifier_reference
+            (identifier))
+          (mixin_with_members
+            member: (mixin_member
+              member: (identifier))
+            member: (mixin_member
+              member: (identifier)))))
       body: (dimension_body
         identity: (entity_identity
           identity: (member

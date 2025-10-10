@@ -23,7 +23,9 @@ end
         identity: (source_entity
           entity: (identifier_reference
             (identifier))
-          member: (identifier))
+          (mixin_with_members
+            member: (mixin_member
+              member: (identifier))))
         (member
           (member_def
             name: (identifier)

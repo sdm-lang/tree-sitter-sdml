@@ -18,13 +18,15 @@ end
     (structure_def
       name: (identifier)
       from: (from_definition_clause
-        from: (identifier_reference
-          (identifier))
-        (from_definition_with
-          member: (identifier)))
-    body: (structure_body
-      (member
-        (member_def
-          name: (identifier)
-          target: (type_reference
-            (builtin_types))))))))
+        mixin: (mixin_clause
+          from: (identifier_reference
+            (identifier))
+          (mixin_with_members
+            member: (mixin_member
+              member: (identifier)))))
+      body: (structure_body
+        (member
+          (member_def
+            name: (identifier)
+            target: (type_reference
+              (builtin_types))))))))

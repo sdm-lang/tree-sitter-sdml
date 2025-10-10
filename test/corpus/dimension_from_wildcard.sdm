@@ -18,10 +18,11 @@ end
     (dimension_def
       name: (identifier)
       from: (from_definition_clause
-        from: (identifier_reference
-          (identifier))
-        (from_definition_with
-          wildcard: (wildcard)))
+        mixin: (mixin_clause
+          from: (identifier_reference
+            (identifier))
+          (mixin_with_members
+            wildcard: (wildcard))))
       body: (dimension_body
         identity: (entity_identity
           identity: (member

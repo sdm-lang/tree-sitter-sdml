@@ -16,29 +16,129 @@
   * Rule `datatype_def_restriction` now `datatype_type_restrictions` for simplicity.
   * Updated test cases.
 
-New metric grammar:
+### New metric grammar
+
+The addition to the grammar for metrics and metric groups is shown below. Note that
+this does not include the change to the rule `Definition` to include the new
+`MetricDef` and `MetricGroupDef` rules. One nice feature of this grammar is that the
+syntax means that a stand-alone metric definition is the same syntax as an inline
+metric definition within a group.
 
 ```text
 MetricDef
-    ::= 'metric' MetricFunctionSignature AnnorationOnlyBody?
+    ::= 'metric' FunctionDef
 
-MetricFunctionSignature
-    ::= Identifier ( '('  FunctionParameter')' )? 
-
-MetricGroupsDef
-    ::= 'metric' 'group' Identifier MetricEventBinding MetricGroupBody?
+MetricGroupDef
+    ::= 'metric' 'group' Identifier MetricEventBinding FromDefinition?
+        MetricGroupBody?
 
 MetricEventBinding
-    ::= 'on' ( Identifier  ( '->' | '→' ) )? IdentifierReference
+    ::= 'on' IdentifierReference
 
 MetricGroupBody
-    ::= 'is' Annotation* ( InlineMetricDef | MetricRef )*
-
-InlineMetricDef
-    ::= ClassFunctionDef
+    ::= 'is' Annotation* ( MetricDef | MetricRef )*
 
 MetricRef
-    ::= 'ref' IdentifierReference AnnotationOnlyBody?
+    ::= 'ref' IdentifierReference FunctionBody?
+```
+
+This does also introduce a new rule `ReservedEvent` which is simply the keyword `event`
+much as `ReservedSelf` is the keyword `self`. In this case it uses the keyword within
+the scope of the metric body as an immutable value bound to the event triggering the
+metric.
+
+### Old/New constraint grammar
+
+The following is the grammar for constraints and environments where an environment is
+an optional component of a `FormalConstraint`.
+
+```text
+FormalConstraint
+    ::= ConstraintEnvironment? 'is' ConstraintSentence 'end'
+
+ConstraintSentence
+    ::= ( SimpleSentence 
+        | BooleanSentence 
+        | ExpressionSentence 
+        | QuantifiedSentence 
+        | '(' ConstraintSentence ')' )
+
+ConstraintEnvironment
+    ::= 'with' FunctionDef+
+
+FunctionDef
+    ::= FunctionSignature FunctionBody
+
+FunctionSignature
+    ::= 'def' Identifier ParameterList? FunctionType
+```
+
+In the new constraint grammar we see that `FormalConstraint` no longer has an explicit
+environment, instead a new choice is added to the `ConstraintSentence` rule to denote
+a sentence with an environment. This new rule `SentenceWithEnvironment` places the
+environment between the keywords `with` and `for` and then recursively uses the
+`ConstraintSentence` to denote the actual sentence. With this, any sentence, at any level,
+may now include it's own environment.
+
+```text
+FormalConstraint
+    ::= 'is' ConstraintSentence 'end'
+
+ConstraintSentence
+    ::= ( SimpleSentence 
+        | BooleanSentence 
+        | ExpressionSentence 
+        | QuantifiedSentence 
+        | '(' ConstraintSentence ')' 
+        | SentenceWithEnvironment )
+
+SentenceWithEnvironment
+    ::= 'with' KeywordFunctionDef+ 'for' ConstraintSentence 'end'
+
+KeywordFunctionDef
+    ::= 'def' FunctionDef
+
+FunctionDef
+    ::= FunctionSignature FunctionBody? AnnotationonlyBody?
+
+FunctionSignature
+    ::= Identifier ParameterList? FunctionType
+```
+
+This has also allowed the removal of the rule `ClassFunctionDef` which was a mostly-redundant
+copy of the older `FunctionDef`. The definition of `TypeClassBody` is therefore considierably
+simplified.
+
+```text
+TypeClassBody
+    ::= 'is' Annotation* KeywordFunctionDef* 'end'
+```
+
+### New mix-in grammar
+
+```text
+FromDefinitionClause
+    ::= 'from' MixinClause
+
+MixinClause
+    ::= IdentifierReference ( MixinWithMembers | MixinWithoutMembers )
+
+MixinWithMembers
+    ::= 'with' ( '_' | MixinMemberSequence )
+
+MixinWithoutMembers
+    ::= 'without' MixinMemberSequence
+
+MixinMemberSequence
+    ::= ( MixinMember | '[' MixinMember+ ']')
+
+MixinMember
+    ::= Identifier ( 'as' Identifier )?
+```
+
+```text
+SourceEntity
+    ::= 'source' IdentifierReference ( MixinWithMembers | MixinWithoutMembers )?
 ```
 
 ## Version 0.4.13
@@ -51,7 +151,7 @@ MetricRef
 * Refactor: Renamed operator keywords to reflect operator names so `KW_AND` is
   now `KW_LOGICAL_AND`.
 
-Example updated grammar:
+### New logical operation/quantifier grammar
 
 ```text
 LogicalQuantifierNegExistential
@@ -155,7 +255,7 @@ correctly in the grammar now.
     sequence type, and may restrict the class of the parameter to implement one
     or more other classes.
 
-New Grammar:
+### New type-class grammar
 
 ```text
 TypeClassDef

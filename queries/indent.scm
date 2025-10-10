@@ -17,14 +17,10 @@
 
 (datatype_type_restrictions "{" @indent "}" @indent.end)
 
-(from_definition_with "[" @indent "]" @indent.end)
-(from_definition_without "[" @indent "]" @indent.end)
+(mixin_with_members "[" @indent "]" @indent.end)
+(mixin_without_members "[" @indent "]" @indent.end)
 
-(source_entity "[" @indent "]" @indent.end)
-
-(constraint_environment
- "with" @indent
- ) @indent.end
+(sentence_with_environment [ "with" "for" ] @indent) @indent.end
 
 (function_signature "(" @indent ")" @indent.end)
 
@@ -40,6 +36,3 @@
 (sequence_of_values "[" @indent "]" @indent.end)
 
 (sequence_builder (seq_builder_separator) @indent.branch)
-
-(class_function_def
- (annotation_only_body "is" @indent.branch))

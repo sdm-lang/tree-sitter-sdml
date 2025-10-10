@@ -1,15 +1,14 @@
 module another is
 
-  assert just_testing with
+  assert just_testing is
+    with
+      def has_pref_label(anns -> {0..} Annotation) -> boolean :=
+        ∃ a ∈ anns, name(a) = skos:prefLabel ∧ ¬ empty(value(a))
 
-    def has_pref_label (anns -> {0..} Annotation) -> boolean :=
-      ∃ a ∈ anns, name(a) = skos:prefLabel ∧ ¬ empty(value(a))
-
-    def foo -> string := "foo"
-
-  is
-
-    self.tags.contains(foo)
+      def foo -> string := "foo"
+    for
+      self.tags.contains(foo)
+    end
   end
 
   datatype myByte ← integer {

@@ -5,7 +5,7 @@ Metric Definition, Empty
 module corpus_test_metrics is
   metric totalSales -> currency
 
-  metric group RetailSales on ev -> RetailSale is
+  metric group RetailSales on RetailSale is
     ref totalSales := ev.total.sum
   end
 end
@@ -16,15 +16,15 @@ end
   (identifier)
   (module_body
     (metric_def
-      (metric_function_signature
-        (identifier)
-        (function_type_reference
-          (identifier_reference
-            (identifier)))))
+      (function_def
+        (function_signature
+          (identifier)
+          (function_type_reference
+            (identifier_reference
+              (identifier))))))
     (metric_group_def
       (identifier)
       (metric_event_binding
-        (identifier)
         (identifier_reference
           (identifier)))
       (metric_group_body

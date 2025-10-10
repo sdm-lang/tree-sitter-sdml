@@ -1,9 +1,9 @@
-==============================
+========================
 Metric Definition, Empty
-==============================
+========================
 
 module corpus_test_metrics is
-  metric accountId -> count
+  metric numberOfThings -> count
 end
 
 ---

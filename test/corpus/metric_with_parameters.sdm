@@ -1,0 +1,25 @@
+==================================
+Metric Definition, With Parameters
+==================================
+
+module corpus_test_metrics is
+  metric numberOfThings(err -> Errors) -> count
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (metric_def
+      (function_def
+        (function_signature
+          (identifier)
+          (function_parameter
+            (identifier)
+            (function_type_reference
+              (identifier_reference
+                (identifier))))
+          (function_type_reference
+            (identifier_reference
+              (identifier))))))))

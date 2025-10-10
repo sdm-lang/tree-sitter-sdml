@@ -1,0 +1,89 @@
+==============================
+Metric Group Definition, With Metrics
+==============================
+
+module corpus_test_metrics is
+  metric group Things on ThingHappened is
+    metric numberOfThings -> count := count(event) is
+      @dc:description = "The total number of things that have happened."
+    end
+    metric numberOfGoodThings(err -> ThingErrors) -> count
+      := self.count - err.count is
+      @dc:description = "The number of things that have happened without error."
+    end
+  end
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (metric_group_def
+      (identifier)
+      (metric_event_binding
+        (identifier_reference
+          (identifier)))
+      (metric_group_body
+        (metric_def
+          (function_def
+            (function_signature
+              (identifier)
+              (function_type_reference
+                (identifier_reference
+                  (identifier))))
+            (function_body
+              (term
+                (functional_term
+                  (term
+                    (identifier_reference
+                      (identifier)))
+                  (term
+                    (reserved_event)))))
+            (annotation_only_body
+              (annotation
+                (annotation_property
+                  (identifier_reference
+                    (qualified_identifier
+                      (identifier)
+                      (identifier)))
+                  (value
+                    (simple_value
+                      (string
+                        (quoted_string)))))))))
+        (metric_def
+          (function_def
+            (function_signature
+              (identifier)
+              (function_parameter
+                (identifier)
+                (function_type_reference
+                  (identifier_reference
+                    (identifier))))
+              (function_type_reference
+                (identifier_reference
+                  (identifier))))
+            (function_body
+              (constraint_sentence
+                (expression_sentence
+                  (arithmetic_expression_sentence
+                    (term
+                      (function_composition
+                        (reserved_self)
+                        (identifier)))
+                    (math_op_subtract)
+                    (term
+                      (function_composition
+                        (identifier)
+                        (identifier)))))))
+            (annotation_only_body
+              (annotation
+                (annotation_property
+                  (identifier_reference
+                    (qualified_identifier
+                      (identifier)
+                      (identifier)))
+                  (value
+                    (simple_value
+                      (string
+                        (quoted_string)))))))))))))

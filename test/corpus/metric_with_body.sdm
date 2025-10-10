@@ -1,0 +1,28 @@
+============================
+Metric Definition, With Body
+============================
+
+module corpus_test_metrics is
+  metric numberOfThings -> count := count(event)
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (metric_def
+      (function_def
+        (function_signature
+          (identifier)
+          (function_type_reference
+            (identifier_reference
+              (identifier))))
+        (function_body
+          (term
+            (functional_term
+              (term
+                (identifier_reference
+                  (identifier)))
+              (term
+                (reserved_event)))))))))

@@ -1,6 +1,6 @@
-==============================
-Metric Definition, Empty
-==============================
+=====================================
+Metric Definition, Referenced in Group
+=====================================
 
 module corpus_test_metrics is
   metric totalSales -> currency

@@ -2,10 +2,18 @@
 
 ## Version 0.4.14
 
-* Feature: Added new `metric` and `metric group` definitions to modules allowing for
+* Feature: Added new **`metric`** and **`metric group`** definitions to modules allowing for
   the capture of metrics that leverage the existing event types. These will be
   described in the SDML reference as soon as feasible.
-  * Added test case `metric_empty`, `metric_group_empty`, and `metric_used`.
+  * Added test cases `metric_empty`, `metric_group_empty`, `metric_group_with_metrics`,
+    `metric_used`, `metric_with_annotations`, `metric_with_annotations_and_body`,
+    `metric_with_body`, and `metric_with_parameters`.
+* Refactor: Reduced the number of function-like definitions by separating the
+  main definition from the introductory keyword (**`def`** and **`metric`** today). Also
+  made all functions have an optional sentence body and optional annotation-only
+  body.
+* Refactor: Re-wrote `FromDefinitionClause` and `SourceEntity` to use common
+  components and allow the latter to use the `without` option.
 * Feature: Added syntactic sugar for defining new annotation properties. This
   makes the task much easier and without the need for any additional RDF
   knowledge.
@@ -18,11 +26,11 @@
 
 ### New metric grammar
 
-The addition to the grammar for metrics and metric groups is shown below. Note that
-this does not include the change to the rule `Definition` to include the new
+The addition to the grammar for metrics and metric groups is shown below. Note
+that this does not include the change to the rule `Definition` to include the new
 `MetricDef` and `MetricGroupDef` rules. One nice feature of this grammar is that the
-syntax means that a stand-alone metric definition is the same syntax as an inline
-metric definition within a group.
+syntax means that a stand-alone metric definition is the same syntax as an
+inline metric definition within a group.
 
 ```text
 MetricDef
@@ -42,15 +50,15 @@ MetricRef
     ::= 'ref' IdentifierReference FunctionBody?
 ```
 
-This does also introduce a new rule `ReservedEvent` which is simply the keyword `event`
-much as `ReservedSelf` is the keyword `self`. In this case it uses the keyword within
-the scope of the metric body as an immutable value bound to the event triggering the
-metric.
+This does also introduce a new rule `ReservedEvent` which is simply the keyword
+`event` much as `ReservedSelf` is the keyword `self`. In this case it uses the keyword
+within the scope of the metric body as an immutable value bound to the event
+triggering the metric.
 
 ### Old/New constraint grammar
 
-The following is the grammar for constraints and environments where an environment is
-an optional component of a `FormalConstraint`.
+The following is the grammar for constraints and environments where an
+environment is an optional component of a `FormalConstraint`.
 
 ```text
 FormalConstraint
@@ -73,12 +81,12 @@ FunctionSignature
     ::= 'def' Identifier ParameterList? FunctionType
 ```
 
-In the new constraint grammar we see that `FormalConstraint` no longer has an explicit
-environment, instead a new choice is added to the `ConstraintSentence` rule to denote
-a sentence with an environment. This new rule `SentenceWithEnvironment` places the
-environment between the keywords `with` and `for` and then recursively uses the
-`ConstraintSentence` to denote the actual sentence. With this, any sentence, at any level,
-may now include it's own environment.
+In the new constraint grammar we see that `FormalConstraint` no longer has an
+explicit environment, instead a new choice is added to the `ConstraintSentence`
+rule to denote a sentence with an environment. This new rule
+`SentenceWithEnvironment` places the environment between the keywords `with` and `for`
+and then recursively uses the `ConstraintSentence` to denote the actual sentence.
+With this, any sentence, at any level, may now include it's own environment.
 
 ```text
 FormalConstraint
@@ -105,9 +113,9 @@ FunctionSignature
     ::= Identifier ParameterList? FunctionType
 ```
 
-This has also allowed the removal of the rule `ClassFunctionDef` which was a mostly-redundant
-copy of the older `FunctionDef`. The definition of `TypeClassBody` is therefore considierably
-simplified.
+This has also allowed the removal of the rule `ClassFunctionDef` which was a
+mostly-redundant copy of the older `FunctionDef`. The definition of `TypeClassBody`
+is therefore considierably simplified.
 
 ```text
 TypeClassBody
@@ -139,7 +147,7 @@ MixinMember
 ```text
 SourceEntity
     ::= 'source' IdentifierReference ( MixinWithMembers | MixinWithoutMembers )?
-```
+    ```
 
 ## Version 0.4.13
 
@@ -193,10 +201,10 @@ correctly in the grammar now.
 * Potentially Breaking
   * Grammar rule `definition` is now a super-type and so doesn't appear in
     the parse tree, but it is there for queries.
-  * All operator grammar rules are now super-types and so don't appear in
-    the parse tree, but are is there for queries: `definition`,`inequality_relation`,
-    `logical_connective`, `logical_quantifier`, `math_operator`,
-    `restriction_facet`, and `set_operator`.
+  * All operator grammar rules are now super-types and so don't appear in the
+    parse tree, but are is there for queries: `definition`,`inequality_relation`,
+    `logical_connective`, `logical_quantifier`, `math_operator`, `restriction_facet`,
+    and `set_operator`.
   * The grammar rule `builtin_simple_type` has been renamed simple `builtin_types`.
   * The grammar field `byte` on the rule `binary` has been renamed `element` inline
     with other sequence types.

@@ -1,0 +1,42 @@
+==========================================
+Metric Definition, With Annotations and Body
+==========================================
+
+module corpus_test_metrics is
+  metric numberOfThings -> count := count(event)
+  is
+    @skos:definition = "the number of things that have occurred"
+  end
+end
+
+---
+
+(module
+  (identifier)
+  (module_body
+    (metric_def
+      (function_def
+        (function_signature
+          (identifier)
+          (function_type_reference
+            (identifier_reference
+              (identifier))))
+        (function_body
+          (term
+            (functional_term
+              (term
+                (identifier_reference
+                  (identifier)))
+              (term
+                (reserved_event)))))
+        (annotation_only_body
+          (annotation
+            (annotation_property
+              (identifier_reference
+                (qualified_identifier
+                  (identifier)
+                  (identifier)))
+              (value
+                (simple_value
+                  (string
+                    (quoted_string)))))))))))

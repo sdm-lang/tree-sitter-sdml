@@ -20,7 +20,7 @@ env:
   GRAMMAR_NAME: sdml
   BUILD_OUTPUT_DIR: build
   EXAMPLES_DIR: examples
-  EM_VERSION: 1.39.18
+  EM_VERSION: 4.0.16
   NODE_VERSION: 20
 
 jobs:

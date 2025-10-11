@@ -185,8 +185,6 @@ Cargo.lock
 
 ### Node ###
 
-package-lock.json
-
 node_modules
 
 ### Python ###

@@ -138,11 +138,11 @@ jobs:
         uses: tree-sitter/setup-action@v2
 
       - name: Setup Emscripten tooling
-        uses: mymindstorm/setup-emsdk@v1
+        uses: numworks/setup-emscripten@v1
         with:
-          version: latest
-  
-      - name: Verify Emscripten installation
+          sdk: latest-fastcomp
+
+      - name: Verify Emscripten install
         run: emcc --version
 
       - name: Build wasm library

@@ -90,12 +90,12 @@ jobs:
         uses: tree-sitter/setup-action/cli@v2
 
       - name: Make output directory
-        run: mkdir -p ${{ BUILD_OUTPUT_DIR }}
+        run: mkdir -p ${{ env.BUILD_OUTPUT_DIR }}
 
       - name: Build core library
         env:
-          BUILD_OUTPUT: ${{ BUILD_OUTPUT_DIR }}/lib${{ GRAMMAR_NAME }}.so
-        run: tree-sitter build --output ${{ build-output }}
+          BUILD_OUTPUT: ${{ env.BUILD_OUTPUT_DIR }}/lib${{ env.GRAMMAR_NAME }}.so
+        run: tree-sitter build --output ${{ env.BUILD_OUTPUT }}
 
   build-wasm:
     name: Build parser library
@@ -110,5 +110,5 @@ jobs:
 
       - name: Build wasm library
         env:
-          BUILD_OUTPUT: ${{ BUILD_OUTPUT_DIR }}/lib${{ GRAMMAR_NAME }}.wasm
-        run: tree-sitter build --wasm --output ${{ BUILD_OUTPUT }}
+          BUILD_OUTPUT: ${{ env.BUILD_OUTPUT_DIR }}/lib${{ env.GRAMMAR_NAME }}.wasm
+        run: tree-sitter build --wasm --output ${{ env.BUILD_OUTPUT }}

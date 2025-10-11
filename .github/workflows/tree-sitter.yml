@@ -20,6 +20,7 @@ env:
   GRAMMAR_NAME: sdml
   BUILD_OUTPUT_DIR: build
   EXAMPLES_DIR: examples
+  EM_VERSION: 1.39.18
   NODE_VERSION: 20
 
 jobs:
@@ -138,9 +139,9 @@ jobs:
         uses: tree-sitter/setup-action@v2
 
       - name: Setup Emscripten tooling
-        uses: numworks/setup-emscripten@v1
+        uses: mymindstorm/setup-emsdk@v14
         with:
-          sdk: latest-fastcomp
+          version: ${{ env.EM_VERSION }}
 
       - name: Verify Emscripten install
         run: emcc --version

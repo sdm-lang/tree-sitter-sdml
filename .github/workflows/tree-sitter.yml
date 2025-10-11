@@ -112,7 +112,7 @@ jobs:
         run: mkdir -p ${{ env.BUILD_OUTPUT_DIR }}
 
       - name: Build core library
-        run: tree-sitter build --output ${{ env.BUILD_OUTPUT_DIR }}
+        run: tree-sitter build --output "$BUILD_OUTPUT"
 
       - name: Upload output
         uses: actions/upload-artifact@v4
@@ -147,7 +147,7 @@ jobs:
         run: emcc --version
 
       - name: Build wasm library
-        run: tree-sitter build --wasm --output ${{ env.BUILD_OUTPUT_DIR }}
+        run: tree-sitter build --wasm --output "$BUILD_OUTPUT"
 
       - name: Upload output
         uses: actions/upload-artifact@v4

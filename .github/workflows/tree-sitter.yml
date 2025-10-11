@@ -146,6 +146,9 @@ jobs:
       - name: Verify Emscripten install
         run: emcc --version
 
+      - name: Make output directory
+        run: mkdir -p ${{ env.BUILD_OUTPUT_DIR }}
+
       - name: Build wasm library
         run: tree-sitter build --wasm --output "$BUILD_OUTPUT"
 

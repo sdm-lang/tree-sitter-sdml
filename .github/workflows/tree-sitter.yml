@@ -96,9 +96,11 @@ jobs:
       matrix:
         os: ["ubuntu-latest", "windows-latest", "macos-latest"]
     runs-on: ${{ matrix.os }}
-    env:
-      BUILD_OUTPUT: ${{ env.BUILD_OUTPUT_DIR }}/lib${{ env.GRAMMAR_NAME }}.so
     steps:
+      - name: Setup environment
+        run: |-
+          echo "BUILD_OUTPUT=${{ env.BUILD_OUTPUT_DIR }}/lib${{ env.GRAMMAR_NAME }}.so" >> "$GITHUB_ENV"
+            
       - name: Checkout repository
         uses: actions/checkout@v5
 
@@ -109,13 +111,13 @@ jobs:
         run: mkdir -p ${{ env.BUILD_OUTPUT_DIR }}
 
       - name: Build core library
-        run: tree-sitter build --output ${{ env.BUILD_OUTPUT }}
+        run: tree-sitter build --output "$BUILD_OUTPUT"
 
       - name: Upload output
         uses: actions/upload-artifact@v4
         with:
           name: Parser library (${{ matrix.os }})
-          path: ${{ env.BUILD_OUTPUT }}
+          path: "$BUILD_OUTPUT"
 
   build-wasm:
     name: Build WASM library
@@ -124,9 +126,11 @@ jobs:
       matrix:
         os: ["ubuntu-latest", "windows-latest", "macos-latest"]
     runs-on: ${{ matrix.os }}
-    env:
-      BUILD_OUTPUT: ${{ env.BUILD_OUTPUT_DIR }}/lib${{ env.GRAMMAR_NAME }}.wasm
     steps:
+      - name: Setup environment
+        run: |-
+          echo "BUILD_OUTPUT=${{ env.BUILD_OUTPUT_DIR }}/lib${{ env.GRAMMAR_NAME }}.wasm >> "$GITHUB_ENV"
+            
       - name: Checkout repository
         uses: actions/checkout@v5
 
@@ -134,13 +138,13 @@ jobs:
         uses: tree-sitter/setup-action@v2
 
       - name: Build wasm library
-        run: tree-sitter build --wasm --output ${{ env.BUILD_OUTPUT }}
+        run: tree-sitter build --wasm --output "$BUILD_OUTPUT"
 
       - name: Upload output
         uses: actions/upload-artifact@v4
         with:
           name: WASM library (${{ matrix.os }})
-          path: ${{ env.BUILD_OUTPUT }}
+          path: "$BUILD_OUTPUT"
 
   build-node:
     name: Build Node library
@@ -149,9 +153,11 @@ jobs:
       matrix:
         os: ["ubuntu-latest", "windows-latest", "macos-latest"]
     runs-on: ${{ matrix.os }}
-    env:
-      BUILD_OUTPUT: ${{ env.BUILD_OUTPUT_DIR }}/${{ env.GRAMMAR_NAME }}_binding.node
     steps:
+      - name: Setup environment
+        run: |-
+          echo "BUILD_OUTPUT=${{ env.BUILD_OUTPUT_DIR }}/lib${{ env.GRAMMAR_NAME }}_binding.node" >> "$GITHUB_ENV"
+            
       - name: Checkout repository
         uses: actions/checkout@v5
 
@@ -174,7 +180,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Node bindings (${{ matrix.os }})
-          path: ${{ env.BUILD_OUTPUT }}
+          path: "$BUILD_OUTPUT"
 
   build-rust:
     name: Build Rust library
@@ -184,10 +190,12 @@ jobs:
         os: ["ubuntu-latest", "windows-latest", "macos-latest"]
         kind: ["debug", "release"]
     runs-on: ${{ matrix.os }}
-    env:
-      RUST_OUTPUT_DIR: ${{ env.BUILD_OUTPUT_DIR }}/target
-      BUILD_OUTPUT: ${{ env.RUST_OUTPUT_DIR }}/${{ matrix.kind }}/lib${{ env.GRAMMAR_NAME }}.rlib
     steps:
+      - name: Setup environment
+        run: |-
+          echo "RUST_OUTPUT_DIR=${{ env.BUILD_OUTPUT_DIR }}/target" >> "$GITHUB_ENV"
+          echo "BUILD_OUTPUT=${{ env.RUST_OUTPUT_DIR }}/${{ matrix.kind }}/lib${{ env.GRAMMAR_NAME }}.rlib" >> "$GITHUB_ENV"
+            
       - name: Checkout repository
         uses: actions/checkout@v5
 
@@ -195,10 +203,10 @@ jobs:
         uses: tree-sitter/setup-action@v2
 
       - name: Build Rust bindings
-        run: cargo build --target-dir ${{ env.RUST_OUTPUT_DIR }}
+        run: cargo build --target-dir "$RUST_OUTPUT_DIR"
 
       - name: Upload output
         uses: actions/upload-artifact@v4
         with:
           name: Rust library (${{ matrix.os }}/${{ matrix.kind }})
-          path: ${{ env.BUILD_OUTPUT }}
+          path: "$BUILD_OUTPUT"

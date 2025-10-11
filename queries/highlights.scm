@@ -19,6 +19,7 @@
  "enum"
  "event"
  "from"
+ "group"
  "import"
  "is"
  "metric"

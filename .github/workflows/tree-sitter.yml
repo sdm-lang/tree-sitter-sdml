@@ -16,6 +16,10 @@ on:
 
   workflow_dispatch:
 
+env:
+  grammar-name: sdml
+  build-output-dir: build
+
 jobs:
   generate:
     name: Generate parser
@@ -49,6 +53,7 @@ jobs:
           test-rust: true
 
   examples:
+    name: Parse example files
     runs-on: ubuntu-latest
     needs: [generate]
     steps:
@@ -72,3 +77,38 @@ jobs:
         with:
           name: failures
           path: ${{steps.examples.outputs.failures}}
+
+  build:
+    name: Build parser library
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup tree-sitter tooling
+        uses: tree-sitter/setup-action/cli@v2
+
+      - name: Make output directory
+        run: mkdir -p ${{ build-output-dir }}
+
+      - name: Build core library
+        env:
+          build-output: ${{ build-output-dir }}/lib${{ grammar-name }}.so
+        run: tree-sitter build --output ${{ build-output }}
+
+  build-wasm:
+    name: Build parser library
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup tree-sitter tooling
+        uses: tree-sitter/setup-action/cli@v2
+
+      - name: Build wasm library
+        env:
+          build-output: ${{ build-output-dir }}/lib${{ grammar-name }}.wasm
+        run: tree-sitter build --wasm --output ${{ build-output }}

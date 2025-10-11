@@ -129,7 +129,7 @@ jobs:
     steps:
       - name: Setup environment
         run: |-
-          echo "BUILD_OUTPUT=${{ env.BUILD_OUTPUT_DIR }}/lib${{ env.GRAMMAR_NAME }}.wasm >> "$GITHUB_ENV"
+          echo "BUILD_OUTPUT=${{ env.BUILD_OUTPUT_DIR }}/lib${{ env.GRAMMAR_NAME }}.wasm" >> "$GITHUB_ENV"
             
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -172,6 +172,9 @@ jobs:
 
       - name: Install Node dependencies
         run: npm install
+
+      - name: Install Node-Gyp
+        run: npm install -g node-gyp
 
       - name: Build Node bindings
         run: node-gyp configure && node-gyp build

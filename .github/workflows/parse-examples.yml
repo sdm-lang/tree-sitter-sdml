@@ -1,0 +1,44 @@
+name: Parse Examples
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - grammar.js
+      - examples/**
+
+  pull_request:
+    paths:
+      - grammar.js
+      - examples/**
+
+jobs:
+  examples:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: 20
+
+      - name: Install node dependencies
+        run: npm install
+
+      - name: Parse example files
+        uses: tree-sitter/parse-action@v3
+        id: examples
+        continue-on-error: true
+        with:
+          files: |-
+            examples/**
+
+      - name: Upload errors
+        uses: actions/upload-artifact@v4
+        if: steps.examples.outputs.failures != ''
+        with:
+          name: failures
+          path: ${{steps.examples.outputs.failures}}

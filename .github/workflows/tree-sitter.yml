@@ -14,8 +14,6 @@ on:
       - "!/*.md"
       - "!/LICENSE*"
 
-  workflow_dispatch:
-
 env:
   GRAMMAR_NAME: sdml
   BUILD_OUTPUT_DIR: build

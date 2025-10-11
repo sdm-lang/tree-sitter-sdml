@@ -137,6 +137,14 @@ jobs:
       - name: Setup tree-sitter tooling
         uses: tree-sitter/setup-action@v2
 
+      - name: Setup Emscripten tooling
+        uses: mymindstorm/setup-emsdk@v1
+        with:
+          version: latest
+  
+      - name: Verify Emscripten installation
+        run: emcc --version
+
       - name: Build wasm library
         run: tree-sitter build --wasm --output "$BUILD_OUTPUT"
 

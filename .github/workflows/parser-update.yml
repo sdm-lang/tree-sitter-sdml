@@ -10,6 +10,10 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  GRAMMAR_NAME: sdml
+  NODE_VERSION: 20
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -17,13 +21,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Setup node
+      - name: Setup Node
         uses: actions/setup-node@v5
         with:
           cache: npm
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Parser dependency updates
         uses: tree-sitter/parser-update-action@v1.1
         with:
-          language-name: sdml
+          language-name: ${{ env.GRAMMAR_NAME }}

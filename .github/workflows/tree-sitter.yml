@@ -112,7 +112,7 @@ jobs:
         run: mkdir -p ${{ env.BUILD_OUTPUT_DIR }}
 
       - name: Build core library
-        run: tree-sitter build --output "$BUILD_OUTPUT"
+        run: tree-sitter build --output ${{ env.BUILD_OUTPUT_DIR }}
 
       - name: Upload output
         uses: actions/upload-artifact@v4
@@ -130,7 +130,7 @@ jobs:
     steps:
       - name: Setup environment
         run: |-
-          echo "BUILD_OUTPUT=${{ env.BUILD_OUTPUT_DIR }}/lib${{ env.GRAMMAR_NAME }}.wasm" >> "$GITHUB_ENV"
+          echo "BUILD_OUTPUT=${{ env.BUILD_OUTPUT_DIR }}/${{ env.GRAMMAR_NAME }}.wasm" >> "$GITHUB_ENV"
             
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -147,7 +147,7 @@ jobs:
         run: emcc --version
 
       - name: Build wasm library
-        run: tree-sitter build --wasm --output "$BUILD_OUTPUT"
+        run: tree-sitter build --wasm --output ${{ env.BUILD_OUTPUT_DIR }}
 
       - name: Upload output
         uses: actions/upload-artifact@v4

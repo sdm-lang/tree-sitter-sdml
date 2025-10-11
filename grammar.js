@@ -771,7 +771,8 @@ module.exports = grammar({
         $._type_op_has_type,
         $._type_op_type_restriction,
         $.mixin_clause,
-        $.mixin_optional_clause
+        $.mixin_optional_clause,
+        $.rename_as_clause
     ],
 
     // ---------------------------------------------------------------------------------------------
@@ -884,7 +885,7 @@ module.exports = grammar({
             $.module_import
         ),
 
-        _rename_import: $ => kw_rule(
+        rename_as_clause: $ => kw_rule(
             KW_AS,
             field(F_RENAME, $.identifier)
         ),
@@ -895,13 +896,13 @@ module.exports = grammar({
             //      identified by `module: (identifier)`.
             //
             field(F_NAME, $.qualified_identifier),
-            optional($._rename_import)
+            optional($.rename_as_clause)
         ),
 
         module_import: $ => seq(
             field(F_NAME, $.identifier),
             optional_field(F_VERSION_URI, $.iri),
-            optional($._rename_import)
+            optional($.rename_as_clause)
         ),
 
         // =========================================================================================
@@ -1543,12 +1544,7 @@ module.exports = grammar({
 
         mixin_member: $ => seq(
             field(F_MEMBER, $.identifier),
-            optional(
-                seq(
-                    KW_AS,
-                    field(F_RENAME, $.identifier)
-                )
-            )
+            optional($.rename_as_clause)
         ),
 
         // -----------------------------------------------------------------------------------------
@@ -2070,9 +2066,7 @@ module.exports = grammar({
 
          type_variant: $ => seq(
             field(F_NAME, $.identifier_reference),
-            optional(
-                kw_field(KW_AS, F_RENAME, $.identifier)
-            ),
+            optional($.rename_as_clause),
             optional_field(F_BODY, $.annotation_only_body)
         ),
 

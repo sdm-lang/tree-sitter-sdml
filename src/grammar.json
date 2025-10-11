@@ -284,7 +284,7 @@
         }
       ]
     },
-    "_rename_import": {
+    "rename_as_clause": {
       "type": "SEQ",
       "members": [
         {
@@ -317,7 +317,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "_rename_import"
+              "name": "rename_as_clause"
             },
             {
               "type": "BLANK"
@@ -358,7 +358,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "_rename_import"
+              "name": "rename_as_clause"
             },
             {
               "type": "BLANK"
@@ -2438,21 +2438,8 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "as"
-                },
-                {
-                  "type": "FIELD",
-                  "name": "rename",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "identifier"
-                  }
-                }
-              ]
+              "type": "SYMBOL",
+              "name": "rename_as_clause"
             },
             {
               "type": "BLANK"
@@ -4591,21 +4578,8 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "as"
-                },
-                {
-                  "type": "FIELD",
-                  "name": "rename",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "identifier"
-                  }
-                }
-              ]
+              "type": "SYMBOL",
+              "name": "rename_as_clause"
             },
             {
               "type": "BLANK"
@@ -5302,13 +5276,13 @@
     "_mixin_member_or_sequence",
     "_predicate_sequence_member",
     "_rdf_types",
-    "_rename_import",
     "_sequence_value_constraints",
     "_type_expression_to",
     "_type_op_has_type",
     "_type_op_type_restriction",
     "mixin_clause",
-    "mixin_optional_clause"
+    "mixin_optional_clause",
+    "rename_as_clause"
   ],
   "supertypes": [
     "definition",

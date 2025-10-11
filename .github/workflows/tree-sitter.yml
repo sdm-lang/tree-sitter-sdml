@@ -1,0 +1,74 @@
+name: Tree-Sitter CI
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "**"
+      - "!/*.md"
+      - "!/LICENSE*"
+
+  pull_request:
+    paths:
+      - "**"
+      - "!/*.md"
+      - "!/LICENSE*"
+
+  workflow_dispatch:
+
+jobs:
+  generate:
+    name: Generate parser
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup tree-sitter tooling
+        uses: tree-sitter/setup-action@v2
+        with:
+          install-lib: false
+
+      - name: Run parser generator
+        run: tree-sitter generate
+
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    needs: [generate]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup tree-sitter tooling
+        uses: tree-sitter/setup-action/cli@v2
+
+      - name: Run included tests
+        uses: tree-sitter/parser-test-action@v3
+        with:
+          test-rust: true
+
+  examples:
+    runs-on: ubuntu-latest
+    needs: [generate]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup tree-sitter tooling
+        uses: tree-sitter/setup-action/cli@v2
+
+      - name: Parse example files
+        uses: tree-sitter/parse-action@v4
+        id: examples
+        continue-on-error: true
+        with:
+          files: |-
+            examples/**
+
+      - name: Upload errors
+        uses: actions/upload-artifact@v4
+        if: steps.examples.outputs.failures != ''
+        with:
+          name: failures
+          path: ${{steps.examples.outputs.failures}}

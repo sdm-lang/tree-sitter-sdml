@@ -46,7 +46,7 @@ jobs:
     needs: [generate]
     strategy:
       matrix:
-        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        os: ["ubuntu-latest", "macos-latest"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
@@ -65,7 +65,7 @@ jobs:
     needs: [generate]
     strategy:
       matrix:
-        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        os: ["ubuntu-latest", "macos-latest"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
@@ -94,7 +94,7 @@ jobs:
     needs: [test]
     strategy:
       matrix:
-        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        os: ["ubuntu-latest", "macos-latest"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup environment
@@ -120,11 +120,11 @@ jobs:
           path: "$BUILD_OUTPUT"
 
   build-wasm:
-    name: Build WASM library
+    name: Build WASM bindings
     needs: [build-lib]
     strategy:
       matrix:
-        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        os: ["ubuntu-latest", "macos-latest"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup environment
@@ -147,11 +147,11 @@ jobs:
           path: "$BUILD_OUTPUT"
 
   build-node:
-    name: Build Node library
+    name: Build Node bindings
     needs: [build-lib]
     strategy:
       matrix:
-        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        os: ["ubuntu-latest", "macos-latest"]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup environment
@@ -183,11 +183,11 @@ jobs:
           path: "$BUILD_OUTPUT"
 
   build-rust:
-    name: Build Rust library
+    name: Build Rust bindings
     needs: [build-lib]
     strategy:
       matrix:
-        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        os: ["ubuntu-latest", "macos-latest"]
         kind: ["debug", "release"]
     runs-on: ${{ matrix.os }}
     steps:

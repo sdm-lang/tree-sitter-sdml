@@ -29,7 +29,7 @@ jobs:
         run: npm install
 
       - name: Parse example files
-        uses: tree-sitter/parse-action@v3
+        uses: tree-sitter/parse-action@v4
         id: examples
         continue-on-error: true
         with:

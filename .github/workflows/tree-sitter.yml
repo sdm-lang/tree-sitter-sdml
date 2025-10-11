@@ -17,8 +17,8 @@ on:
   workflow_dispatch:
 
 env:
-  grammar-name: sdml
-  build-output-dir: build
+  GRAMMAR_NAME: sdml
+  BUILD_OUTPUT_DIR: build
 
 jobs:
   generate:
@@ -90,11 +90,11 @@ jobs:
         uses: tree-sitter/setup-action/cli@v2
 
       - name: Make output directory
-        run: mkdir -p ${{ build-output-dir }}
+        run: mkdir -p ${{ BUILD_OUTPUT_DIR }}
 
       - name: Build core library
         env:
-          build-output: ${{ build-output-dir }}/lib${{ grammar-name }}.so
+          BUILD_OUTPUT: ${{ BUILD_OUTPUT_DIR }}/lib${{ GRAMMAR_NAME }}.so
         run: tree-sitter build --output ${{ build-output }}
 
   build-wasm:
@@ -110,5 +110,5 @@ jobs:
 
       - name: Build wasm library
         env:
-          build-output: ${{ build-output-dir }}/lib${{ grammar-name }}.wasm
-        run: tree-sitter build --wasm --output ${{ build-output }}
+          BUILD_OUTPUT: ${{ BUILD_OUTPUT_DIR }}/lib${{ GRAMMAR_NAME }}.wasm
+        run: tree-sitter build --wasm --output ${{ BUILD_OUTPUT }}

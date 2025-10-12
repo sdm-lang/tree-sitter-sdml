@@ -19,7 +19,7 @@ env:
   BUILD_OUTPUT_DIR: build
   EXAMPLES_DIR: examples
   EM_VERSION: 4.0.16
-  NODE_VERSION: 20
+  NODE_VERSION: 24
 
 jobs:
   generate:

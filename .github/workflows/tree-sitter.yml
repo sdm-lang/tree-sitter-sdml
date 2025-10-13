@@ -156,70 +156,33 @@ jobs:
           name: WASM library (${{ matrix.os }})
           path: "$BUILD_OUTPUT"
 
-  build-node:
-    name: Build Node bindings
+  test-bindings:
+    name: Test all bindings
     needs: [build-lib]
     strategy:
       matrix:
         os: ["ubuntu-latest", "macos-latest"]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Setup environment
-        run: |-
-          echo "BUILD_OUTPUT=${{ env.BUILD_OUTPUT_DIR }}/lib${{ env.GRAMMAR_NAME }}_binding.node" >> "$GITHUB_ENV"
-            
       - name: Checkout repository
         uses: actions/checkout@v5
-
+  
       - name: Setup tree-sitter tooling
         uses: tree-sitter/setup-action@v2
-
-      - name: Setup Node
-        uses: actions/setup-node@v5
+  
+      - name: Run tests
+        uses: tree-sitter/parser-test-action@v3
         with:
-          cache: npm
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install Node dependencies
-        run: npm install
-
-      - name: Install Node-Gyp
-        run: npm install -g node-gyp
-
-      - name: Build Node bindings
-        run: node-gyp configure && node-gyp build
-
+          test-rust: true
+          test-node: true
+          test-python: true
+          test-go: true
+          test-swift: true
+          test-zig: false
+  
       - name: Upload output
         uses: actions/upload-artifact@v4
+        if: steps.examples.outputs.failures != ''
         with:
-          name: Node bindings (${{ matrix.os }})
-          path: "$BUILD_OUTPUT"
-
-  build-rust:
-    name: Build Rust bindings
-    needs: [build-lib]
-    strategy:
-      matrix:
-        os: ["ubuntu-latest", "macos-latest"]
-        kind: ["debug", "release"]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Setup environment
-        run: |-
-          echo "RUST_OUTPUT_DIR=${{ env.BUILD_OUTPUT_DIR }}/target" >> "$GITHUB_ENV"
-          echo "BUILD_OUTPUT=${{ env.RUST_OUTPUT_DIR }}/${{ matrix.kind }}/lib${{ env.GRAMMAR_NAME }}.rlib" >> "$GITHUB_ENV"
-            
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Setup tree-sitter tooling
-        uses: tree-sitter/setup-action@v2
-
-      - name: Build Rust bindings
-        run: cargo build --target-dir "$RUST_OUTPUT_DIR"
-
-      - name: Upload output
-        uses: actions/upload-artifact@v4
-        with:
-          name: Rust library (${{ matrix.os }}/${{ matrix.kind }})
-          path: "$BUILD_OUTPUT"
+          name: failures-${{matrix.os}}
+          path: ${{steps.examples.outputs.failures}}

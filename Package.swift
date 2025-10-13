@@ -9,29 +9,30 @@ let package = Package(
     ],
     dependencies: [],
     targets: [
-        .target(name: "TreeSitterSdml",
-                path: ".",
-                exclude: [
-                    "binding.gyp",
-                    "bindings",
-                    "Cargo.toml",
-                    "grammar.js",
-                    "LICENSE",
-                    "Makefile",
-                    "package.json",
-                    "queries",
-                    "README.org",
-                    "src/grammar.json",
-                    "src/node-types.json",
-                    "test",
-                ],
-                sources: [
-                    "src/parser.c",
-                ],
-                resources: [
-                    .copy("queries")
-                ],
-                publicHeadersPath: "bindings/swift",
-                cSettings: [.headerSearchPath("src")])
+        .target(
+            name: "TreeSitterSdml",
+            path: ".",
+            exclude: [
+                "binding.gyp",
+                "bindings",
+                "Cargo.toml",
+                "grammar.js",
+                "LICENSE",
+                "Makefile",
+                "package.json",
+                "queries",
+                "README.md",
+                "src/grammar.json",
+                "src/node-types.json",
+                "test",
+            ],
+            sources: [
+                "src/parser.c",
+            ],
+            resources: [
+                .copy("queries")
+            ],
+            publicHeadersPath: "bindings/swift",
+            cSettings: [.headerSearchPath("src")])
     ]
 )

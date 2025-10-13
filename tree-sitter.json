@@ -25,7 +25,7 @@
     }
   ],
   "metadata": {
-    "version": "0.4.11",
+    "version": "0.4.14",
     "license": "Apache-2.0",
     "description": "Tree-Sitter grammar for Simple Domain Modeling Language",
     "authors": [

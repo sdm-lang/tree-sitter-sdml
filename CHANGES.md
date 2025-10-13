@@ -13,7 +13,8 @@
   made all functions have an optional sentence body and optional annotation-only
   body.
 * Refactor: Re-wrote `FromDefinitionClause` and `SourceEntity` to use common
-  components and allow the latter to use the `without` option.
+  components and allow the latter to use the `without` option. This *mix-in*
+  grammar is described in detail below.
 * Feature: Added syntactic sugar for defining new annotation properties. This
   makes the task much easier and without the need for any additional RDF
   knowledge.
@@ -171,7 +172,10 @@ MixinMemberSequence
     ::= ( MixinMember | '[' MixinMember+ ']' )
 
 MixinMember
-    ::= Identifier ( 'as' Identifier )?
+    ::= Identifier RenameAsClause?
+
+RenameAsClause
+    ::= 'as' Identifier
 ```
 
 This allows the redefinition of our original two rules as follows. By requiring
@@ -184,6 +188,20 @@ FromDefinitionClause
 
 SourceEntity
     ::= 'source' MixinOptionalClause
+```
+
+The addition of the `RenameClause` rule is also important as it allows for a
+common rename syntax across other cases.
+
+```text
+MemberImport
+    ::= QualifiedIdentifier RenameAsClause?
+
+ModuleImport
+    ::= Identifier Iri? RenameAsClause?
+
+TypeVariant
+    ::= IdentifierReference RenameAsClause? AnnotationOnlyBody?
 ```
 
 ## Version 0.4.13

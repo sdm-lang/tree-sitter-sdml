@@ -260,11 +260,18 @@ dmypy.json
 
 ### Generic Build ###
 
-/dev/
-/build/
+dev/
+build/
 
 ### Binding Generator ###
 
 .editorconfig
 .gitattributes
+.build/
+
+
+### Swift ###
+
+Package.resolved
+
 .build/

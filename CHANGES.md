@@ -1,5 +1,53 @@
 # Changes for tree-sitter-sdml
 
+## Version 0.4.15
+
+* Feature:
+  * Add set operators `difference` and `disunion` to the grammar
+    rule `set_operator`.
+  * The grammar rule `metric_event_binding` now allows a list of event
+    identifier references.
+  * Added step in the make file to create a `grammar.rs` file in the
+    Rust binding generated from the tree-sitter `node-types.json` file.
+* Refactor:
+  * Raising the grammar rule `rename_as_clause` from `module_import` and
+    `member_import` into the new rule `single_import`. Actually renamed
+    the existing silent rule `_import`.
+  * Renamed the silent grammar rule `_rdf_types` to `rdf_types` to allow
+    it to be used in highlight/tag queries.
+  * Rename the grammar rule `_type_expression_to` to `_type_expression`.
+  * Renamed the grammar rule `from_clause` to `import_from_clause` to avoid
+    ambiguity.
+  * Removed the grammar rule `_module_path_actual` so that the rule
+    `module_path_absolute` now uses `module_path_relative` directly.
+* Clean-up:
+  * Removed unused consts; mostly `ALT2`, etc.
+  * Re-organized the order of value rules for readability.
+  * Removed comment cruft from `build.rs`.
+
+### New Import grammar
+
+```text
+ImportStatement
+    ::= ImportFromClause? 'import' ( SingleImport | '[' SingleImport+ ']' )
+
+SingleImport
+    ::= ( MemberImport | ModuleImport ) RenameAsClause?
+
+ModuleImport
+    ::= Identifer Iri?
+
+MemberImport
+    ::= QualifiedIdentifier
+```
+
+### New Metric Group grammar
+
+```text
+MetricEventBinding
+    ::= 'on' ( IdentifierReference | '[' IdentifierReference+ ']' )
+```
+
 ## Version 0.4.14
 
 * Feature: Added new **`metric`** and **`metric group`** definitions to modules allowing for

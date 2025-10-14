@@ -21,4 +21,4 @@ end
             member: (identifier)))
          value: (value
            (simple_value
-             (integer)))))))
+             (unsigned)))))))

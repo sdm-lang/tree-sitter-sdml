@@ -17,8 +17,9 @@ end
   (identifier)
   (module_body
     (import_statement
-      (module_import
-        (identifier)))
+      (single_import
+        (module_import
+          (identifier))))
     (annotation
       (annotation_property
         (identifier_reference

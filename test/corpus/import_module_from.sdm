@@ -16,20 +16,24 @@ end
   (identifier)
   (module_body
     (import_statement
-      (from_clause
+      (import_from_clause
         (module_path_absolute))
-      (module_import
-        (identifier)))
+      (single_import
+        (module_import
+          (identifier))))
     (import_statement
-      (from_clause
+      (import_from_clause
         (module_path_absolute
-          (identifier)))
-      (module_import
-        (identifier)))
+          (module_path_relative
+            (identifier))))
+      (single_import
+        (module_import
+          (identifier))))
     (import_statement
-      (from_clause
+      (import_from_clause
         (module_path_relative
           (identifier)
           (identifier)))
-      (module_import
-        (identifier)))))
+      (single_import
+        (module_import
+          (identifier))))))

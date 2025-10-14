@@ -1,6 +1,6 @@
-===================
-Enum, With Variants
-===================
+============================
+Enum, With Numbered Variants
+============================
 
 module corpus_test_enum is
 
@@ -28,10 +28,12 @@ end
   (identifier)
   (module_body
     (import_statement
-      (module_import
-        (identifier))
-      (module_import
-        (identifier)))
+      (single_import
+        (module_import
+          (identifier)))
+      (single_import
+        (module_import
+          (identifier))))
     (enum_def
       (identifier)
       (enum_body
@@ -55,7 +57,7 @@ end
                     (identifier)))
                 (value
                   (simple_value
-                    (integer)))))))
+                    (unsigned)))))))
         (value_variant
           (identifier)
           (annotation_only_body
@@ -67,4 +69,4 @@ end
                     (identifier)))
                 (value
                   (simple_value
-                    (integer)))))))))))
+                    (unsigned)))))))))))

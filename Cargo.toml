@@ -18,6 +18,9 @@ include = ["LICENSE", "bindings/rust/*", "grammar.js", "queries/*", "src/*", "tr
 [lib]
 path = "bindings/rust/lib.rs"
 
+[features]
+grammar-json = []
+
 [dependencies]
 tree-sitter-language = "0.1"
 

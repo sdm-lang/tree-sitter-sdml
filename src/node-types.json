@@ -118,6 +118,10 @@
         "named": true
       },
       {
+        "type": "logical_quantifier_neg_existential",
+        "named": true
+      },
+      {
         "type": "logical_quantifier_universal",
         "named": true
       }
@@ -199,6 +203,14 @@
       },
       {
         "type": "set_op_complement",
+        "named": true
+      },
+      {
+        "type": "set_op_difference",
+        "named": true
+      },
+      {
+        "type": "set_op_disjoint_union",
         "named": true
       },
       {
@@ -1161,25 +1173,6 @@
     }
   },
   {
-    "type": "from_clause",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "module_path_absolute",
-          "named": true
-        },
-        {
-          "type": "module_path_relative",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "from_definition_clause",
     "named": true,
     "fields": {
@@ -1450,6 +1443,25 @@
     }
   },
   {
+    "type": "import_from_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "module_path_absolute",
+          "named": true
+        },
+        {
+          "type": "module_path_relative",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "import_statement",
     "named": true,
     "fields": {},
@@ -1458,15 +1470,11 @@
       "required": true,
       "types": [
         {
-          "type": "from_clause",
+          "type": "import_from_clause",
           "named": true
         },
         {
-          "type": "member_import",
-          "named": true
-        },
-        {
-          "type": "module_import",
+          "type": "single_import",
           "named": true
         }
       ]
@@ -1663,6 +1671,11 @@
     "fields": {}
   },
   {
+    "type": "logical_quantifier_neg_existential",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "logical_quantifier_universal",
     "named": true,
     "fields": {}
@@ -1817,16 +1830,6 @@
             "named": true
           }
         ]
-      },
-      "rename": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
       }
     }
   },
@@ -1848,16 +1851,17 @@
   {
     "type": "metric_event_binding",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "identifier_reference",
-          "named": true
-        }
-      ]
+    "fields": {
+      "event": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier_reference",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -2107,16 +2111,6 @@
           }
         ]
       },
-      "rename": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "version_uri": {
         "multiple": false,
         "required": false,
@@ -2132,17 +2126,16 @@
   {
     "type": "module_path_absolute",
     "named": true,
-    "fields": {
-      "segment": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "module_path_relative",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -2428,10 +2421,26 @@
             "named": true
           }
         ]
-      },
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "rdf_types",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "rdf_types",
+    "named": true,
+    "fields": {
       "type": {
         "multiple": true,
-        "required": false,
+        "required": true,
         "types": [
           {
             "type": "identifier_reference",
@@ -2695,6 +2704,16 @@
     "fields": {}
   },
   {
+    "type": "set_op_difference",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "set_op_disjoint_union",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "set_op_intersection",
     "named": true,
     "fields": {}
@@ -2818,6 +2837,36 @@
         },
         {
           "type": "unsigned",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "single_import",
+    "named": true,
+    "fields": {
+      "rename": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "member_import",
+          "named": true
+        },
+        {
+          "type": "module_import",
           "named": true
         }
       ]
@@ -3661,18 +3710,26 @@
   },
   {
     "type": "decimal",
-    "named": true
+    "named": false
   },
   {
     "type": "decimal",
-    "named": false
+    "named": true
   },
   {
     "type": "def",
     "named": false
   },
   {
+    "type": "difference",
+    "named": false
+  },
+  {
     "type": "dimension",
+    "named": false
+  },
+  {
+    "type": "disunion",
     "named": false
   },
   {
@@ -4160,11 +4217,19 @@
     "named": false
   },
   {
+    "type": "∄",
+    "named": false
+  },
+  {
     "type": "∈",
     "named": false
   },
   {
     "type": "∉",
+    "named": false
+  },
+  {
+    "type": "∏",
     "named": false
   },
   {
@@ -4224,6 +4289,10 @@
     "named": false
   },
   {
+    "type": "⊔",
+    "named": false
+  },
+  {
     "type": "⊤",
     "named": false
   },
@@ -4236,7 +4305,7 @@
     "named": false
   },
   {
-    "type": "⨉",
+    "type": "△",
     "named": false
   }
 ]

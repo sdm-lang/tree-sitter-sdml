@@ -72,16 +72,19 @@
 ;; ---------------------------------------------------------------------------
 
 (module_path_absolute "::" @punctuation.separator)
-(module_path_absolute segment: (identifier) @module)
 
 (module_path_relative "::" @punctuation.separator)
 (module_path_relative segment: (identifier) @module)
 
 (member_import name: (qualified_identifier) @type)
-(member_import rename: (identifier) @type)
+(single_import
+ (member_import)
+ rename: (identifier) @type)
 
 (module_import name: (identifier) @module)
-(module_import rename: (identifier) @module)
+(single_import
+ (module_import)
+ rename: (identifier) @module)
 
 ;; ---------------------------------------------------------------------------
 ;; Annotation ❱ Properties
@@ -262,8 +265,9 @@
 ;; ---------------------------------------------------------------------------
 
 (rdf_def "rdf" @keyword name: (identifier) @type.definition)
-(rdf_def [ "a" "type" ] @keyword)
-(rdf_def type: (identifier_reference) @type)
+
+(rdf_types [ "a" "type" ] @keyword)
+(rdf_types type: (identifier_reference) @type)
 
 ;; ---------------------------------------------------------------------------
 ;; Definition ❱ Structure

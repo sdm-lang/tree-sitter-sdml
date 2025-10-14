@@ -249,6 +249,8 @@ const KW_RDF_TYPE             = 'type';
 const KW_REF                  = 'ref';
 const KW_SELF                 = 'self';
 const KW_SET_COMPLEMENT       = 'complement';
+const KW_SET_DIFFERENCE       = 'difference';
+const KW_SET_DISUNION         = 'disunion';
 const KW_SET_INTERSECTION     = 'intersects';
 const KW_SET_MEMBERSHIP       = 'in';
 const KW_SET_PRODUCT          = 'product';
@@ -358,9 +360,6 @@ const OP_ARITH_DIVIDE_ALT     = '÷';
 const OP_ARITH_MODULO         = '%';
 const OP_ARITH_MULTIPLY       = '*';
 const OP_ARITH_MULTIPLY_ALT   = '×';
-const OP_ARITH_MULTIPLY_ALT2  = '⋅';
-const OP_ARITH_MULTIPLY_ALT3  = '✕';
-const OP_ARITH_MULTIPLY_ALT4  = '⁢';
 const OP_ARITH_SUBTRACT       = '-';
 const OP_ASSIGNMENT           = "=";
 const OP_BICONDITIONAL        = '<==>';
@@ -386,16 +385,16 @@ const OP_INEQUAL_NE_ALT       = '≠';
 const OP_LOGICAL_AND_ALT      = '∧';
 const OP_LOGICAL_OR_ALT       = '∨';
 const OP_LOGICAL_XOR_ALT      = '⊻';
-const OP_LOGICAL_XOR_ALT2     = '⊕';
 const OP_NEGATION_ALT         = '¬';
 const OP_RANGE                = '..';
 const OP_RANGE_ALT            = '⋯';
 const OP_SET_COMPLEMENT_ALT   = '∖';
+const OP_SET_DIFFERENCE_ALT   = '△';
+const OP_SET_DISUNION_ALT     = '⊔';
 const OP_SET_INTERSECTION_ALT = '∩';
 const OP_SET_MEMBERSHIP_ALT   = '∈';
 const OP_SET_NOT_MEMBERSHIP_ALT = '∉';
-const OP_SET_PRODUCT_ALT      = '⨉';
-const OP_SET_PRODUCT_ALT2     = '∏';
+const OP_SET_PRODUCT_ALT      = '∏';
 const OP_SET_SUBSETEQ_ALT     = '⊆';
 const OP_SET_SUBSET_ALT       = '⊂';
 const OP_SET_SUPSETEQ_ALT     = '⊇';
@@ -760,14 +759,13 @@ module.exports = grammar({
         $._function_op_by_definition,
         $._function_op_composition,
         $._function_type,
-        $._import,
         $._mixin_member_choice,
         $._mixin_member_or_sequence,
         $._predicate_sequence_member,
         $._rdf_types,
         $._rename_import,
         $._sequence_value_constraints,
-        $._type_expression_to,
+        $._type_expression,
         $._type_op_has_type,
         $._type_op_type_restriction,
         $.mixin_clause,
@@ -843,19 +841,19 @@ module.exports = grammar({
 
         import_statement: $ => seq(
             optional(
-                $.from_clause,
+                $.import_from_clause,
             ),
             KW_IMPORT,
             choice(
-                $._import,
+                $.single_import,
                 //
                 // WFR:unique_sequence .
                 //
-                sequence_of(repeat1($._import))
+                sequence_of(repeat1($.single_import))
             )
         ),
 
-        from_clause: $ => kw_rule(
+        import_from_clause: $ => kw_rule(
             KW_FROM,
             choice(
                 $.module_path_absolute,
@@ -865,12 +863,10 @@ module.exports = grammar({
 
         module_path_absolute: $ => seq(
             P_PATH_SEP,
-            optional($._module_path_actual)
+            optional($.module_path_relative)
         ),
 
-        module_path_relative: $ => $._module_path_actual,
-
-        _module_path_actual: $ => seq(
+        module_path_relative: $ => seq(
             field(F_SEGMENT, $.identifier),
             repeat(
                 seq(
@@ -880,9 +876,12 @@ module.exports = grammar({
             )
         ),
 
-        _import: $ => choice(
-            $.member_import,
-            $.module_import
+        single_import: $ => seq(
+            choice(
+                $.member_import,
+                $.module_import
+            ),
+            optional($.rename_as_clause)
         ),
 
         rename_as_clause: $ => kw_rule(
@@ -896,13 +895,11 @@ module.exports = grammar({
             //      identified by `module: (identifier)`.
             //
             field(F_NAME, $.qualified_identifier),
-            optional($.rename_as_clause)
         ),
 
         module_import: $ => seq(
             field(F_NAME, $.identifier),
             optional_field(F_VERSION_URI, $.iri),
-            optional($.rename_as_clause)
         ),
 
         // =========================================================================================
@@ -991,8 +988,8 @@ module.exports = grammar({
             prec(5, $.boolean_sentence),
             prec(4, $.expression_sentence),
             prec(3, $.quantified_sentence),
-            prec(2, expression($.constraint_sentence)),
-            prec(1, $.sentence_with_environment),
+            prec(2, $.sentence_with_environment),
+            prec(1, expression($.constraint_sentence))
         ),
 
         simple_sentence: $ => choice(
@@ -1153,10 +1150,10 @@ module.exports = grammar({
         ),
 
         _predicate_sequence_member: $ => choice(
-            $.predicate_value,
-            $.value_constructor,
-            $.mapping_value,
-            $.identifier_reference
+                            $.predicate_value,
+                            $.value_constructor,
+                            $.mapping_value,
+                            $.identifier_reference
         ),
 
         reserved_self: $ =>  KW_SELF,
@@ -1270,6 +1267,41 @@ module.exports = grammar({
             $.binary
         ),
 
+        boolean: $ => choice(
+            $.boolean_truth,
+            $.boolean_falsity
+        ),
+
+        boolean_truth: $ => choice(
+             VALUE_TRUE,
+             VALUE_TRUE_ALT,
+        ),
+
+        boolean_falsity: $ => choice(
+             VALUE_FALSE,
+             VALUE_FALSE_ALT,
+        ),
+
+        unsigned: $ => token(
+            NUM_UNSIGNED
+        ),
+
+        rational: $ => token(
+            NUM_RATIONAL
+        ),
+
+        double: $ => token(
+            NUM_DOUBLE
+        ),
+
+        decimal: $ => token(
+            NUM_DECIMAL
+        ),
+
+        integer: $ => token(
+           NUM_INTEGER
+        ),
+
         string: $ => seq(
             $.quoted_string,
             optional_field(F_LANGUAGE, $.language_tag)
@@ -1322,41 +1354,6 @@ module.exports = grammar({
             NUM_BYTE_HEX
         ),
 
-        double: $ => token(
-            NUM_DOUBLE
-        ),
-
-        decimal: $ => token(
-            NUM_DECIMAL
-        ),
-
-        integer: $ => token(
-           NUM_INTEGER
-        ),
-
-        rational: $ => token(
-            NUM_RATIONAL
-        ),
-
-        unsigned: $ => token(
-            NUM_UNSIGNED
-        ),
-
-        boolean: $ => choice(
-            $.boolean_truth,
-            $.boolean_falsity
-        ),
-
-        boolean_truth: $ => choice(
-             VALUE_TRUE,
-             VALUE_TRUE_ALT,
-        ),
-
-        boolean_falsity: $ => choice(
-             VALUE_FALSE,
-             VALUE_FALSE_ALT,
-        ),
-
         // -----------------------------------------------------------------------------------------
         // Values ❱ Constructors
         // -----------------------------------------------------------------------------------------
@@ -1393,15 +1390,17 @@ module.exports = grammar({
                 sequence_of_many(
                     field(
                         F_ELEMENT,
-                        choice(
-                            $.simple_value,
-                            $.value_constructor,
-                            $.mapping_value,
-                            $.identifier_reference
-                        )
+                        $._sequence_member
                     )
                 )
             )
+        ),
+
+        _sequence_member: $ => choice(
+            $.simple_value,
+            $.value_constructor,
+            $.mapping_value,
+            $.identifier_reference
         ),
 
         _sequence_value_constraints: $ => restriction(
@@ -1553,19 +1552,21 @@ module.exports = grammar({
 
         datatype_def: $ => definition_with($,
             KW_DATATYPE,
-            seq(
-                $._type_op_type_restriction,
-                optional_field(F_OPAQUE, $.opaque),
-                field(F_BASE, $.datatype_base_type_reference),
-                //
-                // WFR: restrictions should match the root base type of this datatype.
-                //
-                optional_field(F_RESTRICTION, $.datatype_type_restrictions)
-            ),
+            $._datatype_derivation,
             $.annotation_only_body
         ),
 
         opaque: $ => KW_OPAQUE,
+
+        _datatype_derivation: $ => seq(
+            $._type_op_type_restriction,
+            optional_field(F_OPAQUE, $.opaque),
+            field(F_BASE, $.datatype_base_type_reference),
+            //
+            // WFR: restrictions should match the root base type of this datatype.
+            //
+            optional_field(F_RESTRICTION, $.datatype_type_restrictions)
+        ),
 
         datatype_base_type_reference: $ => choice(
             //
@@ -1801,7 +1802,14 @@ module.exports = grammar({
             //
             // WFR:type_mismatch `.` `event`
             //
-            $.identifier_reference
+            choice(
+                field(F_EVENT, $.identifier_reference),
+                seq(
+                    sequence_of_many1(
+                        field(F_EVENT, $.identifier_reference)
+                    )
+                )
+            )
         ),
 
         metric_group_body: $ => is_body_with_annotations(
@@ -1844,15 +1852,12 @@ module.exports = grammar({
         rdf_def: $ => definition_with(
             $,
             KW_RDF,
-            optional($._rdf_types),
+            optional($.rdf_types),
             $.annotation_only_body
         ),
 
-        _rdf_types: $ => seq(
-            choice(
-                KW_RDF_A,
-                KW_RDF_TYPE
-            ),
+        rdf_types: $ => seq(
+            $._type_op_rdf_has_type,
             choice(
                 field(F_TYPE, $.identifier_reference),
                 sequence_of_many1(
@@ -1906,14 +1911,18 @@ module.exports = grammar({
             field(F_NAME, $.identifier),
             optional(
                 seq(
-                    $._type_op_type_restriction,
+                    $._type_parameter_restrictions
+                )
+            )
+        ),
+
+        _type_parameter_restrictions: $ => seq(
+            $._type_op_type_restriction,
+            $.type_parameter_restriction,
+            repeat(
+                seq(
+                    $.type_op_combiner,
                     $.type_parameter_restriction,
-                    repeat(
-                        seq(
-                            $.type_op_combiner,
-                            $.type_parameter_restriction,
-                        )
-                    )
                 )
             )
         ),
@@ -1970,7 +1979,7 @@ module.exports = grammar({
 
         member_def: $ => seq(
             field(F_NAME, $.identifier),
-            $._type_expression_to,
+            $._type_expression,
             optional_field(F_BODY, $.annotation_only_body)
         ),
 
@@ -1988,7 +1997,7 @@ module.exports = grammar({
         // Members ❱ Fields ❱ Type Expressions
         // -----------------------------------------------------------------------------------------
 
-        _type_expression_to: $ => seq(
+        _type_expression: $ => seq(
             $._type_op_has_type,
             optional_field(F_CARDINALITY, $.cardinality_expression),
             field(F_TARGET, $.type_reference)
@@ -2166,7 +2175,8 @@ module.exports = grammar({
         logical_quantifier: $ => choice(
             $.logical_quantifier_universal,
             $.logical_quantifier_existential,
-            $.logical_quantifier_existential_one
+            $.logical_quantifier_existential_one,
+            $.logical_quantifier_neg_existential
         ),
 
         logical_quantifier_universal: $ => choice(
@@ -2179,17 +2189,13 @@ module.exports = grammar({
             OP_EXISTENTIAL_ALT
         ),
 
-        logical_quantifier_neg_existential: $ => choice(
-            seq(
-                $.logical_op_negation,
-                $.logical_quantifier_existential
-            ),
-            OP_NEG_EXISTENTIAL_ALT
-        ),
-
         logical_quantifier_existential_one: $ => choice(
             KW_EXISTENTIAL_1,
             OP_EXISTENTIAL_1_ALT
+        ),
+
+        logical_quantifier_neg_existential: $ => choice(
+            OP_NEG_EXISTENTIAL_ALT
         ),
 
         // -----------------------------------------------------------------------------------------
@@ -2198,7 +2204,9 @@ module.exports = grammar({
 
         set_operator: $ => choice(
             $.set_op_union,
+            $.set_op_disjoint_union,
             $.set_op_intersection,
+            $.set_op_difference,
             $.set_op_subset,
             $.set_op_subset_or_equal,
             $.set_op_supset,
@@ -2213,9 +2221,19 @@ module.exports = grammar({
             OP_SET_UNION_ALT
         ),
 
+        set_op_disjoint_union: $ => choice(
+            KW_SET_DISUNION,
+            OP_SET_DISUNION_ALT
+        ),
+
         set_op_intersection: $ => choice(
             KW_SET_INTERSECTION,
             OP_SET_INTERSECTION_ALT
+        ),
+
+        set_op_difference: $ => choice(
+            KW_SET_DIFFERENCE,
+            OP_SET_DIFFERENCE_ALT
         ),
 
         set_op_subset: $ => choice(
@@ -2324,6 +2342,11 @@ module.exports = grammar({
         _type_op_has_type: $ => choice(
             OP_TY_HAS_TYPE,
             OP_TY_HAS_TYPE_ALT
+        ),
+
+        _type_op_rdf_has_type: $ => choice(
+            KW_RDF_A,
+            KW_RDF_TYPE
         ),
 
         _type_op_type_restriction: $ => choice(

@@ -277,7 +277,14 @@ clean_bindings: clean_rust clean_node clean_wasm clean_python clean_swift
 CARGO := $(MISE) rust -- cargo
 CARGO_FLAGS :=
 
-$(BINDING_RUST): $(PARSER_LIB) $(RUST_SRC_DIR)/build.rs
+RUST_BUILD_FILE := $(RUST_SRC_DIR)/build.rs
+RUST_GRAMMAR_FILE := $(RUST_SRC_DIR)/grammar.rs
+
+$(RUST_GRAMMAR_FILE): $(SRC_DIR)/node-types.json
+	$(info -> generating grammar file for Rust binding in $(BINDING_RUST))
+	@(ts-constgen)
+
+$(BINDING_RUST): $(PARSER_LIB) Cargo.toml $(RUST_BUILD_FILE) $(RUST_GRAMMAR_FILE)
 	$(info -> building Rust binding v$(VERSION) into $(BINDING_RUST))
 	@($(CARGO) build $(RUST_BUILD_MODE) --target-dir $(RUST_TARGET_DIR))
 

@@ -4,7 +4,7 @@ Annotation, Multiple Integers
 
 module corpus_test_annotation is
 
-  @dc:version = [ 1 2 3 ]
+  @dc:version = [ 1 -2 3 ]
 
 end
 
@@ -21,6 +21,6 @@ end
             member: (identifier)))
         value: (value
           (sequence_of_values
+            element: (simple_value (unsigned))
             element: (simple_value (integer))
-            element: (simple_value (integer))
-            element: (simple_value (integer))))))))
+            element: (simple_value (unsigned))))))))

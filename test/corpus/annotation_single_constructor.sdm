@@ -26,5 +26,5 @@ end
                  module: (identifier)
                  member: (identifier)))
              value: (simple_value
-               (integer))))))))
+               (unsigned))))))))
 

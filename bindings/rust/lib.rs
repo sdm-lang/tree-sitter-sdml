@@ -31,6 +31,10 @@ pub const LANGUAGE: LanguageFn = unsafe { LanguageFn::from_raw(tree_sitter_sdml)
 /// [`node-types.json`]: https://tree-sitter.github.io/tree-sitter/using-parsers#static-node-types
 pub const NODE_TYPES: &str = include_str!("../../src/node-types.json");
 
+/// The content of the `grammar.json` file for this grammar.
+#[cfg(feature = "grammar-json")]
+pub const GRAMMAR: &str = include_str!("../../src/grammar.json");
+
 pub const GRAMMAR_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// The syntax highlighting query for this language.
@@ -44,6 +48,9 @@ pub const LOCALS_QUERY: &str = include_str!("../../queries/locals.scm");
 
 /// The symbol tagging query for this language.
 pub const TAGS_QUERY: &str = include_str!("../../queries/tags.scm");
+
+/// This module contains generated constants for node and field names.
+pub mod grammar;
 
 #[cfg(test)]
 mod tests {

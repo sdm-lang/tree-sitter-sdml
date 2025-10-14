@@ -37,7 +37,7 @@ end
             (identifier)))
         (value
           (simple_value
-            (integer)))))
+            (unsigned)))))
     (annotation
       (annotation_property
         (identifier_reference

@@ -14,11 +14,13 @@ end
   name: (identifier)
   body: (module_body
     (import_statement
-      (member_import
-        name: (qualified_identifier
-          module: (identifier)
-          member: (identifier)))
-      (member_import
-        name: (qualified_identifier
-          module: (identifier)
-          member: (identifier))))))
+      (single_import
+        (member_import
+          name: (qualified_identifier
+            module: (identifier)
+            member: (identifier))))
+      (single_import
+        (member_import
+          name: (qualified_identifier
+            module: (identifier)
+            member: (identifier)))))))

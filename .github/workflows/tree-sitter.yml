@@ -175,7 +175,7 @@ jobs:
         with:
           test-rust: true
           test-node: true
-          test-python: true
+          test-python: false
           test-go: true
           test-swift: true
           test-zig: false

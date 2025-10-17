@@ -2,7 +2,6 @@ name: Publish packages
 
 on:
   push:
-    branches: [main]
     tags: ["v*"]
 
 concurrency:

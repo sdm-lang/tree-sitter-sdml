@@ -82,7 +82,7 @@ jobs:
             ${{ env.EXAMPLES_DIR }}/**
 
       - name: Upload errors
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: steps.examples.outputs.failures != ''
         with:
           name: failures
@@ -113,7 +113,7 @@ jobs:
         run: tree-sitter build --output "$BUILD_OUTPUT"
 
       - name: Upload output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Parser library (${{ matrix.os }})
           path: "$BUILD_OUTPUT"
@@ -151,7 +151,7 @@ jobs:
         run: tree-sitter build --wasm --output "$BUILD_OUTPUT"
 
       - name: Upload output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: WASM library (${{ matrix.os }})
           path: "$BUILD_OUTPUT"
@@ -181,7 +181,7 @@ jobs:
           test-zig: false
   
       - name: Upload output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: steps.examples.outputs.failures != ''
         with:
           name: failures-${{matrix.os}}

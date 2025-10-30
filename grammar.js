@@ -4,7 +4,7 @@
 // Author:     Simon Johnston <johntonskj@gmail.com>
 // Version:    0.4.14
 // Repository: https://github.com/johnstonskj/tree-sitter-sdml
-// License:    Apache 2.0 (see LICENSE file)
+// License:    Apache 2.0 (see LICENSE-APACHE) OR MIT (see LICENSE-MIT)
 // Copyright:  Copyright (c) 2023 Simon Johnston
 //
 // =================================================================================================
@@ -167,7 +167,7 @@ function of_body_with_annotations($, content) {
 // equivalence vs. equality relationship between identifiers?
 //   foo = foo′ ⇒ false
 //   foo ≡ foo′ ⇒ true
-const IDENTIFIER              = /[\p{Lu}\p{Ll}][\p{Lu}\p{Ll}\p{Nd}]*(_+[\p{Lu}\p{Ll}\p{Nd}]+)*/;
+const IDENTIFIER = /[\p{Lu}\p{Ll}][\p{Lu}\p{Ll}\p{Nd}]*(_+[\p{Lu}\p{Ll}\p{Nd}]+)*/;
 
 // language: a two-letter language code from ISO 639-1 or a three-letter code from ISO 639-2
 //     4-char: reserved
@@ -176,301 +176,301 @@ const IDENTIFIER              = /[\p{Lu}\p{Ll}][\p{Lu}\p{Ll}\p{Nd}]*(_+[\p{Lu}\p
 // Script: ISO 15924 code in title case
 // region: either 2 character ISO 3166-1 code or 3 digit UN M.49 code
 // this type does not support extensions or private-use components.
-const STRING_LANG_TAG         = /@[a-z]{2,8}(-[A-Z]{3}){0,3}(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?/;
+const STRING_LANG_TAG = /@[a-z]{2,8}(-[A-Z]{3}){0,3}(-[A-Z][a-z]{3})?(-([A-Z]{2}|[0-9]{3}))?/;
 
-const CONTROLLED_LANG_TAG     = /@[a-z]{2,3}(-[A-Z][A-Za-z]{1,9})?/;
+const CONTROLLED_LANG_TAG = /@[a-z]{2,3}(-[A-Z][A-Za-z]{1,9})?/;
 
 // Standard, printable, characters
-const CHAR_PRINTABLE          = /[^\x00-\x08\x0B-\x1F\x7F\\\"]/;
+const CHAR_PRINTABLE = /[^\x00-\x08\x0B-\x1F\x7F\\\"]/;
 
 // Single character escapes
-const CHAR_SINGLE_ESC         = /\\[\"\\\/abefnrtv]/;
+const CHAR_SINGLE_ESC = /\\[\"\\\/abefnrtv]/;
 
 // Unicode escape codes
-const CHAR_UNICODE_ESC        = /\\u\{[0-9a-fA-F]{2,6}\}/;
+const CHAR_UNICODE_ESC = /\\u\{[0-9a-fA-F]{2,6}\}/;
 
-const NUM_SIGN_STR            = '[+\\-]?';
+const NUM_SIGN_STR = '[+\\-]?';
 const NUM_UNSIGNED_NOZERO_STR = '[1-9][0-9]*';
-const NUM_UNSIGNED_STR        = '(0|' + NUM_UNSIGNED_NOZERO_STR + ')';
-const NUM_INTEGER_STR         = NUM_SIGN_STR + NUM_UNSIGNED_STR;
-const NUM_RATIONAL_STR        = NUM_INTEGER_STR + '[\\/⁄](' + NUM_UNSIGNED_NOZERO_STR + ')';
-const NUM_DECIMAL_STR         = NUM_INTEGER_STR + '(\\.[0-9]+)';
-const NUM_DOUBLE_STR          = NUM_DECIMAL_STR + '[eE]' + NUM_INTEGER_STR;
+const NUM_UNSIGNED_STR = '(0|' + NUM_UNSIGNED_NOZERO_STR + ')';
+const NUM_INTEGER_STR = NUM_SIGN_STR + NUM_UNSIGNED_STR;
+const NUM_RATIONAL_STR = NUM_INTEGER_STR + '[\\/⁄](' + NUM_UNSIGNED_NOZERO_STR + ')';
+const NUM_DECIMAL_STR = NUM_INTEGER_STR + '(\\.[0-9]+)';
+const NUM_DOUBLE_STR = NUM_DECIMAL_STR + '[eE]' + NUM_INTEGER_STR;
 
-const NUM_UNSIGNED            = RegExp(NUM_UNSIGNED_STR);
-const NUM_INTEGER             = RegExp(NUM_INTEGER_STR);
-const NUM_RATIONAL            = RegExp(NUM_RATIONAL_STR);
-const NUM_DECIMAL             = RegExp(NUM_DECIMAL_STR);
-const NUM_DOUBLE              = RegExp(NUM_DOUBLE_STR);
+const NUM_UNSIGNED = RegExp(NUM_UNSIGNED_STR);
+const NUM_INTEGER = RegExp(NUM_INTEGER_STR);
+const NUM_RATIONAL = RegExp(NUM_RATIONAL_STR);
+const NUM_DECIMAL = RegExp(NUM_DECIMAL_STR);
+const NUM_DOUBLE = RegExp(NUM_DOUBLE_STR);
 
-const NUM_BYTE_HEX            = /[0-9A-Fa-f]{2}/;
+const NUM_BYTE_HEX = /[0-9A-Fa-f]{2}/;
 
 // =================================================================================================
 // Lexer Constant Strings
 // =================================================================================================
 
-const KW_ARITH_MODULO         = 'mod';
-const KW_AS                   = 'as';
-const KW_ASSERT               = 'assert';
-const KW_BICONDITIONAL        = 'iff';
-const KW_CLASS                = 'class';
-const KW_DATATYPE             = 'datatype';
-const KW_DEF                  = 'def';
-const KW_DIMENSION            = 'dimension';
-const KW_END                  = 'end';
-const KW_ENTITY               = 'entity';
-const KW_ENUM                 = 'enum';
-const KW_EVENT                = 'event';
-const KW_EXISTENTIAL          = 'exists';
-const KW_EXISTENTIAL_1        = 'exists!';
-const KW_FROM                 = 'from';
-const KW_GROUP                = 'group';
-const KW_IDENTITY             = 'identity';
-const KW_IMPLICATION          = 'implies';
-const KW_IMPORT               = 'import';
-const KW_FOR                  = 'for';
-const KW_IS                   = 'is';
-const KW_LOGICAL_AND          = 'and';
-const KW_LOGICAL_OR           = 'or';
-const KW_LOGICAL_XOR          = 'xor';
-const KW_MODULE               = 'module';
-const KW_METRIC               = 'metric';
-const KW_NEGATION             = 'not';
-const KW_NONUNIQUE            = 'nonunique';
-const KW_OF                   = 'of';
-const KW_ON                   = 'on';
-const KW_OPAQUE               = 'opaque';
-const KW_ORDERED              = 'ordered';
-const KW_PARENT               = 'parent';
-const KW_PROPERTY             = 'property';
-const KW_RDF                  = 'rdf';
-const KW_RDF_A                = 'a';
-const KW_RDF_TYPE             = 'type';
-const KW_REF                  = 'ref';
-const KW_SELF                 = 'self';
-const KW_SET_COMPLEMENT       = 'complement';
-const KW_SET_DIFFERENCE       = 'difference';
-const KW_SET_DISUNION         = 'disunion';
-const KW_SET_INTERSECTION     = 'intersects';
-const KW_SET_MEMBERSHIP       = 'in';
-const KW_SET_PRODUCT          = 'product';
-const KW_SET_SUBSET           = 'subset';
-const KW_SET_SUBSETEQ         = 'subseteq';
-const KW_SET_SUPSET           = 'supset';
-const KW_SET_SUPSETEQ         = 'supseteq';
-const KW_SET_UNION            = 'union';
-const KW_SOURCE               = 'source';
-const KW_STRUCTURE            = 'structure';
-const KW_UNION                = 'union';
-const KW_UNIQUE               = 'unique';
-const KW_UNIVERSAL            = 'forall';
-const KW_UNKNOWN              = 'unknown';
-const KW_UNORDERED            = 'unordered';
-const KW_VERSION              = 'version';
-const KW_WITH                 = 'with';
-const KW_WITHOUT              = 'without';
+const KW_ARITH_MODULO = 'mod';
+const KW_AS = 'as';
+const KW_ASSERT = 'assert';
+const KW_BICONDITIONAL = 'iff';
+const KW_CLASS = 'class';
+const KW_DATATYPE = 'datatype';
+const KW_DEF = 'def';
+const KW_DIMENSION = 'dimension';
+const KW_END = 'end';
+const KW_ENTITY = 'entity';
+const KW_ENUM = 'enum';
+const KW_EVENT = 'event';
+const KW_EXISTENTIAL = 'exists';
+const KW_EXISTENTIAL_1 = 'exists!';
+const KW_FROM = 'from';
+const KW_GROUP = 'group';
+const KW_IDENTITY = 'identity';
+const KW_IMPLICATION = 'implies';
+const KW_IMPORT = 'import';
+const KW_FOR = 'for';
+const KW_IS = 'is';
+const KW_LOGICAL_AND = 'and';
+const KW_LOGICAL_OR = 'or';
+const KW_LOGICAL_XOR = 'xor';
+const KW_MODULE = 'module';
+const KW_METRIC = 'metric';
+const KW_NEGATION = 'not';
+const KW_NONUNIQUE = 'nonunique';
+const KW_OF = 'of';
+const KW_ON = 'on';
+const KW_OPAQUE = 'opaque';
+const KW_ORDERED = 'ordered';
+const KW_PARENT = 'parent';
+const KW_PROPERTY = 'property';
+const KW_RDF = 'rdf';
+const KW_RDF_A = 'a';
+const KW_RDF_TYPE = 'type';
+const KW_REF = 'ref';
+const KW_SELF = 'self';
+const KW_SET_COMPLEMENT = 'complement';
+const KW_SET_DIFFERENCE = 'difference';
+const KW_SET_DISUNION = 'disunion';
+const KW_SET_INTERSECTION = 'intersects';
+const KW_SET_MEMBERSHIP = 'in';
+const KW_SET_PRODUCT = 'product';
+const KW_SET_SUBSET = 'subset';
+const KW_SET_SUBSETEQ = 'subseteq';
+const KW_SET_SUPSET = 'supset';
+const KW_SET_SUPSETEQ = 'supseteq';
+const KW_SET_UNION = 'union';
+const KW_SOURCE = 'source';
+const KW_STRUCTURE = 'structure';
+const KW_UNION = 'union';
+const KW_UNIQUE = 'unique';
+const KW_UNIVERSAL = 'forall';
+const KW_UNKNOWN = 'unknown';
+const KW_UNORDERED = 'unordered';
+const KW_VERSION = 'version';
+const KW_WITH = 'with';
+const KW_WITHOUT = 'without';
 
 // Pseudo-Keywords for XSD datatype facets
-const KWF_EXPLICIT_TIMEZONE   = 'explicitTimezone';
-const KWF_FIXED               = 'fixed';
-const KWF_FRACTION_DIGITS     = 'fractionDigits';
-const KWF_LENGTH              = 'length';
-const KWF_MAX_EXCLUSIVE       = 'maxExclusive';
-const KWF_MAX_INCLUSIVE       = 'maxInclusive';
-const KWF_MAX_LENGTH          = 'maxLength';
-const KWF_MIN_EXCLUSIVE       = 'minExclusive';
-const KWF_MIN_INCLUSIVE       = 'minInclusive';
-const KWF_MIN_LENGTH          = 'minLength';
-const KWF_PATTERN             = 'pattern';
-const KWF_TOTAL_DIGITS        = 'totalDigits';
-const KWF_TZ_OPTIONAL         = 'optional';
-const KWF_TZ_PROHIBITED       = 'prohibited';
-const KWF_TZ_REQUIRED         = 'required';
+const KWF_EXPLICIT_TIMEZONE = 'explicitTimezone';
+const KWF_FIXED = 'fixed';
+const KWF_FRACTION_DIGITS = 'fractionDigits';
+const KWF_LENGTH = 'length';
+const KWF_MAX_EXCLUSIVE = 'maxExclusive';
+const KWF_MAX_INCLUSIVE = 'maxInclusive';
+const KWF_MAX_LENGTH = 'maxLength';
+const KWF_MIN_EXCLUSIVE = 'minExclusive';
+const KWF_MIN_INCLUSIVE = 'minInclusive';
+const KWF_MIN_LENGTH = 'minLength';
+const KWF_PATTERN = 'pattern';
+const KWF_TOTAL_DIGITS = 'totalDigits';
+const KWF_TZ_OPTIONAL = 'optional';
+const KWF_TZ_PROHIBITED = 'prohibited';
+const KWF_TZ_REQUIRED = 'required';
 
 // Pseudo-Keywords for builtin type names
-const KWT_ANY_URI             = 'anyURI';
-const KWT_BASE64_BINARY       = 'base64Binary';
-const KWT_BINARY              = 'binary';
-const KWT_BOOLEAN             = 'boolean';
-const KWT_BYTE                = 'byte';
-const KWT_DATE                = 'date';
-const KWT_DATE_TIME           = 'dateTime';
-const KWT_DATE_TIME_STAMP     = 'dateTimeStamp';
-const KWT_DAY_TIME_DURATION   = 'dayTimeDuration';
-const KWT_DECIMAL             = 'decimal';
-const KWT_DOUBLE              = 'double';
-const KWT_DURATION            = 'duration';
-const KWT_FLOAT               = 'float';
-const KWT_G_DAY               = 'gDay';
-const KWT_G_MONTH             = 'gMonth';
-const KWT_G_MONTH_DAY         = 'gMonthDay';
-const KWT_G_YEAR              = 'gYear';
-const KWT_G_YEAR_MONTH        = 'gYearMonth';
-const KWT_HEX_BINARY          = 'hexBinary';
-const KWT_INT                 = 'int';
-const KWT_INTEGER             = 'integer';
-const KWT_IRI                 = 'iri';
-const KWT_LANGUAGE            = 'language';
-const KWT_LONG                = 'long';
-const KWT_NEGATIVE_INTEGER    = 'negativeInteger';
+const KWT_ANY_URI = 'anyURI';
+const KWT_BASE64_BINARY = 'base64Binary';
+const KWT_BINARY = 'binary';
+const KWT_BOOLEAN = 'boolean';
+const KWT_BYTE = 'byte';
+const KWT_DATE = 'date';
+const KWT_DATE_TIME = 'dateTime';
+const KWT_DATE_TIME_STAMP = 'dateTimeStamp';
+const KWT_DAY_TIME_DURATION = 'dayTimeDuration';
+const KWT_DECIMAL = 'decimal';
+const KWT_DOUBLE = 'double';
+const KWT_DURATION = 'duration';
+const KWT_FLOAT = 'float';
+const KWT_G_DAY = 'gDay';
+const KWT_G_MONTH = 'gMonth';
+const KWT_G_MONTH_DAY = 'gMonthDay';
+const KWT_G_YEAR = 'gYear';
+const KWT_G_YEAR_MONTH = 'gYearMonth';
+const KWT_HEX_BINARY = 'hexBinary';
+const KWT_INT = 'int';
+const KWT_INTEGER = 'integer';
+const KWT_IRI = 'iri';
+const KWT_LANGUAGE = 'language';
+const KWT_LONG = 'long';
+const KWT_NEGATIVE_INTEGER = 'negativeInteger';
 const KWT_NON_NEGATIVE_INTEGER = 'nonNegativeInteger';
 const KWT_NON_POSITIVE_INTEGER = 'nonPositiveInteger';
-const KWT_NORMALIZED_STRING   = 'normalizedString';
-const KWT_NOTHING             = 'Nothing';
-const KWT_POSITIVE_INTEGER    = 'positiveInteger';
-const KWT_RATIONAL            = 'rational';
-const KWT_REAL                = 'real';
-const KWT_SHORT               = 'short';
-const KWT_STRING              = 'string';
-const KWT_THING               = 'Thing';
-const KWT_TIME                = 'time';
-const KWT_TOKEN               = 'token';
-const KWT_UNSIGNED            = 'unsigned';
-const KWT_UNSIGNED_BYTE       = 'unsignedByte';
-const KWT_UNSIGNED_INT        = 'unsignedInt';
-const KWT_UNSIGNED_LONG       = 'unsignedLong';
-const KWT_UNSIGNED_SHORT      = 'unsignedShort';
+const KWT_NORMALIZED_STRING = 'normalizedString';
+const KWT_NOTHING = 'Nothing';
+const KWT_POSITIVE_INTEGER = 'positiveInteger';
+const KWT_RATIONAL = 'rational';
+const KWT_REAL = 'real';
+const KWT_SHORT = 'short';
+const KWT_STRING = 'string';
+const KWT_THING = 'Thing';
+const KWT_TIME = 'time';
+const KWT_TOKEN = 'token';
+const KWT_UNSIGNED = 'unsigned';
+const KWT_UNSIGNED_BYTE = 'unsignedByte';
+const KWT_UNSIGNED_INT = 'unsignedInt';
+const KWT_UNSIGNED_LONG = 'unsignedLong';
+const KWT_UNSIGNED_SHORT = 'unsignedShort';
 const KWT_YEAR_MONTH_DURATION = 'yearMonthDuration';
 
-const P_ANNOTATE_PRE          = '@';
-const P_LANGTAG_PRE           = '@';
-const P_PARAMS_END            = ')';
-const P_PARAMS_START          = '(';
-const P_EXPR_END              = ')';
-const P_EXPR_START            = '(';
-const P_PATH_SEP              = '::';
-const P_QID_SEP               = ':';
-const P_QSENTENCE_SEP         = ',';
-const P_RESTRICT_END          = '}';
-const P_RESTRICT_START        = '{';
-const P_SEQ_END               = ']';
-const P_SEQ_START             = '[';
-const P_SEQ_BUILD_END         = '}';
-const P_SEQ_BUILD_START       = '{';
-const P_DOUBLE_QUOTE          = '"';
-const P_IRI_END               = '>';
-const P_IRI_START             = '<';
-const P_BINARY_END            = ']';
-const P_BINARY_START          = '#[';
-const P_SEQ_BUILD_SEP         = '|'; // ‘Such that’ marker in set-builder notation
+const P_ANNOTATE_PRE = '@';
+const P_LANGTAG_PRE = '@';
+const P_PARAMS_END = ')';
+const P_PARAMS_START = '(';
+const P_EXPR_END = ')';
+const P_EXPR_START = '(';
+const P_PATH_SEP = '::';
+const P_QID_SEP = ':';
+const P_QSENTENCE_SEP = ',';
+const P_RESTRICT_END = '}';
+const P_RESTRICT_START = '{';
+const P_SEQ_END = ']';
+const P_SEQ_START = '[';
+const P_SEQ_BUILD_END = '}';
+const P_SEQ_BUILD_START = '{';
+const P_DOUBLE_QUOTE = '"';
+const P_IRI_END = '>';
+const P_IRI_START = '<';
+const P_BINARY_END = ']';
+const P_BINARY_START = '#[';
+const P_SEQ_BUILD_SEP = '|'; // ‘Such that’ marker in set-builder notation
 
-const OP_ARITH_ADD            = '+';
-const OP_ARITH_DIVIDE         = '/';
-const OP_ARITH_DIVIDE_ALT     = '÷';
-const OP_ARITH_MODULO         = '%';
-const OP_ARITH_MULTIPLY       = '*';
-const OP_ARITH_MULTIPLY_ALT   = '×';
-const OP_ARITH_SUBTRACT       = '-';
-const OP_ASSIGNMENT           = "=";
-const OP_BICONDITIONAL        = '<==>';
-const OP_BICONDITIONAL_ALT    = '⇔';
-const OP_EQUATION             = OP_ASSIGNMENT;
-const OP_EXISTENTIAL_ALT      = '∃';
-const OP_EXISTENTIAL_1_ALT    = '∃!';
-const OP_NEG_EXISTENTIAL_ALT  = '∄';
-const OP_FN_COMPOSITION       = '.';
-const OP_FN_COMPOSITION_ALT   = '∘';
-const OP_FN_DEFINITION        = ':=';
-const OP_FN_DEFINITION_ALT    = '≔';
-const OP_IMPLICATION          = '==>';
-const OP_IMPLICATION_ALT      = '⇒';
-const OP_INEQUAL_GT           = '>';
-const OP_INEQUAL_GTEQ         = '>=';
-const OP_INEQUAL_GTEQ_ALT     = '≥';
-const OP_INEQUAL_LT           = '<';
-const OP_INEQUAL_LTEQ         = '<=';
-const OP_INEQUAL_LTEQ_ALT     = '≤';
-const OP_INEQUAL_NE           = '/=';
-const OP_INEQUAL_NE_ALT       = '≠';
-const OP_LOGICAL_AND_ALT      = '∧';
-const OP_LOGICAL_OR_ALT       = '∨';
-const OP_LOGICAL_XOR_ALT      = '⊻';
-const OP_NEGATION_ALT         = '¬';
-const OP_RANGE                = '..';
-const OP_RANGE_ALT            = '⋯';
-const OP_SET_COMPLEMENT_ALT   = '∖';
-const OP_SET_DIFFERENCE_ALT   = '△';
-const OP_SET_DISUNION_ALT     = '⊔';
+const OP_ARITH_ADD = '+';
+const OP_ARITH_DIVIDE = '/';
+const OP_ARITH_DIVIDE_ALT = '÷';
+const OP_ARITH_MODULO = '%';
+const OP_ARITH_MULTIPLY = '*';
+const OP_ARITH_MULTIPLY_ALT = '×';
+const OP_ARITH_SUBTRACT = '-';
+const OP_ASSIGNMENT = "=";
+const OP_BICONDITIONAL = '<==>';
+const OP_BICONDITIONAL_ALT = '⇔';
+const OP_EQUATION = OP_ASSIGNMENT;
+const OP_EXISTENTIAL_ALT = '∃';
+const OP_EXISTENTIAL_1_ALT = '∃!';
+const OP_NEG_EXISTENTIAL_ALT = '∄';
+const OP_FN_COMPOSITION = '.';
+const OP_FN_COMPOSITION_ALT = '∘';
+const OP_FN_DEFINITION = ':=';
+const OP_FN_DEFINITION_ALT = '≔';
+const OP_IMPLICATION = '==>';
+const OP_IMPLICATION_ALT = '⇒';
+const OP_INEQUAL_GT = '>';
+const OP_INEQUAL_GTEQ = '>=';
+const OP_INEQUAL_GTEQ_ALT = '≥';
+const OP_INEQUAL_LT = '<';
+const OP_INEQUAL_LTEQ = '<=';
+const OP_INEQUAL_LTEQ_ALT = '≤';
+const OP_INEQUAL_NE = '/=';
+const OP_INEQUAL_NE_ALT = '≠';
+const OP_LOGICAL_AND_ALT = '∧';
+const OP_LOGICAL_OR_ALT = '∨';
+const OP_LOGICAL_XOR_ALT = '⊻';
+const OP_NEGATION_ALT = '¬';
+const OP_RANGE = '..';
+const OP_RANGE_ALT = '⋯';
+const OP_SET_COMPLEMENT_ALT = '∖';
+const OP_SET_DIFFERENCE_ALT = '△';
+const OP_SET_DISUNION_ALT = '⊔';
 const OP_SET_INTERSECTION_ALT = '∩';
-const OP_SET_MEMBERSHIP_ALT   = '∈';
+const OP_SET_MEMBERSHIP_ALT = '∈';
 const OP_SET_NOT_MEMBERSHIP_ALT = '∉';
-const OP_SET_PRODUCT_ALT      = '∏';
-const OP_SET_SUBSETEQ_ALT     = '⊆';
-const OP_SET_SUBSET_ALT       = '⊂';
-const OP_SET_SUPSETEQ_ALT     = '⊇';
-const OP_SET_SUPSET_ALT       = '⊃';
-const OP_SET_UNION_ALT        = '∪';
-const OP_TY_COMBINES          = '+';
-const OP_TY_HAS_TYPE          = '->';
-const OP_TY_HAS_TYPE_ALT      = '→';
-const OP_TY_RESTRICT          = '<-';
-const OP_TY_RESTRICT_ALT      = '←';
-const OP_UNIVERSAL_ALT         = '∀';
+const OP_SET_PRODUCT_ALT = '∏';
+const OP_SET_SUBSETEQ_ALT = '⊆';
+const OP_SET_SUBSET_ALT = '⊂';
+const OP_SET_SUPSETEQ_ALT = '⊇';
+const OP_SET_SUPSET_ALT = '⊃';
+const OP_SET_UNION_ALT = '∪';
+const OP_TY_COMBINES = '+';
+const OP_TY_HAS_TYPE = '->';
+const OP_TY_HAS_TYPE_ALT = '→';
+const OP_TY_RESTRICT = '<-';
+const OP_TY_RESTRICT_ALT = '←';
+const OP_UNIVERSAL_ALT = '∀';
 
-const WILDCARD                = '_';
+const WILDCARD = '_';
 
-const VALUE_FALSE             = 'false';
-const VALUE_FALSE_ALT         = '⊥';
-const VALUE_TRUE              = 'true';
-const VALUE_TRUE_ALT          = '⊤';
+const VALUE_FALSE = 'false';
+const VALUE_FALSE_ALT = '⊥';
+const VALUE_TRUE = 'true';
+const VALUE_TRUE_ALT = '⊤';
 
-const VALUE_EMPTY             = '∅';
+const VALUE_EMPTY = '∅';
 
 // =================================================================================================
 // Grammar field names, internal
 // =================================================================================================
 
-const F_ARGUMENT              = 'argument';
-const F_BASE                  = 'base';
-const F_BINDING               = 'binding';
-const F_BODY                  = 'body';
-const F_CARDINALITY           = 'cardinality';
-const F_CLASS                 = 'class';
-const F_DOMAIN                = 'domain';
-const F_ELEMENT               = 'element';
-const F_EMPTY                 = 'empty';
-const F_ENTITY                = 'entity';
-const F_ENVIRONMENT           = 'environment';
-const F_EVENT                 = 'event';
-const F_FACET                 = 'facet';
-const F_FROM                  = 'from';
-const F_FUNCTION              = 'function';
-const F_IDENTITY              = 'identity';
-const F_IS_FIXED              = 'is_fixed';
-const F_LANGUAGE              = 'language';
-const F_LHS                   = 'lhs';
-const F_MAX                   = 'max';
-const F_MEMBER                = 'member';
-const F_MIN                   = 'min';
-const F_MIXIN                 = 'mixin';
-const F_MODULE                = 'module';
-const F_NAME                  = 'name';
-const F_OPAQUE                = 'opaque';
-const F_OPERATOR              = 'operator';
-const F_ORDERING              = 'ordering';
-const F_PARAMETER             = 'parameter';
-const F_PARENT                = 'parent';
-const F_PREDICATE             = 'predicate';
-const F_PROPERTY              = 'property';
-const F_QUANTIFIER            = 'quantifier';
-const F_RANGE                 = 'range';
-const F_REFERENT              = 'referent';
-const F_RELATION              = 'relation';
-const F_RENAME                = 'rename';
-const F_RESTRICTION           = 'restriction';
-const F_RHS                   = 'rhs';
-const F_SEGMENT               = 'segment';
-const F_SIGNATURE             = 'signature';
-const F_SOURCE                = 'source';
-const F_SUBJECT               = 'subject';
-const F_TARGET                = 'target';
-const F_TYPE                  = 'type';
-const F_UNIQUENESS            = 'uniqueness';
-const F_VALUE                 = 'value';
-const F_VARIABLE              = 'variable';
-const F_VERSION_INFO          = 'version_info';
-const F_VERSION_URI           = 'version_uri';
-const F_WILDCARD              = 'wildcard';
+const F_ARGUMENT = 'argument';
+const F_BASE = 'base';
+const F_BINDING = 'binding';
+const F_BODY = 'body';
+const F_CARDINALITY = 'cardinality';
+const F_CLASS = 'class';
+const F_DOMAIN = 'domain';
+const F_ELEMENT = 'element';
+const F_EMPTY = 'empty';
+const F_ENTITY = 'entity';
+const F_ENVIRONMENT = 'environment';
+const F_EVENT = 'event';
+const F_FACET = 'facet';
+const F_FROM = 'from';
+const F_FUNCTION = 'function';
+const F_IDENTITY = 'identity';
+const F_IS_FIXED = 'is_fixed';
+const F_LANGUAGE = 'language';
+const F_LHS = 'lhs';
+const F_MAX = 'max';
+const F_MEMBER = 'member';
+const F_MIN = 'min';
+const F_MIXIN = 'mixin';
+const F_MODULE = 'module';
+const F_NAME = 'name';
+const F_OPAQUE = 'opaque';
+const F_OPERATOR = 'operator';
+const F_ORDERING = 'ordering';
+const F_PARAMETER = 'parameter';
+const F_PARENT = 'parent';
+const F_PREDICATE = 'predicate';
+const F_PROPERTY = 'property';
+const F_QUANTIFIER = 'quantifier';
+const F_RANGE = 'range';
+const F_REFERENT = 'referent';
+const F_RELATION = 'relation';
+const F_RENAME = 'rename';
+const F_RESTRICTION = 'restriction';
+const F_RHS = 'rhs';
+const F_SEGMENT = 'segment';
+const F_SIGNATURE = 'signature';
+const F_SOURCE = 'source';
+const F_SUBJECT = 'subject';
+const F_TARGET = 'target';
+const F_TYPE = 'type';
+const F_UNIQUENESS = 'uniqueness';
+const F_VALUE = 'value';
+const F_VARIABLE = 'variable';
+const F_VERSION_INFO = 'version_info';
+const F_VERSION_URI = 'version_uri';
+const F_WILDCARD = 'wildcard';
 
 // =================================================================================================
 // Reserved Word Groupings
@@ -629,7 +629,7 @@ module.exports = grammar({
             ...RW_GLOBAL,
             ...RW_DEFN_FROM,
         ],
-        dimension_body: $ =>  [
+        dimension_body: $ => [
             ...RW_GLOBAL,
             ...RW_DEFN_FROM,
             ...RW_SOURCE_ENTITY,
@@ -935,7 +935,7 @@ module.exports = grammar({
             field(F_VALUE, $.value)
         ),
 
-        constraint: $ => kw_rule (
+        constraint: $ => kw_rule(
             KW_ASSERT,
             seq(
                 field(F_NAME, $.identifier),
@@ -1003,8 +1003,8 @@ module.exports = grammar({
             $._actual_arguments
         ),
 
-       _actual_arguments: $ => parameters(
-           repeat(field(F_ARGUMENT, $.term))
+        _actual_arguments: $ => parameters(
+            repeat(field(F_ARGUMENT, $.term))
 
         ),
 
@@ -1150,15 +1150,15 @@ module.exports = grammar({
         ),
 
         _predicate_sequence_member: $ => choice(
-                            $.predicate_value,
-                            $.value_constructor,
-                            $.mapping_value,
-                            $.identifier_reference
+            $.predicate_value,
+            $.value_constructor,
+            $.mapping_value,
+            $.identifier_reference
         ),
 
-        reserved_self: $ =>  KW_SELF,
+        reserved_self: $ => KW_SELF,
 
-        reserved_event: $ =>  KW_EVENT,
+        reserved_event: $ => KW_EVENT,
 
         // -----------------------------------------------------------------------------------------
         // Annotations ❱ Formal Constraints ❱ Environments
@@ -1273,13 +1273,13 @@ module.exports = grammar({
         ),
 
         boolean_truth: $ => choice(
-             VALUE_TRUE,
-             VALUE_TRUE_ALT,
+            VALUE_TRUE,
+            VALUE_TRUE_ALT,
         ),
 
         boolean_falsity: $ => choice(
-             VALUE_FALSE,
-             VALUE_FALSE_ALT,
+            VALUE_FALSE,
+            VALUE_FALSE_ALT,
         ),
 
         unsigned: $ => token(
@@ -1299,7 +1299,7 @@ module.exports = grammar({
         ),
 
         integer: $ => token(
-           NUM_INTEGER
+            NUM_INTEGER
         ),
 
         string: $ => seq(
@@ -1515,8 +1515,8 @@ module.exports = grammar({
         ),
 
         _mixin_member_choice: $ => choice(
-                $.mixin_with_members,
-                $.mixin_without_members
+            $.mixin_with_members,
+            $.mixin_without_members
         ),
 
         mixin_with_members: $ => kw_rule(
@@ -1605,7 +1605,7 @@ module.exports = grammar({
                 )
             ),
             OP_ASSIGNMENT,
-            optional_field(F_IS_FIXED,$.kw_is_fixed),
+            optional_field(F_IS_FIXED, $.kw_is_fixed),
             field(F_VALUE, $.unsigned)
         ),
 
@@ -1618,7 +1618,7 @@ module.exports = grammar({
                 )
             ),
             OP_ASSIGNMENT,
-            optional_field(F_IS_FIXED,$.kw_is_fixed),
+            optional_field(F_IS_FIXED, $.kw_is_fixed),
             field(F_VALUE, $.unsigned)
         ),
 
@@ -1633,11 +1633,11 @@ module.exports = grammar({
                 )
             ),
             OP_ASSIGNMENT,
-            optional_field(F_IS_FIXED,$.kw_is_fixed),
+            optional_field(F_IS_FIXED, $.kw_is_fixed),
             field(F_VALUE, $.restriction_value)
         ),
 
-        restriction_value: $ => choice (
+        restriction_value: $ => choice(
             //
             // WFR: ensure value matches datatype
             //
@@ -1648,7 +1648,7 @@ module.exports = grammar({
         tz_restriction_facet: $ => seq(
             KWF_EXPLICIT_TIMEZONE,
             OP_ASSIGNMENT,
-            optional_field(F_IS_FIXED,$.kw_is_fixed),
+            optional_field(F_IS_FIXED, $.kw_is_fixed),
             field(F_VALUE, $.tz_restriction_value)
         ),
 
@@ -1792,7 +1792,7 @@ module.exports = grammar({
             seq(KW_METRIC, KW_GROUP),
             seq(
                 $.metric_event_binding,
-                optional_field(F_FROM,  $.from_definition_clause)
+                optional_field(F_FROM, $.from_definition_clause)
             ),
             optional($.metric_group_body)
         ),
@@ -1934,7 +1934,7 @@ module.exports = grammar({
             optional(
                 parameters(
                     repeat1(
-                        field(F_ARGUMENT,$.type_restriction_argument)
+                        field(F_ARGUMENT, $.type_restriction_argument)
                     )
                 )
             )
@@ -2073,7 +2073,7 @@ module.exports = grammar({
             optional_field(F_BODY, $.annotation_only_body)
         ),
 
-         type_variant: $ => seq(
+        type_variant: $ => seq(
             field(F_NAME, $.identifier_reference),
             optional($.rename_as_clause),
             optional_field(F_BODY, $.annotation_only_body)

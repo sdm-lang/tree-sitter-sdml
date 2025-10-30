@@ -106,7 +106,7 @@ licenses:
 > limitations under the License.
 > ```
 
-See the enclosed file [LICENSE-Apache](https://github.com/johnstonskj/rust-flat-error/blob/main/LICENSE-Apache).
+See the enclosed file [LICENSE-Apache](https://github.com/sdm-lang/tree-sitter-sdml/blob/main/LICENSE-APACHE).
 
 ### MIT
 
@@ -131,7 +131,7 @@ See the enclosed file [LICENSE-Apache](https://github.com/johnstonskj/rust-flat-
 > SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 > ```
 
-See the enclosed file [LICENSE-MIT](https://github.com/johnstonskj/rust-flat-error/blob/main/LICENSE-MIT).
+See the enclosed file [LICENSE-MIT](https://github.com/sdm-lang/tree-sitter-sdml/blob/main/LICENSE-MIT).
 
 ### Contributions
 

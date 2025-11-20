@@ -30,7 +30,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup tree-sitter tooling
         uses: tree-sitter/setup-action@v2
@@ -49,7 +49,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup tree-sitter tooling
         uses: tree-sitter/setup-action@v2
@@ -68,7 +68,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup tree-sitter tooling
         uses: tree-sitter/setup-action@v2
@@ -101,7 +101,7 @@ jobs:
           echo "BUILD_OUTPUT=${{ env.BUILD_OUTPUT_DIR }}/lib${{ env.GRAMMAR_NAME }}.so" >> "$GITHUB_ENV"
             
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup tree-sitter tooling
         uses: tree-sitter/setup-action@v2
@@ -131,7 +131,7 @@ jobs:
           echo "BUILD_OUTPUT=${{ env.BUILD_OUTPUT_DIR }}/${{ env.GRAMMAR_NAME }}.wasm" >> "$GITHUB_ENV"
             
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup tree-sitter tooling
         uses: tree-sitter/setup-action@v2
@@ -165,7 +165,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
   
       - name: Setup tree-sitter tooling
         uses: tree-sitter/setup-action@v2

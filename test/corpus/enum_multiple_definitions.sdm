@@ -1,0 +1,36 @@
+=============================================
+Enum, Multiple Definitions With Comments
+=============================================
+
+module corpus_test_enum is
+
+  enum First of
+    A
+    B ;
+  end
+
+  enum Second of
+    C
+  end
+
+end
+
+---
+
+(module
+  name: (identifier)
+  body: (module_body
+    (enum_def
+      name: (identifier)
+      body: (enum_body
+        (value_variant
+          name: (identifier))
+        (value_variant
+          name: (identifier))
+        (line_comment
+          (comment_aligned))))
+    (enum_def
+      name: (identifier)
+      body: (enum_body
+        (value_variant
+          name: (identifier))))))

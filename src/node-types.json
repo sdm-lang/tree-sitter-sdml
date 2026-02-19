@@ -3734,11 +3734,11 @@
   },
   {
     "type": "double",
-    "named": true
+    "named": false
   },
   {
     "type": "double",
-    "named": false
+    "named": true
   },
   {
     "type": "duration",
@@ -4118,11 +4118,11 @@
   },
   {
     "type": "unsigned",
-    "named": true
+    "named": false
   },
   {
     "type": "unsigned",
-    "named": false
+    "named": true
   },
   {
     "type": "unsignedByte",

@@ -1,0 +1,55 @@
+==============
+Comment Types
+==============
+
+;;; Page comment
+;; Local comment
+; Aligned comment
+module Test is end
+
+---
+
+(module
+  (line_comment (comment_page))
+  (line_comment (comment_local))
+  (line_comment (comment_aligned))
+  name: (identifier)
+  body: (module_body))
+
+==========================
+Comments with Semicolons
+==========================
+
+;;; This comment has a ; semicolon
+;; Another ; semicolon ; here
+; Aligned ; with ; multiple ; semicolons
+module Test is end
+
+---
+
+(module
+  (line_comment (comment_page))
+  (line_comment (comment_local))
+  (line_comment (comment_aligned))
+  name: (identifier)
+  body: (module_body))
+
+===============
+Empty Comments
+===============
+
+;
+;;
+;;;
+;;;;
+module Test is end
+
+---
+
+(module
+  (line_comment (comment_aligned))
+  (line_comment (comment_local))
+  (line_comment (comment_page))
+  (line_comment (comment_page))
+  name: (identifier)
+  body: (module_body))

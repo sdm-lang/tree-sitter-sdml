@@ -2361,33 +2361,19 @@ module.exports = grammar({
         // =========================================================================================
 
         line_comment: $ => choice(
-            $.comment_aligned,
+            $.comment_page,
             $.comment_local,
-            $.comment_page
+            $.comment_aligned,
         ),
 
-        // These will be indented with their surrounding content.
-        comment_aligned: $ => token(
-            prec(
-                0,
-                /;[^;].*/
-            )
-        ),
-
-        // No indentation will be applied to these.
-        comment_local: $ => token(
-            prec(
-                0,
-                /;;[^;].*/
-            )
-        ),
 
         // These will be force-placed on column-0.
-        comment_page: $ => token(
-            prec(
-                0,
-                /;;;.*/
-            )
-        )
+        comment_page: $ => token(/;;;.*/),
+
+        // No indentation will be applied to these.
+        comment_local: $ => token(/;;.*/),
+
+        // These will be indented with their surrounding content.
+        comment_aligned: $ => token( /;.*/),
     }
 })

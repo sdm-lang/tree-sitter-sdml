@@ -5278,7 +5278,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "comment_aligned"
+          "name": "comment_page"
         },
         {
           "type": "SYMBOL",
@@ -5286,41 +5286,29 @@
         },
         {
           "type": "SYMBOL",
-          "name": "comment_page"
+          "name": "comment_aligned"
         }
       ]
     },
-    "comment_aligned": {
+    "comment_page": {
       "type": "TOKEN",
       "content": {
-        "type": "PREC",
-        "value": 0,
-        "content": {
-          "type": "PATTERN",
-          "value": ";[^;].*"
-        }
+        "type": "PATTERN",
+        "value": ";;;.*"
       }
     },
     "comment_local": {
       "type": "TOKEN",
       "content": {
-        "type": "PREC",
-        "value": 0,
-        "content": {
-          "type": "PATTERN",
-          "value": ";;[^;].*"
-        }
+        "type": "PATTERN",
+        "value": ";;.*"
       }
     },
-    "comment_page": {
+    "comment_aligned": {
       "type": "TOKEN",
       "content": {
-        "type": "PREC",
-        "value": 0,
-        "content": {
-          "type": "PATTERN",
-          "value": ";;;.*"
-        }
+        "type": "PATTERN",
+        "value": ";.*"
       }
     }
   },

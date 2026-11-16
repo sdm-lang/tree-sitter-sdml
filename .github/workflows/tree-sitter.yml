@@ -74,7 +74,7 @@ jobs:
         uses: tree-sitter/setup-action@v2
 
       - name: Parse example files
-        uses: tree-sitter/parse-action@v4
+        uses: tree-sitter/parse-action@v5
         id: examples
         continue-on-error: true
         with:

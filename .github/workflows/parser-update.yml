@@ -28,6 +28,6 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Parser dependency updates
-        uses: tree-sitter/parser-update-action@v1.1
+        uses: tree-sitter/parser-update-action@v1.2
         with:
           language-name: ${{ env.GRAMMAR_NAME }}
